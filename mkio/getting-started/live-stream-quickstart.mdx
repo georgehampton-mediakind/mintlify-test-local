@@ -1,5 +1,5 @@
 ---
-title: "Live Stream in Five Minutes with MK.IO"
+title: "MK.IO Live Quickstart: Go Live in Under Five Minutes"
 sidebarTitle: "Live Quickstart"
 description: "Create a live event in MK.IO, choose an ingest protocol, connect an RTMP encoder, and retrieve a playback URL — all in under five minutes."
 ---
@@ -36,6 +36,8 @@ Make sure you have:
 
     Select **Live encoding (720p)** if you are unsure. It lets MK.IO generate multiple bitrate levels automatically so viewers on different connections all get a smooth stream.
 
+    <Note>Low-latency streaming is available. Contact the MK.IO sales team for details.</Note>
+
     **Select the input protocol:**
 
     - **RTMP**: Supported by OBS, Wirecast, and most hardware encoders. Use this for your first stream.
@@ -44,7 +46,7 @@ Make sure you have:
 
     **Configure output settings:**
 
-    - **Archive window length**: How long MK.IO retains the live recording. Set this to at least 1 hour for a typical event. The full recording is stored as an asset when you stop the event.
+    - **Archive window length**: How long MK.IO retains the live recording, from 1 minute up to 7 days. The full recording is stored as an asset when you stop the event. If the archive window exceeds 25 hours, viewers see only the most recent 25-hour window in the manifest — the full recording is still preserved. See [Extended Archive Window](/mkio/live/extended-archive-window).
     - **Storage account**: Select the connected storage account where the recording will be saved.
 
     Click **Review**, then **Submit** to create the live event.
@@ -120,7 +122,15 @@ Make sure you have:
 
 ## Connection timeout
 
-If MK.IO receives no data on an RTMP or RTMPS connection for 10 seconds, it drops the connection automatically. This timeout is fixed and cannot be configured. If your stream stops unexpectedly, check that your encoder or network did not pause for more than 10 seconds. Your encoder must reconnect and resume sending data to restore the stream.
+If MK.IO receives no data on an RTMP or RTMPS connection for 10 seconds, it drops the connection automatically. This timeout is fixed and cannot be configured.
+
+If your stream stops unexpectedly, check whether your encoder or network stopped sending data for more than 10 seconds. Common causes include:
+
+- Network instability or packet loss
+- Encoder pauses between scenes
+- Video conferencing software that halts transmission when a participant is idle
+
+Your encoder must reconnect and resume sending data to restore the stream.
 
 ## Next steps
 

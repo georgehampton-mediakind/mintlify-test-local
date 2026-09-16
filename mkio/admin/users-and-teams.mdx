@@ -1,7 +1,7 @@
 ---
-title: "Manage Users, Teams, and Roles in MK.IO"
+title: "Manage MK.IO Users, Teams, Roles, and Access Scopes"
 sidebarTitle: "Users & Teams"
-description: "Invite users, create teams, assign roles and scopes, and manage project access in your MK.IO organization."
+description: "Invite users to your MK.IO organization, create teams, assign roles and scopes, and manage project access using the portal or Management API."
 ---
 
 The MK.IO access model is built in layers. Users belong to an organization, teams group users, roles define capabilities, and scopes define which resources those capabilities apply to. Access is granted by giving a team one or more roles under a scope, then adding users to the team. Granting access team-by-team rather than user-by-user keeps it reusable and easy to audit.
@@ -41,6 +41,15 @@ curl -X GET "https://app.mk.io/api/v1/organization/invites" \
 
 # Cancel an invite
 curl -X DELETE "https://app.mk.io/api/v1/organization/invites/<INVITE_ID>" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+## List users in your organization
+
+To see which users already belong to your organization:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/organization/users" \
   -H "Authorization: Bearer $MKIO_TOKEN"
 ```
 

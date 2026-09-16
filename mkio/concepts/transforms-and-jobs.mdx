@@ -1,7 +1,7 @@
 ---
-title: "Transforms and Jobs: VOD Processing in MK.IO"
+title: "MK.IO Transforms and Jobs: How VOD Processing Works"
 sidebarTitle: "Transforms & Jobs"
-description: "Learn how MK.IO transforms define reusable processing recipes and how jobs apply them to input assets to produce encoded, thumbnail, or AI-generated outputs."
+description: "Learn how MK.IO transforms define reusable processing recipes and how jobs execute them against input assets to produce encoded, thumbnail, and AI outputs."
 ---
 
 VOD processing in MK.IO uses two resource types that work together: a **transform** defines what processing to perform, and a **job** runs that transform against a specific input. Separating the definition from the execution means you configure a processing recipe once and reuse it across as many files as you need.
@@ -22,7 +22,7 @@ Common preset types include:
 
 A single transform can define multiple outputs — for example, an ABR encode and a set of thumbnails in one pass. MK.IO processes all outputs in a single job.
 
-MK.IO provides built-in transform presets (such as `AdaptiveStreaming` for standard ABR output) and lets you create custom transforms with fine-grained encoder settings.
+MK.IO provides built-in transform presets (such as `H264MultipleBitrate720p` for standard ABR output) and lets you create custom transforms with fine-grained encoder settings.
 
 ## Jobs
 
@@ -40,7 +40,17 @@ Jobs move through a predictable state sequence:
 queued → scheduled → processing → finished
 ```
 
-If processing fails, the job enters an **error** state with a description of what went wrong. Jobs that are no longer needed can be cancelled while queued or scheduled, and deleted after they finish.
+| State | Description |
+| --- | --- |
+| **Queued** | Waiting for a processing slot to become available |
+| **Scheduled** | Accepted and placed in the processing queue |
+| **Processing** | Actively running |
+| **Finished** | Completed successfully |
+| **Error** | Failed; the job record includes an error description |
+| **Canceling** | Cancellation requested and in progress |
+| **Canceled** | Successfully cancelled |
+
+If processing fails, the job enters the **Error** state with a description of what went wrong. You can cancel a job while it is in the Queued or Scheduled state, and delete it after it finishes or is cancelled.
 
 ### Job priority
 

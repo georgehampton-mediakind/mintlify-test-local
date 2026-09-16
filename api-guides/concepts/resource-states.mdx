@@ -1,7 +1,7 @@
 ---
-title: "MK.IO API Resource States and Lifecycle"
+title: "MK.IO API Resource Lifecycle States and Transitions"
 sidebarTitle: "Resource States"
-description: "Track MK.IO resource lifecycle states — how assets, jobs, live events, and endpoints move through states and how to monitor state via polling or webhooks."
+description: "Understand MK.IO resource lifecycle states for assets, jobs, live events, and endpoints. Monitor state transitions using polling or webhooks."
 ---
 
 Many MK.IO resources are asynchronous. A request to create or start one returns quickly, but the resource then moves through internal processing before it is ready to use. An integration that ignores state eventually tries to publish, stream, or delete a resource at the wrong moment.
@@ -57,7 +57,7 @@ Two states apply to almost every resource:
 - `Deleted`: removal is complete. You rarely observe this value, because the resource no longer exists and the endpoint returns `404`.
 
 <Note>
-  The API may also report extra transient states for some resources, such as `Updating`, `Scaling`, or `Error`. The [Media API reference](/api-reference/media-api) lists the complete enum for each resource, while the [resource states reference](/api-guides/concepts/resource-states) explains what each value means.
+  The API may also report extra transient states for some resources, such as `Updating`, `Scaling`, or `Error`. The [Media API reference](/api-reference/media-api) lists the complete enum for each resource.
 </Note>
 
 ## Tell runtime state from provisioning state

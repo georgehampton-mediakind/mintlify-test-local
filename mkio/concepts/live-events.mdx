@@ -1,5 +1,5 @@
 ---
-title: "Live Events and Live Outputs in MK.IO"
+title: "Live Events in MK.IO: Ingest, Archive, and Playback"
 sidebarTitle: "Live Events"
 description: "Understand the MK.IO live event resource — ingest modes, passthrough vs encoding, live outputs, archive windows, and the full event state lifecycle."
 ---
@@ -18,6 +18,8 @@ The first decision when creating a live event is whether to use **passthrough** 
 | **Live encoding (1080p)** | Produces ABR output up to 1080p | High-quality productions |
 
 **Encoding mode** is recommended for most workflows. MK.IO automatically generates multiple bitrate renditions so viewers on different connections all get a smooth experience. **Passthrough** requires your encoder to produce the quality levels you want — it is appropriate when you control the full encode chain upstream.
+
+<Note>Live passthrough (up to 5 Mbps) supports a maximum total archive of 8 hours. For longer recordings, use Live passthrough (up to 60 Mbps) or a live encoding mode, which all support archives up to 25 hours.</Note>
 
 <Note>Low-latency streaming is available. Contact the MK.IO sales team for details.</Note>
 

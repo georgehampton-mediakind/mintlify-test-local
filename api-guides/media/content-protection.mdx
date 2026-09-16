@@ -1,5 +1,5 @@
 ---
-title: "Apply DRM Content Protection via the Media API"
+title: "Apply DRM Content Protection with the MK.IO Media API"
 sidebarTitle: "Content Protection"
 description: "Create content key policies, configure PlayReady, Widevine, and FairPlay DRM, and attach protection to streaming locators using the MK.IO Media API."
 ---
@@ -120,7 +120,7 @@ The `configuration` block selects the DRM system. Each system covers different p
 To cover every platform, include all three DRM configurations in one policy, as the minimal example does for two of them. FairPlay is the one configuration that needs extra setup: it requires a Base64-encoded certificate (`fairPlayPfx`), its password (`fairPlayPfxPassword`), and a Base64-encoded application secret key (`ask`). Supply the certificate password directly, without Base64 encoding it. The FairPlay configuration also requires `rentalAndLeaseKeyType` and `rentalDuration`; see `ContentKeyPolicyFairPlayConfiguration` in the [Media API reference](/api-reference/media-api) for their supported values.
 
 <Warning>
-  Clear Key uses AES-128 and does not reach the security of the three DRM systems. Do not add Clear Key to a policy intended for DRM, because it lowers the overall protection. For the per-system setup detail, see [multi-DRM encryption](/mkio/delivery/content-key-policies
+  Clear Key uses AES-128 and does not reach the security of the three DRM systems. Do not add Clear Key to a policy intended for DRM, because it lowers the overall protection. For the per-system setup detail, see [multi-DRM encryption](/mkio/delivery/content-key-policies).
 </Warning>
 
 ## Choosing the restriction
@@ -142,7 +142,7 @@ The verification key type is itself chosen by `@odata.type`:
 | Asymmetric (RSA) | RSA | `#Microsoft.Media.ContentKeyPolicyRsaTokenKey` | `modulus`, `exponent` |
 | Certificate (X.509) | X.509 | `#Microsoft.Media.ContentKeyPolicyX509CertificateTokenKey` | `rawBody` |
 
-Symmetric (HS256) is the default and the simplest. Choose RSA when your security model requires asymmetric keys; see [RSA key for token validation](/mkio/delivery/content-key-policies
+Symmetric (HS256) is the default and the simplest. Choose RSA when your security model requires asymmetric keys; see [RSA key for token validation](/mkio/delivery/content-key-policies).
 
 ## Attach the policy at the locator
 
@@ -213,7 +213,7 @@ curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/contentKeyP
   A protected stream opened without a token can surface a `DRM_FAILED_LICENSE_REQUEST` error. That is expected: the encrypted stream needs a token that has not been provided yet.
 </Accordion>
 
-For the token flow and the required claims, see [JWT token authentication](/mkio/delivery/content-key-policies
+For the token flow and the required claims, see [JWT token authentication](/mkio/delivery/content-key-policies).
 
 ## Where to go deeper
 

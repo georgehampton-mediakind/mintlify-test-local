@@ -1,5 +1,5 @@
 ---
-title: "Publish Your First VOD Asset with MK.IO"
+title: "MK.IO VOD Quickstart: Upload, Transcode, and Publish"
 sidebarTitle: "VOD Quickstart"
 description: "Step-by-step guide to uploading a video to MK.IO, running a transcode job to produce adaptive bitrate output, and publishing it for on-demand playback."
 ---
@@ -43,7 +43,12 @@ Make sure you have:
 
     **Configure the input:**
 
-    Click **Select existing asset** and choose the source asset you created in the previous step. You can also enter an external HTTPS or SAS URL if your source file is publicly accessible.
+    The job input can be an existing asset or an external URL:
+
+    - **Asset**: Click **Select existing asset** to browse assets in your project, or enter the asset name and filename directly. You can also click **Upload asset** to create a new asset by uploading files.
+    - **External URL**: Enter the full HTTPS or SAS URL of the source file. The URL must be publicly accessible.
+
+    For this quickstart, click **Select existing asset** and choose the source asset you created in the previous step.
 
     **Configure the output:**
 

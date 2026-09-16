@@ -1,7 +1,7 @@
 ---
-title: "Configure Content Key Policies and DRM in MK.IO"
+title: "Configure Content Key Policies and DRM Protection in MK.IO"
 sidebarTitle: "Key Policies"
-description: "Set up PlayReady, Widevine, or FairPlay DRM by creating content key policies and referencing them in streaming locators in MK.IO."
+description: "Set up PlayReady, Widevine, or FairPlay DRM by creating content key policies and referencing them in streaming locators for protected playback in MK.IO."
 ---
 
 To configure protected playback with Digital Rights Management (DRM) using the Media API, you combine three resources that meet at the streaming locator. A **content key policy** defines how decryption keys and DRM licenses are delivered, and who is allowed to receive them. A **streaming policy** defines how the content is encrypted for playback. A **streaming locator** ties a policy pair to an asset and publishes it.
@@ -113,11 +113,11 @@ The `restriction` block decides who receives a license.
 
 A token restriction requires `issuer`, `audience`, `restrictionTokenType`, and a `primaryVerificationKey`.
 
-| Signing approach | Key type | `@odata.type` |
-| :-- | :-- | :-- |
-| Symmetric (HMAC, HS256) | Symmetric | `#Microsoft.Media.ContentKeyPolicySymmetricTokenKey` |
-| Asymmetric (RSA) | RSA | `#Microsoft.Media.ContentKeyPolicyRsaTokenKey` |
-| Certificate (X.509) | X.509 | `#Microsoft.Media.ContentKeyPolicyX509CertificateTokenKey` |
+| Signing approach | Key type | `@odata.type` | Required fields |
+| :-- | :-- | :-- | :-- |
+| Symmetric (HMAC, HS256) | Symmetric | `#Microsoft.Media.ContentKeyPolicySymmetricTokenKey` | `keyValue` |
+| Asymmetric (RSA) | RSA | `#Microsoft.Media.ContentKeyPolicyRsaTokenKey` | `modulus`, `exponent` |
+| Certificate (X.509) | X.509 | `#Microsoft.Media.ContentKeyPolicyX509CertificateTokenKey` | `rawBody` |
 
 ## Attach the policy to a streaming locator
 

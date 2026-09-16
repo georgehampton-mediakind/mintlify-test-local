@@ -1,5 +1,5 @@
 ---
-title: "MK.IO Beam Channels API Reference — 21 Endpoints"
+title: "MK.IO Beam Channels API Reference: 21 Device Endpoints"
 sidebarTitle: "Channels API"
 description: "Full REST endpoint reference for the MK.IO Beam Channels API — channel management, alarms, interfaces, deployments served from Beam devices."
 ---
@@ -13,7 +13,7 @@ The MK.IO Beam Channels API is a simplified channel management API for configuri
 </Info>
 
 <Warning>
-  The Channels API is served by the Beam device at `/ui/connectors/channels-api/latest`, **not** from `https://app.mk.io`. You must connect to the device directly. See the [Channels API guide](/api-guides/beam/channels-overview) for device connection and authentication requirements.
+  The Channels API is served by the Beam device at `<DEVICE_ADDRESS>/api/`, **not** from `https://app.mk.io`. You must connect to the device directly over HTTP. See the [Channels API guide](/api-guides/beam/channels-overview) for device connection and authentication requirements.
 </Warning>
 
 ## Endpoint Groups
@@ -111,11 +111,10 @@ Manage BISS (Basic Interoperable Scrambling System) injected IDs and import code
 
 ## Example Request
 
-All requests target the Beam device directly. Replace `<DEVICE_HOST>` with your device's hostname or IP address:
+All requests target the Beam device directly over HTTP. Replace `<DEVICE_HOST>` with your device's IP address or hostname (and port if non-standard):
 
 ```bash
-curl -X GET "http://<DEVICE_HOST>/ui/connectors/channels-api/latest/api/channels/" \
-  -H "Authorization: Bearer $BEAM_TOKEN"
+curl -X GET "http://<DEVICE_HOST>/api/channels/"
 ```
 
 <Tip>
