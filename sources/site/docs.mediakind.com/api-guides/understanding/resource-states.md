@@ -1,0 +1,105 @@
+# Source: https://docs.mediakind.com/api-guides/understanding/resource-states
+
+# Resource states
+
+Many MK.IO resources are asynchronous. A request to create or start one returns quickly, but the resource then moves through internal processing before it is ready to use. An integration that ignores state eventually tries to publish, stream, or delete a resource at the wrong moment.
+
+## Where state appears
+
+[Section titled “Where state appears”](https://docs.mediakind.com/api-guides/understanding/resource-states/#where-state-appears)
+
+State is exposed in two ways:
+
+- A dedicated `/state` endpoint next to the resource, for lightweight polling.
+- State fields on the full resource record, returned by a normal `GET`.
+
+In the Media API, the resources with a `/state` endpoint are assets, content key policies, jobs, live events, live outputs, streaming endpoints, and streaming locators. Poll the `/state` endpoint when you only need the current status. Read the full resource when you also need its configuration.
+
+Live API channels, events, and multiview resources also expose `/state`. Their desired state is `spec.state`, and their reported state is `status.state`. See [Live resource states](https://docs.mediakind.com/api-guides/how-to/live/core-concepts/resource-states) for that lifecycle. The Media API examples below use a different resource model.
+
+## Read the /state endpoint
+
+[Section titled “Read the /state endpoint”](https://docs.mediakind.com/api-guides/understanding/resource-states/#read-the-state-endpoint)
+
+The `/state` endpoint returns a small, uniform body. The `state` value is a string whose meaning depends on the resource type.
+
+Terminal window
+
+```
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/transforms/<TRANSFORM_NAME>/jobs/<JOB_NAME>/state" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+```
+{
+  "status": {
+    "state": "Processing"
+  }
+}
+```
+
+## Media API resource states
+
+[Section titled “Media API resource states”](https://docs.mediakind.com/api-guides/understanding/resource-states/#media-api-resource-states)
+
+Each resource moves through its own lifecycle. The table below lists the states you observe in normal operation, taken from the MK.IO [resource states reference](https://docs.mediakind.com/mkio/reference/resource-states). Use them to decide when the next step in a workflow is valid.
+
+| Resource | Initial | Ready | Running lifecycle |
+| :-- | :-- | :-- | :-- |
+| Asset | `Pending` | `Ready` | \- |
+| Content key policy | `Creating` | `Created` | \- |
+| Live output | `Creating` | `Running` | \- |
+| Streaming locator | `Creating` | `Created` | \- |
+| Streaming endpoint | `Creating` | `Created` | `Starting`, `Running`, `Stopping`, `Stopped` |
+| Live event | `Allocating` | `StandBy` | `Starting`, `Running`, `Stopping`, `Stopped` |
+
+Jobs use a separate set of states, reported in `properties.state`: `Queued`, `Scheduled`, `Processing`, `Finished`, `Canceling`, `Canceled`, and `Error`.
+
+Two states apply to almost every resource:
+
+- `Deleting`: the resource is deleted and the system is processing the removal.
+- `Deleted`: removal is complete. You rarely observe this value, because the resource no longer exists and the endpoint returns `404`.
+
+The API may also report extra transient states for some resources, such as `Updating`, `Scaling`, or `Error`. The [Media API reference](https://docs.mediakind.com/api-reference/media-api) lists the complete enum for each resource, while the [resource states reference](https://docs.mediakind.com/mkio/reference/resource-states) explains what each value means.
+
+## Tell runtime state from provisioning state
+
+[Section titled “Tell runtime state from provisioning state”](https://docs.mediakind.com/api-guides/understanding/resource-states/#tell-runtime-state-from-provisioning-state)
+
+Live events, live outputs, streaming endpoints, and streaming locators expose two separate ideas of state:
+
+- `provisioningState` reports whether the control plane finished creating or updating the resource. Its values are `InProgress`, `Succeeded`, and `Failed`.
+- `resourceState` reports whether the resource is currently running, stopped, or being deleted.
+
+When you wait for a resource to become usable, do not stop at `provisioningState` of `Succeeded`. A streaming endpoint can be provisioned but not yet `Running`. Check `resourceState` as well.
+
+## Design state transitions into the workflow
+
+[Section titled “Design state transitions into the workflow”](https://docs.mediakind.com/api-guides/understanding/resource-states/#design-state-transitions-into-the-workflow)
+
+A safe automation flow waits for the right state before each dependent call:
+
+1. Create or start the resource.
+2. Poll until it reaches the state that makes the next step valid.
+3. Make the next call only then.
+
+In practice:
+
+- Wait for a job to reach `Finished` before you publish its output asset.
+- For Media API `/media/liveEvents`, follow the [Media live-streaming startup sequence](https://docs.mediakind.com/api-guides/how-to/media/live-streaming).
+- For Live API `/live/liveEvents`, prepare the contribution encoder as part of startup and monitor `status.state`. See the [Live event walkthrough](https://docs.mediakind.com/api-guides/how-to/live/walkthrough#step-6-start-the-event).
+- Wait for a streaming endpoint to reach `Running` before you expect playback to succeed.
+
+## When to stop polling
+
+[Section titled “When to stop polling”](https://docs.mediakind.com/api-guides/understanding/resource-states/#when-to-stop-polling)
+
+Polling suits short waits and one-off scripts. It becomes expensive when you monitor many jobs or long-running live workflows, because each check is a request that counts against the [rate limits](https://docs.mediakind.com/api-guides/understanding/rate-limits). At that scale, [webhooks](https://docs.mediakind.com/api-guides/understanding/webhooks) deliver the same state changes without the repeated reads. A common pattern is to use webhooks for change notification and a single `GET` for current detail when a user asks for it.
+
+## What comes next
+
+[Section titled “What comes next”](https://docs.mediakind.com/api-guides/understanding/resource-states/#what-comes-next)
+
+- [Webhooks](https://docs.mediakind.com/api-guides/understanding/webhooks): replace repeated polling with event delivery.
+- [Transforms and jobs](https://docs.mediakind.com/api-guides/how-to/media/transforms-and-jobs): see how job state fits a VOD workflow.
+- [Live streaming](https://docs.mediakind.com/api-guides/how-to/media/live-streaming): see how live-event state affects ingest and publishing.

@@ -1,0 +1,253 @@
+---
+title: "MK.IO Beam Maintenance: Backups, Alarms, and Health"
+sidebarTitle: "Maintenance"
+description: "Perform maintenance tasks on MK.IO Beam — configure service settings, manage alarms, run backups and restores, and monitor system health."
+---
+
+This page covers maintenance tasks for MK.IO Beam: configuring service-level settings such as HTTP headers and Nielsen archiving, backing up and restoring the system configuration, and enabling health monitoring and remote metrics. Most maintenance tasks are accessible from the **System Center** via the gear icon in the upper right corner.
+
+## Service Settings
+
+You can access additional service-specific menus from the **Settings** menu. These menus only display if Packager, Stream Conditioning, or Live Encoder products are in use.
+
+### Packager: Add an HTTP Header
+
+Custom HTTP headers control how the packager serves content to clients and CDNs.
+
+<Steps>
+  <Step title="Open HTTP Headers">
+    Click **Settings** (the three-gears icon) to expand menu options, then select **HTTP Headers**.
+  </Step>
+  <Step title="Edit or Add a Header">
+    Edit an existing header or click **Add** to create a new one. Enter the **URL pattern** and **Headers** values.
+  </Step>
+  <Step title="Save">
+    Select a **Save** option to save changes.
+  </Step>
+</Steps>
+
+### Live Encoder: Enable Nielsen Log Archiving
+
+When enabled, Nielsen watermarking logs are sent to an SFTP server. Watermarking must first be enabled in the Live Encoding service under **Media processing > Audio Processing > Watermarking > Edit > Insertion > Enable**.
+
+<Steps>
+  <Step title="Open Nielsen Archiving">
+    Select **Settings** from the left-side menu panel, then select **Nielsen archiving** from the drop-down.
+  </Step>
+  <Step title="Enable Archiving">
+    Select the check box to enable Nielsen archiving.
+  </Step>
+  <Step title="Enter SFTP Parameters">
+    Enter the required parameters for the SFTP server. Certain parameters are provided by Nielsen and must be registered with Nielsen.
+  </Step>
+</Steps>
+
+<Note>
+  Nielsen archiving is only available in container mode.
+</Note>
+
+### Live Encoder: Live Service Lineup
+
+The lineup file describes a list of sources (including all parameters needed to capture each source: multicast address, port, input streams, etc.) to be used with the Media Composer input. This configuration is unique per controller and is used by all Live Encoder services.
+
+<Steps>
+  <Step title="Open Live Service Lineup">
+    Select **Settings** from the left-side menu, then select **Live service lineup**.
+  </Step>
+  <Step title="Create or Import">
+    - To **create** a new service lineup, click **Add** and enter the appropriate values for each parameter.
+    - To **import** an existing service lineup, click **Import** and browse to select a JSON file.
+  </Step>
+  <Step title="Edit or Export">
+    - Click the **Edit** button in the **Actions** column to view and edit individual lineup parameters.
+    - Click **Export** to copy the JSON, or right-click **Export** and select **Save link as** to save the file locally.
+  </Step>
+</Steps>
+
+---
+
+## Backup and Restore
+
+Backups include services, templates, failover groups, server definitions, and locally defined users. Back up your configurations to enable recovery after a server crash, before an upgrade, or for configuration rollbacks.
+
+<Note>
+  Access to configurations is blocked while a backup or restore is in progress. Up to 30 backup files are supported for local backups — the oldest backup is deleted automatically once 30 are stored.
+</Note>
+
+<Warning>
+  Copying an exported database and restoring it onto a different MK.IO Beam server is not supported. The database backup and restore is for the same server only.
+</Warning>
+
+### Create a Local Backup
+
+Local backups remain accessible even when no remote access is possible. They include servers, services, templates, and user configurations.
+
+<Steps>
+  <Step title="Open Backup Options">
+    Click the gear icon in the upper right, select **Backup**. The Backup Controller Database options display.
+  </Step>
+  <Step title="Backup Now">
+    **Local Backup** is selected by default. Click **Backup now** to store the backup on the local drive.
+  </Step>
+</Steps>
+
+### Create a Remote Backup
+
+Remote backups use FTP or FTPS to store configurations on a remote server.
+
+<Steps>
+  <Step title="Open Backup Options">
+    Click the gear icon, then select **Backup**.
+  </Step>
+  <Step title="Select Remote Backup">
+    Select **Remote backup** and enter the required remote backup settings (Host, Port, Path). FTPS is also authorized.
+  </Step>
+  <Step title="Backup Now">
+    Click **Backup Now**, then click **Save and exit** to save your changes.
+  </Step>
+</Steps>
+
+<Note>
+  Editing the backup file storage location also affects scheduled backups.
+</Note>
+
+### Schedule an Automatic Backup
+
+<Steps>
+  <Step title="Open Backup Options">
+    Click the gear icon, then select **Backup**.
+  </Step>
+  <Step title="Configure Scheduled Backup">
+    Select the **Scheduled Backup** tab. Select the **Enable scheduled backup** checkbox and choose the backup schedule: hourly, daily, or weekly.
+  </Step>
+  <Step title="Set Backup Location">
+    Open the **Backup Location** tab to configure the storage settings if not already configured.
+  </Step>
+  <Step title="Save">
+    Click **Save and exit** to save your changes.
+  </Step>
+</Steps>
+
+<Note>
+  Timestamps for scheduled backups are based on the current time on the Controller server.
+</Note>
+
+### Download the Controller Database File
+
+<Steps>
+  <Step title="Open Backup Options">
+    Click the gear icon, then select **Backup**.
+  </Step>
+  <Step title="Select Download">
+    Select the **Download File** tab. Select **Local Backup** to download a locally stored backup.
+  </Step>
+  <Step title="Choose Backup">
+    Use the **Year / Month / Backup** drop-down lists to select the backup instance you want to download.
+  </Step>
+  <Step title="Download">
+    Click **Download Now** to begin downloading. Click **Save and exit** to save your changes.
+  </Step>
+</Steps>
+
+<Note>
+  Downloading remote backups is not currently available.
+</Note>
+
+### Restore from a Local Backup
+
+<Steps>
+  <Step title="Open Restore Options">
+    Click the gear icon, then select **Restore**. The Restore Controller Database page displays.
+  </Step>
+  <Step title="Select Backup">
+    **Local Backup** is selected by default. Expand the **Backup** drop-down list and select the backup to restore (backups are time-stamped).
+  </Step>
+  <Step title="Restore">
+    Click **Restore**. All users are temporarily assigned to the Monitoring group until the restore completes or is terminated.
+  </Step>
+</Steps>
+
+### Restore from a Remote Backup
+
+<Steps>
+  <Step title="Open Restore Options">
+    Click the gear icon, then select **Restore**.
+  </Step>
+  <Step title="Select Remote Backup">
+    Select **Remote Backup** and choose a **Year > Month > Backup**.
+  </Step>
+  <Step title="Restore">
+    Click **Restore**. The Controller is unavailable to all users until the restore completes.
+  </Step>
+</Steps>
+
+<Warning>
+  The database is inaccessible until the restore completes. Alarms and statistical data are not restored because they are dynamic. The alarms banner does not display until the restore completes.
+</Warning>
+
+---
+
+## Health Monitoring
+
+### Enable or Disable Health Monitoring
+
+Health monitoring is enabled in MK.IO Beam by default. If required, you can disable it to free up server resources.
+
+<Steps>
+  <Step title="Log In as Administrator">
+    Log in with a user account that has Administrative privileges.
+  </Step>
+  <Step title="Open Settings">
+    Click the gear icon in the upper right corner, then select **Settings**.
+  </Step>
+  <Step title="Toggle Health Monitoring">
+    Under the **General** tab, check or uncheck the **Enable health monitoring features** checkbox.
+  </Step>
+</Steps>
+
+<Note>
+  Disabling health monitoring also disables the remote metrics feature.
+</Note>
+
+### Configure Remote Metrics
+
+To push metrics to a remote Grafana endpoint, SSH into the server and run the `configure_prometheus.sh enable` command:
+
+```bash
+configure_prometheus.sh enable \
+  --username <USERNAME> \
+  --password <PASSWORD> \
+  --remoteurl https://<GRAFANA_HOST>/api/prom/push \
+  --env <NODE_NAME> \
+  --zone <LOCATION_ZONE>
+```
+
+Parameters:
+
+| Parameter | Description |
+| :-- | :-- |
+| `--username` | Username for the Grafana endpoint |
+| `--password` | Password for the Grafana endpoint |
+| `--remoteurl` | URL for the Grafana endpoint |
+| `--env` | Name of the node/machine (defaults to hostname if not specified) |
+| `--zone` | Location zone for the node/machine |
+
+<Note>
+  This configuration must be repeated after upgrading the MK.IO Beam software.
+</Note>
+
+If you need to update `--remoteurl`, `--env`, or `--zone` after remote metrics has been enabled, disable remote metrics first and then re-enable it with the updated parameters.
+
+### Disable Remote Metrics
+
+```bash
+configure_prometheus.sh disable
+```
+
+### Additional Remote Metrics Commands
+
+| Command | Description |
+| :-- | :-- |
+| `configure_prometheus.sh show-secret` | Displays the stored username and password for the Grafana endpoint. |
+| `configure_prometheus.sh update-secret --username <U> --password <P>` | Updates the stored credentials without disabling remote metrics. |
+| `configure_prometheus.sh show-remoteurl` | Displays the stored URL for the Grafana endpoint. |

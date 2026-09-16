@@ -1,0 +1,441 @@
+# Source: https://docs.mediakind.com/beam/reception/tech-specs
+
+# Tech Specs
+
+## Compressed Input
+
+[Section titled “Compressed Input”](https://docs.mediakind.com/beam/reception/tech-specs/#compressed-input)
+
+### IP input
+
+[Section titled “IP input”](https://docs.mediakind.com/beam/reception/tech-specs/#ip-input)
+
+- **Type:** IP (IGMPv3-based redundancy and dual multicast redundancy)
+- **Protocols:** MPEG Transport Stream (SPTS, MPTS), RTP / UDP, RTMP, SMPTE ST 2022-7
+- **Bitrate:** Constant Bitrate (CBR)
+- **Error Correction:** ProMPEG FEC
+
+### Reliable transport
+
+[Section titled “Reliable transport”](https://docs.mediakind.com/beam/reception/tech-specs/#reliable-transport)
+
+- **Input:** IP based
+- **Protocols:** SRT, RIST and Zixi
+
+SRT and RIST input
+
+- Carriage of UDP or RTP streams over the SRT protocol
+- SRT listener or caller mode
+- RIST sender mode
+- RIST listener mode
+
+Zixi input
+
+- Zixi sender
+- Zixi feeder or Zixi Receiver mode
+
+### Satellite input
+
+[Section titled “Satellite input”](https://docs.mediakind.com/beam/reception/tech-specs/#satellite-input)
+
+- **Standards:** DVB-S, DVB-S2, DVB-S2X
+- **Hardware requirements:** Requires one or more of the following cards
+
+2-port satellite demodulator option card with 3G-SDI/ASI output (Dektec DTA-2127)
+
+MediaKind marketing code:
+
+- **MKP/HWO/DEMODSDI** (Dektec DTA-2127 DVB-S2X Quad Receiver with 3G-SDI/ASI Output)
+
+The Dektec DTA-2127 option card has 2 x RF input ports. Currently MK.IO Beam only supports configuring one tuner/demodulator per RF input.
+
+Features:
+
+- **Frequency range:** L-band (950 – 2150 MHz)
+- **Standards:** DVB-S, DVB-S2, DVB-S2X
+- **Modulation schemes:** QPSK, 8PSK, 16APSK and 32APSK
+- **Connector:** 2 x F-type 75 ohm
+ - Each connector allows 1x independent tuner/demodulator powered by a single LNB control
+- Long FEC Frame only
+
+4-port satellite demodulator option card (Digital Devices SX8)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/SAT/DEMOD** (Digital Devices SX8 Satellite Demod)
+
+The Digital Devices SX8 is only available as a full-height PCIe card and is therefore limited to servers such as the C-series.
+
+Features:
+
+- **Frequency range:** L-band (950 – 2150 MHz)
+- **Standards:** DVB-S, DVB-S2, DVB-S2X
+- **Modulation schemes:** QPSK, 8PSK, 16APSK, 32APSK and 64APSK
+- **Connector:** 4 x F-type 75 ohm
+ - Each connector allows 2x independent tuners/demodulators that share a single LNB control
+
+Mixing both types of satellite demodulator cards within the same server is not supported.
+
+### ASI input
+
+[Section titled “ASI input”](https://docs.mediakind.com/beam/reception/tech-specs/#asi-input)
+
+- **Standards:** DVB-ASI
+- **Hardware requirements:** Requires one or more of the following cards
+
+4-port ASI/SDI option card (Dektec DTA-2174B)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/SDI/DTA** (Dektec 2174B SDI/ASI)
+
+Features:
+
+- **Port configurations:** 4x ASI input/output
+- **Connector:** micro BNC 75 ohms
+
+8-port ASI/SDI option card (Dektec DTA-2178)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/SDI/8** (Dektec 2178 SDI/ASI)
+
+Features:
+
+- **Port configurations:** 8x ASI input/output
+- **Connector:** micro BNC 75 ohms
+
+### Input redundancy
+
+[Section titled “Input redundancy”](https://docs.mediakind.com/beam/reception/tech-specs/#input-redundancy)
+
+- **Dual source redundancy:** Active Passive (one-hit); Active Active (one-hit); Active Active (switch on failure)
+ - Supported across input types e.g. Primary satellite input, Secondary (Backup) IP input
+- **IP redundancy protocols:** SMPTE ST 2022-7 Seamless protection switching
+
+## Video decoding
+
+[Section titled “Video decoding”](https://docs.mediakind.com/beam/reception/tech-specs/#video-decoding)
+
+- **Video codecs:** MPEG-2, H.264, HEVC, JPEG-XS
+- **Supported resolutions:** 480i, 576i, 720p, 1080i, 1080p, 2160p
+- **Chroma:** 4:2:0 and 4:2:2
+- **Bit depth:** 8-bit and 10-bit (codec-dependent)
+
+Video formats and decoding standards
+
+| Resolution | Frame Rate | Chroma | MPEG-2 | H.264 | HEVC | JPEG-XS<br>(4:2:2 only) |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| 2160p | 23.98, 24,<br>25, 29.97,<br>50, 59.94 fps | 4:20 / 4:2:2 | | | ✔ | ✔ |
+| 1080p | 50, 59.94 fps | 4:20 / 4:2:2 | ✔ | ✔ | ✔ | ✔ |
+| 1080i | 25, 29.97 fps | 4:20 / 4:2:2 | ✔ | ✔ | ✔ | ✔ |
+| 720p | 50, 59.94 fps | 4:20 / 4:2:2 | ✔ | ✔ | ✔ | ✔ |
+| 576i | 25 fps | 4:20 / 4:2:2 | ✔ | ✔ | ✔ | |
+| 480i | 29.97 fps | 4:20 / 4:2:2 | ✔ | ✔ | ✔ | |
+
+Full video width scaling
+
+Horizontally subsampled video is automatically rescaled to full frame width, as detailed below. Supported for all video codecs listed above.
+
+| Input resolution | Output resolution | Expected sample aspect ratio |
+| :-- | :-- | :-- |
+| 1440 x 1080 | 1920 x 1080 | 4:3 |
+| 1280 x 1080 | 1920 x 1080 | 3:2 |
+| 960 x 1080 | 1920 x 1080 | 2:1 |
+| 960 x 720 | 1280 x 720 | 4:3 |
+| 640 x 720 | 1280 x 720 | 2:1 |
+
+Video down-conversions
+
+Supported down-conversions:
+
+- 2160p > 1080p, 1080i, 720p
+- 1080p > 1080i, 720p
+- 1080i > 720p
+
+Video up-conversions
+
+Supported up-conversions:
+
+- 1080i > 1080p
+- 720p > 1080i
+
+HDR to SDR conversions
+
+- **Supported HDR inputs:** PQ10 (HDR10), HLG10
+- **Output:** SDR BT.709 with tone mapping
+
+## Audio decoding
+
+[Section titled “Audio decoding”](https://docs.mediakind.com/beam/reception/tech-specs/#audio-decoding)
+
+- **Audio codecs:** MP1L2, AAC, AAC 5.1, HE-AAC v1 & v2, HE-AAC 5.1, Dolby Digital (AC-3), 2.0 & 5.1, Dolby Digital Plus (E-AC-3) 2.0 & 5.1, MPEG-H
+- **Passthrough:** Linear PCM, Dolby E, Dolby ED2, Dolby Digital (AC-3), Dolby Digital Plus (E-AC-3)
+- **Audio sampling rate:** 48 kHz
+- **Audio Channels:** Up to 8 stereo pairs per service
+- **Phase Aligned Audio (PAA):** Supported
+
+## Ancillary Data
+
+[Section titled “Ancillary Data”](https://docs.mediakind.com/beam/reception/tech-specs/#ancillary-data)
+
+- **Closed captions:** CEA-608, CEA-708
+- **Timecode:** VITC
+- **Teletext:** SMPTE 2031, OP-47
+- **Metadata:** AFD/BAR, VANC
+- **Signalling:** SCTE-35 conversion to SCTE-104
+
+## Video transcoding
+
+[Section titled “Video transcoding”](https://docs.mediakind.com/beam/reception/tech-specs/#video-transcoding)
+
+### Video encoding
+
+[Section titled “Video encoding”](https://docs.mediakind.com/beam/reception/tech-specs/#video-encoding)
+
+- **Codecs:** MPEG-2, MPEG-4 AVC (H.264), HEVC (H.265)
+- **Chroma:** 4:2:0
+- **Conversions:**
+ - HD to HD or SD
+ - SD to SD
+
+### Audio encoding
+
+[Section titled “Audio encoding”](https://docs.mediakind.com/beam/reception/tech-specs/#audio-encoding)
+
+- **Audio codecs:** MPEG-1 Layer-II, AAC, HE-AAC, HE-AAC v2 1. Dolby Digital® 2.0 / 5.1, Dolby Digital Plus® 2.0, 5.1, Dolby AC-3
+- **Audio channels:** Up to 8 stereo pairs per service.
+- **Passthrough:** Dolby E®, Dolby Digital®, Dolby Digital Plus®, Linear PCM (as SMPTE 302)
+- **Data rate:** From 4.75 kbps to 320 kbps (from 64 to 1024 kbps for DD+).
+
+## Compressed output
+
+[Section titled “Compressed output”](https://docs.mediakind.com/beam/reception/tech-specs/#compressed-output)
+
+- **Transport Stream Passthrough:** IP, ASI (requires multiplexer service), unmodified or decrypted
+- **Protocols:** IP, UDP, RTP, RTMP/RTMPS, ASI
+
+SRT and RIST output
+
+- Carriage of UDP or RTP streams over the SRT protocol
+- SRT listener or caller mode
+- RIST sender mode
+- RIST listener mode
+
+Zixi output
+
+- Zixi sender
+- Zixi feeder or Zixi Receiver mode
+
+## Uncompressed output
+
+[Section titled “Uncompressed output”](https://docs.mediakind.com/beam/reception/tech-specs/#uncompressed-output)
+
+- **Output formats:** SDI, SMPTE ST 2022-6, SMPTE ST 2110
+
+### SDI output
+
+[Section titled “SDI output”](https://docs.mediakind.com/beam/reception/tech-specs/#sdi-output)
+
+- **Standards:** SDI, HD-SDI, 3G-SDI, 12G-SDI, Quad‑Link 3G‑SDI
+- **Video formats:** 480i, 576i, 720p, 1080i, 1080p, 2160p
+- **Hardware requirements:** Requires one or more of the following cards
+
+4-port ASI/SDI option card (Dektec DTA-2174B)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/SDI/DTA** (Dektec 2174B SDI/ASI)
+
+Features:
+
+- **Output configurations:**
+ - 4x independent 3G-SDI/ASI input/output
+ - 12G-SDI (Single‑link UHD) or Quadrant (Quad‑Link 3G‑SDI, ST 425‑5 Annex B — Square Division) or Interleaved (Quad‑Link 3G‑SDI, ST 425-5 Two Sample Interleave)
+ - 12G-SDI with 3G-SDI/ASI side channel
+- **Connector:** micro BNC 75 ohms
+
+8-port ASI/SDI option card (Dektec DTA-2178)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/SDI/8** (Dektec 2178 SDI/ASI)
+
+Features:
+
+- **Output configurations:**
+ - 8x independent 3G-SDI/ASI input/output
+ - 2x 12G-SDI (Single‑link UHD) or Quadrant (Quad‑Link 3G‑SDI, ST 425‑5 Annex B — Square Division) or Interleaved (Quad‑Link 3G‑SDI, ST 425-5 Two Sample Interleave)
+ - 2x 12G-SDI with 2x 3G-SDI/ASI side channels
+- **Connector:** micro BNC 75 ohms
+
+2-port satellite demodulator option card with 3G-SDI/ASI output (Dektec DTA-2127)
+
+MediaKind marketing code:
+
+- **MKP/HWO/DEMODSDI** (Dektec DTA-2127 DVB-S2X Quad Receiver with 3G-SDI/ASI Output)
+
+Features:
+
+- **SDI output:** 1x SDI output supporting SD/HD/3G-SDI
+- **Connector:** BNC 75 ohms
+
+### SDI over IP (SMPTE ST 2022-6) output
+
+[Section titled “SDI over IP (SMPTE ST 2022-6) output”](https://docs.mediakind.com/beam/reception/tech-specs/#sdi-over-ip-smpte-st-2022-6-output)
+
+- **Standards:** SMPTE ST 2022-6
+- **Video formats:** 480i, 576i, 720p, 1080i, 1080p (2160p not supported)
+- **Hardware requirements:** Any network card with sufficient network bandwidth may be used
+
+### SMPTE ST 2110 output
+
+[Section titled “SMPTE ST 2110 output”](https://docs.mediakind.com/beam/reception/tech-specs/#smpte-st-2110-output)
+
+- **Standards:** SMPTE ST 2110
+ - ST 2110-20: Uncompressed video for 480i, 576i, 720p, 1080i, 1080p, 2160p
+ - ST 2110-30: PCM digital audio output
+ - ST 2110-31: AES3 audio output
+ - ST 2110-40: Ancillary data (VITC/Time code, AFD/BAR, Closed captioning, OP-47 Teletext, SMPTE 2031 Teletext)
+- **Protocols:** Supports duplicate essence streams on separate output ports to facilitate SMPTE ST 2022-7
+- **NMOS:** NMOS IS-04 and NMOS IS-05 support
+- **Hardware requirements:** Requires one of the following cards
+
+NVIDIA ConnectX-6 Dx EN adapter card 25GbE (MCX621102AN-ADAT)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/NIC/25G/2PORT/B** (MCX621102AN-ADAT)
+
+Features:
+
+- NVIDIA Mellanox ConnectX-6 Dx EN adapter card, 25GbE, **Dual-port SFP28**, PCIe 4.0 x8, No Crypto
+
+NVIDIA ConnectX-6 Lx EN adapter card 25GbE (MCX631102AN-ADAT)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/NIC/25G/2PORT/C** (MCX631102AN-ADAT)
+
+Features:
+
+- NVIDIA Mellanox ConnectX-6 Lx EN adapter Card, 25GbE, **Dual-Port SFP28**, PCIe 4.0 x8, No Crypto
+
+NVIDIA ConnectX-6 Dx EN adapter card 100GbE (MCX623106AN-CDAT)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/NIC/100G** (MCX623106AN-CDAT)
+
+The ConnectX-6 Dx 100GbE card enables higher output bandwidth; however, it does not increase decoding capacity on a COTS platform.
+
+Features:
+
+- NVIDIA Mellanox ConnectX-6 Dx EN adapter card, 100GbE, **Dual-port QSFP56**, PCIe 4.0 x16, No Crypto
+
+NVIDIA / Mellanox Ethernet network adapter cards must be sourced from NVIDIA rather than Dell, as OEM variants may impose restrictions on firmware upgrades.
+
+## Multiplexing
+
+[Section titled “Multiplexing”](https://docs.mediakind.com/beam/reception/tech-specs/#multiplexing)
+
+### Inputs and outputs
+
+[Section titled “Inputs and outputs”](https://docs.mediakind.com/beam/reception/tech-specs/#inputs-and-outputs)
+
+- IP (UDP or RTP) input and output of MPEG Transport Streams
+- RTP re-ordering
+- IGMP V3 redundancy
+- Input bitrate monitoring and CC error detection
+- SMPTE 2022-1 FEC on input and output
+
+### Processing
+
+[Section titled “Processing”](https://docs.mediakind.com/beam/reception/tech-specs/#processing)
+
+- PID filtering and PID remapping by re-multiplexing input programs Real-time PSI regeneration
+
+## Content security
+
+[Section titled “Content security”](https://docs.mediakind.com/beam/reception/tech-specs/#content-security)
+
+### Decryption
+
+[Section titled “Decryption”](https://docs.mediakind.com/beam/reception/tech-specs/#decryption)
+
+- **Conditional Access (CA):** BISS1, BISS2, BISS-CA, Director 6, DVB-CI
+- **Hardware requirements:** A _Trusted Platform Module (TPM)_ may be required or suitable option cards. See details below
+
+BISS1 & BISS2
+
+BISS version 1 (BISS1)
+
+- **Modes:** Mode 1 and Mode E
+- **Key length:** 48-bit
+- **Standards:** DVB-CSA
+
+BISS version 2 (BISS2)
+
+- **Modes:** Mode 1, Mode E and BISS-CA
+- **Key length:** 128-bit
+- **Standards:** DVB-CISSA
+
+BISS-CA
+
+A Trusted Platform Module (TPM) must be installed on the server.
+
+- **Key length:** 128-bit
+- **Standards:** DVB-CISSA
+- **Features:** Entitlement management, Self-generated key pairs, Injected key pairs
+
+Director 6 CA
+
+A Trusted Platform Module (TPM) must be installed on the server.
+
+- **Key length:** 128-bit
+- **Features:** Entitlement management, Over Air Control (OAC)
+
+Dual Common Interface (CI) option card (Digital Devices Octopus Duo CI)
+
+MediaKind marketing code:
+
+- **MKP/HWO/PCI/CI/DUAL** (Digital Devices Octopus Duo CI)
+
+The Digital Devices Octopus Duo CI is only available as a full-height PCIe card and is therefore limited to servers such as the C-series.
+
+Features:
+
+- DVB-CI compliant
+- 2x CI slots for two independent Conditional Access Modules (CAM) on each option card
+- Capable of processing transport streams of up to 96 Mbps per CAM (though actual bitrate may be limted by the CAM)
+- All major CAMs supported
+- Multiple _Dual Common Interface (CI) option cards_ supported
+
+Some CA descramblers will require a Trusted Platform Module (TPM) to be installed on the server.
+
+## Ad insertion
+
+[Section titled “Ad insertion”](https://docs.mediakind.com/beam/reception/tech-specs/#ad-insertion)
+
+- **Ingest format:**
+ - MPEG-TS over IP (SPTS), with a video buffer of 1 second minimum
+ - Assets pre-encoded and stored locally
+- **Scheduling control:** Triggered via advanced scheduling control options:
+ - **Signal-based:** based on submitted SCTE-35 signal (with matching criteria)
+ - **Signal based / fallback to time:** SCTE-35 expected, but not present, fallback to out-of-band operations triggering
+- **Asset management:**
+ - Storage of up to 90 minutes of assets in the unit
+ - Assets and schedules fetched automatically from a central asset server
+ - Automatic housekeeping of the asset store
+
+## Monitoring & control
+
+[Section titled “Monitoring & control”](https://docs.mediakind.com/beam/reception/tech-specs/#monitoring--control)
+
+- **Remote control:** Provided via the Mediakind MK.IO portal
+- **Direct control and status monitoring:** Provided via Web browser user interface and REST API
+- **Standard protocols:** SNMP, NTP, IGMP
+
+High Availability (HA) Controller
+
+- Automated (standalone) 1+1 output synchronization with PTS alignment (either SDI or ST 2110 inputs)

@@ -1,0 +1,9 @@
+# Source: https://docs.mediakind.com/beam/contribution/how-to/lpcm-and-dolby-e-passthrough
+
+# Set up LPCM and Dolby-E pass-through
+
+LPCM and Dolby-E inputs on SDI can be passed through and carried on the TS as SMPTE-302 and Dolby-E respectively by selecting the **SMPTE-302 / Dolby E Pass-Through** codec from Live Encoder **Encoding** > **Audio encoding** section (see [Configure the audio encoding parameters](https://docs.mediakind.com/beam/live-encoder/configure/encoding/audio-encoding)).
+
+![ce1 el lpcm dolby passthrough](https://docs.mediakind.com/ce1-img/ce1_el_lpcm_dolby_passthrough.png)
+
+This is supported for both SDI and SMPTE ST 2110 ingests.

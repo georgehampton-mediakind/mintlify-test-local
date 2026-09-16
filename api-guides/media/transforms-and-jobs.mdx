@@ -1,0 +1,164 @@
+---
+title: "Define Transforms and Submit Jobs via Media API"
+sidebarTitle: "Transforms & Jobs"
+description: "Create reusable transform definitions and submit transcoding jobs to process video assets using the MK.IO Media API. Includes polling job state."
+---
+
+A transform describes what processing should happen. A job applies that processing to a specific input. Together they are the core of Video on Demand (VOD) processing in the Media API. A transform is a recipe you write once; a job runs that recipe against an asset and writes one or more output assets. You usually create a small number of transforms and reuse them across many jobs.
+
+## Create a transform
+
+A transform is created with `PUT`. Its `outputs` array holds the preset that defines the processing. The example below builds an adaptive-bitrate encoding transform using a built-in encoder preset.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/transforms/abr-720p" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "description": "H.264 720p multi-bitrate encoding",
+      "outputs": [
+        {
+          "preset": {
+            "@odata.type": "#Microsoft.Media.BuiltInStandardEncoderPreset",
+            "presetName": "H264MultipleBitrate720p"
+          },
+          "onError": "StopProcessingJob",
+          "relativePriority": "Normal"
+        }
+      ]
+    }
+  }'
+```
+
+Each output also accepts `onError` (`ContinueJob` or `StopProcessingJob`) and `relativePriority` (`High`, `Normal`, or `Low`).
+
+## Choosing a preset
+
+The preset is selected by `@odata.type`. The most common choice is the built-in encoder, but the Media API also offers format conversion, thumbnails, track insertion, and an AI pipeline.
+
+| To… | Use preset `@odata.type` | Key field |
+| :-- | :-- | :-- |
+| Encode to adaptive bitrate H.264 or H.265 | `#Microsoft.Media.BuiltInStandardEncoderPreset` | `presetName` |
+| Convert or repackage to MP4 without re-encoding | `#Microsoft.Media.BuiltInAssetConverterPreset` | `presetName` |
+| Generate thumbnails | `#MediaKind.ThumbnailGeneratorPreset` | `thumbnails` |
+| Insert a track (for example, captions) | `#MediaKind.TrackInserterPreset` | `tracks` |
+| Run an AI pipeline (transcription, translation) | `#MediaKind.AIPipelinePreset` | `pipeline` |
+
+For the built-in encoder, `presetName` chooses the encoding ladder. Single-bitrate options include `H264SingleBitrate720p`, `H264SingleBitrate1080p`, `H265SingleBitrate1080p`, and `H265SingleBitrate4K`. Multi-bitrate options include `H264MultipleBitrateSD`, `H264MultipleBitrate720p`, and `H264MultipleBitrate1080p`, each also available in a `WithCVQ` variant. The [Media API reference](/api-reference/media-api) lists the complete enum.
+
+## Run a job
+
+A job is created with `PUT` under the transform. It needs an `input` and `outputs`. The input is discriminated by `@odata.type`: use `JobInputAsset` to process a stored asset, or `JobInputHttp` to pull from an external HTTP source. Outputs are always `JobOutputAsset`.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/transforms/abr-720p/jobs/job-001" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "input": {
+        "@odata.type": "#Microsoft.Media.JobInputAsset",
+        "assetName": "input-video",
+        "files": ["video.mp4"]
+      },
+      "outputs": [
+        {
+          "@odata.type": "#Microsoft.Media.JobOutputAsset",
+          "assetName": "output-video"
+        }
+      ],
+      "description": "Encode input-video with the 720p transform",
+      "priority": "Normal"
+    }
+  }'
+```
+
+<Note>
+  The output asset named here is created and populated by the job. It does not need to exist beforehand.
+</Note>
+
+## Clip the input
+
+`JobInputAsset` accepts `start` and `end` clip times. Use `AbsoluteClipTime` with an ISO 8601 duration to process only part of the source:
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/transforms/abr-720p/jobs/clip-job" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "input": {
+        "@odata.type": "#Microsoft.Media.JobInputAsset",
+        "assetName": "input-video",
+        "start": { "@odata.type": "#Microsoft.Media.AbsoluteClipTime", "time": "PT0S" },
+        "end": { "@odata.type": "#Microsoft.Media.AbsoluteClipTime", "time": "PT30S" }
+      },
+      "outputs": [
+        { "@odata.type": "#Microsoft.Media.JobOutputAsset", "assetName": "clip-output" }
+      ]
+    }
+  }'
+```
+
+## Monitor the job
+
+Poll the job state endpoint while you wait:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/transforms/abr-720p/jobs/job-001/state" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+A job moves through these states:
+
+| State | Meaning |
+| :-- | :-- |
+| `Queued` | Waiting to be processed. |
+| `Scheduled` | Accepted and scheduled for work. |
+| `Processing` | Running. |
+| `Finished` | Completed successfully. |
+| `Error` | Completed with an error. |
+| `Canceling` | Cancellation is in progress. |
+| `Canceled` | Cancelled. |
+
+<Tip>
+  For background workers and high-volume pipelines, subscribe to the `MediaKind.JobStarted` and `MediaKind.JobFinished` [webhooks](/api-guides/concepts/webhooks) instead of polling.
+</Tip>
+
+## Cancel a job
+
+Cancel a job that is no longer needed:
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/transforms/abr-720p/jobs/job-001/cancelJob" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## What goes wrong
+
+<Accordion title="An invalid presetName">
+  `presetName` must be one of the documented enum values, such as `H264MultipleBitrate720p`. A made-up name like `AdaptiveStreaming` is rejected. Check the [Media API reference](/api-reference/media-api) for the exact list.
+</Accordion>
+
+<Accordion title="Publishing the input asset instead of the output">
+  A job writes to the output asset. Publish that one, not the source.
+</Accordion>
+
+<Accordion title="A job reaches Error">
+  The job output object carries an `error` field with the detail. Read the full job, not just `/state`, to see it.
+</Accordion>
+
+## What comes next
+
+<CardGroup cols={3}>
+  <Card title="VOD Pipeline" icon="film" href="/api-guides/media/vod-pipeline">
+    Transforms and jobs in a full publishing workflow.
+  </Card>
+  <Card title="Publishing" icon="play" href="/api-guides/media/publishing">
+    Publish the job output for playback.
+  </Card>
+  <Card title="Webhooks" icon="bell" href="/api-guides/concepts/webhooks">
+    Replace status polling with events.
+  </Card>
+</CardGroup>

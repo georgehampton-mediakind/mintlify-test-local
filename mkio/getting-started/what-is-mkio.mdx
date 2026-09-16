@@ -1,0 +1,67 @@
+---
+title: "What Is MK.IO? Platform Overview and Key Concepts"
+sidebarTitle: "What Is MK.IO?"
+description: "Learn how MK.IO's resource model connects live events, VOD transforms, assets, streaming locators, and endpoints into end-to-end video workflows."
+---
+
+MK.IO is a cloud-native media platform that handles every stage of a video workflow — ingest, processing, packaging, DRM protection, and delivery — through a unified SaaS environment. You interact with the platform through the web portal at [app.mk.io](https://app.mk.io) or through the REST API, depending on whether you prefer guided setup or automation.
+
+## How MK.IO is organized
+
+Your account belongs to an **organization**. An organization contains one or more **projects**, and each project holds all the resources for a single product, environment, or team. Storage accounts, assets, live events, transforms, jobs, streaming locators, and endpoints all live within a project.
+
+Most teams create at least two projects — one for production and one for staging — so they can test changes without touching live infrastructure.
+
+## The media resource model
+
+MK.IO workflows combine a small set of resource types. The resources you use depend on whether your content is file-based (VOD) or a continuous live stream.
+
+| Resource | What it does |
+| --- | --- |
+| **Storage account** | A connected Amazon S3, Azure Blob, or Google Cloud Storage container that holds media files |
+| **Asset** | A logical reference to a folder of files in connected storage |
+| **Transform** | A reusable processing recipe that defines encoding, thumbnail, or AI outputs |
+| **Job** | A single run of a transform against an input asset, producing an output asset |
+| **Live event** | An ingest endpoint that receives an RTMP or SRT stream and processes it in real time |
+| **Live output** | Writes a live event's stream to an asset and maintains the archive window |
+| **Streaming locator** | Associates an asset with a streaming policy and generates playback URL paths |
+| **Streaming endpoint** | The delivery server that packages content as HLS or DASH and serves viewer requests |
+| **Content key policy** | Defines how MK.IO issues content keys and authorizes DRM-protected playback |
+
+## Live vs VOD workflows
+
+<Tabs>
+  <Tab title="Live streaming">
+    A **live event** receives your encoder's RTMP or SRT stream. When you start the event, MK.IO generates an ingest URL. Your encoder (OBS, FFmpeg, GStreamer, or a hardware encoder) pushes video to that URL.
+
+    A **live output** writes the incoming stream to an asset in your connected storage and maintains a rolling archive window. While the event is running, viewers can watch the live feed. After you stop the event, the full recording is available in the output asset for VOD playback.
+
+    To make the stream watchable, you need a **streaming locator** attached to the output asset and a running **streaming endpoint**. The endpoint generates HLS and DASH playback URLs.
+  </Tab>
+  <Tab title="VOD processing">
+    A VOD workflow starts with an **asset** — either a file you upload or one already present in connected storage. You apply a **transform** to that asset by creating a **job**. The job processes the input and writes the result to a new output asset.
+
+    Once the job finishes, you attach a **streaming locator** to the output asset and pair it with a running **streaming endpoint** to generate playback URLs. Viewers can then stream the content as HLS or DASH.
+  </Tab>
+</Tabs>
+
+## Portal vs API
+
+The MK.IO portal provides a guided interface for every workflow. Use it to create your first live event, explore transforms, or configure content protection settings. It is the fastest way to get results without writing code.
+
+The MK.IO REST API exposes the same resources programmatically. Use it when you need to automate workflows — for example, creating a job for every file that lands in your storage bucket, or starting and stopping live events from your own application. All API requests use bearer token authentication at `https://app.mk.io`.
+
+<CardGroup cols={2}>
+  <Card title="Set Up Your Account" icon="user-plus" href="/mkio/getting-started/account-setup">
+    Create your organization, project, and API token.
+  </Card>
+  <Card title="Connect Cloud Storage" icon="database" href="/mkio/getting-started/connect-cloud-storage">
+    Connect Amazon S3 or Azure Blob Storage before adding assets.
+  </Card>
+  <Card title="Live Quickstart" icon="broadcast-tower" href="/mkio/getting-started/live-stream-quickstart">
+    Start your first live stream in five minutes.
+  </Card>
+  <Card title="VOD Quickstart" icon="film" href="/mkio/getting-started/vod-quickstart">
+    Upload, transcode, and publish your first video.
+  </Card>
+</CardGroup>

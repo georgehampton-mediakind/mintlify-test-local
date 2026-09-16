@@ -1,0 +1,153 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/media/assets
+
+# Assets
+
+An asset is the core media record in the Media API. It points to content in a registered storage location and becomes the unit you pass into jobs, attach to streaming locators, inspect for tracks, and organize with labels. An asset maps to a container in Azure or a bucket in AWS storage. See [Assets](https://docs.mediakind.com/mkio/understanding/core-concepts/assets) for the product background.
+
+In a typical workflow you create an asset that points to source content or a target output location, run a job against it or write live output into it, then publish it through a streaming locator.
+
+## Create an asset
+
+[Section titled “Create an asset”](https://docs.mediakind.com/api-guides/how-to/media/assets/#create-an-asset)
+
+An asset is created with `PUT`. The only required field is `properties.storageAccountName`, which names the storage instance you registered. The rest position the asset within that storage and attach metadata.
+
+Terminal window
+
+```
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/source-video" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "storageAccountName": "primary-azure",
+      "container": "source-video",
+      "description": "Source video for encoding",
+      "subPath": "incoming",
+      "containerDeletionPolicy": "Retain"
+    },
+    "labels": {
+      "series": "my-show",
+      "season": "2"
+    }
+  }'
+```
+
+The fields worth knowing:
+
+- `storageAccountName` (required): the registered storage instance to use.
+- `container`: the storage container or bucket for the asset.
+- `subPath`: a directory path inside the container. It is immutable after creation.
+- `containerDeletionPolicy`: `Delete` or `Retain`. It controls whether deleting the asset also deletes the underlying storage container.
+- `labels`: up to 32 key-value pairs, used for filtering and grouping.
+
+Storage placement is fixed at creation. Treat `storageAccountName`, `container`, and `subPath` as create-time decisions in your automation.
+
+## Read the asset or just its state
+
+[Section titled “Read the asset or just its state”](https://docs.mediakind.com/api-guides/how-to/media/assets/#read-the-asset-or-just-its-state)
+
+Read the full asset with a `GET`:
+
+Terminal window
+
+```
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/source-video" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+When you only need readiness in a polling loop, read the lightweight state endpoint instead of the full object. See [Resource states](https://docs.mediakind.com/api-guides/understanding/resource-states) for the asset state values.
+
+Terminal window
+
+```
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/source-video/state" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## Inspect tracks and request file access
+
+[Section titled “Inspect tracks and request file access”](https://docs.mediakind.com/api-guides/how-to/media/assets/#inspect-tracks-and-request-file-access)
+
+Two read operations are commonly useful once an asset exists.
+
+Enumerate the container contents and track listings, including language and bitrate where available:
+
+Terminal window
+
+```
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/source-video/storage/" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Request the information needed to read files directly from the underlying storage:
+
+Terminal window
+
+```
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/source-video/getFileAccessInfo" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+The response returns `storageAccountName`, `containerName`, `jwt`, `url`, and an optional `subPath`. The storage instance must have a valid credential for this to succeed. For the full two-step download flow, see [Download asset files](https://docs.mediakind.com/api-guides/how-to/media/download-asset-files).
+
+## Organize assets with labels
+
+[Section titled “Organize assets with labels”](https://docs.mediakind.com/api-guides/how-to/media/assets/#organize-assets-with-labels)
+
+Labels are part of the asset schema and are designed for retrieval, not just description. Query by an exact label value:
+
+Terminal window
+
+```
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets?\$label=series=my-show" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Or require the presence of several keys at once:
+
+Terminal window
+
+```
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets?\$label_key=series&\$label_key=region" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+The asset list also supports `$top`, `$skiptoken`, `$orderby`, and `$filter`. See [Pagination and filtering](https://docs.mediakind.com/api-guides/understanding/pagination).
+
+## See where an asset is published
+
+[Section titled “See where an asset is published”](https://docs.mediakind.com/api-guides/how-to/media/assets/#see-where-an-asset-is-published)
+
+To find out whether an asset is already exposed for playback, list the locators attached to it rather than scanning every locator in the project:
+
+Terminal window
+
+```
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/source-video/listStreamingLocators" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## What goes wrong
+
+[Section titled “What goes wrong”](https://docs.mediakind.com/api-guides/how-to/media/assets/#what-goes-wrong)
+
+- **Deleting an asset can delete the content.** When `containerDeletionPolicy` is `Delete`, removing the asset also removes the underlying container and everything in it. Set `Retain` when the stored files must survive the asset record.
+- **Deleting an asset can strand a stopped Live API resource.** Deletion does not immediately repair or invalidate the dependent resource. A later start can be accepted and remain in `Starting`. Search for dependencies where possible, and retrieve each referenced asset immediately before startup.
+- **`getFileAccessInfo` fails after a credential expires.** The most common cause is an expired storage credential. Rotate it first; see [Storage](https://docs.mediakind.com/api-guides/how-to/media/storage).
+- **Trying to move an asset after creation.** Storage placement fields are immutable. To relocate content, create a new asset.
+
+Terminal window
+
+```
+curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/source-video" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## What comes next
+
+[Section titled “What comes next”](https://docs.mediakind.com/api-guides/how-to/media/assets/#what-comes-next)
+
+- [Transforms and jobs](https://docs.mediakind.com/api-guides/how-to/media/transforms-and-jobs): process assets through reusable transforms.
+- [Playback filters](https://docs.mediakind.com/api-guides/how-to/media/playback-filters): publish a shaped subset of an asset.
+- [Streaming and publishing](https://docs.mediakind.com/api-guides/how-to/media/publishing): publish assets for playback.

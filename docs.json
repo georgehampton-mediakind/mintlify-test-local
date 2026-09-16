@@ -1,72 +1,289 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
-  "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+  "name": "MediaKind",
+  "theme": "maple",
+  "logo": {
+    "light": "https://media.brand.dev/ad72bbb5-51e6-4ed9-b30c-f04088cdd0fa.svg",
+    "dark": "https://media.brand.dev/8f3c06bc-5edf-4794-985f-569f4d3730d5.svg"
   },
   "favicon": "/favicon.svg",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+  "colors": {
+    "primary": "#003dff",
+    "light": "#009fe3",
+    "dark": "#0a5390"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "Go to MK.IO",
+      "href": "https://app.mk.io"
     }
   },
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "MK.IO",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "mkio/introduction",
+              "mkio/getting-started/what-is-mkio",
+              "mkio/getting-started/account-setup",
+              "mkio/getting-started/connect-cloud-storage",
+              "mkio/getting-started/live-stream-quickstart",
+              "mkio/getting-started/vod-quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "mkio/concepts/media-resource-model",
+              "mkio/concepts/assets-and-storage",
+              "mkio/concepts/transforms-and-jobs",
+              "mkio/concepts/live-events",
+              "mkio/concepts/streaming-and-playback",
+              "mkio/concepts/content-protection"
+            ]
+          },
+          {
+            "group": "Live Streaming",
+            "pages": [
+              "mkio/live/overview",
+              "mkio/live/set-up-live-event",
+              "mkio/live/live-and-multiview",
+              "mkio/live/extended-archive-window",
+              "mkio/live/monitor-live-stream"
+            ]
+          },
+          {
+            "group": "Video Processing",
+            "pages": [
+              "mkio/vod/overview",
+              "mkio/vod/run-transcode-jobs",
+              "mkio/vod/vod-pipeline",
+              "mkio/vod/ai-dubbing"
+            ]
+          },
+          {
+            "group": "Content Delivery",
+            "pages": [
+              "mkio/delivery/stream-content",
+              "mkio/delivery/streaming-endpoints",
+              "mkio/delivery/content-key-policies",
+              "mkio/delivery/playback-filters"
+            ]
+          },
+          {
+            "group": "Administration",
+            "pages": [
+              "mkio/admin/organization-settings",
+              "mkio/admin/users-and-teams",
+              "mkio/admin/api-tokens",
+              "mkio/admin/webhooks",
+              "mkio/admin/billing-and-usage",
+              "mkio/admin/edge-devices"
+            ]
+          },
+          {
+            "group": "Release Notes",
+            "pages": [
+              "mkio/changelog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MK.IO Beam",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "beam/introduction",
+              "beam/quick-start",
+              "beam/connect-to-mkio",
+              "beam/essentials-ui"
+            ]
+          },
+          {
+            "group": "Contribution",
+            "pages": [
+              "beam/contribution/overview",
+              "beam/contribution/live-encoder",
+              "beam/contribution/configure-feed-components",
+              "beam/contribution/smpte-2110",
+              "beam/contribution/tech-specs"
+            ]
+          },
+          {
+            "group": "Reception",
+            "pages": [
+              "beam/reception/overview",
+              "beam/reception/configure-receiver",
+              "beam/reception/decryption",
+              "beam/reception/delay-modes",
+              "beam/reception/tech-specs"
+            ]
+          },
+          {
+            "group": "Headends",
+            "pages": [
+              "beam/headends/overview",
+              "beam/headends/single-server",
+              "beam/headends/server-pair",
+              "beam/headends/high-availability",
+              "beam/headends/packager",
+              "beam/headends/tech-specs"
+            ]
+          },
+          {
+            "group": "Channels",
+            "pages": [
+              "beam/channels/how-channels-work",
+              "beam/channels/manage-channels",
+              "beam/channels/monitor-channels",
+              "beam/channels/connect-to-device",
+              "beam/channels/import-export"
+            ]
+          },
+          {
+            "group": "System Administration",
+            "pages": [
+              "beam/system-admin/overview",
+              "beam/system-admin/iso-installation",
+              "beam/system-admin/network-configuration",
+              "beam/system-admin/security",
+              "beam/system-admin/servers-and-failover",
+              "beam/system-admin/maintenance"
+            ]
+          },
+          {
+            "group": "Release Notes",
+            "pages": [
+              "beam/release-notes"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Guides",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "api-guides/getting-started/authentication",
+              "api-guides/getting-started/first-api-call",
+              "api-guides/getting-started/which-api"
+            ]
+          },
+          {
+            "group": "API Concepts",
+            "pages": [
+              "api-guides/concepts/overview",
+              "api-guides/concepts/error-handling",
+              "api-guides/concepts/pagination",
+              "api-guides/concepts/rate-limits",
+              "api-guides/concepts/resource-states",
+              "api-guides/concepts/webhooks"
+            ]
+          },
+          {
+            "group": "Media API",
+            "pages": [
+              "api-guides/media/overview",
+              "api-guides/media/storage",
+              "api-guides/media/assets",
+              "api-guides/media/transforms-and-jobs",
+              "api-guides/media/live-streaming",
+              "api-guides/media/publishing",
+              "api-guides/media/content-protection",
+              "api-guides/media/vod-pipeline"
+            ]
+          },
+          {
+            "group": "Live & Templates APIs",
+            "pages": [
+              "api-guides/live/core-concepts",
+              "api-guides/live/manage-live",
+              "api-guides/live/multiview",
+              "api-guides/live/scheduled-operations",
+              "api-guides/live/manage-templates"
+            ]
+          },
+          {
+            "group": "Beam APIs",
+            "pages": [
+              "api-guides/beam/channels-overview",
+              "api-guides/beam/device-management",
+              "api-guides/beam/backups-and-restores",
+              "api-guides/beam/software-updates",
+              "api-guides/beam/networks-and-sites"
+            ]
+          },
+          {
+            "group": "Management API",
+            "pages": [
+              "api-guides/management/org-provisioning",
+              "api-guides/management/users-and-teams",
+              "api-guides/management/tokens",
+              "api-guides/management/webhooks",
+              "api-guides/management/usage-and-billing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "MK.IO APIs",
+            "pages": [
+              "api-reference/overview",
+              "api-reference/media-api",
+              "api-reference/live-api",
+              "api-reference/templates-api",
+              "api-reference/management-api"
+            ]
+          },
+          {
+            "group": "MK.IO Beam APIs",
+            "pages": [
+              "api-reference/channels-api",
+              "api-reference/fleets-api",
+              "api-reference/infrastructure-api"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP",
+        "groups": [
+          {
+            "group": "AI Integration",
+            "pages": [
+              "mcp/overview"
+            ]
+          }
+        ]
+      }
     ]
   },
   "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    "links": [
+      {
+        "title": "Products",
+        "items": [
+          { "label": "MK.IO Platform", "href": "https://app.mk.io" },
+          { "label": "MK.IO Beam", "href": "https://docs.mediakind.com/beam" }
+        ]
+      },
+      {
+        "title": "Support",
+        "items": [
+          { "label": "Support Portal", "href": "https://support.mk.io" },
+          { "label": "Changelog", "href": "/mkio/changelog" }
+        ]
+      }
+    ]
   }
 }

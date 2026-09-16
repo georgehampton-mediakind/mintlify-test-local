@@ -1,0 +1,151 @@
+---
+title: "MK.IO Beam Packager: HLS and DASH Output Configuration"
+sidebarTitle: "Packager"
+description: "Enable the Beam packager, configure HLS and HLS/DASH over CMAF outputs, set HTTPS delivery, generate thumbnails, and monitor packaging status."
+---
+
+A packager takes an encoded video stream and prepares it for delivery across different devices and streaming platforms. It segments the stream into small chunks and generates manifest files that tell the player what is available, at what bitrates, and in what order to request segments. This is the foundation of adaptive bitrate (ABR) streaming, where a player adjusts quality in real time based on network conditions.
+
+MK.IO Beam's Packager converts live encoded outputs into HLS and DASH formats, handling the underlying segmentation and manifest generation automatically.
+
+## Key Concepts
+
+**Catalog** — Links outputs to live packaging services. A catalog must be created first to host outputs. Any live packaging service added to a catalog can be delivered by any output in that catalog.
+
+**Output** — A set of specific delivery parameters for a defined input stream. It contains processing and encryption parameters and is added to a catalog to serve content to viewers.
+
+**Live Packaging Service** — Configuration of the live input parameters. Once associated with a catalog, the service is available for delivery using the outputs defined in that catalog.
+
+## Output Formats
+
+- **HLS and DASH over CMAF (Common Media Application Format):** A modern packaging approach where HLS and DASH manifests reference the same underlying media segments, reducing storage and simplifying multi-format delivery.
+- **HLS over TS (HTTP Live Streaming):** The original HLS format using MPEG-2 TS segments, broadly supported across a wide range of players and devices.
+
+Outputs can include encryption and manifest filtering to control which bitrates or tracks are exposed.
+
+## DVR and Thumbnails
+
+Live Packaging services include DVR (Digital Video Recording) configuration, which controls how much of the live stream is held in the sliding window available to the player. Thumbnail generation is also available, providing preview images from the live stream.
+
+## Enabling the Packager
+
+The Packager function is not enabled by default on a MK.IO Beam server. You must enable live packaging in the server's general parameters before creating Packager services.
+
+<Steps>
+  <Step title="Open Server Details">
+    Click **Servers** in the left panel, then click the **detail** icon in the **Actions** column.
+  </Step>
+  <Step title="Enable Live Packaging">
+    Under **General parameters**, select the **Enable Live Packaging** check box.
+  </Step>
+  <Step title="Save">
+    Click **Save** to apply the changes.
+  </Step>
+</Steps>
+
+## HLS over TS Output Configuration
+
+The Packager can enable HLS (HTTP Live Streaming) mode over TS (Transport Streams). In this mode, you can configure general parameters, HLS playlists, and delivery settings.
+
+### Playlists
+
+By default, the output manifest is delivered without any specific bitrate filtering. Depending on your delivery needs, you can adjust the bitrate filtering on your manifest and add manifests with variant filtering parameters.
+
+Stream characteristics filtering for HLS outputs can be based on:
+
+- **Bitrate in kbps** — for Video, Audio, and Subtitle stream filters
+- **Codec (H.264 or HEVC)** — for Video stream filters
+- **Language** — for Audio stream filters
+- **Width (pixels) or Height (pixels)** — for Thumbnail stream filters
+
+### Delivery
+
+You can define an **Access URL** for the HLS output. For full details, see the HLS over TS delivery parameters.
+
+### Content Replacement
+
+Content replacement is not currently used in MK.IO Beam for HLS over TS outputs.
+
+## HLS and DASH over CMAF Output Configuration
+
+CMAF (Common Media Application Format) is an fMP4-based format used as a common format for both HLS and DASH content delivery. A single copy of the media segments is shared between HLS and DASH manifests, delivering significant gains in storage and bandwidth efficiency.
+
+For both HLS and DASH over CMAF, you can configure:
+
+- General parameters
+- DASH Manifests
+- HLS Playlists
+- Delivery
+- Encryption
+
+### DASH Manifests
+
+By default, the output manifest is delivered without any specific bitrate filtering. Stream characteristics filtering for DASH over CMAF outputs can be based on:
+
+- **Bitrate in kbps** — for Video, Audio, and Subtitle stream filters
+- **Codec (H.264 or HEVC)** — for Video stream filters
+- **Language** — for Audio stream filters
+- **Width (pixels) or Height (pixels)** — for Thumbnail stream filters
+
+### HLS Playlists (CMAF)
+
+The same filtering options apply to HLS playlists within a CMAF output:
+
+- **Bitrate in kbps** — for Video, Audio, and Subtitle stream filters
+- **Codec (H.264 or HEVC)** — for Video stream filters
+- **Language** — for Audio stream filters
+- **Width (pixels) or Height (pixels)** — for Thumbnail stream filters
+
+### Delivery
+
+You can define an **Access URL** for playlists, manifests, and segments. For full details, see the HLS/DASH over CMAF delivery parameters.
+
+### Encryption
+
+By default, output manifests are published without encryption. To configure output encryption, choose between two encryption modes: **CENC** or **CBCS**. You can also disable audio encryption.
+
+| | CENC | CBCS |
+| :-- | :-- | :-- |
+| **Fixed keys** | | |
+| PlayReady | ✓ | ✓ |
+| Widevine | ✓ | ✓ |
+| Fairplay | ✓ | ✓ |
+| **External keys (compatible CPIX)** | | |
+| PlayReady | ✓ | ✓ |
+| Widevine | ✓ | ✓ |
+| MediaRoom | ✓ | ✓ |
+| Fairplay | ✓ | ✓ |
+| Clearkey | ✓ | ✓ |
+
+### Content Replacement
+
+Content replacement is not currently used in MK.IO Beam for HLS/DASH over CMAF outputs.
+
+## Monitoring Packager Services
+
+The user interface provides access to active and cleared alarm lists for each packaging service.
+
+<Steps>
+  <Step title="Locate the Service">
+    From the services page, identify the packaging service you want to monitor.
+  </Step>
+  <Step title="Open Alarms">
+    Click the alarm icon in the **info** column. The icon color indicates the most severe active alarm:
+    - **Red** — critical alarm
+    - **Yellow** — major alarm
+    - **Green** — minor alarm
+  </Step>
+  <Step title="Review Alarm Details">
+    The alarm page shows two tables:
+    - **Active alarms** — including date/time, alarm description, severity, and detailed information
+    - **Alarm history** — including date/time, description, status, severity, and the server on which the alarm raised
+
+    The alarm history table displays up to 10 alarms per page. Use the arrows or page number at the bottom to navigate through the complete list.
+  </Step>
+</Steps>
+
+## Common Use Cases
+
+- Delivering live events over OTT platforms to web and mobile players
+- Publishing live channels with DVR for catch-up viewing
+- Producing multi-format output from a single live source

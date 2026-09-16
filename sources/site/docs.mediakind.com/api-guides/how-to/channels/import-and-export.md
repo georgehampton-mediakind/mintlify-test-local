@@ -1,0 +1,129 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/channels/import-and-export
+
+# Import and export channels
+
+Export and import move channel configuration in and out of a device as a single JSON payload. Use them to copy a working setup onto a second device, to keep a copy of a configuration before a risky change, or to rebuild a device to a known state.
+
+Both endpoints work on the whole payload rather than on one channel at a time, so they are a different job from the create and replace calls in [Create and manage channels](https://docs.mediakind.com/api-guides/how-to/channels/manage-channels).
+
+## Export a configuration
+
+[Section titled “Export a configuration”](https://docs.mediakind.com/api-guides/how-to/channels/import-and-export/#export-a-configuration)
+
+`POST /api/channel-export/` takes a body, even when you want everything. Omit `channels` to export every channel on the device:
+
+Terminal window
+
+```
+curl -X POST <BASE_URL>/api/channel-export/ \
+  -H "Content-Type: application/json" \
+  -d '{ "description": "Studio A, before firmware update" }' \
+  --output beam-channels.json
+```
+
+To export a subset, name the channels:
+
+Terminal window
+
+```
+curl -X POST <BASE_URL>/api/channel-export/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "channels": ["news-contribution", "udp-to-sdi"],
+    "description": "News channels only"
+  }' \
+  --output beam-channels.json
+```
+
+`description` is optional and is carried through into the exported payload, which makes it worth setting when the file is going to sit somewhere for a while.
+
+The payload identifies itself with `schemaVersion`, `exportedAt`, and `sourceVersion`, and holds the channels under `channels`. Each exported channel carries its `metadata` and `spec`, and by default also the underlying `services` that the device generated from that spec.
+
+Set `includeServices` to `false` for a lighter, specification-only export:
+
+Terminal window
+
+```
+curl -X POST <BASE_URL>/api/channel-export/ \
+  -H "Content-Type: application/json" \
+  -d '{ "includeServices": false }' \
+  --output beam-channels-spec-only.json
+```
+
+On import, the device regenerates the services from its own templates. That is usually what you want when moving between devices, because the target device builds services suited to itself. Keep the services when you want the destination to match the source as closely as possible.
+
+## Import a configuration
+
+[Section titled “Import a configuration”](https://docs.mediakind.com/api-guides/how-to/channels/import-and-export/#import-a-configuration)
+
+`POST /api/channel-import/` takes an `ExportPayload` under `payload`, along with the import mode. Send the payload you saved from the export step:
+
+Terminal window
+
+```
+curl -X POST <BASE_URL>/api/channel-import/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "payload": <EXPORT_PAYLOAD>,
+    "mode": "merge"
+  }'
+```
+
+`<EXPORT_PAYLOAD>` is an object with the `schemaVersion`, `exportedAt`, and `channels` fields described above. Check it against the `ExportPayload` schema in the [Channels API reference](https://docs.mediakind.com/api-reference/channels-api) if you are assembling one by hand rather than reusing an export.
+
+Two modes, and the difference matters:
+
+| `mode` | Effect |
+| :-- | :-- |
+| `merge` (default) | Creates channels that are missing, updates channels that have changed, and leaves every other channel on the device alone. |
+| `replace` | Deletes any channel that is not in the payload, then creates and updates the rest. |
+
+`mode` set to `replace` with an empty `channels` list deletes every channel on the device. Check the payload before sending a replace import.
+
+The optional `state` field overrides the desired state of every imported channel, and accepts `Running` or `Stopped`. Setting it to `Stopped` imports a configuration without putting anything on air, which is the safer way to bring a payload onto a live device.
+
+## Check the result
+
+[Section titled “Check the result”](https://docs.mediakind.com/api-guides/how-to/channels/import-and-export/#check-the-result)
+
+The response summarises what the device accepted:
+
+```
+{
+  "imported": [
+    {
+      "name": "news-contribution",
+      "sourceName": "news-contribution",
+      "displayName": "News contribution",
+      "status": "accepted",
+      "error": null
+    }
+  ],
+  "deleted": [],
+  "errors": [],
+  "warnings": []
+}
+```
+
+Each entry in `imported` has a `status` of `accepted`, `skipped`, or `rejected`, with `error` carrying the reason for a rejection. `deleted` lists the channels a replace import removed. `errors` and `warnings` cover problems with the payload as a whole rather than with one channel.
+
+`accepted` means the channel passed validation, not that it is configured. Import returns as soon as the payload is validated, and the device applies the configuration in the background. Poll `GET /api/channels/{channel_id}/` for each imported channel and read `status.syncState` to see how it finished. See [How Beam channels work](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work) for the values.
+
+## What goes wrong
+
+[Section titled “What goes wrong”](https://docs.mediakind.com/api-guides/how-to/channels/import-and-export/#what-goes-wrong)
+
+**A merge import did not remove an old channel.** That is what merge does. Use `replace` if the payload is meant to be the complete set.
+
+**Channels came up running when you did not want them to.** The desired state travels with the payload. Set `state` to `Stopped` on the import request to override it.
+
+**A channel was accepted but never came up.** Import validation and configuration are separate steps. Check `status.syncState` and `status.syncError` on the channel itself.
+
+**The destination device is equipped differently.** A spec that names `eth1` or `slot_1_port_1` depends on the target having that interface. Call `GET /api/interfaces/` on the destination and compare it against the payload before importing, then check both `ImportResult` and each channel’s `status.syncState` afterwards.
+
+## Where to go deeper
+
+[Section titled “Where to go deeper”](https://docs.mediakind.com/api-guides/how-to/channels/import-and-export/#where-to-go-deeper)
+
+- [Configuration backups](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/configuration-backups) covers whole-device backups through MK.IO, which is a broader safety net than a channel export.
+- [Channels API reference](https://docs.mediakind.com/api-reference/channels-api) documents `ExportPayload`, `ImportRequest`, and `ImportResult` in full.

@@ -1,0 +1,126 @@
+---
+title: "Configure Networks and Sites with the Infrastructure API"
+sidebarTitle: "Networks & Sites"
+description: "Provision network configurations, define sites, and link sites to networks for MK.IO Beam deployments using the Infrastructure API."
+---
+
+Networks and sites are the topology layer for Beam devices. A network is a logical segment; a site is a location where devices operate, and its routes decide which networks those devices can reach. The Infrastructure API defines where Beam devices live and which networks they can reach.
+
+## API overview
+
+| Detail | Value |
+| --- | --- |
+| Base path | `/api/v1/projects/{project_name}/infra/` |
+| Scope | Project |
+
+The two core resources:
+
+- **Networks** represent logical network segments. Their status includes `status.owner` and `status.scope`.
+- **Sites** represent locations where devices operate. A site can include routes that reference one or more networks.
+
+## Typical sequence
+
+Follow this order when setting up infrastructure for Beam devices:
+
+<Steps>
+  <Step title="List existing networks and sites">
+    Check what already exists before creating new resources.
+  </Step>
+  <Step title="Create the networks you need">
+    Networks must exist before sites can reference them in routes.
+  </Step>
+  <Step title="Create sites with routes referencing those networks">
+    A site's routes link it to networks, determining what devices at that site can reach.
+  </Step>
+  <Step title="Register Beam devices to those sites">
+    Use the Fleets API to register devices against the sites you created. See [Device Management](/api-guides/beam/device-management).
+  </Step>
+  <Step title="Remove dependent references before deleting">
+    Clear device and flow references before deleting sites or networks.
+  </Step>
+</Steps>
+
+## Create a network
+
+A network is created with `PUT`. Its `spec` is currently empty but must be present; the meaningful content is in `metadata`.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/infra/networks/production-network" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": {
+      "displayName": "Production Network",
+      "labels": { "environment": "production" }
+    },
+    "spec": {}
+  }'
+```
+
+Reading a network back shows its `status.owner` (`User` or `System`) and `status.scope` (`Connecting` between sites, or `Local` within one). System-owned and local networks are created by the platform.
+
+## Create a site with routes
+
+Once the network exists, create a site whose `routes` reference it. A route requires only `networkName`. You can add an optional `defaultTransport` to set how content moves on that network.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/infra/sites/headquarters" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": {
+      "displayName": "Headquarters",
+      "labels": { "region": "europe", "type": "primary" }
+    },
+    "spec": {
+      "routes": [
+        {
+          "networkName": "production-network",
+          "defaultTransport": { "type": "SRTListener" }
+        }
+      ]
+    }
+  }'
+```
+
+`defaultTransport.type` is one of `Auto`, `SRTListener`, `SRTCaller`, `UDP`, or `RISTListener`. A device assigned to this site (through its `siteName`) automatically reaches the networks the site routes to.
+
+## Update and delete
+
+`PATCH` updates labels, display name, or a site's routes:
+
+```bash
+curl -X PATCH "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/infra/sites/headquarters" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{ "metadata": { "displayName": "Main Headquarters" } }'
+```
+
+<Warning>
+A `PATCH` to `routes` replaces the whole array, so send the complete set of routes when updating.
+</Warning>
+
+## What goes wrong
+
+<Accordion title="Creating a site before its network exists">
+  A route references a network by name. Create the networks first, then create sites that reference them.
+</Accordion>
+
+<Accordion title="A delete returns 409 Conflict">
+  A network cannot be deleted while a site routes to it, and a site cannot be deleted while devices or flows reference it. Clear those references first.
+</Accordion>
+
+<Accordion title="Trying to delete a system-owned resource">
+  System-owned networks and sites cannot be deleted, though they can be modified. Check `status.owner` before you attempt a delete.
+</Accordion>
+
+## What comes next
+
+<CardGroup cols={2}>
+  <Card title="Device Management" icon="server" href="/api-guides/beam/device-management">
+    Register Beam devices against the sites you created.
+  </Card>
+  <Card title="Channels API" icon="video" href="/api-guides/beam/channels-overview">
+    Use the device-local API to create and monitor channels.
+  </Card>
+</CardGroup>

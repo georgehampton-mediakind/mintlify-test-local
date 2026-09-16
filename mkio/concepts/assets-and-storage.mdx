@@ -1,0 +1,75 @@
+---
+title: "Assets and Storage in MK.IO"
+sidebarTitle: "Assets & Storage"
+description: "Learn how MK.IO assets act as logical references to files in connected cloud storage, how containers map to assets, and how the asset lifecycle works."
+---
+
+In MK.IO, an **asset** is a logical pointer to a container of files in your connected cloud storage. Assets do not copy or move your files — they reference the storage location where the files live. This means the same underlying files can be managed in MK.IO without changing your existing storage layout.
+
+## Connected storage
+
+Before you can create or use assets, you must connect at least one cloud storage account to your MK.IO project. MK.IO supports:
+
+- **Amazon S3** — accessed using IAM access key credentials
+- **Azure Blob Storage** — accessed using a Shared Access Signature (SAS) token
+- **Google Cloud Storage** — registered through the Media API using `Google.Storage`
+
+Each connected storage account appears in your project's **Storage** section. You can connect multiple accounts and choose which one holds each asset.
+
+See [Connect Cloud Storage](/mkio/getting-started/connect-cloud-storage) for step-by-step setup instructions.
+
+## How assets work
+
+When you create an asset, MK.IO creates a dedicated container (or prefix) in your connected storage account. Files that belong to that asset are stored in that container. The asset record in MK.IO tracks:
+
+- Which storage account and container holds the files
+- The asset name and description
+- Any file tracks (audio, video, text) registered for filtering or delivery
+- Associated streaming locators
+
+An asset can contain one or many files. A typical VOD asset holds the source file plus any additional tracks. An encoded output asset holds multiple rendition files and the ISM manifest that the streaming endpoint uses to serve adaptive bitrate content.
+
+## Asset lifecycle
+
+| State | Description |
+| --- | --- |
+| **Active** | The asset exists and files are accessible in connected storage |
+| **Referenced by a locator** | A streaming locator is attached; the asset is published for playback |
+| **Referenced by a job** | A processing job is using this asset as input or writing to it as output |
+| **Deleted** | The asset record is removed from MK.IO; files in storage are not automatically deleted |
+
+<Warning>Deleting an asset from MK.IO removes the asset record but does not delete the underlying files in your cloud storage. Delete the files directly from your S3 bucket or Azure Blob container if you want to remove them.</Warning>
+
+## Creating assets
+
+You can create assets in several ways:
+
+- **Upload a file** — in the MK.IO portal, go to **Assets** and click **+ Add Asset**, then upload a file. MK.IO creates the container in your storage and registers the asset automatically.
+- **Reference existing files** — if files are already in connected storage, create an asset pointing to the container where they live.
+- **Job output** — when a processing job finishes, MK.IO automatically creates an output asset in the container you specified when you configured the job.
+- **Live output** — when a live event runs, MK.IO writes the recording to an asset in your chosen storage account.
+
+## Asset filters
+
+You can attach **asset filters** to an asset to modify what the streaming endpoint delivers without re-encoding the content. Filters can restrict the manifest to specific renditions, languages, or time ranges. Filters are applied when you create a streaming locator.
+
+## File tracks
+
+For assets that contain multiple audio or text tracks, MK.IO lets you register and label individual tracks. You can use track information to configure the streaming manifest, enable closed captions, or serve alternate audio languages.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Connect Cloud Storage" icon="database" href="/mkio/getting-started/connect-cloud-storage">
+    Set up Amazon S3 or Azure Blob Storage for your project.
+  </Card>
+  <Card title="Transforms and Jobs" icon="sliders" href="/mkio/concepts/transforms-and-jobs">
+    Process an asset to produce encoded renditions and other outputs.
+  </Card>
+  <Card title="Streaming and Playback" icon="play" href="/mkio/concepts/streaming-and-playback">
+    Publish an asset with a streaming locator and endpoint.
+  </Card>
+  <Card title="Storage API Guide" icon="code" href="/api-guides/media/storage">
+    Register and manage storage accounts through the Media API.
+  </Card>
+</CardGroup>

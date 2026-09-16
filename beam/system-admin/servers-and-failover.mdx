@@ -1,0 +1,196 @@
+---
+title: "Server Management and Failover on MK.IO Beam"
+sidebarTitle: "Servers & Failover"
+description: "Manage server hardware, configure failover settings, and monitor server health in MK.IO Beam multi-server deployments."
+---
+
+The **Servers** view displays system information for monitoring and managing all servers in your MK.IO Beam deployment. Server statuses indicate availability: **connected** or **connection lost**. Failover groups provide automatic or manual redundancy when server or service failures occur.
+
+## Manage Servers
+
+### Display Servers
+
+<Steps>
+  <Step title="Open Servers View">
+    Click **Servers** from the left-side menu. The table of servers displays.
+  </Step>
+  <Step title="Filter and Sort">
+    Edit the number of rows displayed or use the search bar to filter the display.
+  </Step>
+</Steps>
+
+### Server Actions
+
+The available actions depend on the installation type, server type, and user role:
+
+| Action | Description |
+| :-- | :-- |
+| **Delete** | Removes a server that is no longer in use. Available to Administrators only. |
+| **Reboot** | Restarts the server after a confirmation prompt. |
+| **Details** | Opens the server information page (General, System Settings, Statistics tabs). |
+| **Stats** | Displays server statistics: CPU, memory, disk usage, and network statistics. |
+| **Support package** | Generates a log bundle for MediaKind support. |
+
+If the connection to a server is lost and the server is in a failover group, check whether a failover occurred. You can also check alarms or alarm history to investigate possible causes, and review server information for IP configurations.
+
+### Server Processing Types
+
+Additional processing types are available from the Servers page:
+
+| Processing type | Description |
+| :-- | :-- |
+| **Controller** | Provides centralized configuration and control, manages failover for Live Encoder, and handles flexible licensing management. |
+| **Arbiter** | A server fulfilling the role of the database arbiter. |
+
+### Display Server Information
+
+<Steps>
+  <Step title="Open Server Details">
+    Click **Servers** on the left-side menu, then click the **Details** icon in the **Actions** column.
+  </Step>
+  <Step title="Navigate Tabs">
+    Click the tabs to display server information:
+    - **General** — server overview and configuration
+    - **System Settings** — network and system parameters
+    - **Statistics** — performance and resource usage
+  </Step>
+</Steps>
+
+---
+
+## Failover and Redundancy
+
+Failover mechanisms ensure service continuity. If a whole server fails or if critical alarms are detected by a processing application, services can be moved to a backup server. The Controller automatically manages failover when automatic mode is configured. You can also trigger failover manually or revert once the primary server is repaired.
+
+### How Failover Works
+
+**Server-level failover:** When an alarm triggers failover, all services on the affected server are moved to one of the configured backup servers. That backup server is then no longer available for further failovers.
+
+**Service-level failover:** When a service-level alarm triggers failover, only the affected service is moved. The backup server is reserved for further failovers from the same primary server.
+
+<Note>
+  Packager redundancy is managed by the Packager application itself (as a cluster of servers). The Controller is not involved in Packager redundancy.
+</Note>
+
+All timestamps in failover operations are in **Universal Time (UTC)**.
+
+### Failover Triggers
+
+- Automatic failovers are triggered by alarms marked as "triggers failover."
+- By default, all critical alarms trigger failover.
+- You can configure the failover trigger behavior per alarm via **Alarm overrides**.
+
+### Display Failover Groups
+
+<Steps>
+  <Step title="Open Failover View">
+    Click **Failover** from the left-side menu. Failover groups display in the table.
+  </Step>
+  <Step title="View Group Details">
+    Click the **Details** icon in the **Actions** column to display group details. The alarm icon shows the highest-severity alarm across servers in the group.
+  </Step>
+</Steps>
+
+### Display a Failover Summary
+
+<Steps>
+  <Step title="Open Failover View">
+    Click **Failover** from the left-side menu.
+  </Step>
+  <Step title="View Summary">
+    Scroll to the bottom of the page to display the **Failover summary** table showing progress and status for failover procedures.
+  </Step>
+</Steps>
+
+### Create a Failover Group
+
+<Steps>
+  <Step title="Open Failover Groups">
+    Click **Failover** from the left-side menu, then click **Add group…**
+  </Step>
+  <Step title="Configure Group Settings">
+    Enter a **Group name** and configure:
+    - **Failover level:** **Server** (move all services) or **Service** (move only affected services)
+    - **Group processing type:** The service types affected by failover in this group
+    - **Group failover mode:** **Automatic** (triggered by critical alarm) or **Manual** (user-triggered only)
+  </Step>
+  <Step title="Assign Servers">
+    Select available servers and use the arrows to define the list of **Primary servers** and **Backup servers**. You can use the search option to filter servers by processing type.
+  </Step>
+  <Step title="Save">
+    The new failover group appears in the list.
+  </Step>
+</Steps>
+
+<Note>
+  The default Group failover mode is **Automatic**. You can still manually trigger a failover or revert even when Automatic mode is enabled.
+</Note>
+
+### Edit a Failover Group
+
+<Steps>
+  <Step title="Open Failover Groups">
+    Click **Failover** from the left-side menu.
+  </Step>
+  <Step title="Edit the Group">
+    Click the **Edit** icon. The failover setup page displays.
+  </Step>
+  <Step title="Modify Settings">
+    Edit the group settings as needed. Note:
+    - **Failover level** can only be changed if there is no active failover for this group.
+    - **Group processing type** cannot be changed after creation.
+  </Step>
+  <Step title="Save">
+    Edit the server selection for primary and backup servers, then click **Save and exit**.
+  </Step>
+</Steps>
+
+### Request a Manual Failover or Revert
+
+Before you start: at least one failover group must exist and you must have the appropriate user permissions.
+
+<Steps>
+  <Step title="Open Failover Groups">
+    Click **Failover** from the left-side menu.
+  </Step>
+  <Step title="Open Group Details">
+    Click the **Details** icon to display the group's details.
+  </Step>
+  <Step title="Trigger Failover or Revert">
+    Click the **Failover** icon to move services to backup servers, or the **Revert** icon to move services back to primary servers.
+  </Step>
+  <Step title="Confirm">
+    A modal dialog shows progress and success/failure of the operation.
+  </Step>
+  <Step title="Verify">
+    When complete, confirm that services are assigned to the correct servers by checking the services page.
+  </Step>
+</Steps>
+
+For service-level groups, you can also trigger failover and revert from the **Services** page:
+
+1. Click the ellipsis (more actions) icon on the service you want to failover or revert.
+2. Click the **Failover** or **Revert** icon. Only the available action is shown.
+3. Click **Yes** to confirm.
+
+If multiple services are selected, the failover/revert action is only available if all selected services are on the same server.
+
+### Configure Failover Trigger Settings
+
+You can control which alarms trigger automatic failover by configuring alarm overrides:
+
+<Steps>
+  <Step title="Open Alarms">
+    Click **Alarms** in the left-hand menu.
+  </Step>
+  <Step title="Open Alarm Overrides">
+    Click **Alarm overrides** to display the override options.
+  </Step>
+  <Step title="Configure Trigger">
+    Select a response for **Trigger failover** for the relevant alarms.
+  </Step>
+</Steps>
+
+<Note>
+  Changes to alarm severity are only applied to future occurrences. Any current or previously existing alarms are unchanged.
+</Note>

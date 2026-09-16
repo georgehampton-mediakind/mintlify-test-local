@@ -1,0 +1,313 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels
+
+# Monitor channels and devices
+
+Everything you need to build a dashboard or an alerting rule comes from four places: the channel list, the alarm list, the thumbnail endpoint, and the device metrics. This page covers each of them and the query options that keep the responses small.
+
+## List channels
+
+[Section titled “List channels”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#list-channels)
+
+Terminal window
+
+```
+curl <BASE_URL>/api/channels/
+```
+
+The response follows the same envelope as the other MK.IO list endpoints. Channels are in `value`, and `supplemental` carries the counts. This is a response from a device holding nine channels, requested one at a time with `$top=1`, with the addresses replaced:
+
+```
+{
+  "value": [
+    {
+      "kind": "BeamChannel",
+      "metadata": {
+        "name": "9b9c65bd-b383-4ed2-ae5a-fcde805e4e8c",
+        "displayName": "demo-channel_0",
+        "created": "2026-05-20T07:52:01.637000Z"
+      },
+      "spec": {
+        "type": "EncodingDistribution",
+        "state": "Stopped",
+        "inputs": [
+          {
+            "type": "SDI",
+            "name": "input_1",
+            "transport": { "url": "sdi://localhost/slot_1_port_3" },
+            "payload": {
+              "audios": [
+                { "name": "Audio_1", "aggregation": { "type": "None", "pair": "G1P1" } }
+              ]
+            }
+          }
+        ],
+        "transform": {
+          "encoding": {
+            "video": { "codec": "H264Main", "videoFormat": "1280x720p", "bitrate": 2000000 },
+            "audios": [
+              {
+                "name": "Audio_1_encoded_1",
+                "inputName": "input_1",
+                "audioName": "Audio_1",
+                "codec": "PassThrough"
+              }
+            ]
+          }
+        },
+        "outputs": [
+          {
+            "type": "UDP",
+            "transport": { "url": "udp://239.1.1.1:5000", "interface": "eth1" }
+          }
+        ]
+      },
+      "status": {
+        "state": "Stopped",
+        "health": { "severity": "Clear" },
+        "inputs": [
+          {
+            "health": { "severity": "Clear" },
+            "name": "sdi-0",
+            "thumbnailUrl": "thumbnails/sdi-0/thumbnail.jpg",
+            "thumbnailPresence": "Absent",
+            "type": "SDI"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "udp-0",
+            "health": { "severity": "Clear" },
+            "type": "UDP",
+            "transport": { "url": "udp://239.1.1.1:5000", "interface": "eth1" },
+            "payload": {
+              "video": { "resolution": "1280x720", "codec": "H264Main", "bitrate": 2000000 },
+              "audios": [{ "codec": "PassThrough" }]
+            }
+          }
+        ],
+        "syncState": "Ok",
+        "syncError": []
+      }
+    }
+  ],
+  "@odata.nextLink": "/channels?%24skiptoken=1&%24top=1&%24orderby=metadata%2Fcreated",
+  "supplemental": {
+    "kind": "BeamChannelList",
+    "count": 1,
+    "operation": "list",
+    "pagination": { "start": 0, "end": 1, "records": 1, "total": 9 }
+  }
+}
+```
+
+Three things in that response are worth pausing on.
+
+`metadata.name` is a UUID here because this channel was created in the Essentials UI. A channel you create through the API keeps whatever name you gave it. Both forms appear on the same device, so treat the name as an opaque identifier and show `displayName` to people.
+
+The names in `spec` and the names in `status` are not the same values. The spec input is called `input_1`, and the device reports it in `status` as `sdi-0`. Match inputs by position or by `type` rather than by name.
+
+`supplemental.pagination.records` counts what came back in this page, and `total` counts every channel that matched. Follow `@odata.nextLink` for the next page rather than calculating the offset yourself, and use it exactly as returned: it is a relative path with the `$` characters percent-encoded. The response above was captured before the API moved under `/api/`, so treat the prefix on that link as whatever your device returns rather than the one shown here.
+
+An audio track encoded as `PassThrough` carries no `mode` or `bitrate`, because nothing is re-encoded. Those fields are required for every other audio codec.
+
+## Filter, sort, and page
+
+[Section titled “Filter, sort, and page”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#filter-sort-and-page)
+
+The list endpoint takes OData-style query parameters:
+
+| Parameter | Default | Purpose |
+| :-- | :-- | :-- |
+| `$filter` | none | An expression that limits which channels are returned. |
+| `$orderby` | `metadata/created` | A sort field with optional `asc` or `desc`. Comma-delimit for multiple keys. |
+| `$select` | none | A comma-separated list of fields to return. |
+| `$top` | `1000` | Maximum items per page, from `1` to `1000`. |
+| `$skiptoken` | `0` | Offset into the results. |
+
+`$filter` supports the operators `eq`, `ne`, `lt`, `le`, `gt`, and `ge`, combined with `and` and `or`, plus the functions `contains()`, `tolower()`, and `toupper()`. Paths into the object use slashes.
+
+Fetch only the channels that are not healthy, worst first:
+
+Terminal window
+
+```
+curl -G <BASE_URL>/api/channels/ \
+  --data-urlencode "\$filter=status/health/severity ne 'Clear'" \
+  --data-urlencode "\$orderby=status/health/severity desc"
+```
+
+Escaping the `$` matters in shells that would otherwise treat `$filter` as a variable, and `--data-urlencode` handles the spaces and quotes in the expression for you.
+
+A few more expressions that cover most monitoring needs:
+
+- `$filter=status/state eq 'Running'` returns the channels that are actually on air, which is not the same as the channels you asked to run.
+- `$filter=contains(tolower(metadata/displayName), 'news')` does a case-insensitive name search.
+- `$filter=metadata/created ge 2026-01-01T00:00:00Z` returns recently created channels.
+
+Filtering, sorting, and pagination are all applied on the device after every channel has been loaded with its live status. That is fine at the channel counts a single Beam device carries, but it does mean a narrow `$filter` does not make the call cheaper.
+
+`$select` is the exception. When you pass it, the device skips loading live status entirely, so a call that only needs names and types is noticeably lighter than a full list.
+
+## Read one channel
+
+[Section titled “Read one channel”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#read-one-channel)
+
+Terminal window
+
+```
+curl <BASE_URL>/api/channels/news-contribution/
+```
+
+The `status` object is where the live detail sits:
+
+- `state` is the actual state, `Running` or `Stopped`, which can differ from `spec.state` while a change is being applied.
+- `health.severity` is the rolled-up channel severity: `Critical`, `Major`, `Minor`, `Notice`, `Ignore`, or `Clear`.
+- `inputs` and `outputs` carry their own health, along with transport detail such as SRT connection statistics and the services detected on the input.
+- `syncState` and `syncError` report whether the configuration you sent was successfully applied. See [How Beam channels work](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work) for the values.
+- `errors` holds any faults the device wants to show a person, already written for display.
+
+Each entry in `status.errors` carries a short summary in `userShort`, capped at 40 characters, a fuller sentence in `userMessage`, and further context in `detail`. Use those rather than composing your own wording from `code`, which is an internal identifier. Two flags tell you how to present it: `showCode` is the device’s own advice on whether the `code` is worth showing to a person, and `transient` marks a fault that may clear without intervention, which is usually a reason to soften how prominently you display it.
+
+## Read active alarms
+
+[Section titled “Read active alarms”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#read-active-alarms)
+
+Health tells you a channel is unwell. Alarms tell you why. The alarm endpoint is scoped to one channel, and `channelName` is required:
+
+Terminal window
+
+```
+curl -G <BASE_URL>/api/channel-channelalarms/active/ \
+  --data-urlencode "channelName=news-contribution"
+```
+
+Each alarm has a `metadata` half identifying it and a `status` half describing it. The placeholders below stand in for values the device supplies:
+
+```
+{
+  "value": [
+    {
+      "kind": "Alarm",
+      "metadata": {
+        "id": "<ALARM_ID>",
+        "name": "<ALARM_NAME>",
+        "displayName": "<ALARM_DISPLAY_NAME>",
+        "objectId": "<OBJECT_ID>",
+        "channelName": "news-contribution",
+        "created": "2026-07-01T09:31:12Z"
+      },
+      "status": {
+        "severity": "Critical",
+        "additionalInfo": "<DETAIL>"
+      }
+    }
+  ],
+  "supplemental": {
+    "kind": "AlarmList",
+    "count": 1,
+    "operation": "list",
+    "pagination": { "start": 0, "end": 1, "records": 1, "total": 1 }
+  }
+}
+```
+
+`<ALARM_ID>` is a UUID, and `<ALARM_NAME>` is the device’s machine name for the fault, with `<ALARM_DISPLAY_NAME>` its readable form. `<OBJECT_ID>` identifies the part of the channel that raised it. `<DETAIL>` is the free-text explanation in `status.additionalInfo`, and it is the field worth surfacing in an alert. `severity` uses the same scale as channel health.
+
+For the alarms a Beam device raises and how to override them, see [Manage alarms](https://docs.mediakind.com/beam/system-admin/maintenance/manage-alarms).
+
+Because the endpoint takes one channel at a time, an alarm view across a device means listing the unhealthy channels first and then fetching alarms for each one.
+
+## Fetch an input thumbnail
+
+[Section titled “Fetch an input thumbnail”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#fetch-an-input-thumbnail)
+
+Each entry in `status.inputs` carries a `thumbnailUrl`, relative to the channel:
+
+```
+{
+  "name": "sdi-0",
+  "thumbnailUrl": "thumbnails/sdi-0/thumbnail.jpg",
+  "thumbnailPresence": "Absent",
+  "type": "SDI"
+}
+```
+
+Use that value rather than building the path yourself. The identifier in it is the name the device assigns to the input in `status`, not the name you gave the input in `spec`, so composing the path from your own spec produces a URL that does not resolve.
+
+Terminal window
+
+```
+curl <BASE_URL>/api/channels/<CHANNEL_NAME>/thumbnails/sdi-0/thumbnail.jpg \
+  --output thumbnail.jpg
+```
+
+Check `thumbnailPresence` before you fetch. It reports `Present`, `Absent`, `Unknown`, or `Unsynced`. The path ends in `.jpg` so that browsers treat the response as a plain image, which means you can point an `<img>` tag straight at it.
+
+## Query device metrics
+
+[Section titled “Query device metrics”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#query-device-metrics)
+
+For a point-in-time reading of the device itself:
+
+Terminal window
+
+```
+curl <BASE_URL>/api/channel-metrics/current/
+```
+
+```
+{
+  "data": {
+    "serverId": "Server1",
+    "cpuUtilizationPercent": 34.52094163392065,
+    "uptimeSeconds": 1041534.8420000076
+  },
+  "collectedAt": "2026-07-29T13:13:32.843368Z"
+}
+```
+
+`temperatureCelsius` is not present in the response above. Read every field under `data` defensively: depending on the device and the sensors fitted to it, a metric can come back as `null` or be left out of the response altogether. Show a dash where a value is absent, as the Essentials dashboard does.
+
+Narrow the response with `$select`, which accepts `serverId`, `cpuUtilizationPercent`, `temperatureCelsius`, and `uptimeSeconds`:
+
+Terminal window
+
+```
+curl -G <BASE_URL>/api/channel-metrics/current/ \
+  --data-urlencode "\$select=cpuUtilizationPercent,temperatureCelsius"
+```
+
+For a history rather than a snapshot, `GET /api/channel-metrics/cpu/` and `GET /api/channel-metrics/temperature/` take a time range. Both require `start` and `end`, which accept ISO 8601 timestamps or Unix timestamps, and take an optional `step` that defaults to `60s`:
+
+Terminal window
+
+```
+curl -G <BASE_URL>/api/channel-metrics/cpu/ \
+  --data-urlencode "start=2026-07-01T00:00:00Z" \
+  --data-urlencode "end=2026-07-01T01:00:00Z" \
+  --data-urlencode "step=60s"
+```
+
+These return the Prometheus range format rather than the envelope used elsewhere in this API. `status` is `success` or `error`, and `data.result` is an array of series, each with a `metric` label set and a `values` array of `[unix_timestamp, value_string]` pairs. The value is a string, so parse it before you chart it.
+
+`GET /api/channel-metrics/query/` takes an arbitrary PromQL expression in `query`, along with the same `start`, `end`, and `step`. Use it when the two named endpoints do not cover the metric you need.
+
+## What goes wrong
+
+[Section titled “What goes wrong”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#what-goes-wrong)
+
+**The channel list is slow.** Live status is loaded for every channel before filtering, so the cost is in the channel count rather than the filter. If you are polling frequently and only need identity, pass `$select` to skip status hydration.
+
+**A `$filter` returns nothing you expected.** String values in an expression are single quoted, and paths use slashes rather than dots. Compare `status/health/severity ne 'Clear'` against a dotted or unquoted version, which will not match.
+
+**A thumbnail URL does not resolve.** The identifier in the path is the input name from `status`, which the device assigns, not the input name you set in `spec`. Read `thumbnailUrl` off the status object instead of composing the path.
+
+**A metric field has no value.** A reading the device cannot supply can be `null` or absent from `data`, so a client that reads `data.temperatureCelsius` directly may get either on a device without a temperature sensor. Treat every field under `data` as optional and handle both.
+
+## Where to go deeper
+
+[Section titled “Where to go deeper”](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels/#where-to-go-deeper)
+
+- [Manage alarms](https://docs.mediakind.com/beam/system-admin/maintenance/manage-alarms) covers alarm types and overrides at the device level.
+- [Beam Essentials UI](https://docs.mediakind.com/beam/essentials) shows the same status, alarms, and metrics on the device dashboard.
+- [Channels API reference](https://docs.mediakind.com/api-reference/channels-api) documents every field of `ChannelStatus`, including the per-transport statistics.

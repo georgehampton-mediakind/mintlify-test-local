@@ -1,0 +1,108 @@
+---
+title: "Install the MK.IO Beam ISO on Server Hardware"
+sidebarTitle: "ISO Installation"
+description: "Install the MK.IO Beam software ISO on G8/G9 server hardware, configure RAID, and perform initial system setup before registering with MK.IO."
+---
+
+This installation process is only required for servers that have not been purchased directly from MediaKind. If the MK.IO Beam server and software are purchased separately, you need to install the MK.IO Beam software, which is distributed as an ISO image.
+
+## BIOS Configuration
+
+Before installing the ISO, review and configure the following BIOS settings.
+
+<Note>
+  Enabling **High Performance** mode in the BIOS is recommended for optimal performance.
+</Note>
+
+If the system drive uses hardware RAID or FakeRAID, review the supported RAID and FakeRAID configurations before continuing.
+
+Configure the following settings in the BIOS:
+
+- **Secure boot** — must be disabled
+- **TPM support** — must be disabled
+- **Real Time Clock (RTC)** — set to the correct time and date
+
+### ASI/SDI PCIe Card Support
+
+If compatibility with 4-port or 8-port Dektec ASI/SDI option cards is required, you must disable the **PCIe Data Link Feature Exchange** option before installing any Dektec ASI/SDI cards.
+
+<Warning>
+  Installing a 4- or 8-port Dektec ASI/SDI card into a server before disabling PCIe Data Link Feature Exchange could prevent the server from booting.
+</Warning>
+
+<Steps>
+  <Step title="Install MK Custom BIOS Firmware">
+    If supplied by MediaKind, install the MK Custom BIOS Firmware before proceeding.
+  </Step>
+  <Step title="Boot into the BIOS">
+    Boot the server into the BIOS setup.
+  </Step>
+  <Step title="Disable PCIe Data Link Feature Exchange">
+    Locate the **PCIe Data Link Feature Exchange** or **DLFE** setting and disable it. If this setting does not exist and the server will not boot with a Dektec card installed, note the server make, model, and BIOS version and contact MediaKind Support.
+  </Step>
+</Steps>
+
+## Create a Bootable USB Drive
+
+The USB drive must be at least 16 GB. The following procedure uses the free tool [Rufus](https://rufus.ie/en/) on Microsoft Windows.
+
+<Steps>
+  <Step title="Download and Install Rufus">
+    Download and install the Rufus tool from [rufus.ie](https://rufus.ie/en/).
+  </Step>
+  <Step title="Connect the USB Drive">
+    Connect the target USB drive to the Windows PC and confirm it is detected in Rufus.
+  </Step>
+  <Step title="Select the ISO File">
+    Click the **Select** button in Rufus and browse to the MK.IO Beam ISO file.
+  </Step>
+  <Step title="Write to USB">
+    Leave all configuration settings at their defaults and click **Start**.
+  </Step>
+  <Step title="Confirm ISO Image Mode">
+    When prompted about an ISOHybrid image, leave the default **ISO Image mode** set and click **OK**.
+  </Step>
+  <Step title="Download Syslinux Files">
+    If prompted to download Syslinux installation files, click **Yes**.
+  </Step>
+  <Step title="Confirm Write">
+    Verify that the correct USB drive is selected and click **OK** to begin writing.
+  </Step>
+  <Step title="Wait for Completion">
+    When the ISO has been written, Rufus changes the status to **READY**. Click **Close** and remove the USB drive.
+  </Step>
+</Steps>
+
+## Boot from the USB Drive
+
+Insert the bootable USB drive into a USB port on the server, then boot to the One Time Boot Menu or configure the BIOS to boot from the USB drive. Refer to the server manufacturer's documentation for the exact steps.
+
+## ISO Installation
+
+<Steps>
+  <Step title="Start the Installer">
+    When first booting to the MK.IO Beam ISO, you will see two options: **Start MediaKind Field Service 2.x** and **Troubleshooting**. Select **Start MediaKind Field Service 2.x** and press Return.
+  </Step>
+  <Step title="No Existing Configuration">
+    A dialog appears stating that no existing configuration has been found. Wait 5 seconds for the installation to continue automatically.
+  </Step>
+  <Step title="Confirm Installation">
+    When prompted to install the bundle, click **OK** to continue.
+  </Step>
+  <Step title="Wait for Progress">
+    A progress screen appears. This process can take 20 minutes or more depending on the speed of the USB drive. The progress bar may not change for several minutes — this is normal.
+  </Step>
+  <Step title="Server Reboots">
+    Once the install process completes, the server reboots automatically.
+  </Step>
+  <Step title="MediaKind Boot Manager Starts">
+    The MediaKind Boot Manager starts, followed by the AlmaLinux boot screen.
+  </Step>
+  <Step title="Installation Complete">
+    When prompted to log in, MK.IO Beam is installed on the server and ready for initial configuration.
+  </Step>
+</Steps>
+
+<Note>
+  After installation, you will need to configure network settings and register the server with MK.IO before it can be used. See [Network Configuration](/beam/system-admin/network-configuration) for the next step.
+</Note>

@@ -1,0 +1,109 @@
+---
+title: "Configure MK.IO Streaming Endpoints for Playback"
+sidebarTitle: "Streaming Endpoints"
+description: "Create, start, and manage streaming endpoints that package and deliver assets over HLS and DASH in MK.IO."
+---
+
+A streaming endpoint is the network infrastructure that serves content from your project's connected storage to viewers. It handles just-in-time packaging, applies any encryption defined in your streaming locators, and provides the hostname that appears in every playback URL. You need at least one running endpoint before any content can be played.
+
+## Endpoint types
+
+MK.IO offers three endpoint types to match different scale and delivery requirements.
+
+| Type | Capacity | Best for |
+| --- | --- | --- |
+| **Shared** | Up to 600 Mbps on shared infrastructure | Development, testing, and low-traffic workloads |
+| **Dedicated** | 200 Mbps of guaranteed bandwidth per scale unit | Production workloads requiring predictable capacity |
+| **CDN** | Dedicated capacity backed by Fastly edge caching | High-scale production delivery with global audiences |
+
+You can switch between Shared and Dedicated at any time. CDN endpoints must be created new because an existing endpoint cannot be converted to CDN after creation.
+
+## Create a streaming endpoint
+
+Go to **Streaming Endpoints** in the left navigation and click **+ Create Streaming Endpoint**.
+
+Configure the following fields:
+
+- **Name**: A unique identifier using lowercase letters, numbers, and hyphens (for example, `production`). The name becomes part of the endpoint's public hostname and is visible in playback URLs.
+- **Description**: Optional. Useful for distinguishing endpoints across environments.
+- **Type**: Select Shared, Dedicated, or CDN.
+- **Scale units** (Dedicated and CDN only): The number of dedicated 200 Mbps capacity units. Start at 1 and scale up as your audience grows.
+- **CDN**: Enable integrated Fastly CDN delivery. When enabled, the endpoint includes a CDN base path for edge-cached playback.
+- **Auto-start**: Enable to activate the endpoint immediately after creation. If disabled, you must start it manually.
+- **Tags**: Optional key-value labels for resource grouping and cost tracking.
+
+Click **Create**. If auto-start is disabled, select the endpoint from the list and click **Start**.
+
+## Endpoint states
+
+Streaming endpoints move through the following states:
+
+| State | Meaning |
+| --- | --- |
+| `Stopped` | The endpoint exists but is not serving content. No charges beyond a base fee. |
+| `Starting` | MK.IO is provisioning capacity. |
+| `Running` | The endpoint is active and serving playback requests. |
+| `Stopping` | The endpoint is shutting down. |
+| `Scaling` | Capacity is being adjusted. |
+
+<Warning>
+A running streaming endpoint incurs charges regardless of whether content is being actively played. Stop endpoints when they are no longer needed to avoid unnecessary costs.
+</Warning>
+
+## Playback URL structure
+
+The endpoint hostname combines with a streaming locator path to form the playback URL. The hostname format is:
+
+```
+<endpoint-name>.<region>.streaming.mediakind.com
+```
+
+For CDN-enabled endpoints, the URL includes an additional CDN base path. Always fetch playback URLs dynamically through `listPaths` rather than constructing them manually, so your clients continue to work if the endpoint hostname changes.
+
+```
+https://<hostName>/<streamingLocatorId>/<manifest>.ism/manifest(format=m3u8-cmaf)
+https://<hostName>/<streamingLocatorId>/<manifest>.ism/manifest(format=mpd-time-cmaf)
+```
+
+## Separate public name and endpoint name
+
+MK.IO generates streaming endpoint URLs with separate `name` and `publicName` fields. The `publicName` is used exclusively for published endpoint URLs, ensuring that only approved, share-safe identifiers appear in public addresses. The `publicName` is validated as globally unique and formatted for compatibility in DNS names and URL paths.
+
+## Scale a dedicated endpoint
+
+To increase capacity for a running Dedicated endpoint, update the `scaleUnits` value. Each unit adds 200 Mbps of guaranteed throughput.
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/media/streamingEndpoints/production/scale" \
+  -H "Authorization: Bearer $MKIO_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "scaleUnit": 2 }'
+```
+
+## Stop and delete an endpoint
+
+Stop an endpoint when you no longer need it to serve content:
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/media/streamingEndpoints/production/stop" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+A stopped endpoint retains its configuration and can be started again. To remove it entirely:
+
+```bash
+curl -X DELETE "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/media/streamingEndpoints/production" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+<Note>
+Confirm that no active streaming locators depend on an endpoint before stopping or deleting it. Stopping the endpoint interrupts playback for every locator that uses it.
+</Note>
+
+## Billing notifications
+
+MK.IO displays a billing confirmation message before you start a streaming endpoint, and again in the **Create and start** workflow. This confirms that charges apply before the endpoint starts.
+
+## CDN delivery
+
+MK.IO integrated CDN delivery uses Fastly for edge caching at origin. CDN-backed endpoints cache HLS CMAF and DASH segments at the edge to reduce origin load and improve playback performance for globally distributed viewers. You can also bring an external CDN by pointing it at your MK.IO streaming origin.

@@ -1,0 +1,130 @@
+---
+title: "Query Usage and Billing Telemetry via Management API"
+sidebarTitle: "Usage & Billing"
+description: "Query billing telemetry, track resource consumption, filter usage by product or project, and download reports using the MK.IO Management API."
+---
+
+The Management API offers two reporting views. Project usage gives the current billing-month view for one project. Organization usage reports query a custom date range across selected projects or payment methods. MK.IO bills on metered, pay-as-you-go usage, so these reports map directly to what you are charged.
+
+## Current project usage
+
+For a quick month-to-date view of one project:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/usage" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+This returns usage since the start of the current month, grouped by meter.
+
+## Date-range usage reports
+
+For any other range, post a query to the reporting endpoint. `startDate` is inclusive and `endDate` is exclusive, both as `YYYY-MM-DD` in UTC.
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/organization/reports/usage" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "startDate": "2026-01-01",
+    "endDate": "2026-02-01",
+    "granularity": "day",
+    "projectNames": ["my-project"]
+  }'
+```
+
+The query supports:
+
+| Parameter | Options | Notes |
+| --- | --- | --- |
+| `granularity` | `hour`, `day`, `week`, `month`, or `year` | Range is capped by granularity: 31 days for `hour`, one year for `day`, unbounded for `week` and above. |
+| `projectNames` | Array of project names | Mutually exclusive with `paymentMethodIds`. |
+| `paymentMethodIds` | Array of payment method IDs | Mutually exclusive with `projectNames`. |
+| `format` | `json` (default) or `csv` | |
+| `download` | `true` or `false` | Set `true` to return the report as a file download. |
+| `filterOnReportedDate` | `true` or `false` | Filter by when usage was charged rather than when it occurred. Helps reconcile against invoice dates. |
+
+To pull a CSV for finance:
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/organization/reports/usage" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "startDate": "2026-01-01",
+    "endDate": "2026-02-01",
+    "format": "csv",
+    "download": true,
+    "filterOnReportedDate": true
+  }'
+```
+
+## Payment methods
+
+List the organization's payment methods, and read one method's rate card to see per-meter prices:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/organization/paymentMethods" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X GET "https://app.mk.io/api/v1/organization/paymentMethods/<PAYMENT_METHOD_ID>/rateCard" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Read or replace the method assigned to a project:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/paymentMethod" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/paymentMethod" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{ "paymentMethodId": "<PAYMENT_METHOD_ID>" }'
+```
+
+## Enable metrics export
+
+Enabling metrics export is billable. Confirm the action and current rate card before turning it on. Enable the project metrics endpoint with a `PATCH`:
+
+```bash
+curl -X PATCH "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/metricsEndpoint" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{ "spec": { "enabled": true } }'
+```
+
+The read response returns `url`, `username`, and `password`. Treat the username and password as secrets. The URL exposes current Prometheus-format samples through `/federate` — it is not a historical query API.
+
+<Note>
+Source values refresh at approximately 30-second intervals. Faster scraping does not create fresher values. Use external Prometheus-compatible storage and Grafana for retained history, trends, and dashboards. Metrics ending in `_total`, including ETR-290 totals, are cumulative counters — calculate rates from retained samples.
+</Note>
+
+<Info>
+The export does not provide viewer count, viewer geography, startup time, rebuffering, or player errors. Streaming endpoint request rate and egress bitrate represent delivery traffic, not viewer, session, or concurrency counts.
+</Info>
+
+## What goes wrong
+
+<Accordion title="A payment method seems stuck on a project">
+  A method cannot be removed, only replaced with another. Assigning a payment method also activates the project.
+</Accordion>
+
+<Accordion title="An hourly report is rejected for too wide a range">
+  `hour` granularity is limited to 31 days. Use `day` or coarser granularity for longer ranges.
+</Accordion>
+
+<Accordion title="Report totals do not match an invoice">
+  The report defaults to when usage occurred. Set `filterOnReportedDate` to `true` to align with billing dates.
+</Accordion>
+
+## What comes next
+
+<CardGroup cols={2}>
+  <Card title="Org Provisioning" icon="building" href="/api-guides/management/org-provisioning">
+    Set up projects before reporting on them.
+  </Card>
+  <Card title="Webhooks" icon="webhook" href="/api-guides/management/webhooks">
+    Receive event-driven notifications for billing and usage events.
+  </Card>
+</CardGroup>

@@ -1,0 +1,60 @@
+---
+title: "Beam Reception Delay Modes for Low-Latency Workflows"
+sidebarTitle: "Delay Modes"
+description: "Understand and configure delay modes in MK.IO Beam reception workflows to balance latency against buffering and error recovery."
+---
+
+MK.IO Beam's Receiver service supports configurable delay modes that control the decoding latency of the contribution decoder. Choosing the right delay mode lets you balance the end-to-end latency of your reception workflow against the decoder's ability to tolerate jitter and buffer variations in the incoming stream. This setting is particularly important for live contribution links where minimizing delay is a priority.
+
+## Delay Modes Overview
+
+The delay mode affects the relationship between the PCR/PTS and the picture display time relative to the system clock reference. Three modes are available:
+
+| Delay Mode | Recommended Use Case |
+| :-- | :-- |
+| **Standard** | Default value. Compatible with all encoders in all modes. Use this when other modes cause issues. |
+| **Low** | **Recommended for most contribution link use cases.** Use wherever low delay is required. |
+| **Super Low** | **Recommended for simple contribution links using TS input with SDI output** where the lowest possible delay is required. |
+
+<Note>
+  **Low** and **Super Low** delay modes have been designed and tested with MK.IO Beam encoders to ensure an optimized, error-free minimum end-to-end delay. Post-processing operations in the receiver — such as video scaling or HDR/SDR conversion — will add to the overall processing time and may not be compatible with these modes.
+</Note>
+
+<Tip>
+  If a problem occurs trying to decode a valid input transport stream, try **Standard** delay mode before raising a support request.
+</Tip>
+
+Additional input processing — such as descrambling or SMPTE ST 2022-7 input — increases overall latency across all delay modes in the Receiver service.
+
+---
+
+## Set the Delay Mode
+
+<Steps>
+  <Step title="Open the Receiver Edit Page">
+    From the **Home** page, select the RECEIVER item from the required feed, then click the edit icon.
+  </Step>
+  <Step title="Open the Decoding Tab">
+    Open the **Decoding** tab in the **Parameters** window.
+  </Step>
+  <Step title="Select a Delay Mode">
+    Select the required **Delay mode** from the available options: **Standard**, **Low**, or **Super Low**.
+  </Step>
+  <Step title="Save">
+    Click **Save and Continue** to apply the change.
+  </Step>
+</Steps>
+
+---
+
+## Considerations for Super Low Delay Mode
+
+Super Low delay mode has specific requirements and limitations. Review these before selecting it for your workflow:
+
+<Warning>
+  **Super Low** delay mode is only guaranteed to work with the MK.IO Beam encoder. The encoder configuration must be optimized for use with Super Low delay mode.
+</Warning>
+
+- **1080i25/29.97 inputs are not supported** with Super Low delay mode.
+- **Dolby Digital decode** requires approximately 15 ms of additional processing time, which extends the delay when Super Low is selected. Dolby Digital passthrough is not affected by this limitation.
+- Post-processing operations such as video scaling or HDR/SDR conversion add processing time and may not be compatible with Super Low mode.

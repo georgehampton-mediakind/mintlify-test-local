@@ -1,0 +1,12 @@
+# Source: https://docs.mediakind.com/beam/live-encoder/parameters/encoding/logo-insertion
+
+# Logo insertion
+
+| Parameter | Description |
+| --- | --- |
+| Image URL | The path to the replacement image (GIF, PNG or JPEG file). 
+Syntax can be either HTTP://path or /path. |
+| Placement | Select the image placement.<br>Possible values: **Top left corner**, **Top right corner**, **Bottom left corner**, or **Bottom right corner** |
+| Horizontal gap | Position of the image in relation to the screen corner. |
+| Vertical gap | Position of the image in relation to the screen corner. |
+| Size | The percentage of the image height. |

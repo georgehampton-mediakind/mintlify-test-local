@@ -1,0 +1,339 @@
+---
+title: "Configure Decryption and Descrambling on MK.IO Beam"
+sidebarTitle: "Decryption"
+description: "Set up BISS decryption modes, Common Interface modules, and CA entitlements to descramble encrypted satellite feeds on MK.IO Beam."
+---
+
+MK.IO Beam supports several Conditional Access (CA) schemes for decrypting services from an incoming transport stream. When the service selected for decode is encrypted (scrambled), a **locked padlock** symbol is displayed next to the service name in the interface. When the service is successfully being decrypted (descrambled), an **unlocked padlock** symbol is displayed.
+
+Use this page to configure the appropriate decryption method for your workflow — BISS Mode 1, BISS Mode E, BISS-CA, or DVB Common Interface (DVB-CI).
+
+---
+
+## BISS Decryption
+
+BISS (Basic Interoperable Scrambling System) refers to either BISS1 or BISS2, both of which use a fixed Control/Session Word to decrypt scrambled content (except in the case of BISS-CA). The supported modes are defined in EBU Tech 3292.
+
+| BISS Protocol Version | Supported Modes | Scrambling Algorithm | Key Length |
+| :-- | :-- | :-- | :-- |
+| BISS1 | Mode 1, Mode E | DVB-CSA | 48 bits |
+| BISS2 | Mode 1, Mode E, Mode CA (BISS-CA) | DVB-CISSA | 128 bits |
+
+### BISS Mode 1
+
+BISS Mode 1 (BISS1-1 or BISS2-1) is recommended for short-term events such as sports broadcasts. Mode 1 uses a fixed key called the Session Word for encryption and decryption.
+
+The **Clear Session Word (CSW)** is entered into the receiver via the web interface. If the same CSW is also configured on a BISS-compliant encoder, the receiver successfully decrypts the encrypted service.
+
+Beam automatically switches between BISS1 and BISS2 versions based on the **BISS Key** length you enter.
+
+<Steps>
+  <Step title="Open the Receiver Edit Page">
+    From the **Home** page, select the RECEIVER item from the required feed, then click the edit icon.
+  </Step>
+  <Step title="Select the Decrypt Tab">
+    Select the **Decrypt** tab in the **Parameters** window.
+  </Step>
+  <Step title="Set Mode 1">
+    Select **Mode 1** for the **BISS mode** setting.
+  </Step>
+  <Step title="Enter the BISS Key">
+    Update the **BISS Key** with the 12-digit hexadecimal CSW for BISS1, or the 32-digit hexadecimal CSW for BISS2. The digits are visible while being entered but are obscured once you click away.
+  </Step>
+  <Step title="Save">
+    Click **Save and Continue**.
+  </Step>
+</Steps>
+
+<Note>
+  If the BISS key is incorrectly entered or the service is encrypted using a different CA scheme, erroneous packets will be output from the descrambler and the decoder will fail to decode the service.
+</Note>
+
+### BISS Mode E
+
+In BISS Mode E (BISS1-E or BISS2-E), the Clear Session Word (CSW) is encrypted to form the **Encrypted Session Word (ESW)**. Because the ESW is used as the BISS key input, Beam requires an **Injected ID** to derive the CSW.
+
+<Warning>
+  If both the ESW (BISS key) and the Injected ID are known, BISS Mode E offers no additional security over BISS Mode 1. The **BISS Injected ID** should ideally be securely embedded on the device by the Content Provider and not shared.
+</Warning>
+
+#### Set the BISS Injected ID
+
+The BISS Injected ID is required for BISS Mode E and should be configured or made available by the Content Provider.
+
+<Steps>
+  <Step title="Navigate to Appliance">
+    Select **Appliance** from the left-hand side menu.
+  </Step>
+  <Step title="Open BISS Injected IDs">
+    Click the **BISS Injected IDs** tab.
+  </Step>
+  <Step title="Enter the Injected ID">
+    In the **New Injected ID** field, enter the 14-digit Injected ID provided for BISS1, or the 32-digit Injected ID provided for BISS2.
+  </Step>
+  <Step title="Add a Description">
+    In the **Description** field, enter a unique description that allows the Injected ID to be referenced later. Each Injected ID must have a unique description.
+  </Step>
+  <Step title="Upload">
+    Click **Upload**. The new Injected ID is added to the list. Multiple Injected IDs can be entered using the same process.
+  </Step>
+</Steps>
+
+#### Set BISS to Mode E
+
+<Steps>
+  <Step title="Open the Receiver Edit Page">
+    From the **Home** page, select the RECEIVER item from the required feed, then click the edit icon.
+  </Step>
+  <Step title="Select the Decrypt Tab">
+    Select the **Decrypt** tab in the **Parameters** window.
+  </Step>
+  <Step title="Set Mode E">
+    Select **Mode E** for the **BISS mode** setting.
+  </Step>
+  <Step title="Enter the ESW">
+    Update the **BISS Key** with the 16-digit hexadecimal ESW for BISS1, or the 32-digit hexadecimal ESW for BISS2.
+  </Step>
+  <Step title="Select the Injected ID">
+    From the **Injected ID** drop-down list, select the appropriate description name for the required Injected ID embedded in the device.
+  </Step>
+  <Step title="Save">
+    Click **Save and Continue**.
+  </Step>
+</Steps>
+
+---
+
+## BISS-CA Decryption
+
+<Note>
+  A **Trusted Platform Module (TPM)** must be fitted to the server. If not fitted, the BISS-CA functionality will be hidden. Contact MediaKind Customer Support to check whether a TPM is installed.
+</Note>
+
+BISS2 mode CA (BISS-CA), as specified in EBU Tech 3292-s1 Version 1.0 March 2018, extends BISS2 by replacing the fixed Session Word with a cycling Session Word transmitted in the transport stream using Entitlement Control Messages (ECMs).
+
+Receivers may be entitled by the headend to decrypt the cycling Session Words via an intermediary Session Key (SK) transmitted using Entitlement Management Messages (EMMs). Entitlement is handled through public/private key cryptography — the public and private keys are both known to the receiver, while only the public key is known to the headend.
+
+### BISS-CA Key Types
+
+The receiver component supports two BISS-CA key types. Multiple key pairs of either type can be stored on a single unit, allowing you to switch between headend scramblers without reloading or regenerating key pairs.
+
+- **Self-Generated Key Pair** — the device generates the key pair internally.
+- **Injected Key Pair** — the key pair is provided externally by the Content Provider and imported onto the device.
+
+### Managing BISS-CA Keys
+
+View the BISS-CA keys stored on the unit in the **BISS-CA Key Pairs** table found in **Appliance** section of the Beam web UI. The table shows:
+
+| Column | Description |
+| :-- | :-- |
+| **EKID** | Entitlement Key ID derived from the stored key pair. Used to identify the key pair when communicating with the Content Provider. |
+| **Key Pair Type** | Self-Generated or Injected. |
+| **Creation Date** | Date the key pair was generated or imported. |
+| **Description** | Optional operator text to identify the Content Provider, event, or purpose. No effect on operation. |
+| **Download Actions** | **Public** (download the public key) or **Delete** (remove the key pair). |
+
+#### Display the BISS-CA Key Pairs Table
+
+1. Select **Appliance** from the left-hand side menu.
+2. Click the **BISS-CA Key Pairs** tab.
+
+#### Create a Self-Generated Key Pair
+
+<Steps>
+  <Step title="Open the Key Pairs Table">
+    Navigate to **Appliance** > **BISS-CA Key Pairs**.
+  </Step>
+  <Step title="Add a Key Pair">
+    Click **Add Key Pair**.
+  </Step>
+  <Step title="Select Self-Generated">
+    Select **Self-Generated Key Pair**. A pop-up window appears stating **Success**.
+  </Step>
+  <Step title="Confirm and Describe">
+    Click **OK** to close the pop-up. A new key pair entry appears in the table. Enter a description in the **Description** field to help identify the Content Provider or event.
+  </Step>
+</Steps>
+
+#### Import an Injected Key Pair
+
+<Steps>
+  <Step title="Open the Key Pairs Table">
+    Navigate to **Appliance** > **BISS-CA Key Pairs**.
+  </Step>
+  <Step title="Add a Key Pair">
+    Click **Add Key Pair**.
+  </Step>
+  <Step title="Select Import Injected">
+    Select **Import Injected Key Pair**. A pop-up browser window appears with fields for the public and private keys.
+  </Step>
+  <Step title="Select the Public Key File">
+    Click the **Select Public Key** field and browse to select the public key file.
+  </Step>
+  <Step title="Select the Private Key File">
+    Click the **Select Private Key** field and browse to select the private key file.
+  </Step>
+  <Step title="Add a Description">
+    Enter a description in the **Description** field.
+  </Step>
+  <Step title="Import">
+    Click **Import**. A pop-up window appears stating **Success**. Click **OK** to close it. A new key pair entry appears in the table.
+  </Step>
+</Steps>
+
+#### Export the Public Key
+
+1. Navigate to **Appliance** > **BISS-CA Key Pairs**.
+2. Locate the row with the desired key pair.
+3. From the **Download Actions** column, click **Public** to download the public key file.
+
+Provide the exported public key to the Content Provider, who will use it to issue entitlements.
+
+#### Remove a Stored Key Pair
+
+<Warning>
+  Removing a key pair is irreversible. Any service using the removed key pair will no longer be descrambled, and new entitlements must be obtained from the Content Provider.
+</Warning>
+
+1. Navigate to **Appliance** > **BISS-CA Key Pairs**.
+2. Locate the row with the key pair to remove.
+3. From the **Download Actions** column, click **Delete**. A pop-up asks for confirmation.
+4. Select **Yes, Delete Key**. A pop-up states **Success**.
+5. Click **OK** to close the pop-up.
+
+### Enable BISS-CA Decryption for Service Decode
+
+For a service configured for **UHD** or **SD/HD**:
+
+<Steps>
+  <Step title="Open the Receiver Edit Page">
+    From the **Home** page, select the RECEIVER item from the required feed, then click the edit icon.
+  </Step>
+  <Step title="Open the Decrypt Tab">
+    From the **Parameters** window, select the **Decrypt** tab.
+  </Step>
+  <Step title="Enable BISS-CA">
+    Tick the **BISS-CA** checkbox to enable decryption. Untick it to disable.
+  </Step>
+  <Step title="Save">
+    Click **Save and continue** to save your changes.
+  </Step>
+</Steps>
+
+### Enable BISS-CA Decryption for TS Passthrough
+
+For a service configured for **TS Passthrough**:
+
+<Steps>
+  <Step title="Open the Receiver Edit Page">
+    From the **Home** page, select the RECEIVER item from the required feed, then click the edit icon.
+  </Step>
+  <Step title="Open the Decrypt Tab">
+    From the **Parameters** window, select the **Decrypt** tab.
+  </Step>
+  <Step title="Add a Decrypted Program">
+    Click **Add Decrypted Program**. A new row appears in the decryption table.
+  </Step>
+  <Step title="Configure the Service">
+    Set the **Service** to be decrypted and set the **Decryption Type** to **BISS-CA**.
+  </Step>
+  <Step title="Save">
+    Click **Save and continue** to save your changes.
+  </Step>
+</Steps>
+
+---
+
+## DVB Common Interface (DVB-CI) Decryption
+
+Common Interface (DVB-CI) provides descrambling using a PCMCIA-based Conditional Access Module (CAM). CAMs are available from many CA vendors and offer varying capabilities. Professional CAMs can often descramble multiple services and multiple components per service.
+
+Each CAM is typically limited to a single CA vendor. Entitlements are stored on the CAM or on a smartcard inserted into the CAM, and can only be activated once the appropriate entitlements have been delivered.
+
+<Note>
+  The Common Interface option card supported by MK.IO Beam can process transport streams up to 96 Mbps. The actual bitrate that can be processed depends on the CAM's own capabilities. If the transport stream bitrate exceeds the CAM's limit, there is no service-limiting feature to reduce the bitrate before it enters the CAM.
+</Note>
+
+### Supported DVB-CI Option Cards
+
+Refer to the [Decryption section](/beam/reception/tech-specs#decryption) of the technical specifications for the list of compatible Common Interface option cards.
+
+### Multi-Service Descrambling
+
+Depending on the CAM capabilities, one or more programmes can be descrambled using a single CAM.
+
+- When the Receiver Configuration Type is **TS passthrough**, multiple programmes from a single MPTS can be descrambled using a single CAM.
+- For decode-oriented types (**SD/HD** or **UHD**), only one programme can be configured for descrambling per CAM.
+- A CAM cannot be shared between multiple running Receiver services. A common workaround is to configure a single **TS passthrough** Receiver service to descramble multiple programmes using one CAM, outputting them as a local multicast stream. Additional decode-oriented Receiver services can then ingest this locally descrambled multicast and decode individual programmes as required.
+
+### Enable DVB-CI Decryption for Service Decode
+
+For a Receiver service configured for **UHD** or **SD/HD**:
+
+<Steps>
+  <Step title="Open the Receiver Edit Page">
+    From the **Home** page, select the **RECEIVER** item from the required feed, then click the edit icon.
+  </Step>
+  <Step title="Open the DVB-CI Tab">
+    From the **Parameters** window, select the **Decrypt** tab, then click the **DVB-CI** tab.
+  </Step>
+  <Step title="Select the CAM Slot">
+    Select the required CAM from the list of detected CAMs in the **CAM slot** drop-down menu to enable descrambling.
+  </Step>
+  <Step title="Select the Programme">
+    From the **Parameters** window, select the **Decoding** tab. From the **Service** drop-down menu, select the programme to be descrambled and decoded, or enter the programme number manually.
+  </Step>
+  <Step title="Save">
+    Click **Save and Continue** to apply the changes.
+  </Step>
+</Steps>
+
+### Enable DVB-CI Decryption for TS Passthrough
+
+For a Receiver service configured for **TS Passthrough**:
+
+<Steps>
+  <Step title="Open the Receiver Edit Page">
+    From the **Home** page, select the **RECEIVER** item from the required feed, then click the edit icon.
+  </Step>
+  <Step title="Open the DVB-CI Tab">
+    From the **Parameters** window, select the **Decrypt** tab, then click the **DVB-CI** tab.
+  </Step>
+  <Step title="Add a Decrypted Program">
+    Under **Program Configuration**, click **Add Decrypted Program**. A new row appears in the decryption table.
+  </Step>
+  <Step title="Configure the Programme">
+    Under the **Service** column, select the programme to be descrambled, or enter the programme number manually. Under the **Decryption Type** column, select the required CAM from the drop-down list of detected CAMs.
+  </Step>
+  <Step title="Repeat and Save">
+    Repeat steps 3–4 for additional programmes. Click **Save and Continue** to apply the changes.
+  </Step>
+</Steps>
+
+### Explore CAM Information
+
+CAM information varies by vendor and between versions. You can configure parameters such as CA PIN or language, and view details including model number, version, and status.
+
+<Warning>
+  Switching between CAMs will interrupt any programmes currently being descrambled.
+</Warning>
+
+1. Ensure the Receiver service or Feed is in a **Running** state.
+2. Open the Receiver edit page and navigate to **Decrypt** > **DVB-CI**.
+3. Select the CAM from the **CAM selection** or **CAM slot** drop-down menu.
+4. Click **Explore CAM in Slot** to open the CAM menu pop-up.
+5. Click menu items to navigate through the CAM's menus (clicking an item is equivalent to pressing OK on a remote control).
+6. Click **Exit** at the bottom of the pop-up to close it.
+
+### Reset the CAM
+
+If the CAM or smartcard develops a fault, you can reset it remotely through the user interface without physical access.
+
+<Warning>
+  Resetting the CAM briefly stops descrambling, which may disrupt the output transport stream or cause decode errors.
+</Warning>
+
+1. Ensure the Receiver service or Feed is in a **Running** state.
+2. Open the Receiver edit page and navigate to **Decrypt** > **DVB-CI**.
+3. Select the CAM from the **CAM selection** or **CAM slot** drop-down menu.
+4. Click **Reset CAM in Slot** to reset the CAM.

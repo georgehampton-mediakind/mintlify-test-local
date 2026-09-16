@@ -1,0 +1,19 @@
+# Source: https://docs.mediakind.com/beam/live-encoder/configure/input/audio-stream
+
+# Configure the audio input stream
+
+1. Display services.
+
+2. Click ![Edit][base64-image] to edit the service. The **General parameters** display.
+
+3. Select **Input** tab to display parameters.
+
+4. Go to the **Sources** > **Input streams selection** > **Audio ID** section then click **Add** to configure a new audio stream or click ![Edit][base64-image] to edit an existing one.
+
+5. Enter the appropriate value for each [audio stream parameter](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio#audio).
+
+ Parameters differ depending on the selected input type.
+
+6. Click **Ok**. The audio input is added to the list of audio inputs.
+
+7. Click **Save and continue** or **Save and exit** to save your changes.

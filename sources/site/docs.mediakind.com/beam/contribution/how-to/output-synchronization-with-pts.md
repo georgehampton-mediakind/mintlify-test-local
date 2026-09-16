@@ -1,0 +1,39 @@
+# Source: https://docs.mediakind.com/beam/contribution/how-to/output-synchronization-with-pts
+
+# 1+1 output synchronization with PTS alignment
+
+The synchronization of two MK.IO Beam servers is useful to reduce the redundancy switch time of a downstream device: the two MK.IO Beam units using the same source can output two streams where the encoded frames have their PCR, PTS and IDR aligned. When the downstream device switches between one MK.IO Beam output and the other, the stream looks identical to the downstream device and the only interruption observed is “on the wire”.
+
+How it works:
+
+- The source fed to the two MK.IO Beam servers needs to be the same (identical) and the timecode needs to be present on the input. With no timecode present, the feature still operates but the alignment is not as accurate.
+- The two units need to be identically configured. This can be achieved (for example) by exporting a channel configuration from one device to the other.
+- The synchronization needs to be configured so the two units interact with each other (see [Configuration](https://docs.mediakind.com/beam/contribution/how-to/output-synchronization-with-pts/#configuration) section below for details on how to configure this option)
+- The two output streams perform an automatic alignment of the PCR as well as the PTS of the encoded frames. The picture types (the IDR being the important one here) are also aligned where the position of the IDR is the same between the two streams. These has been measured to be accurate within a frame (or +/-1 frame when timecode is not used).
+- The third-party downstream device can be configured with two inputs corresponding to the two MK.IO Beam servers. When the input is manually switched from one to the other, the downstream device recovers with the same PCR and the decoder recovers at the next IDR point. The interruption observed is minimal (looks like a glitch).
+- Without this feature, the recovery would typically be tens of seconds and the visible impact would be very severe.
+
+## Use cases
+
+[Section titled “Use cases”](https://docs.mediakind.com/beam/contribution/how-to/output-synchronization-with-pts/#use-cases)
+
+- The two units need to be configured identically (same configuration parameters apart from the output multicast or ASI output ports).
+- The support of encoder synchronization is available for SDI ingest and SMPTE ST 2110 ingests.
+- Only PAL content is supported. Telecine content has not been validated with this feature.
+
+## Configuration
+
+[Section titled “Configuration”](https://docs.mediakind.com/beam/contribution/how-to/output-synchronization-with-pts/#configuration)
+
+From the Live Encoder component UI, you can synchronize two services (with the exact same configuration) on two standalone units:
+
+1. Go to **General** > **Services synchronization** section.
+
+2. Tick the **Activate** checkbox then enter the **Pool name** to identify the services that need to be synchronized together.
+
+ ![ce1 el synch poolname](https://docs.mediakind.com/ce1-img/ce1_el_synch_poolname.png)
+
+It is required that the unit IP addresses are not set to the default IP address (127.0.0.1) or the unit control IP addresses which will interfere with this feature.
+
+**See also** 
+[Synchronize two services](https://docs.mediakind.com/beam/live-encoder/configure#synchronize-two-services)

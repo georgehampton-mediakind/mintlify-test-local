@@ -1,0 +1,162 @@
+---
+title: "MK.IO Beam Headend Technical Specifications"
+sidebarTitle: "Tech Specs"
+description: "Technical specifications for MK.IO Beam headend deployments — supported formats, encoding capabilities, output types, and hardware requirements."
+---
+
+This page lists the technical specifications for MK.IO Beam headend deployments, covering input types, pre-processing, encoding, multiplexing, output formats, content protection, and monitoring capabilities.
+
+## Input
+
+### Compressed Input
+
+- **Type:** IP (IGMPv3-based redundancy and dual multicast redundancy), dual source redundancy (active/active and active/passive modes), Pro-MPEG FEC support
+- **Monitoring:** Packet loss statistics
+- **Protocol:** MPEG-2 TS (MPTS and SPTS), RTMP
+- **Codec:** JPEG-XS, MPEG-2, H.264, HEVC, MPEG-1 LII, Dolby Digital (AC-3), Dolby Digital Plus (E-AC3), AAC, HE-AAC v1 and v2, Dolby E (baseband input only), Dolby Digital Plus ATMOS
+- **Data rate:** SD/HD up to 50 Mbps; UHD up to 80 Mbps
+
+#### Reliable Transport
+
+- **SRT and RIST input/output:**
+  - Carriage of UDP or RTP streams over the SRT protocol
+  - SRT listener or caller mode
+  - RIST sender mode
+  - RIST listener mode
+- **Zixi input/output:**
+  - Zixi sender
+  - Zixi feeder or Zixi receiver mode
+
+### Baseband Input
+
+Optional hardware required.
+
+- **SDI:** 3G / HD / SD-SDI (max 16 per server)
+- **SDI over IP (SMPTE ST 2022-6)**
+- **SMPTE ST 2110:**
+  - SMPTE ST 2110-20 uncompressed video up to UHD resolution
+  - SMPTE ST 2110-30/31: uncompressed audio
+  - SMPTE ST 2110-40: data (VITC/Time code, AFD/BAR, Closed captioning, OP-47 Teletext, SMPTE 2031 Teletext)
+  - All SMPTE ST 2110 essences can be input as ST 2022-7
+  - NMOS IS-04 and NMOS IS-05 support
+
+## Pre-processing
+
+### Enhancement Filters
+
+- **Video:** De-interlacing, Cropping, Letter boxing, Stretching, SD and HD Cross-scaling, 3:2 Pull down, MCTF, Deblocking filter, Spatial denoising filter, Cross Talk filter, Sharpening, Diamond filter
+- **Audio:** Automatic loudness control (A/85), Audio gain adjustment, Mute
+
+### Image
+
+- **Image settings:** Brightness, Contrast, Saturation, Hue, Gamma, Temperature
+- **Image overlays:** Image insertion on input loss
+- **Aspect ratio:** WSS, AFD, Video index
+
+## Metadata
+
+- **Subtitles passthrough and translation:** EIA 608/708 Closed Caption, SCTE-20, DVB Teletext, DVB Subtitles, SCTE-27, ARIB B24
+- **Metadata:** SCTE-104, SCTE-35, EIA 608/708 Closed Caption, SCTE-20, DVB Teletext, DVB-VBI, SCTE-27, OP47, SMPTE 2031, VITC, SMPTE 2038, ARIB B24
+- **Streaming subtitles:**
+  - Closed Captions: WebVTT for HLS, DFXP for HSS, WebVTT or SMPTE-TT for DASH
+  - DVB-Teletext page 888: WebVTT for HLS, DFXP for HSS, WebVTT or SMPTE-TT for DASH
+  - DVB-Subtitles: DFXP for HSS, SMPTE-TT for DASH
+- **Ad insertion:** EBIF / EISS / AITSCTE-35 passthrough
+- **Nielsen:** Watermark extraction for multi-screen devices
+
+## Video Encoding
+
+- **Video codec:** HEVC Main 10, HEVC Main Profile, H.264 Baseline / Main / High Profile, MPEG-2
+- **HDR:** HDR10, HLG10, PQ10, Dolby Vision 8.1 and 5.0
+- **Rate control:** CBR, VBR, constant video quality
+- **Data rate:** 100 kbps to 60 Mbps
+- **Resolutions:**
+  - Progressive: QCIF to UHD, up to 60 fps
+  - Interlaced: 480i, 576i, 720i, and 1080i
+- **Templates:** Channel template creation and management
+
+## Audio Encoding
+
+- **Audio encoding:** MPEG-4 / MPEG-2 AAC, AAC 5.1, HE-AAC v1 and v2, HE-AAC 5.1, Dolby Digital (AC3), Dolby Digital Plus (E-AC3), Dolby Digital Plus ATMOS
+- **Audio channels per service:** Up to 8 stereo pairs; radio channels
+- **Passthrough:** MPEG-1 LII, Dolby Digital (AC-3), Dolby Digital Plus (E-AC3) 5.1-ch or stereo, Dolby E, Dolby Digital Plus ATMOS
+- **Data rate:** 4.75 kbps to 320 kbps (64 to 1024 kbps for DD+)
+
+## Multiplexing
+
+### Processing
+
+- Full re-multiplexing support including real-time PSI regeneration and dynamic rules-based passthrough of descriptors
+- PID re-mapping
+- SI/PSI generation/re-generation and insertion from external source
+- Statistical multiplexing bitrate allocation for MediaKind software encoder
+- Bitrate policing
+- Input content extraction
+
+### Content Protection
+
+- DVB-CSA V1, V2 scrambling
+- AES-128 scrambling
+- BISS Mode 0, 1, 2
+
+## Broadcast Output
+
+### Output Type and Format
+
+- Adaptive TS / MPEG-2 TS (ALD, EBP, IDR, or RAP-based signal)
+- SPTS over UDP
+
+### Transmission
+
+- Multicast / Unicast, UDP, RTP
+
+## Streaming Output
+
+### Formatting
+
+- Apple HTTP Live Streaming (over CMAF or TS), Microsoft Smooth Streaming, DASH
+- Common CMAF segment delivery for HLS and DASH
+- Low latency chunking support for DASH
+- RTMP
+
+### Multi Audio
+
+- Multiple audio streams per output for HLS, Smooth Streaming, and DASH
+
+### Content Protection
+
+- Microsoft PlayReady DRM support for HLS/TS, Smooth Streaming, and DASH
+- Apple Segment Encryption for HLS/TS
+- FairPlay support for HLS/TS and HLS/CMAF
+- Adobe Primetime Access support for HLS/TS
+- Widevine, PlayReady, and Marlin support in CTR mode for DASH
+- Widevine and PlayReady support in CBC mode for DASH
+- Key provisioning interface to leading CAS and DRM vendors
+
+### Content Publishing
+
+- Support for pull scenarios in just-in-time packaging
+- Support for publishing to local storage or to WebDAV servers
+
+### Origin Server
+
+- Built-in live and VOD origin server for HLS, Smooth Streaming, and DASH
+- Custom HTTP headers management (expiry settings, CORS headers)
+- Built-in support of HTTP 1.1 Chunked Transfer Encoding for low latency
+
+### CDN
+
+- Interfaces to leading CDNs
+- Certified with Akamai MSL 4 for HLS and DASH
+
+## Monitoring and Control
+
+- **Control interface:** Up to 2 IP ports for monitoring and control (primary and spare) via API and GUI
+- **Control and system protocols:** REST, HTTP, NTP, FTP, IGMP v2/v3, SNMP v2/3c
+- **Content replacement:** SCTE-35 in-band / ESAM out-of-band; triggers include time signal, splice-out/splice-in, alternate command, or manually triggered from GUI
+- **High availability:** Support for both 1+1 and N+M redundancy schemes; service synchronization on encoder and packager
+
+## Infrastructure
+
+- **Servers:** MediaKind-referenced hardware, IT data center–based, on COTS servers
+- **CPU:** Intel, AMD

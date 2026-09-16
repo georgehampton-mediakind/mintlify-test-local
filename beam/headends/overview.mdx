@@ -1,0 +1,86 @@
+---
+title: "MK.IO Beam Headends: Channel Processing and Distribution"
+sidebarTitle: "Overview"
+description: "Configure MK.IO Beam headend solutions for cable, IPTV, and OTT distribution — statistical multiplexing, ABR transcoding, and HLS/DASH packaging."
+---
+
+MK.IO Beam modernizes traditional broadcast and streaming headend workflows with a cloud-connected, software-based approach. Running on standard COTS servers, it delivers cost-effective, portable, and programmable live video processing. Fully integrated with the MK.IO cloud orchestration layer, MK.IO Beam enables centralized control, monitoring, and software lifecycle management across any headend deployment.
+
+## Deployment Topologies
+
+Choose a topology based on your redundancy and capacity requirements:
+
+<CardGroup cols={2}>
+  <Card title="Single Server" icon="server" href="/beam/headends/single-server">
+    Deploy a self-contained headend on one server with redundant outputs for smaller-scale OTT and cable workflows.
+  </Card>
+  <Card title="Server Pair" icon="arrows-rotate" href="/beam/headends/server-pair">
+    Configure two servers as a redundant pair using chain or mesh redundancy for 1+1 fault tolerance.
+  </Card>
+  <Card title="High Availability" icon="shield-check" href="/beam/headends/high-availability">
+    Deploy distributed worker nodes with N+M or 1+1 redundancy for large-scale live broadcast and streaming.
+  </Card>
+  <Card title="Tech Specs" icon="list-check" href="/beam/headends/tech-specs">
+    Review supported input formats, encoding capabilities, output types, and hardware requirements.
+  </Card>
+</CardGroup>
+
+## Solution Layers
+
+The headend solution is organized into three layers that work together through a shared micro-services architecture.
+
+### Management Layer
+
+The management layer is the single entry point for all configuration, control, and monitoring. This interface — available as both a Web UI and a REST API — provides:
+
+- Centralized deployment and orchestration of processing applications across all nodes
+- Service-driven configuration and control (start, stop, failover, server assignment)
+- Aggregated logs and metrics from all nodes and applications
+- Template mechanisms for pre-production preparation and reuse
+
+The management layer is designed for high availability. MediaKind recommends deploying three instances of the management controller to replicate critical components and avoid downtime.
+
+### Processing Layer
+
+The processing layer runs independently of the management layer, ensuring continuous media processing even if the connection to the controller is lost. It includes the following components:
+
+**Live Video Service Encoding** — Software-based live encoding and transcoding leveraging 25 years of MediaKind compression expertise. Supports MPEG-2, H.264, and HEVC for IPTV, cable, DTH, and Internet TV applications.
+
+**Live Video Service Packaging** — Just-in-time packaging (JITP) and encryption for multiscreen distribution. Scales from smartphones to connected TVs and OTT set-top boxes with built-in origin server capabilities.
+
+**Reliable Transport (SRT, RIST, Zixi)** — Secure and reliable transport over private or public IP networks. Supports SRT listener/caller, RIST sender/listener, and Zixi feeder/receiver modes.
+
+**Stream Conditioning** — Used with Live Encoder to trigger SCTE-35 rewriting, animation/text crawling, slate/logo insertion, and live-to-file or file-to-live switching.
+
+**TS Splicer** — Dynamically substitutes content within a live MPEG-2 TS stream without re-encoding, in response to SCTE-35 triggers or a schedule. See [TS Splicing](/beam/headends/packager) for details.
+
+**Statistical Multiplexing** — Statmux pools dynamically allocate bitrate across multiple channels to optimize bandwidth on MPTS outputs.
+
+### Infrastructure Layer
+
+The infrastructure layer is the physical or virtual hardware on which the headend runs. MK.IO Beam is designed for IT data center deployment on MediaKind-referenced COTS servers with Intel or AMD CPUs.
+
+## Common Workflows
+
+<CardGroup cols={2}>
+  <Card title="Configure HLS/DASH Output" icon="play" href="/beam/headends/packager">
+    Set up ABR ladders, manifest generation, and CMAF-based multi-format delivery.
+  </Card>
+  <Card title="Statistical Multiplexing" icon="chart-bar" href="/beam/headends/tech-specs">
+    Set up Statmux pools to optimize bandwidth across multiple channels.
+  </Card>
+  <Card title="High Availability Distributed" icon="network-wired" href="/beam/headends/high-availability">
+    Configure 1+1 or N+M redundancy for encoders and packagers.
+  </Card>
+  <Card title="Server Pair Setup" icon="server" href="/beam/headends/server-pair">
+    Configure main and backup server pairs with chain or mesh redundancy.
+  </Card>
+</CardGroup>
+
+## Security
+
+The Controller is the single entry point for all UI and API requests. A virtual IP always redirects requests to the active controller in 1+1 redundancy configurations. MediaKind recommends enabling HTTPS for all API and UI access.
+
+User management is enabled by default. You can connect it to an LDAP service for enterprise integration. See [Security Settings](/beam/system-admin/security) for user management, SSL, and LDAP configuration.
+
+MediaKind uses the Nessus® vulnerability scanner and releases security packages approximately every two months to address OS-level security risks. Products are tested with each security package before release.

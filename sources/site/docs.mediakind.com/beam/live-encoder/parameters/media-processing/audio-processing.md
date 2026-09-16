@@ -1,0 +1,134 @@
+# Source: https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing
+
+# Audio processing parameters
+
+| Parameter | Description |
+| --- | --- |
+| Mute | Tick the checkbox to mute the audio volume. |
+| Forced language | Overwrites the language of the audio track. If not set the original language is kept.<br>Possible values: 3 alphanumeric characters |
+
+## Advanced
+
+[Section titled “Advanced”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#advanced)
+
+| Parameter | Description |
+| --- | --- |
+| Force audio type | Indication set in audio type.
+
+- Clean effects: indicates that the referenced program element has no language.
+
+- Hearing impaired: indicates that the referenced program element is prepared for the hearing impaired.
+
+- Visual impaired commentary: indicates that the referenced program element is prepared for the visually impaired viewer.
+
+- Primary: indicates the default recommended language.
+
+- Native: indicates the language in which the program was produced.
+
+- If not set, no override is performed.
+
+ |
+| Using audio description | When present in the source, this signals the use of audio description. It carries mono audio on the left channel and modulated pan/fade data on the right channel of an AES stereo pair. If enabled, it is possible to enable ''Audio description bitrate saving'' and drop the audio stream if the description is not present. (See [Signal loss management](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#signal-loss-management)). |
+| Audio delay | Adjust the delay between audio and video. Example: helps resolve lip sync issues.Possible values: From 300 to 300 |
+| Downmix compression mode | Select a mode for Dolby input stream downmixing from 5.1 to stereo.Possible values: **Line mode**, **RF mode** |
+
+## Target loudness
+
+[Section titled “Target loudness”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#target-loudness)
+
+| Parameter | Description |
+| --- | --- |
+| Mode | Select the required target loudness mode:
+
+- 'Static gain' to set a fixed gain.
+
+- 'Loudness control' to use a predefined standard or set a target loudness.
+
+- 'Advanced Loudness control' for country specific regulatory (requires specific licenses).
+
+ |
+| Profile | Select a predefined standard or 'Custom' (only available in 'Loudness control' mode) to define a target loudness |
+| Target loudness | Maintains the audio level at the level defined by the Target loudness parameter. |
+| Gain | Amplify or attenuate the incoming signal.Possible values: From 100 to 20 |
+
+## Dolby E to PCM fallback
+
+[Section titled “Dolby E to PCM fallback”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#dolby-e-to-pcm-fallback)
+
+| Parameter | Description |
+| --- | --- |
+| Audio | Select a fallback audio input stream to switch on if Dolby E is no more available on this stream. A fallback audio input stream must have been previously defined. |
+
+## Watermarking
+
+[Section titled “Watermarking”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#watermarking)
+
+### Nielsen Linear watermarking
+
+[Section titled “Nielsen Linear watermarking”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#nielsen-linear-watermarking)
+
+#### Insertion
+
+[Section titled “Insertion”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#insertion)
+
+| Parameter | Description |
+| --- | --- |
+| Process type | Linear watermarking insertion process type |
+| SID | Linear watermarking insertion source ID<br>One or more SIDs (Source Identification) are assigned to each content provider or distribution source. Included as a component of each watermark, the SID uniquely identifies the distribution source.<br>Only available with NAES watermarking. |
+| CBET SID | Linear watermarking insertion CBET source ID<br>Only available with CBET watermarking. |
+| Check digits | Two uppercase alpha characters, corresponding to the SID that are assigned by Nielsen. If the check-digit string does not match the SID, the authenticator does not permit watermarking with the SID.<br>Only available with NAES watermarking. |
+| CBET Check digits | Only available with CBET watermarking.<br>Two uppercase alpha characters, corresponding to the CBET SID that are assigned by Nielsen. If the CBET check-digit string does not match the SID, the authenticator does not permit watermarking with the CBET SID. |
+| Enable CBET Step-aside mode | Only available with CBET watermarking.<br>Activate the CBET stepaside mode.<br>Determines the method of CBET insertion mode when prior encoding is detected on the same layer. The default mode is overwrite but you can enable the step-aside mode. |
+| Distribution type | Linear watermarking insertion distribution type<br>Typically, **Program Content** watermarks are assigned to syndication content or to content providers (i.e. broadcast networks etc.), while **Final Distributor** watermarks are assigned to local broadcast affiliates or to cable network content. |
+| Existing N2 Watermarks | Linear watermarking NAES II insertion mode<br>Specifies whether the watermark engine overwrites existing NAES audio watermarks of the same type as the watermark that is currently proposed for insertion.<br>\- If the mode is set to **Refrain**, then preexisting watermarks are left intact; new watermarks are inserted only in portions of the audio stream where there are no preexisting watermarks.<br>\- If the mode is set to **Overwrite**, then the watermark engine replaces the original watermarks with the new one.<br> |
+
+#### Extraction
+
+[Section titled “Extraction”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#extraction)
+
+| Parameter | Description |
+| --- | --- |
+| Watermark | Type of watermark that must be extracted from this audio track. |
+| Distributor ID | DNS domain name of the company or entity operating the device.<br>**Note:** This value must be identical for each watermarking within the same service. |
+| Breakout code | Type of content that must be extracted. |
+
+### Nielsen RTVOD
+
+[Section titled “Nielsen RTVOD”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#nielsen-rtvod)
+
+#### Extraction
+
+[Section titled “Extraction”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#extraction-1)
+
+| Parameter | Description |
+| --- | --- |
+| Distributor ID | DNS domain name of the company or entity operating the device. |
+| Breakout code | Type of content that must be extracted. |
+
+## Cue tones
+
+[Section titled “Cue tones”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#cue-tones)
+
+| Parameter | Description |
+| --- | --- |
+| Extract DTMF | Enable DTMF extraction for detecting cuetones. |
+
+### Cue tones with DTMF extraction
+
+[Section titled “Cue tones with DTMF extraction”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#cue-tones-with-dtmf-extraction)
+
+| Parameter | Description |
+| --- | --- |
+| Tone duration | Duration of the tone expected by the DTMF detection algorithm. It is assumed the gaps have the same duration.<br>Possible values: From 0 to 1000 ms |
+| Detection threshold | Detection threshold required in the algorithm to suit the input stream characteristic. The cue tones information in the statistics page or the knowledge of the upstream cue tone system provide help to define the value. The value is expressed in %, it is the threshold ratio versus total signal energy to detect the tone.<br>Possible values: From 0 to 100 |
+
+## Signal loss management
+
+[Section titled “Signal loss management”](https://docs.mediakind.com/beam/live-encoder/parameters/media-processing/audio-processing/#signal-loss-management)
+
+| Parameter | Description |
+| --- | --- |
+| Replacement | Selects the audio sound to be generated when no input is detected.Possible values: Silence, 1kHz audio tone, Audio Description bitrate saving (drop audio stream) |
+
+**Related information** 
+[Configuring the audio processing parameters](https://docs.mediakind.com/beam/live-encoder/configure/media-processing/audio-processing)

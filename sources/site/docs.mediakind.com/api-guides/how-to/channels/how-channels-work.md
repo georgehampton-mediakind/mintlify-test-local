@@ -1,0 +1,96 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work
+
+# How Beam channels work
+
+A _channel_ is a single end to end media path on an MK.IO Beam device: one or more inputs, an optional transform, and one or more outputs, managed as one object. The Advanced view of the device interface exposes the individual services that make this up. The Channels API, like the Essentials UI, hides that layer and gives you the channel as a single resource.
+
+Every channel is identified by `metadata.name`, which is also the value you put in the path of every request. `metadata.displayName` is the human readable label shown in the interface, and the two do not have to match.
+
+## Spec and status
+
+[Section titled “Spec and status”](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work/#spec-and-status)
+
+A channel object has two halves, and knowing which one you are looking at saves a lot of confusion:
+
+| Half | Who writes it | What it holds |
+| :-- | :-- | :-- |
+| `spec` | You | The configuration you want: type, desired state, inputs, transform, and outputs. |
+| `status` | The device | What is actually happening: actual state, health severity, live input and output detail, and sync state. |
+
+`spec.state` is your _desired_ state and accepts `Running` or `Stopped`. `status.state` is the _actual_ state and reports the same two values. When you start a channel, the two disagree for a short period, which is normal.
+
+`GET /api/channels/{channel_id}/` returns both halves. A create or replace request sends only `kind`, `metadata`, and `spec`, because the device owns everything in `status`.
+
+## The five channel types
+
+[Section titled “The five channel types”](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work/#the-five-channel-types)
+
+`spec.type` is the most important decision you make, because it determines which input and output types the device will accept and whether a transform is required.
+
+| `spec.type` | Use it for | Accepted inputs | Accepted outputs |
+| :-- | :-- | :-- | :-- |
+| `EncodingContribution` | Encoding a baseband source for onward contribution at high quality | `SDI`, `Smpte2110` | `ASI`, `UDP`, `SRTCaller`, `SRTListener`, `RF` |
+| `EncodingDistribution` | Encoding a baseband source for distribution to viewers | `SDI`, `Smpte2110` | `ASI`, `UDP`, `SRTCaller`, `SRTListener`, `RF` |
+| `EncodingStreaming` | Encoding a baseband source into adaptive bitrate streaming output | `SDI` | `HttpStreaming` |
+| `ReceptionDecoding` | Receiving a transport stream and decoding it back to baseband | `SRTCaller`, `SRTListener`, `UDP`, `ASI`, `SatDemod` | `SDI`, `Smpte2110` |
+| `ReceptionGateway` | Receiving a transport stream and passing it on without decoding | `SRTCaller`, `SRTListener`, `UDP`, `ASI`, `SatDemod` | `ASI`, `UDP`, `SRTCaller`, `SRTListener`, `RF` |
+
+`SDI` is a Serial Digital Interface port, `ASI` is an Asynchronous Serial Interface port, `SatDemod` is a satellite demodulator, `RF` is a satellite modulator output, and the `SRT` types are Secure Reliable Transport callers and listeners. Which of these a device actually has depends on its hardware, so read `GET /api/interfaces/` before you commit to a design.
+
+Contribution and distribution accept the same inputs and outputs, so the practical difference is the video codec list each one allows. Contribution offers the mezzanine grade codecs, including the 4:2:2 profiles and JPEG XS. Distribution offers the delivery grade codecs, such as `HEVCMain`, `H264High`, `H264Main`, and `MPEG2`. Choosing the wrong type is the most common reason a codec value is rejected.
+
+## When a transform is required
+
+[Section titled “When a transform is required”](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work/#when-a-transform-is-required)
+
+`spec.transform` carries the encoding configuration, and whether you must supply it depends on the channel type:
+
+- `EncodingContribution` and `EncodingDistribution` require `transform.encoding`, which holds the video settings and the audio track list.
+- `EncodingStreaming` requires `transform.abrEncoding` instead, which holds the adaptive bitrate representations.
+- `ReceptionDecoding` and `ReceptionGateway` do not take a transform at all, because nothing is re-encoded.
+
+## Configuration is applied in the background
+
+[Section titled “Configuration is applied in the background”](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work/#configuration-is-applied-in-the-background)
+
+Create, replace, and import requests return as soon as the device has accepted the channel. The device then pushes the underlying service configuration out separately, so a `200` response means the request was valid rather than that the channel is live.
+
+`status.syncState` tells you where that background work got to:
+
+| `syncState` | Meaning |
+| :-- | :-- |
+| `Ok` | The configuration on the device matches the spec you sent. |
+| `Configuring` | The device is still applying the change. |
+| `ConfigFailed` | The device rejected the configuration when it tried to apply it. |
+| `SyncFailed` | The device could not reconcile the channel with its services. |
+| `Failed` | The channel is in a failed state. |
+
+Poll `GET /api/channels/{channel_id}/` after any write and treat `syncState` as the asynchronous result of your request, rather than the status code. `status.syncError` is a list of strings carrying the detail behind the failure states.
+
+Synchronisation runs in both directions, between the Channels API and the Advanced APIs underneath it, so `syncState` also reports problems that originate from a change made outside the Channels API.
+
+## Fields the Channels API cannot represent
+
+[Section titled “Fields the Channels API cannot represent”](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work/#fields-the-channels-api-cannot-represent)
+
+Configuration changes made through the Advanced UI are normally synchronised back into the `spec` of the matching channel. The Channels API is deliberately a simpler model, though, so some of the less common Advanced settings have no equivalent in it.
+
+When that happens, the affected `spec` fields are given the value `Unsynced`, which most of the enumerations in the API include for this purpose, and the field paths are listed in `status.unsyncedFields`.
+
+This is information rather than an error, and it does not mean the channel will not work. Editing a channel in the Advanced UI means taking responsibility for the advanced configuration being correct. What it does mean is that once a channel has drifted far enough from the Channels API model to report `Unsynced`, you need to make further changes to it through the Advanced UI, because the Channels API can no longer describe it in full.
+
+## Health and alarms
+
+[Section titled “Health and alarms”](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work/#health-and-alarms)
+
+`status.health.severity` gives a single rolled-up severity for the channel, and the same severity scale appears on each input and output and on every alarm. The values are `Critical`, `Major`, `Minor`, `Notice`, `Ignore`, and `Clear`. A healthy channel reports `Clear`.
+
+Health tells you that something is wrong. Alarms tell you what. See [Monitor channels and devices](https://docs.mediakind.com/api-guides/how-to/channels/monitor-channels) for reading both.
+
+## Where to go deeper
+
+[Section titled “Where to go deeper”](https://docs.mediakind.com/api-guides/how-to/channels/how-channels-work/#where-to-go-deeper)
+
+- [Beam Essentials UI](https://docs.mediakind.com/beam/essentials) shows the same model through the device interface, which is often the quickest way to understand a channel before you script it.
+- [Manage alarms](https://docs.mediakind.com/beam/system-admin/maintenance/manage-alarms) covers alarm types and overrides at the device level.
+- [Channels API reference](https://docs.mediakind.com/api-reference/channels-api) lists every field of `ChannelSpec` and `ChannelStatus`.

@@ -1,0 +1,119 @@
+---
+title: "Publish Your First VOD Asset with MK.IO"
+sidebarTitle: "VOD Quickstart"
+description: "Step-by-step guide to uploading a video to MK.IO, running a transcode job to produce adaptive bitrate output, and publishing it for on-demand playback."
+---
+
+This quickstart walks you through the full VOD workflow in MK.IO: upload a source video, process it with a transform, and publish the output for playback. By the end you will have a working HLS and DASH URL you can paste into any media player.
+
+## Before you begin
+
+Make sure you have:
+
+- An MK.IO account and project. See [Account Setup](/mkio/getting-started/account-setup).
+- At least one storage account connected to your project. See [Connect Cloud Storage](/mkio/getting-started/connect-cloud-storage).
+- A transform already configured. MK.IO includes built-in presets — see [Configure Transformations](/mkio/vod/overview) to create one if you have not already.
+
+## Publish your first VOD asset
+
+<Steps>
+  <Step title="Add a source asset">
+    Go to **Assets** in the left navigation and click **+ Add Asset**.
+
+    - **Asset name**: A descriptive identifier (for example, `my-first-video`).
+    - **Storage account**: Select the connected storage account where the source file lives.
+
+    To upload a file directly, click **Upload** and choose a file from your computer. MK.IO uploads it to your connected storage and registers it as an asset.
+
+    Alternatively, if your file is already in connected storage, enter the asset name and it will reference the existing files in that container.
+  </Step>
+
+  <Step title="Create a processing job">
+    Go to **Video Processing** in the left navigation and click **Create Job**.
+
+    **Select a transform:**
+
+    Choose the transform to apply from the dropdown. The transform determines the output type. For adaptive bitrate streaming, choose a built-in ABR preset such as `AdaptiveStreaming`. For thumbnails or AI transcription, choose the corresponding preset.
+
+    **Name and configure the job:**
+
+    - **Name** (required): A unique identifier for this job (for example, `encode-my-first-video`).
+    - **Description** (optional): A note about what this job is doing.
+    - **Priority**: Leave at **Normal** for most workloads. Set to **High** to move the job to the front of the queue; **Low** for background processing.
+
+    **Configure the input:**
+
+    Click **Select existing asset** and choose the source asset you created in the previous step. You can also enter an external HTTPS or SAS URL if your source file is publicly accessible.
+
+    **Configure the output:**
+
+    - **Storage account**: Select the storage account where the output should be written.
+    - **Asset name**: Give the output a clear name (for example, `my-first-video-encoded`).
+  </Step>
+
+  <Step title="Submit the job">
+    Click **Submit**. The job enters the queue immediately.
+
+    The job moves through these states: **queued → scheduled → processing → finished**.
+
+    Track progress on the **Video Processing** page. The progress percentage updates as each output rendition is produced.
+
+    <Note>You can duplicate an existing job from the Jobs list to reuse its settings with minor adjustments — useful when you process multiple files with the same transform.</Note>
+  </Step>
+
+  <Step title="Create a streaming endpoint">
+    A streaming endpoint is the delivery server that packages your content as HLS or DASH and serves viewer requests. If you already have a running endpoint, skip to the next step.
+
+    Go to **Streaming Endpoints** and click **+ Create Streaming Endpoint**.
+
+    - **Name**: Use something like `default` or `production`.
+    - **Type**: Select **Shared** for testing (up to 600 Mbps on shared infrastructure).
+    - **Auto-start**: Enable to start the endpoint immediately.
+
+    Click **Create**.
+
+    <Warning>A running streaming endpoint incurs costs even when no content is actively being played. Stop the endpoint when you are done testing.</Warning>
+  </Step>
+
+  <Step title="Create a streaming locator">
+    Once your job reaches **finished**, the output asset appears on the **Assets** page. Click the output asset name.
+
+    Scroll to **Streaming Locators** and click **+ Add Streaming Locator**.
+
+    - **Name**: A unique identifier (for example, `public-access`).
+    - **Streaming policy**: Select `Predefined_ClearStreamingOnly` for an unprotected stream.
+    - Leave **Content key policy** empty for clear streaming.
+
+    Click **Add**.
+  </Step>
+
+  <Step title="Get your playback URL">
+    On the asset page, open the **Streaming Endpoint** dropdown and select your running endpoint. Open the **Streaming locator** dropdown and select the locator you just created. Click **Apply**.
+
+    MK.IO generates your playback URLs:
+
+    ```
+    https://<endpoint-name>.<region>.streaming.mediakind.com/<locator-id>/<manifest>.ism/manifest(format=m3u8-cmaf)
+    https://<endpoint-name>.<region>.streaming.mediakind.com/<locator-id>/<manifest>.ism/manifest(format=mpd-time-cmaf)
+    ```
+
+    Paste either URL into a media player — the built-in MKPlayer on the asset page, VLC, or any HLS/DASH-compatible player — to verify playback.
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Video Processing" icon="sliders" href="/mkio/vod/overview">
+    Explore clip inputs, thumbnail outputs, and AI transcription transforms.
+  </Card>
+  <Card title="Content Protection" icon="lock" href="/mkio/delivery/content-key-policies">
+    Protect your VOD content with Widevine, PlayReady, or FairPlay DRM.
+  </Card>
+  <Card title="Transforms and Jobs API" icon="code" href="/api-guides/media/transforms-and-jobs">
+    Submit, monitor, cancel, and delete jobs through the Media API.
+  </Card>
+  <Card title="Streaming and Playback" icon="play" href="/mkio/concepts/streaming-and-playback">
+    Learn how locators, endpoints, and streaming policies work together.
+  </Card>
+</CardGroup>

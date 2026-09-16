@@ -1,0 +1,123 @@
+---
+title: "MK.IO Beam Channels API Reference — 21 Endpoints"
+sidebarTitle: "Channels API"
+description: "Full REST endpoint reference for the MK.IO Beam Channels API — channel management, alarms, interfaces, deployments served from Beam devices."
+---
+
+The MK.IO Beam Channels API is a simplified channel management API for configuring and monitoring channels on an MK.IO Beam device. Unlike the cloud APIs, it is served directly by the Beam appliance — not from the MK.IO cloud. Use it to create and manage channels, query live metrics, export and import configurations, and inspect device capabilities.
+
+<Info>
+  **Version:** v0.1.0 · **Endpoints:** 21 · **Groups:** 10 · **Spec:** OpenAPI 3.1.0
+
+  [Download OpenAPI spec](https://docs.mediakind.com/openapi/beam/channels-api.json)
+</Info>
+
+<Warning>
+  The Channels API is served by the Beam device at `/ui/connectors/channels-api/latest`, **not** from `https://app.mk.io`. You must connect to the device directly. See the [Channels API guide](/api-guides/beam/channels-overview) for device connection and authentication requirements.
+</Warning>
+
+## Endpoint Groups
+
+### Deployment — 1 endpoint
+
+Check whether the device is eligible for channel deployment.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channel-deployment/eligibility/` | Get Eligibility |
+
+### Me — 1 endpoint
+
+Retrieve information about the currently authenticated session on the device.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channel-me/` | Get Me |
+
+### Channel Alarms — 1 endpoint
+
+List all currently active alarms across channels on the device.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channel-channelalarms/active/` | List Active Channel Alarms |
+
+### Channels — 6 endpoints
+
+Create, retrieve, update, delete, and manage channels running on the Beam appliance. Also provides access to channel thumbnails.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channels/` | List Channels |
+| `GET` | `/api/channels/{channel_id}/` | Get Channel |
+| `PUT` | `/api/channels/{channel_id}/` | Put Channel |
+| `PATCH` | `/api/channels/{channel_id}/` | Patch Channel |
+| `DELETE` | `/api/channels/{channel_id}/` | Delete Channel |
+| `GET` | `/api/channels/{channel_id}/thumbnails/{thumbnail_id}/thumbnail.jpg` | Get Thumbnail |
+
+### Interfaces — 1 endpoint
+
+List the network interfaces available on the Beam device.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/interfaces/` | List Interfaces |
+
+### Appliance — 1 endpoint
+
+Retrieve the capability profile of the Beam appliance, describing what channel types and features it supports.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channel-capability/` | Get Appliance |
+
+### Metrics — 4 endpoints
+
+Query current and historical performance metrics for channels and device hardware.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channel-metrics/current/` | Get Current Metrics |
+| `GET` | `/api/channel-metrics/query/` | Query Metrics |
+| `GET` | `/api/channel-metrics/cpu/` | Query CPU Metrics |
+| `GET` | `/api/channel-metrics/temperature/` | Query Temperature Metrics |
+
+### Import Export — 2 endpoints
+
+Export channel configurations from the device or import a configuration to provision channels in bulk.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/channel-export/` | Channel Export |
+| `POST` | `/api/channel-import/` | Channel Import |
+
+### System — 1 endpoint
+
+Retrieve system information about the Beam appliance, including hardware and software details.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channel-system/` | Get System Info |
+
+### Biss — 3 endpoints
+
+Manage BISS (Basic Interoperable Scrambling System) injected IDs and import codes for broadcast descrambling.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/channel-biss/injected-ids/` | List Injected IDs |
+| `POST` | `/api/channel-biss/injected-ids/` | Create Injected ID |
+| `GET` | `/api/channel-biss/import-code/` | Get Import Code |
+
+## Example Request
+
+All requests target the Beam device directly. Replace `<DEVICE_HOST>` with your device's hostname or IP address:
+
+```bash
+curl -X GET "http://<DEVICE_HOST>/ui/connectors/channels-api/latest/api/channels/" \
+  -H "Authorization: Bearer $BEAM_TOKEN"
+```
+
+<Tip>
+  Use the [Fleets API](/api-reference/fleets-api) to manage Beam device registration, backups, and software from the cloud, and the [Infrastructure API](/api-reference/infrastructure-api) to define the networks and sites your devices are deployed into.
+</Tip>

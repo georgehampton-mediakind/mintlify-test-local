@@ -1,0 +1,218 @@
+# Source: https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video
+
+# Video encoding parameters
+
+## General parameters
+
+[Section titled “General parameters”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#general-parameters)
+
+| Parameter | Description |
+| --- | --- |
+| Rate control | Define how the bitrate is managed for this stream. Trick Play only applies to CBR.Possible values: **VBR**, **CBR**, **CVQ (Constant Video quality)**, **Statmux**.<br>\- With **CBR** (Constant bit rate), you can stream content over a limited bit rate channel such as a network. The output stream fits in one bit rate, which you specify as a parameter. Constant bit rate means that the bit rate is constant according to the leaky bucket concept.<br>\- For more information on **Statmux**, see [Statmux, Statistical rate control](https://docs.mediakind.com/beam/live-encoder/rate-control#statmux-statistical-rate-control).<br>**Note:** In case of H.264, the stream remains compliant with the normative HRD. |
+| Trick play | Only available with **CBR** rate control.Provides a low frame rate video stream that can be used for Trick play. This option requires CBR and is not compatible with shared encoding. |
+| Low delay encoding | Only available with **CBR** rate control.This mode decreases latency by forcing the encoder to use a simplified codec analysis. The video quality is impacted, and only CBR mode is allowed.<br>**Note:** If activated, **Buffer duration** in [**Codec settings**](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#codec-settings) section is limited to **Short** and **Custom** values. |
+| CVQ mode | Only available with **CVQ** rate control.<br>Define how to manage bandwidth in CVQ rate mode. 
+Select Average bit rate to define Target bit rate in kbps. While keeping homogeneous quality, this mode guarantees the Target bitrate over a long period of time (several hours). 
+Select Quality level to define a Target quality using a decimal number on a scale from 1.0 to 5.0. |
+| Target quality | Only available with **CVQ** rate control.<br>Define the Target quality of the CVQ encoding using a decimal number on a scale from 1.0 to 5.0. 5.0 is the highest quality. |
+| Pool name | Only available with **Statmux** rate control.<br>Each statmux stream is included in a pool that defines the global multiplex bitrate. This parameter defines the pool this stream must be attached to. |
+| Service name in profile name | Service name is in profile name. |
+| Minimum bit rate | Only available with **Statmux** rate control.<br>In statmux each stream is encoded in VBR. Minimum bit rate defines the lowest bit rate limit.<br>**Note:** This bit rate can be changed on-the-fly. |
+| Maximum bit rate | Only available with **Statmux** or **VBR** rate control.<br>In statmux, VBR or CVQ mode, each stream is encoded with variable bitrate. Maximum bit rate defines the highest bit rate limit.<br>**Note:** This bit rate can be changed on-the-fly. |
+| Target bit rate | Bandwidth used to encode the video stream.<br>Possible values: From 100 to 60000 kbps<br>**Note:**<br>\- Video bit rate corresponds to “raw” video bit rate, and does not include bit rate overhead due to encapsulation (such as PES headers, MPEG-2 TS headers).<br>\- This bit rate can be changed on-the-fly. |
+| Resolution | Define the output size of each image (length x height).<br>**Note:** Resolutions are sorted by the total number of pixels per frame.<br>You can either choose a value from the drop-down list or enter a custom resolution. |
+| Codec | The different codecs (MPEG2, H.264, HEVC, JPEG XS) can be used to encode the content. Select a codec and its profile for each video stream. |
+| Video quality mode | Different tradeoffs between video quality and density. UP! and UP!+ provide the highest video quality. With Adaptive quality mode the codec leverages ACT (AI Compression Technology) to ensure the best video quality while using all the available resources to process the channel. Adaptive (ACT) is an option if the service runs on constrained resources (like a Kubernetes POD with limited vCPU resources).<br>**Note:**<br>\- The list of available video quality modes depends on codec, rate control, export type and resolutions values.<br>\- For Internet TV, output a mix of these presets is recommended to optimize both the VQ and the density. |
+| Stream conditioning | Conditions stream encoding based on the metadata stream.<br>**Note:** You can select several SCTE-35 streams (either in-band or out-of-band) to condition video streams. |
+| Blackout | This blackout configuration will be applied to the related audio/video/subtitles stream. |
+| Chunking policy | Select the policy to apply when a splice occurs (ad insertion, ad replacement, blackout management, etc). 
+The policy applies for both stream conditioning and blackout to ensure relevant chunk sizing.
+
+- Distribute: chunks before the splice point are adapted to have the same duration. Subsequent GOP boundaries are modified.
+
+- Merge: chunks before or after the splice point are merged. Subsequent GOP boundaries are unchanged.
+
+![chunking distribute](https://docs.mediakind.com/_astro/chunking_distribute.hY8Tvz4c_Zx16XV.webp)<br>_Chunking policy: Distribute_![chunking merge](https://docs.mediakind.com/_astro/chunking_merge.Dyw2gAYW_ZzCX01.webp)<br>_Chunking policy: Merge_ |
+
+### Switch to CBR parameters
+
+[Section titled “Switch to CBR parameters”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#switch-to-cbr-parameters)
+
+Only available when **Rate control** is set to **Statmux**.
+
+| Parameter | Description |
+| --- | --- |
+| Switch to CBR | Enable switching from Statmux to CBR based on SCTE35 splice triggers.The switch relies on SCTE-35 splice commands: a Splice out is used to exit Statmux rate control and switch to CBR then a Splice in is used to switch back to Statmux.<br>If enabled and configured, when you start the service new buttons are available in the [Services > Statistics > Outputs](https://docs.mediakind.com/beam/live-encoder/monitor-statistics#outputs) menu:<br>\- **Switch to CBR** to manually switch from Statmux to CBR.<br>\- **Switch to Statmux** to manually switch back from CBR to Statmux. |
+| Constant bit rate | Bandwidth used to encode the video stream |
+| Triggering stream | Select the SCTE35 metadata stream used to trigger the switch between Statmux and CBR. Note that SCTE35 metadata stream codec must be set to conditioning. |
+| Timeout | Timeout in milliseconds for switching back to Statmux. Disabled if not filled.<br>Possible values: from 1s to 24h |
+
+## Statmux advanced parameters
+
+[Section titled “Statmux advanced parameters”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#statmux-advanced-parameters)
+
+| Parameter | Description |
+| --- | --- |
+| Stream priority | Ability to set the priority (or weight) of a service when it joins a statmux group. 
+'Normal' does not change the default behavior of the statmux algorithm. 
+'High' and 'Highest' will distribute more bandwidth to the video stream than normal computation of the statmux algorithm. 
+'Low' and 'Lowest' will distribute less bandwidth in order to favor the other streams of the group. |
+
+## Codec settings
+
+[Section titled “Codec settings”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#codec-settings)
+
+| Parameter | Description |
+| --- | --- |
+| Video quality experience | Select the codec configuration for subjective or objective measurement. If you have a proprietary probe then select MSSSIM finetuning.The last algorithms integrated in our codec improve the subjective video quality: the quality of experience of the end user is increased. However, these specific fine-tuning in the encoder may decrease objective scores measured by automatic metrics such as PSNR, SSIM, MS-SSIM. If the customer wants to evaluate the video quality with one of these metrics, he can select a fine-tuning of the encode to keep high scores. If the customer uses proprietary probes, we recommend choosing MS-SSIM.<br>Possible values: Objective: **Human visual fine-tuning** or Subjective: **SSIM fine-tuning**, **MS-SSIM fine-tuning**, or **PSNR fine-tuning** |
+| Buffer duration | Define the size of the video buffer. Delay increases with buffer size. Encoding quality improves with buffer size. The default values offered correspond to: Short = 500ms, Standard = 1000ms, Long=2000ms. Customizable value in ms is also an option.<br>**Note:** The video buffer is the standard VBV ([Video Buffering Verifier](https://docs.mediakind.com/beam/live-encoder/leaky-bucket)), it guarantees the encoded stream doesn’t overflow or underflow the decoder’s buffer.<br>Possible values: **Short**, **Standard**, **Long**, or **Custom**<br>\- If **Low delay encoding** is activated, **Short** = 500 ms (for both Internet TV and IP TV)<br>\- If **Low delay encoding** is not activated,<br>**Short** = 500 ms, **Standard** = 1000 ms, **Long** = 2000 ms (for both Internet TV and IP TV) |
+| B-frames | Select the number of B-frames that will be inserted between two I/IDR or P frames.<br>B-frames are used to increase quality. They can be considered as interpolated frames between reference frames (I or P), interpolation is done using forward and backward motion vectors used to select pieces of pictures in reference frames.<br>Modes: (1) Auto: allows the encoder to choose the number of Bframes depending on the source. (2) OFF: If no Bframes are required. (3)(4)(5) 1/2/3: If the number of Bframes must be fixed. |
+| Coding mode | Only available with **Internet TV** export type.<br>Modes: (1) Progressive. (2) Interlaced: only available with framerate 'regular' and resolution 'height' 480, 576 or 1080.<br>In case of shared encoding, only progressive is available. |
+| Frame/field coding mode | Video encoding options: (1) Frame only: each image is considered progressive. (2) Field only: each image is considered interlaced. (3) Frame MBAFF: each image is encoded as progressive with a interlaced/progressive choice at the macroblock level. (4) Auto: recommended setting to automatically detect the best encoding option for each frame.<br>A picture to be encoded may have interlaced structure (2 fields) or progressive structure. Even though a picture may be interlaced, video quality may be improved with frame coding when the correlation between odd and even fields is very strong. |
+| Dynamic range mode | Follow input leaves input format unchanged. Otherwise, the format is converted if necessary: color space, tone mapping (HDR to SDR) or inverse tone mapping (SDR to HDR). 
+HDR formats are only available with HEVC main 10 or JPEG XS 4:2:2 10 bits codec. Dolby Vision formats are only available with progressive outputs (internet TV or UHD).<br>See restrictions and notes below. |
+
+**Restrictions for Dynamic range mode:**
+
+- HDR conversions are only available with **HEVC Main 10 bits** codec.
+
+- **Dolby Vision** is only available with **Progressive** coding mode (Internet TV or UHD).
+
+- At the input, **Dolby Vision** streams are not supported for ST2110, but for SDI, SDI over IP, and compressed IP.
+
+- **SDR**:
+
+ - Transfer characteristic: BT 709
+ - Colorspace: BT 709
+- **Dolby Vision 8.1 & 5**:
+
+ - Backward compatibility to HDR 10
+
+**Notes for Dynamic range mode:** 
+If the input source is not HDR 10 (expected format to convert to DV 8.1 or DV 5), a pre-conversion is performed.
+
+- **PQ 10**:
+ - Transfer characteristic: EOTF SMPTE ST-2084
+ - Colorspace: BT 2020
+- **HDR 10**
+ - PQ 10 +
+ - optional metadata
+- **HLG 10**
+ - Transfer characteristics: Hybrid Log Gamma
+ - Static metadata
+ - Colorspace: BT 2020
+- **HLG-10 SEI compatibility**: HLG10 SEI compatibility is another way to signal HL-G10 through an SEI message instead of the default VUI parameters. This mode provides backward compatibility with UHD TV/decode system only compatible with version 1 of HEVC (not supporting HLG); that would discard the SEI and interpret the signal as SDR BT.2020.
+
+## Video processing
+
+[Section titled “Video processing”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#video-processing)
+
+| Parameter | Description |
+| --- | --- |
+| Detail enhancement filter | This filter boosts frequencies for improved sharpness. Use this filter when input is downscaled. Example: when converting 1080i to 720p. This filter is applied to the source before encoding starts.<br>Compliant with the EIA-608 standard. |
+
+## GOP settings
+
+[Section titled “GOP settings”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#gop-settings)
+
+| Parameter | Description |
+| --- | --- |
+| GOP policy | The GOP policy defines the way GOPs are finished.Values: (1) Open: reference frames can be picked across the GOPs. (2) Closed: all the reference frames must be in the same GOP. Impact depends on player capabilities.<br>\- **Open** mode provides the best video quality.<br>\- **Closed** mode is often used for interoperability. |
+| Key frame period | Enter the maximum time between two key frames.<br>Key frames are inserted into the video stream periodically to synchronize the decoder and enable it to recover from errors.<br>In an OTT use case, the key frame period defines the chunk duration.<br>Setting the value at 2 seconds will generate a chunk duration of 2000 ms for a PAL/DVB output and 2002 ms for a ATSC/NTSC output.<br>Possible values for IPTV: 500 to 10000<br>Possible values for Internet TV: 1000 to 10000 |
+| Key frame period policy | Enter the maximum time between two key frames.<br>Key frames are inserted into the video stream periodically to synchronize the decoder and enable it to recover from errors.<br>In an OTT use case, the key frame period defines the chunk duration.<br>Setting the value at 2 seconds will generate a chunk duration of 2000 ms for a PAL/DVB output and 2002 ms for a ATSC/NTSC output.<br>Possible values:<br>\- **Auto**: adjusts the number of B-frames to have a complete sub-GOP before the key frame period, round key frame period to superior GOP size<br>\- **Maximum**: adjusts the number of B-frames to have a complete sub-GOP before the key frame period but round key frame period to inferior GOP size<br>\- **Strict**: not below key frame period ( in ms) |
+| Low latency fragment(s) per GOP | Fragments/chunks count generated inside of the Key frame period for low latency DASHIF CMAF INGEST outputs.<br>1 means no chunks, no low latency. |
+
+## Aspect ratio
+
+[Section titled “Aspect ratio”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#aspect-ratio)
+
+Whatever the original stream aspect ratio, the best compromise is always performed by the encoder using the AFD, Video Index information. But you can use a specific aspect ratio scaling (anamorphic, letterbox, center cut or stretching.) to adapt the output to 4:3 or 16:9 aspect ratios for terminal not supporting the dynamic changes. 
+Aspect ratio adjustment is coupled with cropping when necessary: different modes are available depending of your needs. 
+Cropping can be used to remove black bars on the sides of the video, remove scrolling banners that are not readable on a handset screen or focus on a specific area of the video.
+
+| Parameter | Description |
+| --- | --- |
+| AFD | If present at the input, AFD (Active Format Description) information is added in the output stream. |
+| Scaling | Method applied to the video when rescaling. The Anamorphic type dynamically adapts the pixel aspect ratio (width x height) per frame. Letterbox inserts black stripes to fit the target aspect ratio. Center cut adjusts the video to keep the subject in the center of the frame and removes the black stripes, Stretching adapts the pixel aspect ratio (width x height) per frame, AFD from input follows the AFD information present in the input.<br>Note: some options are not available with hardware acceleration |
+| Cropping | Only available with **Anamorphic** and **Stretching**.<br>Specify the cropping value in % of video from Top, Bottom, Right and Left. |
+| Output aspect ratio | Only available with **Letterbox** and **Stretching**.<br>Targeted output aspect ratio. |
+| Zoom adjustment | Only available with **Letterbox**.<br>Adjust the zoom level to remove the black bars at the top and bottom of the picture (% of black stripes) |
+| Fallback option | Only available with **AFD from input**.<br>Fallback value when scaling is based on AFD information and AFD is not present in the stream. |
+
+## Output aspect ratio and cropping
+
+[Section titled “Output aspect ratio and cropping”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#output-aspect-ratio-and-cropping)
+
+### Picture aspect ratio handling (Auto)
+
+[Section titled “Picture aspect ratio handling (Auto)”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#picture-aspect-ratio-handling-auto)
+
+If the input video signal embeds WSS information and if the **Aspect ratio** parameter is set to **Auto**, MediaKind Live Encoder can extract the picture aspect ratio (PAR) information and transforms the input video as follows.
+
+The signal always comes as 4:3, but the picture could be 16:9 anamorphic.
+
+| Video Input | WSS Flag | Processing | 4:3 Video Output |
+| --- | --- | --- | --- |
+| ![out 43 43](https://docs.mediakind.com/_astro/out_43_43.DydL83dU_1VIeOY.webp) | 4:3 Full | None | ![out 43 43](https://docs.mediakind.com/_astro/out_43_43.DydL83dU_1VIeOY.webp) |
+| ![in 149 full](https://docs.mediakind.com/_astro/in_149_full.DrtzZWGE_Zl9B98.webp) | 14:9 FullOnly available in PAL | Restore PAR and fit in letterbox | ![out 149 43](https://docs.mediakind.com/_astro/out_149_43.CHWSGh-O_1cFUIc.webp) |
+| ![out 169 169](https://docs.mediakind.com/_astro/out_169_169.dsZ2tU8r_2rdLhh.webp) | 16:9 Full | Restore PAR and fit in letterbox | ![out 43 169](https://docs.mediakind.com/_astro/out_43_169.BnmlCmfv_objAz.webp) |
+| ![in 149 letterbox](https://docs.mediakind.com/_astro/in_149_letterbox.vqrX6vyU_2sIaJN.webp) | 14:9 Letterbox (center)<br>Only available in PAL | None | ![out 149 43](https://docs.mediakind.com/_astro/out_149_43.CHWSGh-O_1cFUIc.webp) |
+| ![out 43 169LBC](https://docs.mediakind.com/_astro/out_43_169LBC.C6UFsG8p_2wqRDB.webp) | 16:9 Letterbox (center)<br>Only available in PAL | None | ![out 43 169LBC](https://docs.mediakind.com/_astro/out_43_169LBC.C6UFsG8p_2wqRDB.webp) |
+| ![out 43 209LBC](https://docs.mediakind.com/_astro/out_43_209LBC.BbbtieOv_RFkSV.webp) | 16:9 Letterbox (center)<br>Only available in PAL | None | ![out 43 209LBC](https://docs.mediakind.com/_astro/out_43_209LBC.BbbtieOv_RFkSV.webp) |
+| ![in 149 letterbox top](https://docs.mediakind.com/_astro/in_149_letterbox_top.CDlMNvDr_ZAosYb.webp) | 14:9 Letterbox (top)<br>Only available in PAL | None | ![in 149 letterbox top](https://docs.mediakind.com/_astro/in_149_letterbox_top.CDlMNvDr_ZAosYb.webp) |
+| Image Removed | 16:9 Letterbox (top)<br>Only available in PAL | None | Image Removed |
+| ![out 43 43](https://docs.mediakind.com/_astro/out_43_43.DydL83dU_1VIeOY.webp) | 4:3 Full | None | ![out 169 43](https://docs.mediakind.com/_astro/out_169_43.CKoLmEfa_Z1rnj4u.webp) |
+| ![in 149 full](https://docs.mediakind.com/_astro/in_149_full.DrtzZWGE_Zl9B98.webp) | 14:9 Full Only available in PAL | Restore PAR and fit in letterbox | ![out 149full 169](https://docs.mediakind.com/_astro/out_149full_169.DMRjjXGD_1xlbWS.webp) |
+| ![out 169 169](https://docs.mediakind.com/_astro/out_169_169.dsZ2tU8r_2rdLhh.webp) | 16:9 Full | Restore PAR and fit in letterbox | ![out 169 169](https://docs.mediakind.com/_astro/out_169_169.dsZ2tU8r_2rdLhh.webp) |
+| ![in 149 letterbox](https://docs.mediakind.com/_astro/in_149_letterbox.vqrX6vyU_2sIaJN.webp) | 14:9 Letterbox (center)<br>Only available in PAL | None | ![out 169 169](https://docs.mediakind.com/_astro/out_169_169.dsZ2tU8r_2rdLhh.webp) |
+| ![out 43 209LBC](https://docs.mediakind.com/_astro/out_43_209LBC.BbbtieOv_RFkSV.webp) | 16:9 Letterbox (center)<br>Only available in PAL | None | ![out 169 209LBC](https://docs.mediakind.com/_astro/out_169_209LBC.BTY6eLb7_ZT3blI.webp) |
+| ![in 149 letterbox top](https://docs.mediakind.com/_astro/in_149_letterbox_top.CDlMNvDr_ZAosYb.webp) | 16:9 Letterbox (center)<br>Only available in PAL | None | ![out 149letterboxtop 169](https://docs.mediakind.com/_astro/out_149letterboxtop_169.D9NBjA2z_Z2dp4gx.webp) |
+| ![in 149 letterbox top](https://docs.mediakind.com/_astro/in_149_letterbox_top.CDlMNvDr_ZAosYb.webp) | 14:9 Letterbox (top)<br>Only available in PAL | None | ![out 149letterboxtop 169](https://docs.mediakind.com/_astro/out_149letterboxtop_169.D9NBjA2z_Z2dp4gx.webp) |
+
+### Cropping management
+
+[Section titled “Cropping management”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#cropping-management)
+
+Cropping is managed in a different way depending on the output aspect ratio management.
+
+| Cropping method | Parameters | Input display | Output display |
+| --- | --- | --- | --- |
+| Dynamic | Crop Left, Right, Top, Bottom and keep Aspect ratio | ![in crop C L R T](https://docs.mediakind.com/_astro/in_crop_C_L_R_T.dzisL75H_Z1yV3Ej.webp) | ![C4 iphone cropping dyn out](https://docs.mediakind.com/_astro/C4-iphone-cropping-dyn-out.Bd110IuO_Z2sXqnn.webp) |
+| Letter Boxing | Adaptation of input 16:9 to output 4:3 zoom level 0% | ![out 169 169](https://docs.mediakind.com/_astro/out_169_169.dsZ2tU8r_2rdLhh.webp) | ![out 43 169](https://docs.mediakind.com/_astro/out_43_169.BnmlCmfv_objAz.webp) |
+| Letter Boxing | Adaptation of input 16:9 to output 4:3 zoom level 50% | ![out 169 169](https://docs.mediakind.com/_astro/out_169_169.dsZ2tU8r_2rdLhh.webp) | ![C4 iphone cropping lbox out](https://docs.mediakind.com/_astro/C4-iphone-cropping-lbox-out.BIJSQ4XT_Z1PE5Db.webp) |
+| Stretch to fit | Crop Left, Right, Top, Bottom and Stretch | ![in crop C L R T](https://docs.mediakind.com/_astro/in_crop_C_L_R_T.dzisL75H_Z1yV3Ej.webp) | ![C4 iphone cropping stretch out](https://docs.mediakind.com/_astro/C4-iphone-cropping-stretch-out.CjCSy_8o_FBVCP.webp) |
+
+## Stream metadata settings
+
+[Section titled “Stream metadata settings”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#stream-metadata-settings)
+
+| Parameter | Description |
+| --- | --- |
+| Timing and VUI insertion | The output streams contains the Timecode and Video Usability Information (VUI), and inserts this information in SEI data and PPS/SPS data. |
+| Timecode insertion | Passthrough the source timecode located within the NAL SEI (H.264/HEVC), within the User Data (MPEG2), or in the jxes\_header() (JPEG XS). |
+| SCTE-20 | If present at the input, SCTE20 closed captions are added in the output stream or converted to SCTE20 if input is closed caption (EIA608 or EIA708) .<br>This option is only available with **IPTV** export type, with **Resolution** ≤720, **MPEG-2 Main** codec with **Frame/field coding mode** set to **Frame only**. |
+
+## Subtitle settings
+
+[Section titled “Subtitle settings”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#subtitle-settings)
+
+| Parameter | Description |
+| --- | --- |
+| Closed caption | If present at the input, closed captions (EIA608 or EIA708) will be added in the output stream or converted to closed captions if input is SCTE20.<br>Compliant with the EIA-608 standard. |
+| Burn-in | This caption burnin configuration will be applied to the related video stream.<br>Possible values: subtitle(s) burn-in defined in **Encoding** > **Subtitle burn-in configuration** section (see [Configure subtitle burn-in](https://docs.mediakind.com/beam/live-encoder/configure/encoding/subtitle-burnin-encoding)). |
+
+## Shared encoding (factorization)
+
+[Section titled “Shared encoding (factorization)”](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#shared-encoding-factorization)
+
+This feature aims to share the encoding process of ABR profiles with the same resolution and frame rate. The information is re-used to simplify lower bitrates encoding.
+
+**Restriction:** Shared encoding is only available if **Coding mode** is set to **Progressive** (see [Codec settings](https://docs.mediakind.com/beam/live-encoder/parameters/encoding/video/#codec-settings)).
+
+| Parameter | Description |
+| --- | --- |
+| **Parent encoding** | The name of the parent encoding stream configuration used to preconfigure this child encoding. Processing for parent and child encodings is mutualized to optimize CPU usage.<br>**Important:** Parent and child stream will have the same rate control mode (CBR or CVQ). |
+| **Target bit rate** | Bandwidth used to encode the video stream.<br>**Note:** Configure the parent stream with the highest bitrate, then configure child stream bitrates to be more than half of the parent bitrate. |
+
+**Related information** 
+[Configure the video encoding parameters](https://docs.mediakind.com/beam/live-encoder/configure/encoding/video-encoding)

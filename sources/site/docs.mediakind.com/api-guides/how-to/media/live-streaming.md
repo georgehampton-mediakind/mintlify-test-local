@@ -1,0 +1,165 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/media/live-streaming
+
+# Live streaming
+
+A live workflow in the Media API is built from a few resources that you manage independently: a **live event** defines ingest and encoding, a **live output** archives the running stream into an asset, a **streaming locator** publishes that asset, and a **streaming endpoint** serves the playback hostname. Separating ingest, archive, and playback lets you, for example, keep an archive asset for VOD long after the event ends. See [Live events](https://docs.mediakind.com/mkio/understanding/core-concepts/live-event) for the product background.
+
+## Create the live event
+
+[Section titled “Create the live event”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#create-the-live-event)
+
+A live event is created with `PUT`. Several of its properties are create-time only, including `input`, `encoding`, `streamOptions`, and `useStaticHostname`, so create it only when you are ready to use it. The example below is a passthrough event that ingests over RTMP.
+
+Terminal window
+
+```
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/liveEvents/main-stage" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tags": {},
+    "properties": {
+      "useStaticHostname": false,
+      "streamOptions": ["Default"],
+      "encoding": {
+        "encodingType": "PassthroughBasic"
+      },
+      "input": {
+        "streamingProtocol": "RTMP",
+        "accessControl": { "ip": { "allow": [] } },
+        "accessToken": "<INGEST_ACCESS_TOKEN>",
+        "keyFrameIntervalDuration": "PT2S",
+        "timedMetadataEndpoints": []
+      }
+    }
+  }'
+```
+
+An empty `accessControl.ip.allow` array allows ingest from any address. For production, list the encoder addresses explicitly. When `useStaticHostname` is `true` you can also set `hostnamePrefix` for a stable ingest and preview hostname; when it is `false`, MK.IO generates the addresses.
+
+## Choosing an encoding type
+
+[Section titled “Choosing an encoding type”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#choosing-an-encoding-type)
+
+`encodingType` decides whether MK.IO forwards your encoder’s output as-is or transcodes it into an adaptive ladder. Passthrough is cheaper and lower-latency but pushes the adaptive-bitrate work onto your encoder; the encoding types produce the ladder for you.
+
+| `encodingType` | What it does | Ingest cap | Maximum archive |
+| :-- | :-- | :-- | :-- |
+| `PassthroughBasic` | Forwards incoming layers, no transcoding | 5 Mbps | 8 hours |
+| `PassthroughStandard` | Forwards incoming layers, no transcoding | 60 Mbps | 25 hours |
+| `Standard` | Transcodes to a 720p adaptive ladder | \- | 25 hours |
+| `Premium1080p` | Transcodes to a 1080p adaptive ladder | \- | 25 hours |
+
+For ingest protocol, `RTMP` and `RTMPS` work with passthrough and encoding. `SRT` (Secure Reliable Transport) is supported for the encoding types.
+
+## Start the event and get the ingest URL
+
+[Section titled “Start the event and get the ingest URL”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#start-the-event-and-get-the-ingest-url)
+
+Start the event when you are ready to receive the stream:
+
+Terminal window
+
+```
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/liveEvents/main-stage/start" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Then read the event back. The `input.endpoints` field is populated server-side and holds the ingest URLs you give to your encoder:
+
+Terminal window
+
+```
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/liveEvents/main-stage" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Point your encoder at that URL. Configure the encoder’s keyframe interval (Group of Pictures, or GOP) to match `keyFrameIntervalDuration`. For example, at 30 frames per second with a 2-second interval, set the encoder to a 60-frame GOP.
+
+## Archive the stream with a live output
+
+[Section titled “Archive the stream with a live output”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#archive-the-stream-with-a-live-output)
+
+A live output writes the running stream into an asset. It requires `assetName` and `archiveWindowLength`, an ISO 8601 duration that sets the Digital Video Recorder (DVR) window.
+
+Terminal window
+
+```
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/liveEvents/main-stage/liveOutputs/main-archive" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "assetName": "main-stage-archive",
+      "archiveWindowLength": "PT4H",
+      "manifestName": "index",
+      "description": "Archive of the main stage feed"
+    }
+  }'
+```
+
+## Publish live playback
+
+[Section titled “Publish live playback”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#publish-live-playback)
+
+The live output writes into an asset, so you publish it the same way as VOD: create a streaming locator on the asset, then retrieve its paths.
+
+Terminal window
+
+```
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/streamingLocators/main-stage-live" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "assetName": "main-stage-archive",
+      "streamingPolicyName": "Predefined_ClearStreamingOnly"
+    }
+  }'
+```
+
+Combine the paths from `listPaths` with the `hostName` of a running streaming endpoint to form the playback URLs. See [Streaming and publishing](https://docs.mediakind.com/api-guides/how-to/media/publishing) for the full publishing model.
+
+## Stop, reset, and delete
+
+[Section titled “Stop, reset, and delete”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#stop-reset-and-delete)
+
+Stopping is a deliberate, billing-relevant action. Stop the event when the stream ends:
+
+Terminal window
+
+```
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/liveEvents/main-stage/stop" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+`reset` restarts ingest on the same event without recreating it. To tear the event down, delete the live output first, then the event:
+
+Terminal window
+
+```
+curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/liveEvents/main-stage/liveOutputs/main-archive" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/liveEvents/main-stage" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+The archived asset survives the event and can keep serving VOD playback.
+
+## What goes wrong
+
+[Section titled “What goes wrong”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#what-goes-wrong)
+
+- **Ingest stops after a pause.** RTMP and RTMPS drop the connection after roughly 10 seconds with no data. Encoder pauses between scenes, network instability, or an idle source can all trigger this. Keep the feed flowing.
+- **Playback stutters or fails because keyframes do not align.** The encoder GOP must match `keyFrameIntervalDuration`. A mismatch produces broken segments.
+- **Ongoing charges after the broadcast.** A running live event and a running streaming endpoint both bill while active. A streaming endpoint can serve many locators and assets. Before stopping it, confirm that no other playback workflow depends on it.
+- **Trying to allocate before starting.** The `allocate` operation is not implemented and returns an error. Start the event directly.
+- **Editing a create-time field.** Input, encoding, stream options, and static-hostname settings cannot change after creation. To change them, create a new event.
+
+## What comes next
+
+[Section titled “What comes next”](https://docs.mediakind.com/api-guides/how-to/media/live-streaming/#what-comes-next)
+
+- [Streaming and publishing](https://docs.mediakind.com/api-guides/how-to/media/publishing): locators, policies, endpoints, and playback URLs.
+- [Webhooks](https://docs.mediakind.com/api-guides/understanding/webhooks): react to `MediaKind.ChannelInstanceStarted`, `ChannelInstanceStopped`, and `ChannelInstanceError` without polling.

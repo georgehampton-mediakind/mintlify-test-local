@@ -1,0 +1,99 @@
+---
+title: "Live Events and Live Outputs in MK.IO"
+sidebarTitle: "Live Events"
+description: "Understand the MK.IO live event resource — ingest modes, passthrough vs encoding, live outputs, archive windows, and the full event state lifecycle."
+---
+
+A **live event** in MK.IO is the ingest and processing component for continuous video streams. It receives an incoming stream from your encoder via RTMP or SRT, processes it according to the event type you configure, and writes the output to a live output asset that viewers can watch in real time.
+
+## Event types
+
+The first decision when creating a live event is whether to use **passthrough** or **encoding** mode. This determines what happens to your stream inside MK.IO.
+
+| Mode | What MK.IO does | Best for |
+| --- | --- | --- |
+| **Live passthrough (up to 5 Mbps)** | Passes the stream through unchanged | Low-bandwidth streams already encoded at source |
+| **Live passthrough (up to 60 Mbps)** | Same, with a higher bandwidth ceiling | High-bitrate professional sources |
+| **Live encoding (720p)** | Produces adaptive bitrate output at 720p and lower | Most use cases — recommended default |
+| **Live encoding (1080p)** | Produces ABR output up to 1080p | High-quality productions |
+
+**Encoding mode** is recommended for most workflows. MK.IO automatically generates multiple bitrate renditions so viewers on different connections all get a smooth experience. **Passthrough** requires your encoder to produce the quality levels you want — it is appropriate when you control the full encode chain upstream.
+
+<Note>Low-latency streaming is available. Contact the MK.IO sales team for details.</Note>
+
+## Input protocols
+
+When creating a live event, choose how your encoder sends video to MK.IO:
+
+| Protocol | Description |
+| --- | --- |
+| **RTMP** | The most widely supported streaming protocol. Used by OBS, Wirecast, and most hardware encoders. |
+| **RTMPS** | Encrypted RTMP. Use when your network requires encrypted ingest. |
+| **SRT** | Secure Reliable Transport. Better reliability over unpredictable networks. Requires encoding mode. |
+
+## Live outputs
+
+A **live output** is the component that writes the processed stream to an asset in your connected storage. You attach a live output to a running live event. The live output controls:
+
+- **Archive window length**: How long MK.IO keeps the live recording visible in the manifest, from 1 minute up to 7 days. Viewers can scrub back through this window during the live event. When the archive window exceeds 25 hours, the manifest shows only the most recent 25-hour window to viewers, but the full recording is still stored in the output asset.
+- **Output asset**: The asset in your connected storage where the recording is written.
+
+When you stop the live event, the full recording remains in the output asset and can be published for VOD playback using a streaming locator.
+
+## Live event state lifecycle
+
+Live events move through the following states:
+
+```
+Stopped → Starting → Running → Stopping → Stopped
+```
+
+| State | Description |
+| --- | --- |
+| **Stopped** | The live event exists but is not consuming resources. No ingest URL is available. |
+| **Starting** | MK.IO is provisioning the ingest infrastructure. Takes a few seconds. |
+| **Running** | The ingest URL is active. MK.IO accepts streams from your encoder. |
+| **Stopping** | MK.IO is shutting down the ingest infrastructure. |
+
+<Warning>A live event in the **Running** state incurs costs even if no encoder is connected. Stop the event when you are not streaming to avoid unnecessary charges.</Warning>
+
+## Live transcription
+
+Live transcription is available for live encoding events. It generates WebVTT subtitles for HLS output and TTML subtitles for DASH output.
+
+To enable it, set the AI pipeline to `Predefined_ACSLiveTranscription` in the advanced settings and specify the source audio language using a BCP-47 language tag (for example, `en-US`). You can also provide expected words or phrases to improve recognition of names and specialist terms.
+
+Live transcription adds less than five seconds to event latency and is billed per minute the live event runs. See [MK.IO pricing](https://mediakind.com/mkio/pricing/) for current rates.
+
+## Connection timeout
+
+If MK.IO receives no data on an RTMP or RTMPS connection for 10 seconds, it automatically drops the connection. This timeout is fixed and cannot be configured. Your encoder must reconnect and resume sending data to restore the stream.
+
+Common causes of unexpected disconnects include:
+
+- Network instability or packet loss
+- Encoder pauses between scenes
+- Video conferencing software that halts transmission when a participant is idle
+
+## Publishing live content
+
+To make a live stream watchable, you need a **streaming locator** attached to the live output asset and a running **streaming endpoint**. Set these up before starting your live event so playback is ready as soon as the stream begins.
+
+See [Streaming and Playback](/mkio/concepts/streaming-and-playback) for how locators and endpoints work, or follow the [Live Quickstart](/mkio/getting-started/live-stream-quickstart) for a complete end-to-end walkthrough.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Live Quickstart" icon="broadcast-tower" href="/mkio/getting-started/live-stream-quickstart">
+    Start your first live stream in five minutes.
+  </Card>
+  <Card title="Set Up a Live Event" icon="sliders" href="/mkio/live/set-up-live-event">
+    Configure advanced settings including AI transcription and image fitting.
+  </Card>
+  <Card title="Live Streaming API" icon="code" href="/api-guides/media/live-streaming">
+    Create and control live events through the Media API.
+  </Card>
+  <Card title="Streaming and Playback" icon="play" href="/mkio/concepts/streaming-and-playback">
+    Publish live output with a locator and endpoint.
+  </Card>
+</CardGroup>

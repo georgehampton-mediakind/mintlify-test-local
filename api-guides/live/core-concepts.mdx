@@ -1,0 +1,238 @@
+---
+title: "Live API Core Concepts: Channels, Events, and Templates"
+sidebarTitle: "Core Concepts"
+description: "Understand Live API resource types, billing models, inputs, outputs, and how live channels and events connect to templates, sources, and assets."
+---
+
+The Live API is built around a small set of ideas that appear in every resource you create. Understanding these building blocks — resource types, the desired state model, inputs, outputs, and templates — lets you configure and operate live workflows without surprises. If you'd rather start hands-on, the live event walkthrough covers the same concepts in the context of a working example.
+
+## The four resource types
+
+Every resource in the Live API is a live processing unit. You create one, define its inputs and outputs, assign a template that controls how it encodes, and then start it. There are four types, chosen by the combination of what you need and how you want to be billed.
+
+| Resource | Billing | Use when |
+| --- | --- | --- |
+| `liveChannels` | Monthly flat fee, charged immediately on start | You need a 24/7 live feed that is always encoding |
+| `liveEvents` | Per-minute | You need a live feed for a defined broadcast window |
+| `staticMultiviewChannels` | Monthly flat fee, charged immediately on start | You need to compose multiple feeds into a multiview output, continuously |
+| `staticMultiviewEvents` | Per-minute | You need to compose multiple feeds into a multiview output for a specific event |
+
+All four share the same body structure, the same lifecycle, and the same endpoints pattern. Choose the matching `spec.transform.type` and configuration fields for your resource. Multiview resources can also reference a `multiviewComposing` config.
+
+## The desired state model
+
+Live API resources use a desired state model. The `spec.state` field tells the platform what you want the resource to be doing. Set it to `Stopped` to create and configure the resource without active processing. Set it to `Running` to begin startup.
+
+This means you can create a resource in advance and verify its configuration before startup. A stopped resource can still take time to move through `Starting`. Stop a resource by patching `spec.state` back to `Stopped`, not by deleting it.
+
+<Info>
+Create with `Stopped`. Start by patching to `Running`. Stop by patching back to `Stopped`. Delete only when you no longer need the resource at all.
+</Info>
+
+## Sites
+
+Each live resource runs on a site. For a normal cloud workflow, omit `spec.siteName` so MK.IO uses the project's cloud site. Set an explicit site only when you deliberately target that site.
+
+<Warning>
+Do not copy `world` into cloud examples — it can route the resource toward a device site.
+</Warning>
+
+## Inputs
+
+An input connects a live resource to a stream. You define inputs as a list in `spec.inputs`, and each input specifies exactly one source of stream data. You choose exactly one of three fields per input — they are mutually exclusive:
+
+| Field | Connects to | Use when |
+| --- | --- | --- |
+| `sourceName` | One specific, named source resource (Media API) | You know exactly which physical feed you want, and it won't change. |
+| `contentName` | A content identifier, resolved to a candidate source (Media API) | The physical source might change, and you want the platform to resolve among available candidates. |
+| `flowName` | Another live resource's output | You are chaining resources together, feeding the output of one flow into another. |
+
+Before defining an input, retrieve the created config and copy its `status.inputPins[].name`. Replace `<INPUT_PIN>` in your requests with a returned pin name.
+
+A single camera with a direct source reference:
+
+```json
+"inputs": [
+  {
+    "sourceName": "camera-1-source",
+    "transformInput": "<INPUT_PIN>"
+  }
+]
+```
+
+A setup where several sources can supply the same logical content:
+
+```json
+"inputs": [
+  {
+    "contentName": "camera-1",
+    "transformInput": "<INPUT_PIN>"
+  }
+]
+```
+
+In both cases, the live resource keeps the same processing config. `contentName` lets the platform resolve among candidates, but it does not guarantee seamless media-aware failover.
+
+### Flow input refiners
+
+When an input uses `contentName`, the platform picks one specific source to supply it. A `refiner` narrows that choice further, without switching to a hard-pinned `sourceName` or `flowName`.
+
+A **`flow`** refiner restricts resolution to a single named upstream flow:
+
+```json
+"inputs": [
+  {
+    "contentName": "camera-1",
+    "transformInput": "<INPUT_PIN>",
+    "refiner": {
+      "flow": { "name": "upstream-encode" }
+    }
+  }
+]
+```
+
+A **`labelMatch`** refiner restricts resolution to sources or flows carrying a specific label key and value:
+
+```json
+"refiner": {
+  "labelMatch": { "key": "region", "value": "eu-west" }
+}
+```
+
+<Note>
+Refiners only apply to inputs today. The `refiner` field exists on outputs and flows too, but those are reserved for future functionality — setting them has no effect yet.
+</Note>
+
+### Transform pins
+
+Every input has a `transformInput` field. This field names the slot, or **pin**, in the processing config that receives the stream. Think of pins as labelled input jacks on a mixing desk. Your `encodingLive` template defines how many inputs it expects and what each one is called.
+
+Pin names come from the config itself. After creating a config, retrieve it and read `status.inputPins[].name`. Use those exact values for `transformInput`. Presets and configs can change, so do not treat a pin name from an example as universal.
+
+Each pin also reports `allowMultipleBindings`. If it's `false`, only one input can target that pin. If it's `true`, the template has been built to accept more than one input on that pin.
+
+## Outputs
+
+An output defines where encoded stream data goes after processing. You define outputs as a list in `spec.outputs`. An output can:
+
+- Connect to a named destination (`destinationName`), sending the stream to an external RTMP or SRT endpoint.
+- Publish a content name (`contentName`), making the processed stream available to downstream live resources by name.
+- Be internal: omitting both `destinationName` and `contentName` makes the output available to downstream resources without external egress.
+
+An internal output is useful when you want to chain resources together inside the platform without sending anything to an external system.
+
+### Outputs and the archive asset
+
+`spec.outputs` controls optional egress. It is separate from `assetName`, which lives on `spec.transform` alongside `encodingLive` and is **required** on every `LiveChannel`, `LiveEvent`, `StaticMultiviewChannel`, and `StaticMultiviewEvent` — you cannot create one of these resources without naming an asset.
+
+```json
+"transform": {
+  "type": "LiveEvent",
+  "assetName": "my-event-archive",
+  "encodingLive": { "configRef": { "name": "my-encoding-template", "version": "latest" } }
+}
+```
+
+Use `archiveWindowLength` to control the archive and time-shift window, up to the documented maximum of 30 days. Configuring an external destination does not remove the required asset field.
+
+## Templates
+
+The live resource spec controls _what_ to do: which inputs to accept, where to send output, when to run. What it does not control is _how_ to encode. Templates solve this. You upload your encoding settings once to the **Templates API**, give the template a name, and reference it from as many live resources as you need.
+
+### Reference a template
+
+Reference a template in a live resource spec like this:
+
+```json
+"encodingLive": {
+  "configRef": {
+    "name": "my-encoding-template",
+    "version": "latest"
+  }
+}
+```
+
+The `configRef.name` value must identify a customer config, not a MediaKind preset. Create the config from a preset first, then retrieve the config and read `status.inputPins` and `status.outputPins`.
+
+<Tip>
+The `latest` tag is mutable. Pin `configRef.version` to a version hash for production workflows that must remain reproducible.
+</Tip>
+
+### Customize a resource configuration
+
+There are two ways to adjust a template's behavior for a single resource without changing the shared template itself.
+
+**`configValues`** lets you set named parameters the template has explicitly declared:
+
+```json
+"encodingLive": {
+  "configRef": {
+    "name": "my-encoding-template",
+    "version": "latest"
+  },
+  "configValues": {
+    "<PARAMETER_NAME>": "<PARAMETER_VALUE>"
+  }
+}
+```
+
+Add `configValues` only for parameters listed in the created config's `spec.parameters`. You cannot invent a parameter name on the resource side.
+
+**`configOverrides`** applies JSON Patch operations directly against the template's content at any path, whether or not the template author intended it to be changed:
+
+```json
+"encodingLive": {
+  "configRef": {
+    "name": "my-encoding-template",
+    "version": "latest"
+  },
+  "configOverrides": {
+    "type": "application/json-patch+json",
+    "operations": [
+      {
+        "op": "replace",
+        "path": "<CONFIG_JSON_POINTER>",
+        "value": "<OVERRIDE_VALUE>"
+      }
+    ]
+  }
+}
+```
+
+If both `configValues` and `configOverrides` touch the same field, `configValues` is applied first and `configOverrides` second — so `configOverrides` wins.
+
+<Note>
+The same object accepts an `advancedSettingsName` field. This points at an advanced-settings block that MediaKind manages on your behalf. Leave it out unless MediaKind support has specifically asked you to reference one.
+</Note>
+
+### Template types
+
+| Config type | Required by | Purpose |
+| --- | --- | --- |
+| `encodingLive` | All four resource types | Live encoding parameters |
+| `multiviewComposing` | StaticMultiviewChannel, StaticMultiviewEvent (optional) | Composition layout for multiview, defined separately from encoding |
+| `streamConditioning` | Optional on any | Stream conditioning parameters |
+
+## What the Live API depends on
+
+The Live API references two other APIs by name but doesn't manage them directly:
+
+- **Media API**: sources, content, destinations, and assets. See the Content, Sources, and Destinations guide.
+- **Templates API**: the encoding and composition templates referenced from your live resources. See the Templates API guide.
+
+## What comes next
+
+<CardGroup cols={2}>
+  <Card title="Manage Live" icon="play" href="/api-guides/live/manage-live">
+    Create and operate liveChannels and liveEvents.
+  </Card>
+  <Card title="Multiview" icon="grid" href="/api-guides/live/multiview">
+    Compose multiple live inputs into a single tiled output.
+  </Card>
+  <Card title="Manage Templates" icon="file-code" href="/api-guides/live/manage-templates">
+    Create and version encoding configuration templates.
+  </Card>
+  <Card title="Scheduled Operations" icon="clock" href="/api-guides/live/scheduled-operations">
+    Automate start and stop times for live resources.
+  </Card>
+</CardGroup>

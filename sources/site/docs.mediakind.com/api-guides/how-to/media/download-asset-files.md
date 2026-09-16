@@ -1,0 +1,112 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/media/download-asset-files
+
+# Download asset files
+
+To read a file from an asset, call `getFileAccessInfo` to get temporary access details, then use those details to request the file.
+
+You need an asset that already points to stored content, a bearer token, the asset name, and the path of the file you want.
+
+## Get the access details
+
+[Section titled “Get the access details”](https://docs.mediakind.com/api-guides/how-to/media/download-asset-files/#get-the-access-details)
+
+`getFileAccessInfo` is a `POST` with no body:
+
+Terminal window
+
+```
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/<ASSET_NAME>/getFileAccessInfo" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+The response contains the information needed to access files associated with the asset:
+
+```
+{
+  "storageAccountName": "mystorageaccount",
+  "containerName": "mycontainer",
+  "jwt": "<access_token>",
+  "url": "https://cluster-1.eastus.streaming.mediakind.com/project/<project-id>/",
+  "subPath": "incoming"
+}
+```
+
+| Field | Description |
+| :-- | :-- |
+| `url` | Base URL to use for the file access request. |
+| `jwt` | Token used to authenticate the file access request. |
+| `storageAccountName` | Storage account associated with the asset. |
+| `containerName` | Container holding the asset files. |
+| `subPath` | Optional path prefix. Include it when specifying the file path. |
+
+The `jwt` returned by `getFileAccessInfo` is different from the bearer token used to call the MK.IO API. It can also expire, so request fresh access details immediately before downloading a file.
+
+## Build the file path
+
+[Section titled “Build the file path”](https://docs.mediakind.com/api-guides/how-to/media/download-asset-files/#build-the-file-path)
+
+Combine `subPath`, if present, with the file name. If `subPath` is `incoming` and the file is `manifest.mpd`, the path is `incoming/manifest.mpd`. With no `subPath`, the path is just `manifest.mpd`.
+
+## Download the file
+
+[Section titled “Download the file”](https://docs.mediakind.com/api-guides/how-to/media/download-asset-files/#download-the-file)
+
+Append `downloadBlob` to the returned `url`, pass the returned `jwt` as the bearer token, and provide the storage and file details in the request body:
+
+Terminal window
+
+```
+curl -X POST "<url>downloadBlob" \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "storageAccountName": "<storageAccountName>",
+    "containerName": "<containerName>",
+    "fileName": "<filePath>"
+  }' \
+  --output <fileName>
+```
+
+For example:
+
+Terminal window
+
+```
+curl -X POST \
+  "https://cluster-1.eastus.streaming.mediakind.com/project/<project-id>/downloadBlob" \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "storageAccountName": "mystorageaccount",
+    "containerName": "mycontainer",
+    "fileName": "video.mp4"
+  }' \
+  --output video.mp4
+```
+
+If the asset uses a `subPath`, include it in `fileName`:
+
+```
+{
+  "storageAccountName": "mystorageaccount",
+  "containerName": "mycontainer",
+  "fileName": "incoming/video.mp4"
+}
+```
+
+## What goes wrong
+
+[Section titled “What goes wrong”](https://docs.mediakind.com/api-guides/how-to/media/download-asset-files/#what-goes-wrong)
+
+- **`getFileAccessInfo` fails.** A common cause is an expired storage credential. Rotate it; see [Storage](https://docs.mediakind.com/api-guides/how-to/media/storage).
+- **`401` or `token is expired`.** Call `getFileAccessInfo` again and retry the download with the newly returned `jwt`.
+- **`404 page not found`.** Do not append the file name directly to the returned `url`. Append `downloadBlob` and provide the file name in the request body.
+- **`502 Bad Gateway`.** The file access service could not complete the request. Confirm that the file exists and that the asset’s registered storage is accessible. If both are valid and the request continues to fail, contact MediaKind support.
+- **Using your MK.IO bearer token for the download.** Use the `jwt` returned by `getFileAccessInfo` for the `downloadBlob` request.
+
+## What comes next
+
+[Section titled “What comes next”](https://docs.mediakind.com/api-guides/how-to/media/download-asset-files/#what-comes-next)
+
+- [Assets](https://docs.mediakind.com/api-guides/how-to/media/assets): manage the assets these files belong to.
+- [Storage](https://docs.mediakind.com/api-guides/how-to/media/storage): rotate credentials if access stops working.

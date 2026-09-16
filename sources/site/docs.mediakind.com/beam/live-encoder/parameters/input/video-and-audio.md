@@ -1,0 +1,134 @@
+# Source: https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio
+
+# Video and audio
+
+## Video
+
+[Section titled “Video”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#video)
+
+| Parameter | Description |
+| --- | --- |
+| Video PID | Numerical identifier of the video track. Enter 'auto' to capture the video present in the input stream.<br>**Restriction:** PID is only configurable if **Input synchronization mode** is set to **PidLocked** mode.<br>Possible values: From 1 to 65535 |
+| Decoding capability | Select the standards to be decoded. Specific licenses are required for AVS+, AVS2 and JPEG XS decoding.<br>JPEG XS options are exclusive. Please select only one option at a time. |
+
+### SMPTE ST 2110
+
+[Section titled “SMPTE ST 2110”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#smpte-st-2110)
+
+| Parameter | Description |
+| --- | --- |
+| SDP File Location | Location of SDP file describing the input stream. Either a URL or a file location. |
+| Stream Index | Index of stream within the SDP file. 1 is the first stream. |
+
+**Related information** 
+[Configure video in input stream](https://docs.mediakind.com/beam/live-encoder/configure/input/video-stream) 
+[SMPTE ST 2110 SDP file](https://docs.mediakind.com/beam/live-encoder/configure/input/input-stream-source#smpte-st-2110-sdp-file)
+
+## Audio
+
+[Section titled “Audio”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#audio)
+
+### MPEG-2 TS/UDP
+
+[Section titled “MPEG-2 TS/UDP”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#mpeg-2-tsudp)
+
+| Parameter | Description |
+| --- | --- |
+| Audio ID Type | Choose the audio stream type used to identify the input audio stream.<br>Possible values: **PID**, **Language** |
+| PID | Only available with **PID** audio type. Numerical identifier of the audio track. Or auto to use any language in the stream. |
+| Language | Only available with **Language** audio type. Audio track languages in ISO 639 format (3letter code, lowercase). This can be defined using a comma to separate, or enter 'auto' to use any language. |
+| Max bitrate | Highest bitrate that can be used to capture Audio |
+| Decoding capability | Select Dolby if you decode Dolby Digital or Dolby Digital Plus. Select Dolby E if Dolby E decoding is required (SDI or SDI/IP only). Specific licenses are required for Dolby decoding. |
+
+### SDI
+
+[Section titled “SDI”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#sdi)
+
+| Parameter | Description |
+| --- | --- |
+| Type | Type of audio to create (1) Audio (2) Aggregated audio: Used to extract up to 5.1 audio tracks from the SDI audio pairs |
+| Audio Pair | Only available with **Audio** type.<br>Select the stereo audio pair (Group/Pair). |
+| Audio format | Only available with **Audio** type.<br>Select if the audio format should be automatically detected or forced. For uncompressed/Dolby E Passthrough select either 'AES Uncompressed audio' or 'Dolby E' as the input format, and 'SMPTE302/Dolby E Passthrough' from the encoding menu. Dolby E input will not work with Dolby AC4. To decode/reencode Dolby E select Auto or SMPTE337 compressed input as the input format. |
+| Decoding capability | Only available with **Audio** type.<br>Select Dolby if you decode Dolby Digital or Dolby Digital Plus. Select Dolby E if Dolby E decoding is required (SDI or SDI/IP only). Specific licenses are required for Dolby decoding. |
+| Dolby E program | Only available with **Dolby E** decoding capability.<br>The Dolby E algorithm is optimized for handling discrete multichannel audio programs and multiple audio programs. Encoded audio channels are grouped as programs that are typically mono (one channel), stereo or matrix surround (Lt/Rt) encoded (two channels), or discrete six-channel audio with five full-range channels and a bass-only Low-Frequency Effects (LFE) channel (5.1 channels).<br>Dolby E makes use of the available data space only for the number of audio channels that are present, so requiring less space if fewer than eight audio channels are used. The channel configuration is determined at the time of encoding, allowing users to choose the best mode for the specific application.<br>Possible values: See [table below](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#dolby-e-program-values). |
+| Mode | Only available with **Aggregated audio** type.<br>Defines the number of channels to configure. In case of 5.1 audio, 6 channels need to be configured: Left, Right, Center, LFE, Left surround and Right surround. |
+| PCM audio mapping | Only available with **Aggregated audio** type.<br>You can aggregate multiple SDI audio pairs to have up to 5.1 streams.<br>Associate the Group/pairs **SDI (Gn Pn)** with **Left** and **Right** as needed by scrolling the menus.![Live SDI aggregated audio](https://docs.mediakind.com/_astro/Live_SDI_aggregated_audio.DSqYcBdq_2sr9rp.webp) |
+
+#### Dolby-E program values
+
+[Section titled “Dolby-E program values”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#dolby-e-program-values)
+
+| Program | Configuration program | Channel count | Sequence | Channel sequence |
+| :-- | :-- | :-- | :-- | :-- |
+| 0 | 2 | 8 | 5.1+2 | 0L, 0C, 0Ls, 1L, 0R, 0LFE, 0Rs, 1R |
+| 1 | 3 | 8 | 5.1+1+1 | 0L, 0C, 0Ls, 1C, 0R, 0LFE, 0Rs, 2C |
+| 2 | 2 | 8 | 4+4 | 0L, 0C, 1L, 1C, 0R, 0S, 1R, 1S |
+| 3 | 3 | 8 | 4+2+2 | 0L, 0C, 1L, 2L, 0R, 0S, 1R, 2R |
+| 4 | 4 | 8 | 4+2+1+1 | 0L, 0C, 1L, 2C, 0R, 0S, 1R, 3C |
+| 5 | 5 | 8 | 4+1+1+1+1 | 0L, 0C, 1C, 3C, 0R, 0S, 2C, 4C |
+| 6 | 4 | 8 | 2+2+2+2 | 0L, 1L, 2L, 3L, 0R, 1R, 2R, 3R |
+| 7 | 5 | 8 | 2+2+2+1+1 | 0L, 1L, 2L, 3C, 0R, 1R, 2R, 4C |
+| 8 | 6 | 8 | 2+2+1+1+1+1 | 0L, 1L, 2C, 4C, 0R, 1R, 3C, 5C |
+| 9 | 7 | 8 | 2+1+1+1+1+1+1 | 0L, 1C, 3C, 5C, 0R, 2C, 4C, 6C |
+| 10 | 8 | 8 | 1+1+1+1+1+1+1+1 | 0C, 2C, 4C, 6C, 1C, 3C, 5C, 7C |
+| 11 | 1 | 6 | 5.1 | 0L, 0C, 0Ls, 0R, 0LFE, 0Rs |
+| 12 | 2 | 6 | 4+2 | 0L, 0C, 1L, 0R, 0S, 1R |
+| 13 | 3 | 6 | 4+1+1 | L, 0C, 1C, 0R, 0S, 2C |
+| 14 | 3 | 6 | 2+2+2 | 0L, 1L, 2L, 0R, 1R, 2R |
+| 15 | 4 | 6 | 2+2+1+1 | 0L, 1L, 2C, 0R, 1R, 3C |
+| 16 | 5 | 6 | 2+1+1+1+1 | 0L, 1C, 3C, 0R, 2C, 4C |
+| 17 | 6 | 6 | 1+1+1+1+1+1 | 0C, 2C, 4C, 1C, 3C, 5C |
+| 18 | 1 | 4 | 4 | 0L, 0C, 0R, 0S |
+| 19 | 2 | 4 | 2+2 | 0L, 1L, 0R, 1R |
+| 20 | 3 | 4 | 2+1+1 | 0L, 1C, 0R, 2C |
+| 21 | 4 | 4 | 1+1+1+1 | 0C, 2C, 1C, 3C |
+| 22 | 1 | 8 | 7.1 | 0L, 0C, 0Ls, 0Bsl, 0R, 0LFE, 0Rs, 0Bsr |
+| 23 | 1 | 8 | 7.1 screen | 0L, 0C, 0Ls, 0Lc, 0R, 0LFE, 0Rs, 0Rc |
+| 24–63 | Reserved | Reserved | Reserved | Reserved |
+
+### SDI/IP
+
+[Section titled “SDI/IP”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#sdiip)
+
+| Parameter | Description |
+| --- | --- |
+| Audio Pair | Select the stereo audio pair (Group/Pair). |
+| Audio format | Select if the audio format should be automatically detected or forced. For uncompressed/Dolby E Passthrough select either 'AES Uncompressed audio' or 'Dolby E' as the input format, and 'SMPTE302/Dolby E Passthrough' from the encoding menu. Dolby E input will not work with Dolby AC4. To decode/reencode Dolby E select Auto or SMPTE337 compressed input as the input format. |
+| Decoding capability | Select Dolby if you decode Dolby Digital or Dolby Digital Plus. Select Dolby E if Dolby E decoding is required (SDI or SDI/IP only). Specific licenses are required for Dolby decoding. |
+| Dolby E program | Only available with **Dolby E** decoding capability.<br>The Dolby E algorithm is optimized for handling discrete multichannel audio programs and multiple audio programs. Encoded audio channels are grouped as programs that are typically mono (one channel), stereo or matrix surround (Lt/Rt) encoded (two channels), or discrete six-channel audio with five full-range channels and a bass-only Low-Frequency Effects (LFE) channel (5.1 channels).<br>Dolby E makes use of the available data space only for the number of audio channels that are present, so requiring less space if fewer than eight audio channels are used. The channel configuration is determined at the time of encoding, allowing users to choose the best mode for the specific application.<br>Possible values: See [table above](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#dolby-e-program-values). |
+
+### SMPTE ST 2110
+
+[Section titled “SMPTE ST 2110”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#smpte-st-2110-1)
+
+| Parameter | Description |
+| --- | --- |
+| Stream Index | Index of stream within the SDP file. 1 is the first stream. |
+| SDP File Location | Location of SDP file describing the input stream. Either a URL or a file location. |
+| Channel Group Index | Index of channel group within the SDP audio stream. 1 is the first channel group. |
+| Audio format | Select if the audio format should be automatically detected or forced. For uncompressed/Dolby E Passthrough select either 'AES Uncompressed audio' or 'Dolby E' as the input format, and 'SMPTE302/Dolby E Passthrough' from the encoding menu. Dolby E input will not work with Dolby AC4. To decode/reencode Dolby E select Auto or SMPTE337 compressed input as the input format. |
+| Decoding capability | Select Dolby if you decode Dolby Digital or Dolby Digital Plus. Select Dolby E if Dolby E decoding is required (SDI or SDI/IP only). Specific licenses are required for Dolby decoding. |
+| Channel Order | Select if the audio channel groups should be automatically read from the SDP file or manually specified.<br>Possible values: M, DM, ST, LtRt, 51, 71, 222, SGRP [See table below.](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#channel-order-values)<br>For multi-channel audio, Live Encoder relies on the SDP file to specify how audio channels are grouped, but the channel order parameter that specifies the quantity and order of audio channels is optional in the SDP file. If the channel order is not specified, you can manually specify it.![el input audio st2110 channelorder](https://docs.mediakind.com/_astro/el_input_audio_st2110_channelorder.CjhxDTt4_1Sno0j.webp) |
+
+#### Channel order values
+
+[Section titled “Channel order values”](https://docs.mediakind.com/beam/live-encoder/parameters/input/video-and-audio/#channel-order-values)
+
+| Channel grouping symbol | Quantity of audio channels in group | Description of group | Order of audio channels in group |
+| :-- | :-- | :-- | :-- |
+| M | 1 | Mono | Mono |
+| DM | 2 | Dual Mono | M1, M2 |
+| ST | 2 | Standard Stereo | Left, Right |
+| LtRt | 2 | Matrix Stereo | Left Total, Right Total |
+| 51 | 6 | 5.1 Surround | L, R, C, LFE, Ls, Rs |
+| 71 | 8 | 7.1 Surround | L, R, C, LFE, Lss, Rss, Lrs, Rrs |
+| 222 | 24 | 22.2 Surround | Order shall be per SMPTE ST 2036-2, Table 1 |
+| SGRP | 4 | One SDI audio group | 1, 2, 3, 4 |
+| U01…U64 | As indicated by Grouping Symbol (Unn where nn is the number of channels in the group) | Undefined | None specified, the order of channels in this group is Undefined. |
+
+- The Channel Order described above was developed such that phase-coherent multichannel audio groups (or simply mono channels) can have their channels clearly defined within SDP. It does not attempt to provide any “higher level” description of the purpose of the audio channels (such as “secondary language”). It only addresses fixed multichannel audio groups commonly used at the time of publication of this document, and does not attempt to deal with object-based audio.
+- The 5.1 Surround and 7.1 Surround channel orders defined in Table 1 are based on typical ordering of those channels found in SMPTE ST 2035, EBU R 123, and SMPTE ST 429-2.
+
+**Related information** 
+[Configure the audio input stream](https://docs.mediakind.com/beam/live-encoder/configure/input/audio-stream) 
+[SMPTE ST 2110 SDP file](https://docs.mediakind.com/beam/live-encoder/configure/input/input-stream-source#smpte-st-2110-sdp-file)

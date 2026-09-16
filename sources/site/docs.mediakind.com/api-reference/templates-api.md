@@ -1,0 +1,17 @@
+# Source: https://docs.mediakind.com/api-reference/templates-api
+
+# Templates API
+
+[Download OpenAPI spec](https://docs.mediakind.com/openapi/mkio/templates-api.json)
+
+Base URL `https://app.mk.io` v1.0.8 12 endpoints OpenAPI 3.0.2
+
+## Endpoints
+
+[Templating 9 endpoints](https://docs.mediakind.com/api-reference/templates-api/templating)
+
+[get List the latest versions of configurations. /api/v1/projects/{project\_name}/templating/configs](https://docs.mediakind.com/api-reference/templates-api/templating/list-the-latest-versions-of-configurations) [get List the latest versions of configurations. /api/v1/projects/{project\_name}/templating/configs/{config\_type}](https://docs.mediakind.com/api-reference/templates-api/templating/list-the-latest-versions-of-configurations-get) [get Get the latest version of this configuration. /api/v1/projects/{project\_name}/templating/configs/{config\_type}/{name}](https://docs.mediakind.com/api-reference/templates-api/templating/get-the-latest-version-of-this-configuration) [put Create a new configuration, or a new version of a configuration. /api/v1/projects/{project\_name}/templating/configs/{config\_type}/{name}](https://docs.mediakind.com/api-reference/templates-api/templating/create-a-new-configuration-or-a-new-version-of-a-configuration) [del Delete all versions of this configuration. /api/v1/projects/{project\_name}/templating/configs/{config\_type}/{name}](https://docs.mediakind.com/api-reference/templates-api/templating/delete-all-versions-of-this-configuration) [get Get all versions of this configuration. /api/v1/projects/{project\_name}/templating/configs/{config\_type}/{name}/versions](https://docs.mediakind.com/api-reference/templates-api/templating/get-all-versions-of-this-configuration) [get Get a version of a configuration by hash or by tag. /api/v1/projects/{project\_name}/templating/configs/{config\_type}/{name}/versions/{version}](https://docs.mediakind.com/api-reference/templates-api/templating/get-a-version-of-a-configuration-by-hash-or-by-tag) [del Delete a version of a configuration by hash or by tag. /api/v1/projects/{project\_name}/templating/configs/{config\_type}/{name}/versions/{version}](https://docs.mediakind.com/api-reference/templates-api/templating/delete-a-version-of-a-configuration-by-hash-or-by-tag) [get Get information on the types of configuration supported by this project. /api/v1/projects/{project\_name}/templating/types](https://docs.mediakind.com/api-reference/templates-api/templating/get-information-on-the-types-of-configuration-supported-by-this-project)
+
+[Templating Presets 3 endpoints](https://docs.mediakind.com/api-reference/templates-api/templating-presets)
+
+[get List the latest versions of configurations. /api/v1/projects/{project\_name}/templating/presets](https://docs.mediakind.com/api-reference/templates-api/templating-presets/list-the-latest-versions-of-configurations) [get List the latest versions of configurations. /api/v1/projects/{project\_name}/templating/presets/{config\_type}](https://docs.mediakind.com/api-reference/templates-api/templating-presets/list-the-latest-versions-of-configurations-get) [get Get the latest version of this configuration. /api/v1/projects/{project\_name}/templating/presets/{config\_type}/{name}](https://docs.mediakind.com/api-reference/templates-api/templating-presets/get-the-latest-version-of-this-configuration)

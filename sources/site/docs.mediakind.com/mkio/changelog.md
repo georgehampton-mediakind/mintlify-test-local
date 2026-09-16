@@ -1,0 +1,817 @@
+# Source: https://docs.mediakind.com/mkio/changelog
+
+# Changelog
+
+## Live streaming and multiview
+
+[Section titled “Live streaming and multiview”](https://docs.mediakind.com/mkio/changelog/#live-streaming-and-multiview)
+
+**September 9, 2026**
+
+The **Live** interface brings reusable sources, encoding profiles, and scheduled start and stop controls together for live events and continuous channels. Multiview combines several sources into one tiled stream.
+
+The Live and Templates Application Programming Interfaces (APIs) let you automate these workflows and reuse versioned encoding and composition configurations across broadcasts.
+
+See [Live and multiview](https://docs.mediakind.com/mkio/how-to/live-streaming/live), [Live API](https://docs.mediakind.com/api-guides/how-to/live), and [Templates API](https://docs.mediakind.com/api-guides/how-to/templates) for details.
+
+## Project billing assignments
+
+[Section titled “Project billing assignments”](https://docs.mediakind.com/mkio/changelog/#project-billing-assignments)
+
+**July 6, 2026**
+
+Organization administrators can now view and manage the payment method assigned to each project. Administrators can move one or more projects to another payment method within the same organization, helping keep usage charges allocated correctly when billing arrangements change.
+
+See [Billing](https://docs.mediakind.com/mkio/how-to/managing-your-organization/billing#move-a-project-between-payment-methods) for details.
+
+## Payment methods can be deleted
+
+[Section titled “Payment methods can be deleted”](https://docs.mediakind.com/mkio/changelog/#payment-methods-can-be-deleted)
+
+**July 3, 2026**
+
+Organization administrators can now delete payment methods from the Admin UI. A deleted payment method no longer appears to the organization’s customers or in the Admin UI, and any redemption links associated with it stop working. A payment method with projects still attached cannot be deleted. A payment method deleted by mistake can be restored via the API.
+
+## Styled WebVTT subtitles
+
+[Section titled “Styled WebVTT subtitles”](https://docs.mediakind.com/mkio/changelog/#styled-webvtt-subtitles)
+
+**June 25, 2026**
+
+MK.IO can now preserve color and style information from input subtitles in Web Video Text Tracks (WebVTT) output.
+
+## Teletext to TTML conversion for Static Multiview
+
+[Section titled “Teletext to TTML conversion for Static Multiview”](https://docs.mediakind.com/mkio/changelog/#teletext-to-ttml-conversion-for-static-multiview)
+
+**June 24, 2026**
+
+Static Multiview now accepts Teletext tracks at the input and converts them to Timed Text Markup Language (TTML) tracks at the output, matching support already available for Elastic Multiview.
+
+## New MK.IO billing view
+
+[Section titled “New MK.IO billing view”](https://docs.mediakind.com/mkio/changelog/#new-mkio-billing-view)
+
+**June 23, 2026**
+
+The new **Billing** view is now generally available in MK.IO. Administrators can review organization spend across MK.IO and MK.IO Beam, filter by product, inspect monthly and daily usage, download comma-separated value (CSV) reports, and manage the Beam billing model for each payment method.
+
+See [Billing](https://docs.mediakind.com/mkio/how-to/managing-your-organization/billing) for details.
+
+## Improved payment method redemption for multi-organization accounts
+
+[Section titled “Improved payment method redemption for multi-organization accounts”](https://docs.mediakind.com/mkio/changelog/#improved-payment-method-redemption-for-multi-organization-accounts)
+
+**June 15, 2026**
+
+Redemption links for direct sales payment methods are now scoped to a single organization when possible, reducing the risk of a payment method being associated with the wrong organization. If a link can’t be scoped automatically and your account has multiple organizations, MK.IO now prompts you to choose which organization to redeem it against.
+
+## Payment method display names
+
+[Section titled “Payment method display names”](https://docs.mediakind.com/mkio/changelog/#payment-method-display-names)
+
+**June 3, 2026**
+
+Payment methods now support display names in the MK.IO user interface and Management Application Programming Interface (API). Use display names to distinguish multiple payment methods associated with the same sales order. The name appears in payment method lists and details.
+
+See [Billing](https://docs.mediakind.com/mkio/how-to/managing-your-organization/billing#understand-payment-methods) for details.
+
+## Beam usage summaries for partner customers
+
+[Section titled “Beam usage summaries for partner customers”](https://docs.mediakind.com/mkio/changelog/#beam-usage-summaries-for-partner-customers)
+
+**June 3, 2026**
+
+Customers who access MK.IO through a channel partner can now see current-month Beam usage summaries on the MK.IO dashboard, including encoding and reception hours. Billing information remains managed by the channel partner and is not shown to those customers.
+
+## Extended live event archive window
+
+[Section titled “Extended live event archive window”](https://docs.mediakind.com/mkio/changelog/#extended-live-event-archive-window)
+
+**May 19, 2026**
+
+Live event archive windows now support durations of up to 7 days, up from the previous maximum of 25 hours.
+
+When the archive window is set to more than 25 hours, the manifest presents a rolling 25-hour window of the most recent content. To access content older than 25 hours, specify start and end times in the manifest request query parameters. You can also use asset or account filters to control exactly which portion of the archive each manifest request returns.
+
+See [Extended archive window](https://docs.mediakind.com/mkio/how-to/live-streaming/extended-archive-window) for details.
+
+## Fastly CDN delivery
+
+[Section titled “Fastly CDN delivery”](https://docs.mediakind.com/mkio/changelog/#fastly-cdn-delivery)
+
+**May 19, 2026**
+
+MK.IO self-service and managed deployments previously using Akamai now use Fastly for Content Delivery Network (CDN) delivery. The migration also adds updated monitoring and metering for CDN-backed streaming endpoints.
+
+## ESAM automation for Static Multiview flows
+
+[Section titled “ESAM automation for Static Multiview flows”](https://docs.mediakind.com/mkio/changelog/#esam-automation-for-static-multiview-flows)
+
+**May 19, 2026**
+
+Static Multiview flows now support Event Signaling and Management (ESAM) out-of-band signaling and automation, including slate insertion, matching functionality already available for live channels.
+
+## AWS Marketplace private offers
+
+[Section titled “AWS Marketplace private offers”](https://docs.mediakind.com/mkio/changelog/#aws-marketplace-private-offers)
+
+**May 18, 2026**
+
+MK.IO now supports private offers through Amazon Web Services (AWS) Marketplace. This release supports pre-committed marketplace agreements with custom rate cards and entitlements.
+
+## Expanded Static Multiview layouts
+
+[Section titled “Expanded Static Multiview layouts”](https://docs.mediakind.com/mkio/changelog/#expanded-static-multiview-layouts)
+
+**May 7, 2026**
+
+Static Multiview now supports layouts with up to 9 tiles, up from the previous maximum.
+
+## High-scale flow resilience
+
+[Section titled “High-scale flow resilience”](https://docs.mediakind.com/mkio/changelog/#high-scale-flow-resilience)
+
+**April 13, 2026**
+
+MK.IO now handles high-volume flow workloads with fewer and less complex database queries. These changes reduce platform load and improve resilience for customers.
+
+## Broader packaging interoperability
+
+[Section titled “Broader packaging interoperability”](https://docs.mediakind.com/mkio/changelog/#broader-packaging-interoperability)
+
+**March 6, 2026**
+
+MK.IO can now apply advanced settings to the just-in-time packager. These settings support packaging interoperability requirements, including DASH interoperability and cache values.
+
+## RIST distribution for Multiview
+
+[Section titled “RIST distribution for Multiview”](https://docs.mediakind.com/mkio/changelog/#rist-distribution-for-multiview)
+
+**January 28, 2026**
+
+MK.IO now supports Reliable Internet Stream Transport (RIST) distribution for Multiview sources. A source can be reused up to 250 times in downstream flows across multi-cluster locations without distributing multiple copies over the internet.
+
+## Self-service Multiview
+
+[Section titled “Self-service Multiview”](https://docs.mediakind.com/mkio/changelog/#self-service-multiview)
+
+**November 19, 2025**
+
+Self-service Multiview is now available to select MK.IO customers. You can create Multiview channels, with quotas and usage statistics available for the supported flow types.
+
+## VOD audio dubbing
+
+[Section titled “VOD audio dubbing”](https://docs.mediakind.com/mkio/changelog/#vod-audio-dubbing)
+
+**November 14, 2025**
+
+MK.IO now supports on-demand audio dubbing for Video on Demand (VOD) content. Use an Artificial Intelligence (AI) workflow to generate translated audio tracks from an existing audio track. VOD audio dubbing is available in all regions and is billed per minute of processed content.
+
+See [Multi-language VOD dubbing](https://docs.mediakind.com/mkio/how-to/ai-features/multi-language-vod-dubbing) for details.
+
+## Audio track side loading
+
+[Section titled “Audio track side loading”](https://docs.mediakind.com/mkio/changelog/#audio-track-side-loading)
+
+**November 14, 2025**
+
+You can now side-load additional audio tracks into existing VOD assets through the API. Use this feature to add commentary, alternate languages, or descriptive audio. Audio track side-loading is available in all regions at no additional charge.
+
+See [Track insertion transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/add-a-track-to-a-vod-asset) for details.
+
+## Streaming endpoint charge notifications
+
+[Section titled “Streaming endpoint charge notifications”](https://docs.mediakind.com/mkio/changelog/#streaming-endpoint-charge-notifications)
+
+**October 22, 2025**
+
+MK.IO now displays a billing message before you start a streaming endpoint. The message also appears in the **Create and start** workflow, so you can confirm that charges apply before the endpoint starts.
+
+## Compare live channel templates
+
+[Section titled “Compare live channel templates”](https://docs.mediakind.com/mkio/changelog/#compare-live-channel-templates)
+
+**October 15, 2025**
+
+You can now compare Live Channel template versions in the MK.IO interface. Choose a revision to see a side-by-side or inline comparison, review highlighted metadata and configuration changes, and navigate directly to modified sections.
+
+## Uninterrupted live service upgrades
+
+[Section titled “Uninterrupted live service upgrades”](https://docs.mediakind.com/mkio/changelog/#uninterrupted-live-service-upgrades)
+
+**October 15, 2025**
+
+Nightly MK.IO control plane upgrades no longer interrupt running Live Events or Live Channel services. Planned service interruptions remain limited to agreed maintenance windows.
+
+## Expanded Dolby Vision support
+
+[Section titled “Expanded Dolby Vision support”](https://docs.mediakind.com/mkio/changelog/#expanded-dolby-vision-support)
+
+**October 10, 2025**
+
+MK.IO now supports Dolby Vision Profile 8.4 for Hybrid Log-Gamma (HLG) channels and Dolby Vision Profile 8.1 passthrough. Profile 8.4 avoids converting HLG sources to PQ10, while Profile 8.1 passthrough preserves source metadata in the encoded output.
+
+## AV1 support in live streaming
+
+[Section titled “AV1 support in live streaming”](https://docs.mediakind.com/mkio/changelog/#av1-support-in-live-streaming)
+
+**July 21, 2025**
+
+MK.IO live encoding and packaging now support the AV1 video codec as an alternative to HEVC, reducing bitrate and Content Delivery Network (CDN) costs for progressive, internet-delivered streams up to HD resolution. AV1 support is in limited availability and not enabled by default.
+
+## Dynamic live outputs for events
+
+[Section titled “Dynamic live outputs for events”](https://docs.mediakind.com/mkio/changelog/#dynamic-live-outputs-for-events)
+
+**July 2nd, 2025**
+
+You can now dynamically add or remove live outputs from a live event in MK.IO, even while the event is running.
+
+**What is new**
+
+- Add or remove one or more live outputs at any time, without stopping or restarting the event.
+- Manage destinations on the fly for greater flexibility in live production workflows.
+- Streamline your transition from Live to VOD by controlling exactly how and where your live content is output and recorded.
+
+## Live transcription
+
+[Section titled “Live transcription”](https://docs.mediakind.com/mkio/changelog/#live-transcription)
+
+**July 2025**
+
+Live encoding events can generate real-time subtitles through the `Predefined_ACSLiveTranscription` AI pipeline. The pipeline produces WebVTT subtitles for HLS output and TTML subtitles for DASH output, with less than five seconds of added latency. Configure the source language and optional expected phrases when creating the live event.
+
+The feature launched in all regions and is billed per minute of a running live event.
+
+See [Configure a live event](https://docs.mediakind.com/mkio/how-to/live-streaming/set-up-a-live-streaming-event) for details.
+
+## VOD translation
+
+[Section titled “VOD translation”](https://docs.mediakind.com/mkio/changelog/#vod-translation)
+
+**July 2025**
+
+VOD translation can transcribe an audio track and translate the result into up to 25 languages in one operation. The workflow produces WebVTT subtitle tracks for the source and target languages. The feature launched in all regions and is billed per minute of processed VOD content.
+
+See [Transcription and translation transforms](https://docs.mediakind.com/mkio/how-to/ai-features/vod-transcription-and-translation-transforms) for details.
+
+## Subtitle support in asset conversion
+
+[Section titled “Subtitle support in asset conversion”](https://docs.mediakind.com/mkio/changelog/#subtitle-support-in-asset-conversion)
+
+**June 9th, 2025**
+
+MK.IO now supports subtitle preservation during asset conversion, ensuring that captions from your live events remain available in your on-demand MP4 content.
+
+## Audio-only transcoding for Live Events
+
+[Section titled “Audio-only transcoding for Live Events”](https://docs.mediakind.com/mkio/changelog/#audio-only-transcoding-for-live-events)
+
+**May 22nd, 2025**
+
+MK.IO now supports audio-only transcoding for live events, helping you deliver optimized, bandwidth-efficient audio streams.
+
+## Simplify your account with the new billing view
+
+[Section titled “Simplify your account with the new billing view”](https://docs.mediakind.com/mkio/changelog/#simplify-your-account-with-the-new-billing-view)
+
+**May 20th, 2025**
+
+MK.IO added detailed billing information for the current or a selected month. The initial view grouped usage into Live Processing and Recording, Content Processing and Transcoding, Video Streaming, Content Protection, and Storage Management.
+
+Customers with multiple projects could inspect each project or an aggregate view. Usage across multiple subscriptions was aggregated for reporting, while charges remained separated by subscription. The detailed view launched in all regions at no extra cost.
+
+See [Billing](https://docs.mediakind.com/mkio/how-to/managing-your-organization/billing) for the current billing view.
+
+## MK.IO now supports MK.IO Beam devices
+
+[Section titled “MK.IO now supports MK.IO Beam devices”](https://docs.mediakind.com/mkio/changelog/#mkio-now-supports-mkio-beam-devices)
+
+**May 5th, 2025**
+
+MK.IO now includes MK.IO Beam device management, allowing you to monitor, control, and update devices through the same interface.
+
+**Fleet Management for MK.IO Beam Devices** 
+Access your Beam device UI remotely and troubleshoot issues with the new remote access capabilities. You can also add, edit, and remove devices directly in the MK.IO UI without using the API. The release added a unified device-status view and a map of registered device locations.
+
+**Customer Onboarding Workflow** 
+The new onboarding flow makes it simple to get started with Beam devices:
+
+- Create or link your organization
+- Add a payment method
+- Set up your first project
+- Register and activate your Beam device from MK.IO
+
+**Beam Software Upgrades** 
+Beam bundle downloads and software upgrades are now available through MK.IO for connected devices.
+
+Docs: [MK.IO Beam devices onboarding](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices)
+
+Fleet management became available in April 2025 at no additional charge.
+
+## Job notifications via webhooks
+
+[Section titled “Job notifications via webhooks”](https://docs.mediakind.com/mkio/changelog/#job-notifications-via-webhooks)
+
+**April 14th, 2025**
+
+MK.IO jobs now support webhook notifications through the Management API. Payloads use the CloudEvents format, delivery runs asynchronously, and MK.IO retries failed deliveries. Webhooks launched in all regions at no additional cost.
+
+Docs: [Webhooks](https://docs.mediakind.com/mkio/how-to/managing-your-organization/webhooks)
+
+## MK.IO available on AWS marketplace
+
+[Section titled “MK.IO available on AWS marketplace”](https://docs.mediakind.com/mkio/changelog/#mkio-available-on-aws-marketplace)
+
+**February 28th, 2025**
+
+MK.IO can now be discovered, subscribed to, and deployed directly through the AWS Marketplace. This simplifies procurement for enterprise customers and makes it easier to integrate MK.IO within your existing AWS infrastructure. Key Benefits:
+
+- Streamlined procurement through your AWS account
+- Consolidated billing with your existing AWS usage
+- Faster onboarding for enterprise customers
+
+AWS users can access MK.IO without additional contracts or setup. At launch, the subscription used pay-as-you-go billing with no activation or setup fees. Customers could apply an AWS enterprise commitment and run processing close to content stored in Amazon S3.
+
+Docs: [Subscribe through AWS Marketplace](https://docs.mediakind.com/mkio/how-to/managing-your-organization/subscribe-through-aws-marketplace)
+
+## Live & VOD transcription enhancements
+
+[Section titled “Live & VOD transcription enhancements”](https://docs.mediakind.com/mkio/changelog/#live--vod-transcription-enhancements)
+
+**February 10th, 2025**
+
+MK.IO now offers more flexibility, accuracy, and insight into your transcription workflows across Live and VOD content.
+
+**Update Caption Language Values** 
+Easily update transcription language codes (e.g., en-UK → en-GB) directly from the UI or API - no more manual fixes or request errors.
+
+**Live Transcription Monitoring** 
+MK.IO now includes metrics and alerts for monitoring Live transcription performance.
+
+**Language Selection for Live and VOD** 
+Choose your preferred transcription language for both Live and VOD workflows - ensuring accurate captions and localized experiences for every audience.
+
+**In-Band Audio Transcriptions** 
+Generate transcriptions automatically from in-band audio streams in your Live Encodes, simplifying setup and improving reliability.
+
+**VOD Speech-to-Text Translation** 
+Upload any VOD asset and automatically generate translated transcripts in multiple languages, expanding global reach and accessibility.
+
+Docs: [Live transcription](https://docs.mediakind.com/mkio/how-to/live-streaming/set-up-a-live-streaming-event) | [VOD transcription and translation](https://docs.mediakind.com/mkio/how-to/ai-features/vod-transcription-and-translation-transforms)
+
+## Streaming endpoints: separate domain and name fields
+
+[Section titled “Streaming endpoints: separate domain and name fields”](https://docs.mediakind.com/mkio/changelog/#streaming-endpoints-separate-domain-and-name-fields)
+
+**February 3rd, 2025**
+
+MK.IO now generates Streaming Endpoint URLs with separate domain and name fields for improved security, privacy, and naming flexibility.
+
+**What is new:**
+
+- The Streaming Endpoints API now includes a new field: publicName
+- This publicName is used exclusively for published endpoint URLs, ensuring that only approved, share-safe identifiers appear in public addresses.
+- The publicName is validated as globally unique and formatted for compatibility in both DNS names and URL paths.
+
+Docs: [Streaming endpoints](https://docs.mediakind.com/mkio/understanding/core-concepts/endpoints)
+
+## Upload local files for transform from the UI
+
+[Section titled “Upload local files for transform from the UI”](https://docs.mediakind.com/mkio/changelog/#upload-local-files-for-transform-from-the-ui)
+
+**January 14th, 2025**
+
+You can now upload local files directly from the MK.IO UI to initiate transformations without using the API or external storage.
+
+Docs: [Add assets into MK.IO](https://docs.mediakind.com/mkio/how-to/content-management/add-an-asset-in-mkio)
+
+## ALAC support
+
+[Section titled “ALAC support”](https://docs.mediakind.com/mkio/changelog/#alac-support)
+
+**January 10th, 2025**
+
+✨ Features added 
+Apple Lossless Audio Codec support is now available.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## Asset Filtering by UTC Start and End Time
+
+[Section titled “Asset Filtering by UTC Start and End Time”](https://docs.mediakind.com/mkio/changelog/#asset-filtering-by-utc-start-and-end-time)
+
+**January 7th, 2025**
+
+You can now filter and trim assets using precise UTC start and end times in MK.IO.
+
+**What is new**
+
+- Specify start and end times in UTC when filtering or trimming your content.
+- Achieve frame-accurate control over the portions of live or recorded content you want to keep.
+- Ideal for editing live events, highlights, or scheduled content that spans multiple time zones.
+
+## Use live output name during asset conversion
+
+[Section titled “Use live output name during asset conversion”](https://docs.mediakind.com/mkio/changelog/#use-live-output-name-during-asset-conversion)
+
+**January 6th, 2025**
+
+When converting assets, MK.IO now automatically uses the Live Output name, ensuring consistent naming conventions across workflows.
+
+Docs: [Asset conversion transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/asset-conversion-transform)
+
+## Sorenson Spark support
+
+[Section titled “Sorenson Spark support”](https://docs.mediakind.com/mkio/changelog/#sorenson-spark-support)
+
+**December 23rd, 2024**
+
+✨ Features added 
+Sorenson Spark support is now available for Flash content.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## ADPCM and DPCM for WAV
+
+[Section titled “ADPCM and DPCM for WAV”](https://docs.mediakind.com/mkio/changelog/#adpcm-and-dpcm-for-wav)
+
+**November 19th, 2024**
+
+✨ Features added 
+ADPCM and DPCM support is now available for WAV content.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## Operational metrics
+
+[Section titled “Operational metrics”](https://docs.mediakind.com/mkio/changelog/#operational-metrics)
+
+**November 5, 2024**
+
+Operational metrics became available in all regions on September 12, 2024. Projects can publish Prometheus metrics for an external monitoring framework. Early adopters needed to update their scrape URL to the documented endpoint.
+
+Docs: [Activate and scrape operational metrics](https://docs.mediakind.com/mkio/how-to/monitor-your-services)
+
+## AI-based VOD transcription
+
+[Section titled “AI-based VOD transcription”](https://docs.mediakind.com/mkio/changelog/#ai-based-vod-transcription)
+
+**October 28, 2024**
+
+AI-based transcription became available for VOD assets in all regions. The workflow generates a WebVTT subtitle track from an audio track and is billed per minute of processed VOD content.
+
+Docs: [VOD transcription](https://docs.mediakind.com/mkio/how-to/ai-features/vod-transcription-and-translation-transforms)
+
+## Role-based access control
+
+[Section titled “Role-based access control”](https://docs.mediakind.com/mkio/changelog/#role-based-access-control)
+
+**October 21, 2024**
+
+Role-based access control (RBAC) became available in all regions at no additional charge. It replaced individual project assignments with teams, roles, scopes, and rights assignments. During the rollout, the earlier and new authorization models ran together and MK.IO applied the more restrictive result.
+
+Docs: [Access, users and teams](https://docs.mediakind.com/mkio/how-to/managing-your-organization/access-users-and-teams)
+
+## MP3 ingest | Cover images
+
+[Section titled “MP3 ingest | Cover images”](https://docs.mediakind.com/mkio/changelog/#mp3-ingest--cover-images)
+
+**October 11th, 2024**
+
+✨ Features added 
+Encoding transform can now ingest MP3. Cover images are also supported.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## WebM AV1 | WMV Microsoft MPEG4 | H.263 ingest
+
+[Section titled “WebM AV1 | WMV Microsoft MPEG4 | H.263 ingest”](https://docs.mediakind.com/mkio/changelog/#webm-av1--wmv-microsoft-mpeg4--h263-ingest)
+
+**September 24th, 2024**
+
+✨ Features added 
+Encoding transform can now ingest files in WebM format including AV1 video codec. 
+Encoding transform can now ingest files in WMV format with Microsoft MPEG4 video codec. 
+Encoding transform can now ingest using H.263 video codec.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## MJPEG ingest
+
+[Section titled “MJPEG ingest”](https://docs.mediakind.com/mkio/changelog/#mjpeg-ingest)
+
+**September 18th, 2024**
+
+✨ Features added 
+Encoding transform can now ingest files in content using MJPEG video codec.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## VP8 | VP9 | Opus | Vorbis ingest
+
+[Section titled “VP8 | VP9 | Opus | Vorbis ingest”](https://docs.mediakind.com/mkio/changelog/#vp8--vp9--opus--vorbis-ingest)
+
+**August 29th, 2024**
+
+✨ Features added 
+Encoding transform can now ingest files in WebM format including VP8, VP9 video codecs and Opus, Vorbis audio codecs.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## WebVTT subtitle side-loading
+
+[Section titled “WebVTT subtitle side-loading”](https://docs.mediakind.com/mkio/changelog/#webvtt-subtitle-side-loading)
+
+**August 19, 2024**
+
+Web Video Text Tracks (WebVTT) subtitles can now be side-loaded to an existing VOD asset through the Media API. The feature launched in all regions at no additional charge.
+
+Docs: [Track insertion transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/add-a-track-to-a-vod-asset)
+
+## VOD input clipping
+
+[Section titled “VOD input clipping”](https://docs.mediakind.com/mkio/changelog/#vod-input-clipping)
+
+**August 16, 2024**
+
+VOD processing jobs now support clipping an asset or HTTP input with a start and end time through the Media API. The feature launched in all regions at no additional charge.
+
+Docs: [Job with input clipping](https://docs.mediakind.com/mkio/how-to/video-processing-encoding/vod-processing-job-with-input-clipping)
+
+## New region: West US
+
+[Section titled “New region: West US”](https://docs.mediakind.com/mkio/changelog/#new-region-west-us)
+
+**August 8th, 2024**
+
+✨ New region deployed 
+We are opening one new region: West US
+
+Docs: [Cloud region support](https://docs.mediakind.com/mkio/reference/cloud-region-support)
+
+## RTMPS ingest
+
+[Section titled “RTMPS ingest”](https://docs.mediakind.com/mkio/changelog/#rtmps-ingest)
+
+**July 25th, 2024**
+
+✨ Features added 
+Live events can now use RTMPS as ingest transport protocol.
+
+## SRT ingest
+
+[Section titled “SRT ingest”](https://docs.mediakind.com/mkio/changelog/#srt-ingest)
+
+**July 17, 2024**
+
+Live encoding events can now use Secure Reliable Transport (SRT) for ingest. SRT uses a passphrase and AES-128 encryption by default, although protocol negotiation can select another supported key length. Live passthrough remains limited to RTMP ingest. SRT ingest launched in all regions at no additional charge.
+
+Docs: [Advanced live streaming features](https://docs.mediakind.com/mkio/getting-started/live-streaming-workflows/advanced-features#secure-reliable-transport-ingest)
+
+## MP4 transition | Variable frame rate | Thumbnails | JWT
+
+[Section titled “MP4 transition | Variable frame rate | Thumbnails | JWT”](https://docs.mediakind.com/mkio/changelog/#mp4-transition--variable-frame-rate--thumbnails--jwt)
+
+**July 9, 2024**
+
+- The transition to the current MP4 output format completed in all regions. Existing MK.IO and Azure Media Services assets remained deliverable, and existing transforms required no changes.
+- Encoding transforms added support for variable-frame-rate input.
+- Standard VOD transcoding began generating one JPEG thumbnail at 50 percent of the size of the highest-resolution rendition. The release also added the `MediaKind.ThumbnailGeneratorPreset` for custom thumbnails and sprite generation. Thumbnail generation launched in all regions at no additional charge.
+- JSON Web Token (JWT) became the main authentication and authorization format.
+
+Docs: [Generate thumbnails](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/how-to-generate-thumbnails) | [API tokens](https://docs.mediakind.com/mkio/how-to/managing-your-organization/api-tokens)
+
+## Personal access tokens
+
+[Section titled “Personal access tokens”](https://docs.mediakind.com/mkio/changelog/#personal-access-tokens)
+
+**July 9, 2024**
+
+MK.IO personal access tokens use the JSON Web Token (JWT) format and can authenticate API requests with a bearer authorization header. This release began the transition away from the earlier `x-mkio-token` header, which remained temporarily supported during migration. Personal access tokens launched in all regions.
+
+See [API tokens](https://docs.mediakind.com/mkio/how-to/managing-your-organization/api-tokens) for details.
+
+## Asset conversion presets | MPEG-1 | VC-1 ingest
+
+[Section titled “Asset conversion presets | MPEG-1 | VC-1 ingest”](https://docs.mediakind.com/mkio/changelog/#asset-conversion-presets--mpeg-1--vc-1-ingest)
+
+**June 27, 2024**
+
+- The `CopyTopBitrateInterleaved`, `CopyAllBitratesNonInterleaved`, and `CopyAllBitratesInterleaved` presets became available in all regions. They convert live-event recordings or legacy MP4 content to the current MP4 layout. At launch, processing minutes were billed at the Foundation SD rate.
+- Encoding transforms added MPEG-1 and VC-1 video-codec ingest.
+
+Docs: [Asset Conversion Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/asset-conversion-transform) | [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## Download streaming presets
+
+[Section titled “Download streaming presets”](https://docs.mediakind.com/mkio/changelog/#download-streaming-presets)
+
+**June 13, 2024**
+
+The `Predefined_DownloadOnly` and `Predefined_DownloadAndClearStreaming` policies became available in all regions. They let a streaming locator return direct file-download URLs for workflows such as post-production, thumbnail retrieval, and subtitle retrieval. The policies had no additional feature charge at launch, but outbound traffic remained billable.
+
+Docs: [Streaming locators](https://docs.mediakind.com/mkio/understanding/core-concepts/locators)
+
+## Aspect ratio | Rotation preserved
+
+[Section titled “Aspect ratio | Rotation preserved”](https://docs.mediakind.com/mkio/changelog/#aspect-ratio--rotation-preserved)
+
+**May 29th, 2024**
+
+✨ Features added 
+Encoding transforms have now been updated to preserve the source aspect ratio and rotation information.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## Integrated CDN endpoints
+
+[Section titled “Integrated CDN endpoints”](https://docs.mediakind.com/mkio/changelog/#integrated-cdn-endpoints)
+
+**May 2024**
+
+MK.IO added Content Delivery Network (CDN) enabled streaming endpoints in all regions for live and on-demand HLS CMAF and DASH delivery. The initial integrated provider was Akamai. The release also retained support for bringing an external CDN to an MK.IO origin.
+
+Integrated CDN delivery launched as a pay-as-you-go capability backed by dedicated endpoint capacity. At launch, customers needed to create a new CDN endpoint because an existing endpoint could not be converted. In May 2026, MK.IO moved integrated CDN delivery from Akamai to Fastly.
+
+See [Publish content for streaming](https://docs.mediakind.com/mkio/how-to/content-delivery-publishing/stream-content) for current endpoint options.
+
+## OpenID Discovery | Multiple options per DRM
+
+[Section titled “OpenID Discovery | Multiple options per DRM”](https://docs.mediakind.com/mkio/changelog/#openid-discovery--multiple-options-per-drm)
+
+**May 8th, 2024**
+
+✨ Features added 
+Support OpenID Discovery for Content Key Policy with a token protection. 
+It is now possible to use Multiple ContentKeyPolicyOptions with the same DRM type in Content Key Policy.
+
+Docs: [Use an OpenID to retrieve Primary Verification Key](https://docs.mediakind.com/mkio/how-to/drm-content-protection/openid-verification-key) | [Content protection](https://docs.mediakind.com/mkio/understanding/core-concepts/content-protection)
+
+## Private storage links
+
+[Section titled “Private storage links”](https://docs.mediakind.com/mkio/changelog/#private-storage-links)
+
+**April 22, 2024**
+
+MK.IO added private network links for Azure Storage accounts in all regions. The connection requires configuration in MK.IO and approval by the storage account owner in Azure. Requests fail until both sides are configured. At launch, the private link could not be removed from that MK.IO storage resource after it was enabled.
+
+At launch, the feature required the MK.IO 2024 plan and had a fixed monthly fee. Private-link ingress and egress traffic also incurred charges.
+
+See [Set up a private storage link](https://docs.mediakind.com/mkio/how-to/security-access-control/private-storage-link) for details.
+
+## ISMV and AVI ingest
+
+[Section titled “ISMV and AVI ingest”](https://docs.mediakind.com/mkio/changelog/#ismv-and-avi-ingest)
+
+**March 28th, 2024**
+
+✨ Features added 
+Encoding transform can now ingest ISMV and AVI containers.
+
+Docs: [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## New region: Central US
+
+[Section titled “New region: Central US”](https://docs.mediakind.com/mkio/changelog/#new-region-central-us)
+
+**March 18th, 2024**
+
+✨ New region deployed 
+We are opening one new region: Central US
+
+Docs: [Cloud region support](https://docs.mediakind.com/mkio/reference/cloud-region-support)
+
+## Persistent licenses | External PlayReady server
+
+[Section titled “Persistent licenses | External PlayReady server”](https://docs.mediakind.com/mkio/changelog/#persistent-licenses--external-playready-server)
+
+**February 29th, 2024**
+
+✨ Features added 
+Persistent licenses are now supported for FairPlay, Widevine and PlayReady DRMs. This enables offline playback of content. 
+It is now possible to use an External PlayReady License Server when a custom streaming policy is defined.
+
+Docs: [Content protection](https://docs.mediakind.com/mkio/understanding/core-concepts/content-protection)
+
+## Constant Video Quality presets
+
+[Section titled “Constant Video Quality presets”](https://docs.mediakind.com/mkio/changelog/#constant-video-quality-presets)
+
+**February 9, 2024**
+
+Three Constant Video Quality (CVQ) presets became available for on-demand transforms in all regions: `H264MultipleBitrateSDWithCVQ`, `H264MultipleBitrate720pWithCVQ`, and `H264MultipleBitrate1080pWithCVQ`. At launch, CVQ was available in the Advanced and Premium encoding tiers.
+
+Docs: [Encoding transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform#constant-video-quality-presets)
+
+## Asset deletion policies | Private offer
+
+[Section titled “Asset deletion policies | Private offer”](https://docs.mediakind.com/mkio/changelog/#asset-deletion-policies--private-offer)
+
+**January 5th, 2024**
+
+✨ Features added 
+Asset deletion policies have been added to allow you to determine how MK.IO manages the underlying content upon the deletion of an asset. 
+Private offer support has been introduced to our Azure Marketplace offer to cater specifically to high-volume users and address complex use cases.
+
+## Bulk Asset Ingest Tool
+
+[Section titled “Bulk Asset Ingest Tool”](https://docs.mediakind.com/mkio/changelog/#bulk-asset-ingest-tool)
+
+**December 15th, 2023**
+
+✨ Features added 
+MK.IO now includes a Bulk Asset Ingest Tool for migrating and managing multiple assets in one operation.
+
+## DASH & HLS playback | Players
+
+[Section titled “DASH & HLS playback | Players”](https://docs.mediakind.com/mkio/changelog/#dash--hls-playback--players)
+
+**December 1st, 2023**
+
+✨ Features added 
+Now introducing DASH & HLS playback with support for multiple players. Choose your preferred experience with AMS Player, Shaka Player, or MKPlayer, providing enhanced flexibility and compatibility for a seamless video playback journey.
+
+## First Quality | Asset Filters by name
+
+[Section titled “First Quality | Asset Filters by name”](https://docs.mediakind.com/mkio/changelog/#first-quality--asset-filters-by-name)
+
+**November 17th, 2023**
+
+✨ Features added 
+Support for the “First Quality” setting, allowing you to set the initial playback quality level directly in the manifest, offering a customized video experience right from the beginning. 
+Asset Filters now include name-based track filtering.
+
+## ClearKey for DASH | Latency | Security | New regions
+
+[Section titled “ClearKey for DASH | Latency | Security | New regions”](https://docs.mediakind.com/mkio/changelog/#clearkey-for-dash--latency--security--new-regions)
+
+**November 3rd, 2023**
+
+✨ Features added 
+ClearKey encryption support for DASH-packed content is now added. This robust addition fortifies the security of your digital assets, ensuring that content packaged in DASH format is now seamlessly compatible with ClearKey encryption. 
+Enhanced end-to-end latency in live encoding, achieving a 25-second threshold; performance benchmarks required for marketing validation. 
+We have further enhanced our advanced storage security measures, incorporating the latest advancements in encryption, access controls, and threat mitigation. 
+We are opening two new availability regions: Japan West and Europe West.
+
+Docs: [Content protection](https://docs.mediakind.com/mkio/understanding/core-concepts/content-protection) | [Latency](https://docs.mediakind.com/mkio/understanding/advanced-concepts/latency) | [Cloud region support](https://docs.mediakind.com/mkio/reference/cloud-region-support)
+
+## DRM with client JWT entitlement
+
+[Section titled “DRM with client JWT entitlement”](https://docs.mediakind.com/mkio/changelog/#drm-with-client-jwt-entitlement)
+
+**October 20th, 2023**
+
+✨ Features added 
+Expanded DRM support for client JWT entitlement management. This enhancement guarantees improved control, heightened security measures, and smoother access management for your content.
+
+Docs: [Using custom claims in content key policies](https://docs.mediakind.com/mkio/how-to/drm-content-protection/custom-claims)
+
+## Video Quality enhancements
+
+[Section titled “Video Quality enhancements”](https://docs.mediakind.com/mkio/changelog/#video-quality-enhancements)
+
+**October 6th, 2023**
+
+✨ Features added 
+Video quality enhancements improve PSSI and VMAF scores without changing the output bitrate.
+
+## Asset Filters | Bug fixes
+
+[Section titled “Asset Filters | Bug fixes”](https://docs.mediakind.com/mkio/changelog/#asset-filters--bug-fixes)
+
+**September 22nd, 2023**
+
+✨ Features added 
+MK.IO now supports Asset Filters that allow you to dynamically modify the output of your HLS and DASH manifests. You can filter tracks in the manifest based on Bitrate and FourCC, a video codec identifier. 🪲 Bugs resolved 
+Resolved playback issues with DRM-protected content on the Live Events page.
+
+## Content protection | Encoding | Live encoding
+
+[Section titled “Content protection | Encoding | Live encoding”](https://docs.mediakind.com/mkio/changelog/#content-protection--encoding--live-encoding)
+
+**September 6th, 2023**
+
+✨ Features added 
+Content Key Policies enable you to control access to their content delivered via MK.IO. MK.IO now supports the following protection schemes: AES-128, ClearKey, and industry grade multi-DRM options like Widevine, FairPlay, and PlayReady. Access control can be managed by authorizing users based on claims in JWT tokens.
+
+Video Encoding is now available and allows you to set up encoding jobs based on preconfigured Transforms. Supported encoding codecs include H.264 and H.265 with either single bitrate or multi-bitrate configurations.
+
+Live Events functionality now includes support for live encoding, enabling you to transcode your live event into 720p or 1080p multi-bitrate HLS or DASH output. Users can select these options either through via the Create Live Event page or the /liveEvents API.
+
+Docs: [Content protection](https://docs.mediakind.com/mkio/understanding/core-concepts/content-protection) | [Encoding Transform](https://docs.mediakind.com/mkio/reference/encoding-transform-presets/encoding-transform)
+
+## Multi‑bitrate RTMP | Live streaming | Bug fixes
+
+[Section titled “Multi‑bitrate RTMP | Live streaming | Bug fixes”](https://docs.mediakind.com/mkio/changelog/#multibitrate-rtmp--live-streaming--bug-fixes)
+
+**August 4th, 2023**
+
+✨ Features added 
+MK.IO now accepts multi-bitrate RTMP input for live passthrough events. MK.IO exposes each input bitrate in the HLS and DASH output. MK Player then selects a bitrate based on the viewer’s playback conditions.
+
+Live Streaming is now available. Transcode your RTMP input stream into multiple HLS and DASH output bitrates. Foundation level outputs up to 720p, while the Advanced level provides up to 1080p output.
+
+🪲 Bugs resolved 
+A bug that resulted in streaming endpoints not starting due to malformed labels has been resolved.

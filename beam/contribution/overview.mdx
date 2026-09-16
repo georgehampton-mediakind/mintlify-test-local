@@ -1,0 +1,72 @@
+---
+title: "MK.IO Beam Contribution: Send Feeds from Field to Studio"
+sidebarTitle: "Overview"
+description: "Configure MK.IO Beam for low-latency contribution encoding, secure transport, and live event feeds from field locations to broadcast studios."
+---
+
+MK.IO Beam for contribution is engineered to meet the demands of modern live content acquisition, delivering pristine video quality with maximum efficiency. Its flexible architecture allows for field reconfiguration for IP or satellite contribution, supporting up to 4:2:2 10-bit UHD across a range of server options. Beam is ideally suited to live events, where consumption-based pricing gives you the flexibility to scale costs to actual usage.
+
+MK.IO Beam connects to the cloud, enabling direct and automated control, monitoring, and lifecycle management via the MK.IO cloud portal for efficient operations at scale.
+
+## How Contribution Works
+
+A contribution workflow on MK.IO Beam compresses a live video source — SDI, SMPTE ST 2110, or IP — into a compact, high-quality stream for delivery from a field location to a production facility or broadcast studio. The processing chain consists of feed components that you configure individually:
+
+- **Live Encoder** — compresses the baseband input using HEVC, H.264, MPEG-2, or JPEG-XS encoding at up to 4:2:2 10-bit UHD. Handles video, audio, and data including SCTE-35 pass-through.
+- **Multiplexer** (optional) — combines multiple encoded services into a single MPEG Transport Stream for efficient delivery.
+- **Reliable Transport** (optional, added separately) — wraps the transport stream in SRT, Zixi, or RIST for resilient delivery over unmanaged IP networks.
+- **Satellite Modulator** (optional) — modulates the transport stream to L-band RF for satellite uplink (DVB-S, DVB-S2, DVB-S2X).
+
+## Common Workflows
+
+### Input Setup
+
+<CardGroup cols={2}>
+  <Card title="Configure SMPTE ST 2110 Input" icon="network-wired" href="/beam/contribution/smpte-2110">
+    Set up uncompressed IP video and audio inputs using SMPTE ST 2110 and PTP synchronization.
+  </Card>
+  <Card title="Configure SDI/ASI Cards" icon="plug" href="https://docs.mediakind.com/beam/system-admin/maintenance/setup-sdi-asi-card">
+    Set up SDI and ASI hardware cards for HD and UHD baseband input.
+  </Card>
+</CardGroup>
+
+### Low Latency and Reliability
+
+<CardGroup cols={2}>
+  <Card title="Minimise End-to-End Delay" icon="gauge-high" href="https://docs.mediakind.com/beam/contribution/how-to/minimize-end-to-end-delay">
+    Tune encoder and transport settings to reduce the end-to-end delay across the contribution link.
+  </Card>
+  <Card title="Drop Output on Input Loss" icon="triangle-exclamation" href="https://docs.mediakind.com/beam/contribution/how-to/drop-output-on-input-loss">
+    Configure IP or ASI output to drop immediately when the input signal is lost.
+  </Card>
+</CardGroup>
+
+### Transport
+
+<CardGroup cols={2}>
+  <Card title="Configure SRT / Zixi / RIST" icon="shuffle" href="https://docs.mediakind.com/beam/reliable-transport/service-management">
+    Set up reliable transport protocols for resilient contribution over IP networks.
+  </Card>
+  <Card title="Configure Satellite Modulator" icon="satellite" href="https://docs.mediakind.com/beam/contribution/configure-feed-components/satellite-modulator">
+    Set up the DVB-S/S2/S2X satellite modulator for uplink contribution.
+  </Card>
+</CardGroup>
+
+## Configure Feed Components
+
+After creating a feed, configure each service within it individually:
+
+<CardGroup cols={2}>
+  <Card title="Live Encoder" icon="video" href="/beam/contribution/live-encoder">
+    Configure input type, video and audio encoding settings, output parameters, and advanced options such as CBR and SCTE-35 pass-through.
+  </Card>
+  <Card title="Feed Components" icon="sliders" href="/beam/contribution/configure-feed-components">
+    Configure the multiplexer, reliable transport service, and other components in the contribution chain.
+  </Card>
+</CardGroup>
+
+## Technical Specifications
+
+<Card title="Contribution Tech Specs" icon="file-lines" href="/beam/contribution/tech-specs">
+  Supported codecs, resolutions, frame rates, reliable transport protocols, encryption standards, satellite modulator specifications, and hardware card requirements.
+</Card>

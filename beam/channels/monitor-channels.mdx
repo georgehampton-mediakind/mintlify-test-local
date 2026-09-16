@@ -1,0 +1,288 @@
+---
+title: "Monitor Channel Health and Alarms on MK.IO Beam"
+sidebarTitle: "Monitor Channels"
+description: "Monitor channel health, review active alarms, and track input/output status on MK.IO Beam devices from the Essentials dashboard or API."
+---
+
+Everything you need to build a dashboard or an alerting rule comes from four places: the channel list, the alarm list, the thumbnail endpoint, and the device metrics. This page covers each of them and the query options that keep the responses small.
+
+## List Channels
+
+```bash
+curl <BASE_URL>/api/channels/
+```
+
+The response follows the same envelope as the other MK.IO list endpoints. Channels are in `value`, and `supplemental` carries the counts. This example shows a response from a device holding nine channels, requested one at a time with `$top=1`:
+
+```json
+{
+  "value": [
+    {
+      "kind": "BeamChannel",
+      "metadata": {
+        "name": "9b9c65bd-b383-4ed2-ae5a-fcde805e4e8c",
+        "displayName": "demo-channel_0",
+        "created": "2026-05-20T07:52:01.637000Z"
+      },
+      "spec": {
+        "type": "EncodingDistribution",
+        "state": "Stopped",
+        "inputs": [
+          {
+            "type": "SDI",
+            "name": "input_1",
+            "transport": { "url": "sdi://localhost/slot_1_port_3" },
+            "payload": {
+              "audios": [
+                { "name": "Audio_1", "aggregation": { "type": "None", "pair": "G1P1" } }
+              ]
+            }
+          }
+        ],
+        "transform": {
+          "encoding": {
+            "video": { "codec": "H264Main", "videoFormat": "1280x720p", "bitrate": 2000000 },
+            "audios": [
+              {
+                "name": "Audio_1_encoded_1",
+                "inputName": "input_1",
+                "audioName": "Audio_1",
+                "codec": "PassThrough"
+              }
+            ]
+          }
+        },
+        "outputs": [
+          {
+            "type": "UDP",
+            "transport": { "url": "udp://239.1.1.1:5000", "interface": "eth1" }
+          }
+        ]
+      },
+      "status": {
+        "state": "Stopped",
+        "health": { "severity": "Clear" },
+        "inputs": [
+          {
+            "health": { "severity": "Clear" },
+            "name": "sdi-0",
+            "thumbnailUrl": "thumbnails/sdi-0/thumbnail.jpg",
+            "thumbnailPresence": "Absent",
+            "type": "SDI"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "udp-0",
+            "health": { "severity": "Clear" },
+            "type": "UDP",
+            "transport": { "url": "udp://239.1.1.1:5000", "interface": "eth1" },
+            "payload": {
+              "video": { "resolution": "1280x720", "codec": "H264Main", "bitrate": 2000000 },
+              "audios": [{ "codec": "PassThrough" }]
+            }
+          }
+        ],
+        "syncState": "Ok",
+        "syncError": []
+      }
+    }
+  ],
+  "@odata.nextLink": "/channels?%24skiptoken=1&%24top=1&%24orderby=metadata%2Fcreated",
+  "supplemental": {
+    "kind": "BeamChannelList",
+    "count": 1,
+    "operation": "list",
+    "pagination": { "start": 0, "end": 1, "records": 1, "total": 9 }
+  }
+}
+```
+
+Three things in that response are worth noting:
+
+- `metadata.name` is a UUID here because this channel was created in the Essentials UI. A channel you create through the API keeps whatever name you gave it. Treat the name as an opaque identifier and show `displayName` to people.
+- The names in `spec` and in `status` are not the same values. The spec input is called `input_1`, and the device reports it in `status` as `sdi-0`. Match inputs by position or by `type` rather than by name.
+- `supplemental.pagination.records` counts what came back in this page, and `total` counts every channel that matched. Follow `@odata.nextLink` for the next page rather than calculating the offset yourself.
+
+## Filter, Sort, and Page
+
+The list endpoint takes OData-style query parameters:
+
+| Parameter | Default | Purpose |
+| :-- | :-- | :-- |
+| `$filter` | none | An expression that limits which channels are returned. |
+| `$orderby` | `metadata/created` | A sort field with optional `asc` or `desc`. Comma-delimit for multiple keys. |
+| `$select` | none | A comma-separated list of fields to return. |
+| `$top` | `1000` | Maximum items per page, from `1` to `1000`. |
+| `$skiptoken` | `0` | Offset into the results. |
+
+`$filter` supports the operators `eq`, `ne`, `lt`, `le`, `gt`, and `ge`, combined with `and` and `or`, plus the functions `contains()`, `tolower()`, and `toupper()`. Paths into the object use slashes.
+
+Fetch only channels that are not healthy, worst first:
+
+```bash
+curl -G <BASE_URL>/api/channels/ \
+  --data-urlencode "\$filter=status/health/severity ne 'Clear'" \
+  --data-urlencode "\$orderby=status/health/severity desc"
+```
+
+More useful expressions:
+
+- `$filter=status/state eq 'Running'` — channels that are actually on air
+- `$filter=contains(tolower(metadata/displayName), 'news')` — case-insensitive name search
+- `$filter=metadata/created ge 2026-01-01T00:00:00Z` — recently created channels
+
+<Tip>
+  Pass `$select` when you only need identity fields. The device skips loading live status entirely for `$select`-only requests, making the call noticeably lighter than a full list.
+</Tip>
+
+## Read One Channel
+
+```bash
+curl <BASE_URL>/api/channels/news-contribution/
+```
+
+The `status` object is where the live detail sits:
+
+- `state` — the actual state, `Running` or `Stopped`
+- `health.severity` — the rolled-up channel severity: `Critical`, `Major`, `Minor`, `Notice`, `Ignore`, or `Clear`
+- `inputs` and `outputs` — their own health, along with transport detail such as SRT connection statistics
+- `syncState` and `syncError` — whether the configuration you sent was successfully applied
+- `errors` — faults the device wants to show a person, already written for display
+
+Each entry in `status.errors` carries:
+- `userShort` — a short summary, capped at 40 characters
+- `userMessage` — a fuller sentence
+- `detail` — further context
+- `showCode` — whether the `code` is worth showing to a person
+- `transient` — marks a fault that may clear without intervention
+
+## Read Active Alarms
+
+Health tells you a channel is unwell. Alarms tell you why. The alarm endpoint is scoped to one channel, and `channelName` is required:
+
+```bash
+curl -G <BASE_URL>/api/channel-channelalarms/active/ \
+  --data-urlencode "channelName=news-contribution"
+```
+
+Each alarm has a `metadata` half and a `status` half:
+
+```json
+{
+  "value": [
+    {
+      "kind": "Alarm",
+      "metadata": {
+        "id": "<ALARM_ID>",
+        "name": "<ALARM_NAME>",
+        "displayName": "<ALARM_DISPLAY_NAME>",
+        "objectId": "<OBJECT_ID>",
+        "channelName": "news-contribution",
+        "created": "2026-07-01T09:31:12Z"
+      },
+      "status": {
+        "severity": "Critical",
+        "additionalInfo": "<DETAIL>"
+      }
+    }
+  ],
+  "supplemental": {
+    "kind": "AlarmList",
+    "count": 1,
+    "operation": "list",
+    "pagination": { "start": 0, "end": 1, "records": 1, "total": 1 }
+  }
+}
+```
+
+`status.additionalInfo` is the free-text explanation worth surfacing in an alert. `severity` uses the same scale as channel health.
+
+Because the endpoint takes one channel at a time, an alarm view across a device means listing the unhealthy channels first and then fetching alarms for each one.
+
+## Fetch an Input Thumbnail
+
+Each entry in `status.inputs` carries a `thumbnailUrl`, relative to the channel:
+
+```json
+{
+  "name": "sdi-0",
+  "thumbnailUrl": "thumbnails/sdi-0/thumbnail.jpg",
+  "thumbnailPresence": "Absent",
+  "type": "SDI"
+}
+```
+
+Use that value rather than building the path yourself. The identifier in it is the name the device assigns to the input in `status`, not the name you gave the input in `spec`.
+
+```bash
+curl <BASE_URL>/api/channels/<CHANNEL_NAME>/thumbnails/sdi-0/thumbnail.jpg \
+  --output thumbnail.jpg
+```
+
+Check `thumbnailPresence` before you fetch. It reports `Present`, `Absent`, `Unknown`, or `Unsynced`.
+
+## Query Device Metrics
+
+For a point-in-time reading of the device itself:
+
+```bash
+curl <BASE_URL>/api/channel-metrics/current/
+```
+
+```json
+{
+  "data": {
+    "serverId": "Server1",
+    "cpuUtilizationPercent": 34.52094163392065,
+    "uptimeSeconds": 1041534.8420000076
+  },
+  "collectedAt": "2026-07-29T13:13:32.843368Z"
+}
+```
+
+Read every field under `data` defensively: depending on the device and the sensors fitted to it, a metric can be `null` or be absent from the response entirely.
+
+Narrow the response with `$select`, which accepts `serverId`, `cpuUtilizationPercent`, `temperatureCelsius`, and `uptimeSeconds`:
+
+```bash
+curl -G <BASE_URL>/api/channel-metrics/current/ \
+  --data-urlencode "\$select=cpuUtilizationPercent,temperatureCelsius"
+```
+
+For historical data, `GET /api/channel-metrics/cpu/` and `GET /api/channel-metrics/temperature/` take a time range. Both require `start` and `end` (ISO 8601 or Unix timestamps) and an optional `step` that defaults to `60s`:
+
+```bash
+curl -G <BASE_URL>/api/channel-metrics/cpu/ \
+  --data-urlencode "start=2026-07-01T00:00:00Z" \
+  --data-urlencode "end=2026-07-01T01:00:00Z" \
+  --data-urlencode "step=60s"
+```
+
+These return the Prometheus range format. `status` is `success` or `error`, and `data.result` is an array of series. The value in each pair is a string, so parse it before you chart it.
+
+`GET /api/channel-metrics/query/` takes an arbitrary PromQL expression in `query`, along with the same `start`, `end`, and `step`. Use it when the two named endpoints do not cover the metric you need.
+
+## What Goes Wrong
+
+<Accordion title="The channel list is slow.">
+  Live status is loaded for every channel before filtering, so the cost is in the channel count rather than the filter. If you are polling frequently and only need identity, pass `$select` to skip status hydration.
+</Accordion>
+
+<Accordion title="A $filter returns nothing you expected.">
+  String values in an expression are single-quoted, and paths use slashes rather than dots. Compare `status/health/severity ne 'Clear'` against a dotted or unquoted version, which will not match.
+</Accordion>
+
+<Accordion title="A thumbnail URL does not resolve.">
+  The identifier in the path is the input name from `status`, which the device assigns, not the input name you set in `spec`. Read `thumbnailUrl` off the status object instead of composing the path.
+</Accordion>
+
+<Accordion title="A metric field has no value.">
+  A reading the device cannot supply can be `null` or absent from `data`. Treat every field under `data` as optional and handle both cases.
+</Accordion>
+
+## Where to Go Deeper
+
+- [Manage Channels](/beam/channels/manage-channels) — create, start, stop, and delete channels.
+- [Import and Export](/beam/channels/import-export) — bulk operations and configuration backups.
+- [Channels API reference](/api-reference/channels-api) — every field of `ChannelStatus`, including per-transport statistics.

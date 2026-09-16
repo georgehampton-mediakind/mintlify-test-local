@@ -1,0 +1,80 @@
+---
+title: "Create and Manage MK.IO API Tokens"
+sidebarTitle: "API Tokens"
+description: "Create personal API tokens, set expiration dates, limit scopes, and rotate credentials for MK.IO API access."
+---
+
+Making an API request to access MK.IO services requires a token for authentication. An API token is a unique character string that identifies you to the API. It acts like a key that tells the API who you are and what you are allowed to do. Using an API token ensures that only authorized users and applications can access API services.
+
+A personal token contains the following information:
+
+- The identity of the user
+- The identity of the organization
+- The token type and expiration date
+- Optionally, a set of permissions if the token only grants a subset of the user's permissions
+
+MK.IO personal access tokens use the JSON Web Token (JWT) format and can authenticate API requests with a bearer authorization header:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/media/assets" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+## Create a personal API token
+
+<Steps>
+  <Step title="Open your profile">
+    From the profile dropdown menu in the top-right corner, click your email address.
+  </Step>
+  <Step title="Navigate to API tokens">
+    Scroll to the **Your personal API tokens** section.
+  </Step>
+  <Step title="Create the token">
+    Click **Add Token**, then enter a description and the expiration date (UTC time). Click **Create**.
+  </Step>
+  <Step title="Copy the token">
+    Once created, copy the token to a secure location immediately. **It is only visible for 5 minutes** after creation and cannot be retrieved again.
+  </Step>
+</Steps>
+
+<Warning>
+Store your API token in a secrets manager or environment variable. Never hard-code it in source code or share it in logs. If a token is compromised, revoke it immediately from Organization Settings.
+</Warning>
+
+## View tokens
+
+Access to view tokens depends on your role:
+
+- **As a user:** From the profile dropdown menu, click your email, then navigate to **Your personal API Tokens**. You can only see the tokens you created.
+- **As an Admin:** From the profile dropdown, navigate to **Organization Settings → API Tokens**. You can view all API tokens and their creators across the organization.
+
+## Revoke an API token
+
+For each token in the list, select the action button at the right of the row to view the token details or revoke it. Revoking a token immediately invalidates it — any application using that token will receive authentication errors.
+
+Use token revocation when:
+
+- A team member leaves the organization
+- You suspect a token has been exposed
+- You want to rotate credentials as part of a regular security practice
+
+## Manage tokens with the API
+
+Use the Tokens API to create, list, and revoke tokens programmatically. This is useful for automation workflows where tokens need to be provisioned or cycled on a schedule.
+
+See the [Tokens API Guide](/api-guides/management/tokens) for token endpoints, authentication headers, and revocation workflows.
+
+## Token permissions
+
+By default, a personal API token grants the same permissions as the user who created it. You can restrict a token to a subset of your own permissions by specifying a limited scope when creating the token. A restricted token cannot have more access than your own user account.
+
+To verify what capabilities a token has, check the RBAC endpoint:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/user/rbac" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+<Tip>
+Create separate tokens for separate applications or automation workflows. This makes it easier to revoke access for one system without affecting others.
+</Tip>

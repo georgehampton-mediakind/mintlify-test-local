@@ -1,0 +1,119 @@
+# Source: https://docs.mediakind.com/api-guides/understanding/webhooks
+
+# Webhooks
+
+Webhooks let your integration react to MK.IO events as they happen. Rather than polling jobs, live events, or streaming locators on a timer, you register a webhook rule and receive an HTTP `POST` request whenever a subscribed event fires. Webhook rules belong to the Management API.
+
+## How a webhook rule works
+
+[Section titled “How a webhook rule works”](https://docs.mediakind.com/api-guides/understanding/webhooks/#how-a-webhook-rule-works)
+
+A rule belongs to a project and defines where to deliver events, whether delivery is on, and which events trigger it:
+
+- `url`: the target for the `POST` request.
+- `enabled`: whether the rule delivers.
+- `events`: the event types that trigger the rule.
+- `headers` and `queryParams`: non-sensitive request decoration.
+- `authentication.headers` and `authentication.queryParams`: sensitive values, such as a shared secret.
+
+The configuration endpoint is `/api/v1/projects/{project_name}/webhook/rules`. For the create, edit, and delete calls, see [Webhook rules](https://docs.mediakind.com/api-guides/how-to/management/webhooks).
+
+## The events you can subscribe to
+
+[Section titled “The events you can subscribe to”](https://docs.mediakind.com/api-guides/understanding/webhooks/#the-events-you-can-subscribe-to)
+
+| Event | Use it to |
+| :-- | :-- |
+| `MediaKind.JobStarted` | Track when a job leaves the queue and begins processing. |
+| `MediaKind.JobFinished` | Trigger downstream work when a job reaches a terminal state. |
+| `MediaKind.StreamingLocatorCreated` | React when newly published content is ready. |
+| `MediaKind.ChannelInstanceStarted` | Track live channel startup. |
+| `MediaKind.ChannelInstanceStopped` | Track live channel shutdown. |
+| `MediaKind.ChannelInstanceError` | Alert on live channel failures. |
+| `MediaKind.ScheduledOperationAccepted` | Observe scheduled work entering the pipeline. |
+| `MediaKind.ScheduledOperationOngoing` | Track scheduled work in progress. |
+| `MediaKind.ScheduledOperationCompleted` | Trigger follow-up work after a scheduled operation finishes. |
+| `MediaKind.ScheduledOperationError` | Alert on scheduled-operation failures. |
+
+Scheduled operation events are available only when that feature is enabled for the organization.
+
+## The delivered payload
+
+[Section titled “The delivered payload”](https://docs.mediakind.com/api-guides/understanding/webhooks/#the-delivered-payload)
+
+MK.IO delivers events in the [CloudEvents](https://cloudevents.io/) format. Every payload has the same envelope:
+
+```
+{
+  "specversion": "1.0",
+  "id": "<unique_id>",
+  "type": "<event_type>",
+  "source": "<object_url>",
+  "time": "<event_time>",
+  "datacontenttype": "application/json",
+  "data": {
+    "projectName": "<project_name>",
+    "previousState": "<state before this event>",
+    "state": "<new state>",
+    "resource": {}
+  }
+}
+```
+
+The `data.resource` object holds the full resource, exactly as a `GET` on `source` would return it. The `data.previousState` and `data.state` fields tell you which transition fired the event:
+
+| Event | `previousState` | `state` |
+| :-- | :-- | :-- |
+| `MediaKind.JobStarted` | `Queued` | `Processing` |
+| `MediaKind.JobFinished` | `Processing` | `Finished`, `Canceled`, or `Error` |
+| `MediaKind.StreamingLocatorCreated` | `Creating` | `Created` |
+
+## What webhooks change in your design
+
+[Section titled “What webhooks change in your design”](https://docs.mediakind.com/api-guides/understanding/webhooks/#what-webhooks-change-in-your-design)
+
+Without webhooks, a client creates a resource, then polls a `GET` or `/state` endpoint until the resource reaches a terminal state, handling retry timing and rate limits along the way. With webhooks the flow becomes:
+
+1. Create the resource.
+2. Return control to the user or job runner.
+3. Wait for the event that reports the state change.
+4. Retrieve the resource only when you need fresh detail.
+
+This is most valuable for jobs and live workflows, where the wait can be long and unpredictable.
+
+## A useful first rule
+
+[Section titled “A useful first rule”](https://docs.mediakind.com/api-guides/understanding/webhooks/#a-useful-first-rule)
+
+For a Video On Demand (VOD) workflow, the smallest useful subscription is `MediaKind.JobStarted` and `MediaKind.JobFinished`, which signal when a job begins and when it reaches a terminal state. For live workflows, start with `MediaKind.ChannelInstanceStarted`, `MediaKind.ChannelInstanceStopped`, and `MediaKind.ChannelInstanceError`.
+
+## Authentication fields are write-only
+
+[Section titled “Authentication fields are write-only”](https://docs.mediakind.com/api-guides/understanding/webhooks/#authentication-fields-are-write-only)
+
+A rule separates general request decoration from sensitive values. `headers` and `queryParams` carry general fields. `authentication.headers` and `authentication.queryParams` carry secret or authentication values. Fields under `authentication` are write-only: when you read a saved rule back, those values appear masked rather than in clear text.
+
+## Build a handler that survives retries
+
+[Section titled “Build a handler that survives retries”](https://docs.mediakind.com/api-guides/understanding/webhooks/#build-a-handler-that-survives-retries)
+
+If a delivery fails, MK.IO retries it. Your endpoint should therefore handle duplicate deliveries safely:
+
+- Make event handling idempotent where possible.
+- Log the event `id`, `type`, and `source`.
+- Return a success response as soon as you have safely accepted the event.
+
+Treat the endpoint as a security surface. Serve it over HTTPS, pass a shared secret through the `authentication` fields, and verify that secret in your handler before acting on a payload.
+
+## When a direct read is still the right tool
+
+[Section titled “When a direct read is still the right tool”](https://docs.mediakind.com/api-guides/understanding/webhooks/#when-a-direct-read-is-still-the-right-tool)
+
+Webhooks suit asynchronous workflows, but they do not replace every read. Use a direct `GET` when a user asks for the current state now, when you need to list resources on demand, or when the resource has no event coverage. The strongest integrations combine both: webhooks for change notification, and API reads for current detail.
+
+## Related reading
+
+[Section titled “Related reading”](https://docs.mediakind.com/api-guides/understanding/webhooks/#related-reading)
+
+- [Resource states](https://docs.mediakind.com/api-guides/understanding/resource-states): the state values these events report.
+- [Rate limits](https://docs.mediakind.com/api-guides/understanding/rate-limits): why event delivery scales better than polling.

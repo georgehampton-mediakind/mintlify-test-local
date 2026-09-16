@@ -1,0 +1,108 @@
+---
+title: "MK.IO Beam Reception: Decode Satellite and IP Feeds"
+sidebarTitle: "Overview"
+description: "Configure MK.IO Beam for satellite reception, IP turnaround, and professional decoding of broadcast feeds in reception and distribution workflows."
+---
+
+MK.IO Beam for reception is engineered to meet the evolving demands of processing at the edge of your network, delivering high-quality video and audio decoding with maximum efficiency. Its flexible architecture allows for seamless integration into existing workflows, providing a future-proof solution for content turnaround and distribution. Whether you are demodulating satellite feeds for monitoring, descrambling encrypted services, or converting transport streams to baseband SDI, Beam handles the complete chain from signal in to output out.
+
+## How Reception Works
+
+A reception workflow on MK.IO Beam processes content through the following stages:
+
+- **Receive and decrypt** — ingest the signal from satellite, ASI, IP, or a reliable transport protocol (SRT, RIST, Zixi), and optionally descramble encrypted services using BISS, BISS-CA, Director 6, or DVB-CI.
+- **Decode and process** — decode video (MPEG-2, H.264, HEVC, JPEG-XS) and audio from the selected program, with optional HDR-to-SDR conversion, video scaling, and delay mode control.
+- **Output** — deliver the decoded content as SDI (HD, 3G, 12G), SMPTE ST 2022-6 (SDI over IP), or SMPTE ST 2110 (uncompressed IP video), or pass through the transport stream as IP or ASI for downstream processing.
+
+## Common Workflows
+
+### Receive and Decrypt
+
+<CardGroup cols={2}>
+  <Card title="Satellite / ASI Input" icon="satellite" href="https://docs.mediakind.com/beam/receiver/input">
+    Set up tuners, LNB frequencies, and ASI ports for satellite and baseband signal ingestion.
+  </Card>
+  <Card title="Reliable Transport Input" icon="shuffle" href="https://docs.mediakind.com/beam/reliable-transport/service-management">
+    Ingest SRT, Zixi, or RIST streams from IP-based sources.
+  </Card>
+  <Card title="BISS-CA Decryption" icon="lock" href="/beam/reception/decryption">
+    Configure BISS-CA entitlements and keys for cycling session word decryption.
+  </Card>
+  <Card title="Common Interface (DVB-CI)" icon="credit-card" href="/beam/reception/decryption">
+    Manage physical Conditional Access Modules (CAM) for descrambling.
+  </Card>
+</CardGroup>
+
+### Decode and Process
+
+<CardGroup cols={2}>
+  <Card title="Configure Receiver" icon="sliders" href="/beam/reception/configure-receiver">
+    Set up the Receiver service for satellite or IP input, choose the configuration type, and configure decoding.
+  </Card>
+  <Card title="Delay Modes" icon="clock" href="/beam/reception/delay-modes">
+    Adjust buffer settings for Standard, Low, or Super Low latency to suit your workflow.
+  </Card>
+  <Card title="HDR to SDR" icon="sun" href="https://docs.mediakind.com/beam/receiver/output/hdr-sdr">
+    Down-convert HDR signals (PQ10/HLG10) to SDR BT.709 for standard displays.
+  </Card>
+  <Card title="Video Decoding" icon="film" href="https://docs.mediakind.com/beam/receiver/decoding">
+    Manage codecs, resolutions, program selection, and PID assignment.
+  </Card>
+</CardGroup>
+
+### Output
+
+<CardGroup cols={3}>
+  <Card title="SDI Output" icon="plug" href="https://docs.mediakind.com/beam/receiver/output/sdi">
+    Map services to physical SDI output ports (HD, 3G, 12G-SDI, UHD).
+  </Card>
+  <Card title="SMPTE ST 2022-6 Output" icon="network-wired" href="https://docs.mediakind.com/beam/receiver/output/smpte-st-2022-6">
+    Output SDI over IP for remote monitoring and production workflows.
+  </Card>
+  <Card title="SMPTE ST 2110 Output" icon="server" href="https://docs.mediakind.com/beam/receiver/output/smpte-st-2110">
+    Output uncompressed IP video and audio for IP-based studio environments.
+  </Card>
+</CardGroup>
+
+## End-to-End Use Case: SRT Input with Decode and SDI Output
+
+The following example shows how to configure a complete reception workflow using SRT input and SDI output. This is the most common IP-based reception use case.
+
+<Steps>
+  <Step title="Configure a Reliable Transport Input">
+    1. Navigate to the **Services** menu on the left-hand pane.
+    2. Click **Add service** and select **Reliable Transport** to create and configure the service.
+    3. Enter a name for this service.
+    4. In the **Input** section, set the **Input Mode** to **SRT Listener**.
+    5. In the **Output** section, set the **Output Mode** to **UDP**.
+  </Step>
+
+  <Step title="Configure the SRT Listener with UDP IP Output">
+    1. Configure the SRT Listener **Connection** parameters with the listener address and port. Configure **Encryption** if required. Adjust **Link characteristics** parameters as needed.
+    2. Configure the **Output Connection** parameters (multicast address and port for the UDP output).
+    3. Click **Save and exit** to save your changes.
+  </Step>
+
+  <Step title="Configure the Receiver Service for SDI Output">
+    1. Navigate to the **Services** menu on the left-hand pane.
+    2. Click **Add service** and select **Receiver** to create a new service.
+    3. Set the **Name** for the service, the service **Type** to **SD/HD**, and the **Output type** to **SDI**.
+    4. Click **OK** to create the service.
+    5. Click the service name to edit the configuration.
+    6. Select the **Input** tab under **Parameters**.
+    7. Set the **Input Type** to **IP** and configure the multicast **Stream address** and **Port** number to match the Reliable Transport output.
+    8. Select the **Output** tab under **Parameters**.
+    9. Configure the SDI output parameters, such as the SDI output port number from the **Output interface** option.
+    10. Click **Save and exit**.
+  </Step>
+
+  <Step title="Start Services">
+    On the **Services** page, assign a server to each service you want to run, then start the services.
+  </Step>
+</Steps>
+
+## Technical Specifications
+
+<Card title="Reception Tech Specs" icon="file-lines" href="/beam/reception/tech-specs">
+  Supported input formats, satellite standards, decoding capabilities, decryption systems, output formats, and hardware requirements.
+</Card>

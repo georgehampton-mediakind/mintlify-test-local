@@ -1,0 +1,102 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/templates
+
+# Build with the Templates API
+
+The Templates API manages the configuration templates that Live API resources depend on for encoding, composition, and stream conditioning. Templates are versioned: each upload creates a new version, and the most recent version is always tagged `latest`.
+
+## API overview
+
+[Section titled “API overview”](https://docs.mediakind.com/api-guides/how-to/templates/#api-overview)
+
+| Detail | Value |
+| --- | --- |
+| Base path | `/api/v1/projects/{project_name}/templating/` |
+| Scope | Project |
+| Reference | [Templates API reference](https://docs.mediakind.com/api-reference/templates-api) |
+
+Every endpoint the Templates API has, in full:
+
+| Endpoint | What it does |
+| --- | --- |
+| `GET /templating/types` | Lists the config types your project supports |
+| `GET /templating/configs`, `GET /templating/configs/{config_type}` | List your own configs, across all types or filtered to one |
+| `GET /templating/configs/{config_type}/{name}` | Read the latest version of one config |
+| `PUT /templating/configs/{config_type}/{name}` | Create a config, or a new version of one that already exists |
+| `DELETE /templating/configs/{config_type}/{name}` | Delete a config and every version of it |
+| `GET /templating/configs/{config_type}/{name}/versions` | List every version of a config |
+| `GET /templating/configs/{config_type}/{name}/versions/{version}` | Read one specific version, by hash or tag |
+| `DELETE /templating/configs/{config_type}/{name}/versions/{version}` | Delete one specific version |
+| `GET /templating/presets`, `GET /templating/presets/{config_type}` | List MediaKind’s presets, across all types or filtered to one |
+| `GET /templating/presets/{config_type}/{name}` | Read one specific preset |
+
+That’s the complete list. Presets have no PUT, POST, or DELETE anywhere, everything writable lives under `/configs`.
+
+## How templates connect to live resources
+
+[Section titled “How templates connect to live resources”](https://docs.mediakind.com/api-guides/how-to/templates/#how-templates-connect-to-live-resources)
+
+### Reference a config
+
+[Section titled “Reference a config”](https://docs.mediakind.com/api-guides/how-to/templates/#reference-a-config)
+
+A template is referenced by name and version in a Live API resource’s transform spec. For example, an `encodingLive` template is required by every `LiveChannel`, `LiveEvent`, `StaticMultiviewChannel`, and `StaticMultiviewEvent`. A `multiviewComposing` template is optional but provides a way to separate composition layout from encoding settings in multiview workflows.
+
+Reference a template from a live resource like this:
+
+```
+"encodingLive": {
+  "configRef": {
+    "name": "my-encoding-template",
+    "version": "latest"
+  }
+}
+```
+
+Use `"version": "latest"` to always reference the most recently uploaded version. Pin to a specific version hash when you need stable, reproducible deployments.
+
+### Start from a preset
+
+[Section titled “Start from a preset”](https://docs.mediakind.com/api-guides/how-to/templates/#start-from-a-preset)
+
+A live resource’s `configRef` always points at a **config**, the template you create and own. It never points at a **preset**, a separate, read-only, MediaKind-managed starting point you can optionally copy into a config. See [Configs and presets](https://docs.mediakind.com/api-guides/how-to/templates/manage-templates#configs-and-presets) for how the two relate.
+
+Use this sequence for a preset-based Live API workflow:
+
+1. List the presets available to the project.
+2. Create a customer config from the selected preset.
+3. Retrieve the created config and copy its input or output pin names.
+4. Reference the customer config from the Live API resource.
+
+A Live API resource cannot reference the preset directly. For production, use a version hash instead of the mutable `latest` tag when the broadcast must use reproducible configuration.
+
+### Customize a live resource
+
+[Section titled “Customize a live resource”](https://docs.mediakind.com/api-guides/how-to/templates/#customize-a-live-resource)
+
+Alongside `configRef`, a live resource can set **`configValues`**, named values for any parameters the template declares, and **`configOverrides`**, JSON Patch operations against the template’s content directly.
+
+Prefer `configValues` where the template supports it: it’s checked against parameters the template author explicitly declared, while `configOverrides` can touch any path and requires knowing the template’s internal structure in detail. See [Set per-instance parameter values](https://docs.mediakind.com/api-guides/how-to/live/manage-live#set-per-instance-parameter-values) and [Declare parameters on a config](https://docs.mediakind.com/api-guides/how-to/templates/manage-templates#declare-parameters-on-a-config).
+
+## Template types
+
+[Section titled “Template types”](https://docs.mediakind.com/api-guides/how-to/templates/#template-types)
+
+| Config type | Purpose |
+| --- | --- |
+| `encodingLive` | Live encoding configuration. Required by `liveChannels`, `liveEvents`, `staticMultiviewChannels`, `staticMultiviewEvents`. |
+| `multiviewComposing` | Composition layout, optional on `staticMultiviewChannels` and `staticMultiviewEvents`. |
+| `streamConditioning` | Optional stream conditioning settings, usable on any of the four resource types. |
+
+Call the types endpoint for the full list of types supported by your project. It is the source of truth, since types can be added over time.
+
+`config_type` is a string path parameter. Choose a type returned by `GET /api/v1/projects/{project_name}/templating/types` and supported by the resource you plan to create. The [Live API reference](https://docs.mediakind.com/api-reference/live-api) defines the four resource transforms and their accepted config types.
+
+## Guides
+
+[Section titled “Guides”](https://docs.mediakind.com/api-guides/how-to/templates/#guides)
+
+[Manage templates](https://docs.mediakind.com/api-guides/how-to/templates/manage-templates)
+
+### Manage templates
+
+Create, version, tag, delete, and reference configuration templates. Use presets as a starting point.

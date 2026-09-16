@@ -1,0 +1,62 @@
+---
+title: "Connect MK.IO Beam Devices to the MK.IO Cloud Portal"
+sidebarTitle: "Connect to MK.IO"
+description: "Check network requirements and follow device-management guides to connect your MK.IO Beam appliance to the MK.IO cloud portal for remote control and monitoring."
+---
+
+MK.IO Beam devices connect to the MK.IO cloud so you can register, monitor, and manage them from the MK.IO portal. Use this page to find the Beam setup requirements, network details, and device-management guides. Once connected, you gain remote UI access, software updates, configuration backups, and log collection — all without physical access to the appliance.
+
+## Start with Beam Setup
+
+If you are preparing a new device, follow the [Quick Start](/beam/quick-start) guide first. It covers the installation, Control interface, network configuration, time synchronization, device registration, and software update sequence in order.
+
+Before registering your device, confirm it has:
+
+- A configured **Control** interface with an IP address.
+- A default gateway and DNS servers that can resolve external domains.
+- A configured and active time source.
+
+## Network Requirements
+
+The device must be able to reach MK.IO services before you register it. Allow outbound **TCP port 443** to `https://api.mk.io/` through any customer-managed firewall.
+
+If the device can reach the internet only through a proxy, configure the HTTP proxy from **Appliance** > **Fleet** in the device UI. The device must also connect to `https://app.mk.io/` at least once before you register it.
+
+<Note>
+  For full network checks and diagnostics, see [Troubleshoot edge-device onboarding](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices/troubleshooting).
+</Note>
+
+## Register a Device
+
+Start with [Onboard edge devices](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices) to choose the registration path that matches your installation workflow:
+
+<CardGroup cols={2}>
+  <Card title="Common Onboarding Workflow" icon="plug" href="https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices/common-workflow">
+    Connect the device from its local UI, copy the short code, and add it in MK.IO. The most common registration path.
+  </Card>
+  <Card title="Onboard from the Device Terminal" icon="terminal" href="https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices/terminal-only">
+    Use the Device ID when the installer cannot access the device UI.
+  </Card>
+  <Card title="Onboard Using the API" icon="code" href="https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices/api-onboarding">
+    Register the device programmatically through the Fleet API for automated deployments.
+  </Card>
+  <Card title="Remove a Device" icon="trash" href="https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices/remove-device">
+    Remove a device from an MK.IO project when it is decommissioned or reassigned.
+  </Card>
+</CardGroup>
+
+The device must connect to MK.IO before you can complete registration. The **Connected** field in **Appliance** > **Fleet** on the device UI shows whether that connection is working.
+
+## Manage Registered Devices
+
+After registration, use MK.IO for the following device-management tasks:
+
+- [**View device information**](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/display-device-information) — check status, software version, hardware, network, and running services.
+- [**Access the remote device UI**](https://docs.mediakind.com/beam/connect-to-mkio) — open the full device interface through a secure MK.IO tunnel without VPN or direct network access.
+- [**Update device software**](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/update-device-software) — deploy available software bundles from the portal.
+- [**Create and restore configuration backups**](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/configuration-backups) — snapshot the full device configuration and restore it after a re-image or hardware replacement.
+- [**Collect device logs**](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/support-packages) — bundle device logs into a support package for MediaKind Customer Support.
+
+<Tip>
+  For automation and bulk device management, use the [Fleet device management API Guide](https://docs.mediakind.com/api-guides/how-to/fleets/device-management) to register, monitor, and update devices programmatically.
+</Tip>

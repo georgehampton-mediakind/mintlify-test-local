@@ -1,0 +1,93 @@
+---
+title: "MK.IO Beam Quick Start: Configure and Register Your Device"
+sidebarTitle: "Quick Start"
+description: "Install the ISO, set the control IP, connect to the Beam web UI, configure the network, sync time, and register your device with the MK.IO cloud portal."
+---
+
+This guide walks you through the complete setup sequence for a new MK.IO Beam device — from first power-on through to a registered, cloud-connected appliance ready for broadcast workflows. Complete each step in order; some steps are conditional depending on whether you have MediaKind hardware or a software-only installation.
+
+<Note>
+  **Default credentials** differ by purchase type:
+  - **MK.IO Beam hardware purchased from MediaKind:** credentials are printed on the paper Quick Start Guide supplied with the hardware.
+  - **SW Only:** credentials are in the email from SWSupply with a subject containing "Your recent MK.IO Beam purchase…".
+
+  Change the default password after your first login. Select the user icon in the upper-right corner of the device UI and choose **Change password**.
+</Note>
+
+<Steps>
+  <Step title="Install the ISO">
+    This step is required for **SW Only** customers only. The ISO is pre-installed on MK.IO Beam hardware purchased from MediaKind.
+
+    Follow the [Install the ISO](https://docs.mediakind.com/beam/system-admin/iso-installation) guide to prepare your server before continuing.
+  </Step>
+
+  <Step title="Set the Control IP Address">
+    This step is only required if the device has not obtained a DHCP address. The IP address displays on the terminal when a monitor and keyboard are attached. Press **Return** if needed to clear the screen.
+
+    1. Log in to the terminal with the default credentials.
+    2. Type `control-wizard` and press **Enter** to configure the _Control_ interface.
+
+    ```bash
+    control-wizard
+    ```
+
+    You can also configure an HTTP proxy here if one is needed to reach MK.IO.
+  </Step>
+
+  <Step title="Connect to the Web User Interface">
+    1. Open a web browser and go to `http://<Control-IP-Address>`, where `<Control-IP-Address>` is the control IP address you set in the previous step.
+    2. Enter the default **username** and **password** on the login page.
+
+    The **Home** page displays.
+
+    <Tip>
+      Bookmark the device URL now so you can return to it quickly during subsequent configuration steps.
+    </Tip>
+  </Step>
+
+  <Step title="Configure the Network">
+    Follow the [Network Configuration](https://docs.mediakind.com/beam/system-admin/network/configure-nics) guide to configure your network interfaces.
+
+    Set at least one DNS server. DNS is required for connection to MK.IO unless you have configured an HTTP proxy.
+
+    <Note>
+      For MK.IO connection requirements and device-management guides, see [Connect MK.IO Beam to MK.IO](/beam/connect-to-mkio).
+    </Note>
+  </Step>
+
+  <Step title="Configure and Activate Time Synchronization">
+    Follow the [How to configure the system clock](https://docs.mediakind.com/beam/system-admin/network/system-clock) guide to configure a time source.
+
+    Configure a time source and make it **active**. An accurate system clock is required for MK.IO registration and for ST 2110 / PTP workflows.
+  </Step>
+
+  <Step title="Register the MK.IO Beam Device with MK.IO">
+    Follow the [device onboarding](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/on-board-fleet-devices) guide to register your device with the MK.IO cloud portal.
+
+    <Warning>
+      Registration status persists over a software upgrade but does **not** persist if the device is re-imaged. If you re-image the device, you must register it again.
+    </Warning>
+  </Step>
+
+  <Step title="Upgrade to the Latest Software Version">
+    Follow the [updating device software](https://docs.mediakind.com/mkio/how-to/managing-edge-devices/update-device-software) guide to install the latest available software bundle.
+
+    Running the latest software ensures you have access to all current features, including the Essentials UI (requires `1.12.0` or higher on a fresh installation).
+  </Step>
+</Steps>
+
+## Next Steps
+
+After completing setup, choose the workflow that matches your deployment:
+
+<CardGroup cols={3}>
+  <Card title="Contribution" icon="satellite-dish" href="/beam/contribution/overview">
+    Configure low-latency encoding and secure transport for field-to-studio feeds.
+  </Card>
+  <Card title="Reception" icon="signal" href="/beam/reception/overview">
+    Configure satellite demodulation, decryption, and baseband decoding.
+  </Card>
+  <Card title="Essentials UI" icon="gauge" href="/beam/essentials-ui">
+    Learn the day-to-day monitoring and channel management interface.
+  </Card>
+</CardGroup>

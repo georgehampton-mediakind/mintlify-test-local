@@ -1,0 +1,112 @@
+# Source: https://docs.mediakind.com/mcp
+
+# MediaKind Context MCP
+
+Connect your AI tool to the MediaKind Model Context Protocol (MCP) server to find published documentation and Application Programming Interface (API) references. Search returns concise sources with links. You can then read a specific document or endpoint in more detail.
+
+## Connect your AI tool
+
+[Section titled “Connect your AI tool”](https://docs.mediakind.com/mcp/#connect-your-ai-tool)
+
+Use this server address with a client that supports Streamable HTTP:
+
+```
+https://docs.mediakind.com/api/mcp
+```
+
+The server does not require an API key or authentication token. Its tools read documentation and do not modify your MK.IO resources.
+
+For clients that accept a transport configuration, use:
+
+```
+{
+  "transport": "streamable-http",
+  "url": "https://docs.mediakind.com/api/mcp"
+}
+```
+
+The client manages the MCP session. After connecting, call `list_corpora` to verify the connection and see the current documentation collections and API names.
+
+## Find the right source
+
+[Section titled “Find the right source”](https://docs.mediakind.com/mcp/#find-the-right-source)
+
+Search the collection that matches your question. Use `search_all_mkio_docs` when the question spans multiple collections.
+
+| Tool | Use it to |
+| :-- | :-- |
+| `list_corpora` | See available collections, API names, and the catalog revision. |
+| `search_all_mkio_docs` | Search MK.IO, MK.IO Beam, API guides, and API references together. |
+| `search_mkio_docs` | Find MK.IO product guides and concepts. |
+| `search_beam_docs` | Find MK.IO Beam configuration and operation documentation. |
+| `search_api_guide` | Find API authentication instructions, workflows, and concepts. |
+| `search_api_reference` | Search endpoint titles, tags, paths, and descriptions, optionally within one API. |
+
+The search tools require a `query`. For example, call `search_mkio_docs` with:
+
+```
+{
+  "query": "How do I create a streaming locator?"
+}
+```
+
+Product and guide searches return up to five distinct documents with short excerpts. Each result includes a document `id`, a title, and a canonical `url`. Results are JSON objects returned as text. A search with no relevant results reports `no_matches`.
+
+## Browse and inspect endpoints
+
+[Section titled “Browse and inspect endpoints”](https://docs.mediakind.com/mcp/#browse-and-inspect-endpoints)
+
+Use catalog tools when you need an exact endpoint or a complete list of operations. These tools do not substitute a similar endpoint for a missing one.
+
+| Tool | Inputs and result |
+| :-- | :-- |
+| `list_api_endpoints` | Browse endpoints. Optional `api_name` and `tag` filters narrow the list. |
+| `search_api_by_tag` | Browse endpoints with the exact resource `tag`, such as `Assets`. |
+| `get_api_endpoint` | Match an HTTP `method` and exact `path`. Add `api_name` if the signature exists in more than one API. |
+| `compare_api_versions` | Find endpoints matching a `query`, grouped by current API. This compares APIs, not historical versions. |
+
+Call `list_api_endpoints` to browse the Media API’s asset operations:
+
+```
+{
+  "api_name": "media-api",
+  "tag": "Assets",
+  "limit": 20
+}
+```
+
+The response includes `total` and `next_cursor`. If `next_cursor` is not null, pass it as `cursor` with the same filters to continue. Listing defaults to 20 entries and accepts a `limit` from one to 50. A response may contain fewer entries to stay within its size limit.
+
+Use the API names returned by `list_corpora`. The aliases `media`, `management`, `fleet`, and `infra` are also supported. Unknown API names produce an input error rather than silently searching a different API.
+
+An exact lookup reports `not_found` when no signature matches, or `ambiguous` when you need to select an API. A successful lookup returns the endpoint identity and document `id` for reading its details.
+
+## Read document details
+
+[Section titled “Read document details”](https://docs.mediakind.com/mcp/#read-document-details)
+
+Use `get_document` with an `id` returned by search or endpoint browsing. Replace the placeholder below with that value:
+
+```
+{
+  "id": "<DOCUMENT_ID>"
+}
+```
+
+The response includes document content and section headings. To read a particular section, pass its exact heading as `section` with the same `id`.
+
+For an API endpoint, set `format` to `openapi` to read the exact source operation. References remain as `$ref` values. To follow a local reference, pass its value without the leading `#` as `pointer`, with the same endpoint `id` and `format`. Pass an empty `pointer` to read the complete specification, including shared parameters, security schemes, and server definitions.
+
+OpenAPI content is JSON text. For a paginated response, concatenate the `content` fields from every page before parsing the JSON. Keep the same `format` and `pointer` when continuing. Markdown is a readable overview; use OpenAPI format when you need the complete schema.
+
+Search responses are limited to 8 KiB. Document reads are limited to 16 KiB per response. Large documents return `truncated: true` and a `next_cursor`. Pass that value as `cursor`, with the same document and section, to continue. Truncated content is incomplete: read the continuation before relying on the full schema or procedure.
+
+## Handle updates and errors
+
+[Section titled “Handle updates and errors”](https://docs.mediakind.com/mcp/#handle-updates-and-errors)
+
+Cursors belong to a catalog revision and a set of filters. If the documentation changes or you change filters, start again without the cursor.
+
+The catalog refreshes within one minute. During publication, a search can report `index_updating` or `incomplete` while indexed content catches up with the current catalog. Retry shortly. A document that changes between discovery and reading reports `content_changed` rather than returning mismatched content.
+
+Blank queries, queries containing only punctuation, and queries longer than 2,000 characters produce input errors. Service failures are reported as errors, separately from a valid search with no matches.

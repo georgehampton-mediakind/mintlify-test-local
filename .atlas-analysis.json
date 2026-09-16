@@ -1,0 +1,293 @@
+{
+  "projectType": "saas",
+  "projectName": "MediaKind",
+  "projectDescription": "MediaKind is a cloud-native media platform delivering live and on-demand video processing, packaging, and streaming through MK.IO (cloud SaaS) and MK.IO Beam (on-premises edge appliances).",
+  "theme": "maple",
+  "primaryColor": "#003dff",
+  "lightColor": "#009fe3",
+  "darkColor": "#0a5390",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "MK.IO",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "mkio/introduction",
+              "mkio/getting-started/what-is-mkio",
+              "mkio/getting-started/account-setup",
+              "mkio/getting-started/connect-cloud-storage",
+              "mkio/getting-started/live-stream-quickstart",
+              "mkio/getting-started/vod-quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "mkio/concepts/media-resource-model",
+              "mkio/concepts/assets-and-storage",
+              "mkio/concepts/transforms-and-jobs",
+              "mkio/concepts/live-events",
+              "mkio/concepts/streaming-and-playback",
+              "mkio/concepts/content-protection"
+            ]
+          },
+          {
+            "group": "Live Streaming",
+            "pages": [
+              "mkio/live/overview",
+              "mkio/live/set-up-live-event",
+              "mkio/live/live-and-multiview",
+              "mkio/live/extended-archive-window",
+              "mkio/live/monitor-live-stream"
+            ]
+          },
+          {
+            "group": "Video Processing",
+            "pages": [
+              "mkio/vod/overview",
+              "mkio/vod/run-transcode-jobs",
+              "mkio/vod/vod-pipeline",
+              "mkio/vod/ai-dubbing"
+            ]
+          },
+          {
+            "group": "Content Delivery",
+            "pages": [
+              "mkio/delivery/stream-content",
+              "mkio/delivery/streaming-endpoints",
+              "mkio/delivery/content-key-policies",
+              "mkio/delivery/playback-filters"
+            ]
+          },
+          {
+            "group": "Administration",
+            "pages": [
+              "mkio/admin/organization-settings",
+              "mkio/admin/users-and-teams",
+              "mkio/admin/api-tokens",
+              "mkio/admin/webhooks",
+              "mkio/admin/billing-and-usage",
+              "mkio/admin/edge-devices"
+            ]
+          },
+          {
+            "group": "Release Notes",
+            "pages": [
+              "mkio/changelog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MK.IO Beam",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "beam/introduction",
+              "beam/quick-start",
+              "beam/connect-to-mkio",
+              "beam/essentials-ui"
+            ]
+          },
+          {
+            "group": "Contribution",
+            "pages": [
+              "beam/contribution/overview",
+              "beam/contribution/live-encoder",
+              "beam/contribution/configure-feed-components",
+              "beam/contribution/smpte-2110",
+              "beam/contribution/tech-specs"
+            ]
+          },
+          {
+            "group": "Reception",
+            "pages": [
+              "beam/reception/overview",
+              "beam/reception/configure-receiver",
+              "beam/reception/decryption",
+              "beam/reception/delay-modes",
+              "beam/reception/tech-specs"
+            ]
+          },
+          {
+            "group": "Headends",
+            "pages": [
+              "beam/headends/overview",
+              "beam/headends/single-server",
+              "beam/headends/server-pair",
+              "beam/headends/high-availability",
+              "beam/headends/packager",
+              "beam/headends/tech-specs"
+            ]
+          },
+          {
+            "group": "Channels",
+            "pages": [
+              "beam/channels/how-channels-work",
+              "beam/channels/manage-channels",
+              "beam/channels/monitor-channels",
+              "beam/channels/connect-to-device",
+              "beam/channels/import-export"
+            ]
+          },
+          {
+            "group": "System Administration",
+            "pages": [
+              "beam/system-admin/overview",
+              "beam/system-admin/iso-installation",
+              "beam/system-admin/network-configuration",
+              "beam/system-admin/security",
+              "beam/system-admin/servers-and-failover",
+              "beam/system-admin/maintenance"
+            ]
+          },
+          {
+            "group": "Release Notes",
+            "pages": [
+              "beam/release-notes"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Guides",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "api-guides/getting-started/authentication",
+              "api-guides/getting-started/first-api-call",
+              "api-guides/getting-started/which-api"
+            ]
+          },
+          {
+            "group": "API Concepts",
+            "pages": [
+              "api-guides/concepts/overview",
+              "api-guides/concepts/error-handling",
+              "api-guides/concepts/pagination",
+              "api-guides/concepts/rate-limits",
+              "api-guides/concepts/resource-states",
+              "api-guides/concepts/webhooks"
+            ]
+          },
+          {
+            "group": "Media API",
+            "pages": [
+              "api-guides/media/overview",
+              "api-guides/media/storage",
+              "api-guides/media/assets",
+              "api-guides/media/transforms-and-jobs",
+              "api-guides/media/live-streaming",
+              "api-guides/media/publishing",
+              "api-guides/media/content-protection",
+              "api-guides/media/vod-pipeline"
+            ]
+          },
+          {
+            "group": "Live & Templates APIs",
+            "pages": [
+              "api-guides/live/core-concepts",
+              "api-guides/live/manage-live",
+              "api-guides/live/multiview",
+              "api-guides/live/scheduled-operations",
+              "api-guides/live/manage-templates"
+            ]
+          },
+          {
+            "group": "Beam APIs",
+            "pages": [
+              "api-guides/beam/channels-overview",
+              "api-guides/beam/device-management",
+              "api-guides/beam/backups-and-restores",
+              "api-guides/beam/software-updates",
+              "api-guides/beam/networks-and-sites"
+            ]
+          },
+          {
+            "group": "Management API",
+            "pages": [
+              "api-guides/management/org-provisioning",
+              "api-guides/management/users-and-teams",
+              "api-guides/management/tokens",
+              "api-guides/management/webhooks",
+              "api-guides/management/usage-and-billing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "MK.IO APIs",
+            "pages": [
+              "api-reference/overview",
+              "api-reference/media-api",
+              "api-reference/live-api",
+              "api-reference/templates-api",
+              "api-reference/management-api"
+            ]
+          },
+          {
+            "group": "MK.IO Beam APIs",
+            "pages": [
+              "api-reference/channels-api",
+              "api-reference/fleets-api",
+              "api-reference/infrastructure-api"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP",
+        "groups": [
+          {
+            "group": "AI Integration",
+            "pages": [
+              "mcp/overview"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Cloud-native live and VOD media processing via MK.IO SaaS platform",
+    "On-premises edge encoding, packaging, and decoding via MK.IO Beam appliances",
+    "Multi-product unified API surface: Media, Live, Templates, Management, Fleets, Infrastructure, and Channels APIs",
+    "REST API with bearer token authentication shared across all cloud APIs",
+    "Live event ingest (RTMP, SRT, SMPTE 2110) with HLS/DASH packaging and DRM protection",
+    "VOD transcode pipeline with reusable transforms, jobs, and output assets",
+    "Multiview composition of multiple live sources into a single tiled output",
+    "AI-powered workflows including multi-language VOD dubbing and transcription",
+    "Fleet management for on-premises Beam devices: registration, software updates, backups, and support packages",
+    "Webhook event notifications for job completion, resource state changes, and more",
+    "Model Context Protocol (MCP) server for AI tool integration with MediaKind documentation",
+    "Content protection with PlayReady, Widevine, FairPlay DRM and content key policies",
+    "Organization-level multi-project management with RBAC, teams, and billing"
+  ],
+  "publicApiSurface": [
+    "GET /api/v1/projects/{project_name}/media/assets — list and retrieve media assets",
+    "PUT /api/v1/projects/{project_name}/media/assets/{asset_name} — create or update asset",
+    "GET /api/v1/projects/{project_name}/media/transforms — list transcode templates",
+    "PUT /api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs/{job_name} — submit transcode job",
+    "PUT /api/v1/projects/{project_name}/media/liveEvents/{live_event_name} — create live event",
+    "POST /api/v1/projects/{project_name}/media/liveEvents/{live_event_name}/start — start live event",
+    "PUT /api/v1/projects/{project_name}/media/streamingLocators/{locator_name} — create streaming locator",
+    "POST /api/v1/projects/{project_name}/media/streamingLocators/{locator_name}/listPaths — retrieve playback URLs",
+    "GET /api/v1/projects/{project_name}/live/liveChannels — list Live API channels",
+    "PUT /api/v1/projects/{project_name}/live/liveChannels/{channel_name} — create Live API channel",
+    "GET /api/v1/projects/{project_name}/templating/templates — list encoding templates",
+    "PUT /api/v1/projects/{project_name}/fleet/devices/{device_name} — register fleet device",
+    "POST /api/v1/projects/{project_name}/fleet/devices/{device_name}/backup — backup device configuration",
+    "GET /api/v1/projects/{project_name}/infra/networks — list infrastructure networks",
+    "GET /api/v1/organizations/{org_name}/users — list organization users",
+    "POST /api/v1/organizations/{org_name}/webhookRules — create webhook notification rule",
+    "GET /api/channels/ — Channels API: list channels on Beam device",
+    "PUT /api/channels/{channel_id}/ — Channels API: create or update channel on Beam device"
+  ]
+}

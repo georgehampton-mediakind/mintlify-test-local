@@ -1,0 +1,10 @@
+# Source: https://docs.mediakind.com/beam/live-encoder/parameters/input/source-error-management
+
+# Source error management
+
+| Parameter | Description |
+| --- | --- |
+| Switch on ES data loss | Switch to backup source if video or audio is lost. |
+| Delay | The amount of time between the video or audio loss and the switch to the backup source.<br>Needs to be defined if **Switch on ES data loss** is activated. |
+| Slate if no source at start | Display an image when live input is not yet detected. The replacement image can be defined in Video processing>Freeze frame management section (Media Processing tab). |
+| Default frame rate | Default frame rate used when live input is not yet detected.<br>Needs to be defined if **Slate if no source at start** is activated. |

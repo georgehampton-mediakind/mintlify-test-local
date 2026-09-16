@@ -1,0 +1,218 @@
+---
+title: "Security Settings: Users, SSL, and LDAP on MK.IO Beam"
+sidebarTitle: "Security"
+description: "Manage local users, configure SSL certificates, and set up LDAP authentication for MK.IO Beam web interface access."
+---
+
+MK.IO Beam provides user management, SSL certificate installation, and LDAP/Active Directory integration for securing access to the web interface and API. Administrators manage all security settings from the System Center via the gear icon in the upper right corner.
+
+## User Management
+
+Administrators can create users, assign them to groups, and control their permissions. User groups define a set of access rights across different areas of the system.
+
+### User Groups
+
+A user group is a set of access rights and permissions. Users are assigned to at least one group and can belong to multiple groups. New users are automatically assigned to the **Monitoring** group by default.
+
+#### Built-in User Groups
+
+There are four built-in user groups. Permissions are either Read (R), Write (W), or Read and Write (R/W):
+
+| | Admin | Configuration | Monitoring | API |
+| :-- | :-- | :-- | :-- | :-- |
+| Services | R/W | R/W | R | R/W |
+| Servers | R/W | R/W | R | R/W |
+| Templates | R/W | R/W | R | R/W |
+| Failover | R/W | R/W | R | R/W |
+| Alarms and Stats | R | R | R | R |
+| Settings | R/W | N/A | N/A | R/W |
+| Restore | Yes | Yes | No | R/W |
+| Backup | Yes | Yes | Yes | R/W |
+| User Management | R/W | N/A | N/A | N/A |
+
+**Monitoring** users can: access the GUI, back up databases, and manually trigger failover or revert.
+
+**Configuration** users can do everything Monitoring users can, plus: restore databases, create/edit/delete services, templates, and failover groups, modify licenses, access settings, configure SNMP, schedule jobs, edit alarm overrides, and generate catalogs and outputs.
+
+**Admin** users can do everything Configuration and Monitoring users can, plus: modify external links and general settings, delete licenses and servers, and reboot servers.
+
+**API** users have rights to access the API.
+
+### Display the List of Users
+
+<Steps>
+  <Step title="Open User Management">
+    Click the gear icon in the upper right corner, then select **User Management**.
+  </Step>
+  <Step title="View Users">
+    Select **Users**. The list of users displays. Scroll to the end of the list to see the total number of users.
+  </Step>
+</Steps>
+
+### Create a New User
+
+<Steps>
+  <Step title="Open User Management">
+    Click the gear icon, select **User Management**, then select **Users**.
+  </Step>
+  <Step title="Add User">
+    Select **Add User** and enter the user information: **Username** and **Password**.
+  </Step>
+  <Step title="Save">
+    Select a **Save** option. By default, new users are assigned to the **Monitoring** group.
+  </Step>
+  <Step title="Assign to a Group">
+    To change permissions, assign the user to the appropriate group (see below).
+  </Step>
+</Steps>
+
+An Admin user can edit or create other Admin users and profiles, including passwords and permissions.
+
+### Assign a User to a Group
+
+<Steps>
+  <Step title="Open User Management">
+    Click the gear icon, select **User Management**, then select **Users**.
+  </Step>
+  <Step title="Open User Permissions">
+    Click the user in the list to display their information and permissions.
+  </Step>
+  <Step title="Assign Groups">
+    Scroll to **Permissions** and use the arrows to add groups to the **Chosen groups** list. You can add multiple groups, or click **Choose all** to assign the user to all available groups.
+  </Step>
+  <Step title="Save">
+    Click **Save**.
+  </Step>
+</Steps>
+
+### Add a New Group
+
+<Steps>
+  <Step title="Open Groups">
+    Click the gear icon, select **User Management**, then select **Groups**.
+  </Step>
+  <Step title="Add Group">
+    Select **Add Group** and enter a **Name** and define the **Permissions** for the group.
+  </Step>
+  <Step title="Save">
+    Select a **Save** option. The new group appears in the list.
+  </Step>
+</Steps>
+
+### Edit User Information
+
+<Steps>
+  <Step title="Open Users">
+    Display the list of users via User Management.
+  </Step>
+  <Step title="Select a User">
+    Click the user you want to edit.
+  </Step>
+  <Step title="Edit Fields">
+    Edit the **Username**, **Password**, **Personal information**, or **Permissions** as needed.
+  </Step>
+  <Step title="Save">
+    Select a save option to continue or exit.
+  </Step>
+</Steps>
+
+### Edit a User Password
+
+Any user can edit their own password, but only users with Admin or Configuration permissions can edit passwords for other users.
+
+<Steps>
+  <Step title="Open Users">
+    Display the list of users via User Management.
+  </Step>
+  <Step title="Select the User">
+    Click the user whose password you want to change.
+  </Step>
+  <Step title="Change Password">
+    Click the **this form** link to change the password, then edit the profile settings and click **Save**.
+  </Step>
+</Steps>
+
+### Link LDAP or Active Directory
+
+The MK.IO Beam Controller can be linked with an external LDAP or Active Directory server to authenticate users. When activated, the authentication page is shown before granting access.
+
+When users are first installed from the LDAP server, they are automatically assigned to the Monitoring group by default. The default group can be configured, and LDAP can be configured to assign groups based on LDAP group membership.
+
+See the LDAP configuration guide for the full configuration procedure.
+
+### Save Options for User Management
+
+| Save option | Result |
+| :-- | :-- |
+| **Save** | The user is added to the list. |
+| **Save and continue** | Additional user information (groups and permissions) displays. |
+| **Save and add another** | User is added and the add user page refreshes for a new entry. |
+
+---
+
+## SSL Certificates
+
+By default, MK.IO Beam uses HTTP for web access. You can install customer-signed SSL certificates to enable HTTPS access. The same certificate also configures HTTPS for packaged output.
+
+### Certificate File Location
+
+Store your certificate files (`.crt` and `.key`) in `/etc/pki/tls/certs/custom`. Certificates stored in this location are backed up during upgrades. The configuration script allows a different location, but files stored elsewhere will not be backed up.
+
+### Configuration File
+
+The configuration file at `/usr/bin/certs/certs.conf` must be updated with the correct certificate file names:
+
+```bash
+##############################################################
+#                                                            #
+# Config file used by add-https-certs.sh                     #
+# Needs to be populated by the customer specific file names  #
+#                                                            #
+##############################################################
+CERTS_input_file_location=/etc/pki/tls/certs/custom
+client_KEY_file=customer.key
+client_CRT_file=customer.crt
+CA_auth_file=TrustedRoot.crt
+http_deployment=api-gateway
+```
+
+| Parameter | Value |
+| :-- | :-- |
+| `CERTS_input_file_location` | The location where your `.key` and `.crt` files are stored. |
+| `client_KEY_file` | Your customer key file name. |
+| `client_CRT_file` | Your customer certificate file name. |
+| `CA_auth_file` | Your trusted root certificate file name. |
+| `http_deployment` | Always `api-gateway` in the current deployment — do not change. |
+
+### Apply the Certificates
+
+<Steps>
+  <Step title="Place Certificate Files">
+    Copy your `.key`, `.crt`, and CA root certificate files to `/etc/pki/tls/certs/custom`.
+  </Step>
+  <Step title="Update the Configuration File">
+    Edit `/usr/bin/certs/certs.conf` to set the correct file names for your certificates.
+  </Step>
+  <Step title="Run the Configuration Script">
+    Run the script to apply the certificates:
+
+    ```bash
+    ./add-https-certs.sh --add
+    ```
+
+    Progress is displayed on the CLI. If successful, the certificates are immediately in place and in use.
+  </Step>
+  <Step title="Verify HTTPS Access">
+    Access the web interface over HTTPS on port 31443:
+
+    ```
+    https://<UNIT_IP>:31443
+    ```
+  </Step>
+</Steps>
+
+To see all available actions for the configuration script, run it without arguments:
+
+```bash
+add-https-certs.sh --help
+```

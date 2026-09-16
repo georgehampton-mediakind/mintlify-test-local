@@ -1,0 +1,62 @@
+# Source: https://docs.mediakind.com/beam/live-encoder/parameters/input/source
+
+# Source
+
+## MPEG-2 TS/UDP
+
+[Section titled “MPEG-2 TS/UDP”](https://docs.mediakind.com/beam/live-encoder/parameters/input/source/#mpeg-2-tsudp)
+
+| Parameter | Description |
+| --- | --- |
+| Network interface | Name of the network interface used to capture the input stream. |
+| Stream address | Input stream unicast or multicast IPv4 address<br>Only defined source addresses can be used to retrieve the multicast stream. |
+| Port | Port used to capture the input stream<br>Example: **1234** |
+| IGMPv3 source filtering | IGMP source IP address. List of addresses allowed in IGMPv3 using a comma to separate.<br>Example: \*_239.2.3.123_ |
+| FEC port(s) | Port(s) used to activate FEC (Forward Error Correction) and resolve RTP packet loss issues due to network transport. 
+Use a comma to separate in case of dual mode. One port (column) or two ports (combined raw and column) can be set, in any order. Data is retrieved from these ports. 
+Note: Leave this field empty if you want to disable the FEC support.\- In case of mono FEC mode, only column is used. In case of dual FEC mode, both column and rows are used.<br>\- In dual FEC modes, statistics are displayed for both the column and row.<br>![el stats dual fec mode](https://docs.mediakind.com/_astro/el_stats_dual_fec-mode.CYd4Rcft_3dWps.webp) |
+| Input synchronization mode | Input can be synchronized based on PMT program ID or on VCT major and minor channel numbers or the stream PIDs. Make a selection based on the information present on the input stream. |
+| Program ID | Select the correct program from the MTPS input stream.<br>Possible values: From 1 to 65535 |
+| Major channel | The major channel number present in the VCT<br>Possible values: From 1 to 99 |
+| Minor channel | The minor channel number present in the VCT<br>Possible values: From 1 to 999 |
+| PCR PID | Enter the packet identifier of the Program Clock Reference. This clock is used to synchronize audio and video packets. If left blank, the PCR PID is set to the output Video PID.<br>Possible values: From 16 to 8190 |
+
+## SDI/IP
+
+[Section titled “SDI/IP”](https://docs.mediakind.com/beam/live-encoder/parameters/input/source/#sdiip)
+
+| Parameter | Description |
+| --- | --- |
+| Network interface | Name of the network interface used to capture the input stream. |
+| Stream address | Input stream unicast or multicast IPv4 address<br>Only defined source addresses can be used to retrieve the multicast stream. |
+| Port | Port used to capture the input stream<br>Example: **1234** |
+| IGMPv3 source filtering | IGMP source IP address. List of addresses allowed in IGMPv3 using a comma to separate.<br>Example: **239.2.3.123** |
+
+## SMTPE ST 2110
+
+[Section titled “SMTPE ST 2110”](https://docs.mediakind.com/beam/live-encoder/parameters/input/source/#smtpe-st-2110)
+
+| Parameter | Description |
+| --- | --- |
+| Network interface | Name of the network interface used to capture the input stream. |
+
+## RTMP
+
+[Section titled “RTMP”](https://docs.mediakind.com/beam/live-encoder/parameters/input/source/#rtmp)
+
+| Parameter | Description |
+| --- | --- |
+| Server URL | URL of RTMP server to connect to. |
+
+## MediaComposer
+
+[Section titled “MediaComposer”](https://docs.mediakind.com/beam/live-encoder/parameters/input/source/#mediacomposer)
+
+| Parameter | Description |
+| --- | --- |
+| Input redundancy | Choose the redundancy settings: two modes can be set when two multicast sources (primary and secondary) are available.<br>In active/passive mode, the passive source is idle and doesn't even join the multicast address or capture UDP packets.<br>In active/active mode, both sources capture in parallel, provide statistics on transport and demux layers, but only one source is fully decoded at any given time. |
+| Primary interface | Name of the input interface used to capture the input stream. |
+| Secondary interface | Name of the input interface used to capture the input stream (secondary source). |
+
+**Related information** 
+[Configure stream source(s) in input stream](https://docs.mediakind.com/beam/live-encoder/configure/input/input-stream-source)

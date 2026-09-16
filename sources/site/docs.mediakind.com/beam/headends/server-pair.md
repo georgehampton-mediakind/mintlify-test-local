@@ -1,0 +1,39 @@
+# Source: https://docs.mediakind.com/beam/headends/server-pair
+
+# Server pair & redundancy
+
+Two servers running MK.IO Beam for headends can be configured as a server pair, which offers various redundancy options with the options being chosen depending on the desired system behavior.
+
+## Chain redundancy
+
+[Section titled “Chain redundancy”](https://docs.mediakind.com/beam/headends/server-pair/#chain-redundancy)
+
+Chain redundancy provides simplified server-level redundancy.
+
+![ServerPairChainRedundancy](https://docs.mediakind.com/beam-img/ServerPairChainRedundancy.png)
+
+Chain redundancy is appropriate for 1+1 server use cases where:
+
+- There is no benefit to “meshing” the Encoding Live services from one server to another, to provide additional/secondary redundant sources to each multiplexer within the server pair.
+
+- When inter-chassis network bandwidth is limited.
+
+## Mesh redundancy
+
+[Section titled “Mesh redundancy”](https://docs.mediakind.com/beam/headends/server-pair/#mesh-redundancy)
+
+Mesh redundancy provides optimal service-level combined with server-level redundancy.
+
+![ServerPairMeshRedundancy](https://docs.mediakind.com/beam-img/ServerPairMeshRedundancy.png)
+
+Mesh redundancy is appropriate for 1+1 server cases where:
+
+- Service-level redundancy is required/beneficial. For example, with SDI sources where a single SDI feed could be lost/damaged and switching just one service is required.
+
+- The inter-network infrastructure can carry all traffic between the server pair providing redundant sources, i.e. there is adequate network bandwidth.
+
+With mesh redundancy it is necessary to use the externally visible interfaces for all service outputs which are to be meshed between single server partners.
+
+Mesh source redundancy between Live Encoding services and Multiplexer services is achieved by offering the Live Encoding sources of one server as an additional set of sources to the other.
+
+The above diagram shows that both Multiplexers within the pair are outputting (aka Active/Active). Active/Standby is also supported.

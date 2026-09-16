@@ -1,0 +1,33 @@
+---
+title: "Single-Server Headend Deployment on MK.IO Beam"
+sidebarTitle: "Single Server"
+description: "Deploy an MK.IO Beam headend on a single server for smaller-scale channel processing and OTT distribution workflows."
+---
+
+A single server installation of MK.IO Beam provides a self-contained headend for smaller-scale deployments. While a single server does not offer full hardware redundancy, you can achieve limited redundancy through redundant and multiple outputs from a Live Encoding service, pairing sources into a Multiplexer service that in turn delivers redundant multiple transport stream outputs.
+
+Reliable Transport services can optionally be used to provide ingress to or egress from the solution using SRT, RIST, or Zixi protocols.
+
+## Architecture
+
+The diagram below shows a single-server headend topology. Live Encoding services produce redundant SPTS streams that feed the Multiplexer, which produces one or more MPTS outputs for distribution.
+
+![Single-server headend architecture](https://docs.mediakind.com/beam-img/BeamHeadendSingleServer.png)
+
+## Key Characteristics
+
+- **Live Encoding** receives incoming sources and encodes or transcodes them into SPTS streams.
+- **Multiplexer** combines multiple SPTS streams into a DVB-compliant MPTS for cable, satellite, or terrestrial distribution.
+- **Reliable Transport** (SRT, RIST, Zixi) can optionally handle input ingress or output egress over IP networks.
+- **Packager** (optional) produces HLS and DASH over CMAF outputs for OTT streaming delivery.
+
+<Note>
+  A single-server deployment provides limited redundancy through multiple encoder outputs and multiplexer output streams. For full 1+1 hardware redundancy, see the [Server Pair](/beam/headends/server-pair) topology.
+</Note>
+
+## Next Steps
+
+- Add redundancy: [Server Pair Deployment](/beam/headends/server-pair)
+- Distribute across multiple nodes: [High Availability Deployment](/beam/headends/high-availability)
+- Configure packaging: [Packager](/beam/headends/packager)
+- Review supported capabilities: [Technical Specifications](/beam/headends/tech-specs)

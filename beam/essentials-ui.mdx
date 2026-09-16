@@ -1,0 +1,281 @@
+---
+title: "MK.IO Beam Essentials UI: Dashboard and Channel Control"
+sidebarTitle: "Essentials UI"
+description: "Use the Beam Essentials UI for day-to-day channel monitoring, alarm review, and channel creation without configuring underlying services directly."
+---
+
+The Essentials UI is a simplified operating view for MK.IO Beam devices, designed for day-to-day monitoring and channel control. Use it to check channel health at a glance, review active alarms, and create new channels without configuring the underlying services directly. You can access a device's Essentials UI locally at the device address, or remotely through MK.IO — see [Access the remote device UI](https://docs.mediakind.com/beam/connect-to-mkio) for remote access details.
+
+<Note>
+  The Essentials UI requires Beam version `1.12.0` or higher and is only available for new customers or fresh Beam ISO installations.
+</Note>
+
+The Essentials UI also introduces the **Channels API**, which presents everything the device is doing as a set of _channels_ — where one channel covers the input, processing, and output of a single service. For more information, see the [Channels API guides](https://docs.mediakind.com/api-guides/beam/channels-overview/).
+
+## Essentials and Advanced Views
+
+The device UI is split into two views, toggled from the **Essentials** / **Advanced** buttons in the top-right corner of the header. The current view is highlighted.
+
+- **Essentials** — day-to-day operations and monitoring. Channels are presented as a single unified concept with live thumbnails and clear status indicators.
+- **Advanced** — deeper engineering and service-level configuration, exposing the underlying services, alarms, servers, and templates that power each channel. See [Advanced interface overview](https://docs.mediakind.com/beam/web-interface) for documentation.
+
+Both views operate on the same underlying system. Advanced gives full configuration access at the service level; Essentials presents that same configuration as unified channels.
+
+<Warning>
+  A device presents one view or the other, never both. A device with the Essentials view manages workflows as _channels_; a device without it manages them as _feeds_. If the documentation you are reading refers to feeds, see the Advanced interface guides.
+</Warning>
+
+Select **Advanced** when you need configuration not covered by the Essentials view — such as reception and gateway configuration beyond the channel wizard, service-level settings, servers, or templates. Select **Essentials** to return to the monitoring dashboard.
+
+## Dashboard
+
+Opening a device in the Essentials view displays the dashboard, which shows every channel running on that device.
+
+### Quick Controls
+
+Below the header, the dashboard provides three controls:
+
+- **View only alarmed** — a toggle that filters the dashboard to show only channels that currently have alarms.
+- **Filter** — a search field to filter the channel list by name.
+- **New channel** — opens the channel creation wizard.
+
+### Status Panel
+
+In the top-right of the dashboard, three summary metrics show the device's current load:
+
+| Metric | Description |
+| :-- | :-- |
+| **CPU Usage** | Current processor utilization across the device. |
+| **Unit up-time** | How long the device has been running since last restart. |
+| **Temperature** | Device hardware temperature. A dash means the reading is not available on this device. |
+
+Below the summary metrics, a second panel identifies the device by **Software version** and **Installed hardware**.
+
+### Active Alarms Panel
+
+Below the status panel, the active alarms panel lists every active alarm across the device, sorted by severity and recency. Each entry shows:
+
+- A timestamp
+- A severity badge (**Critical**, **Major**, or **Notice**)
+- A title and description of the fault, usually including the affected service name
+
+For a full breakdown of alarm types and how to configure alarm overrides, see [Manage alarms](https://docs.mediakind.com/beam/system-admin/maintenance/manage-alarms).
+
+### Channel Cards
+
+The channel card grid is the main part of the dashboard. Each card represents a channel on the device and shows:
+
+- Its **On Air** or **Stopped** status, with a live video thumbnail when on air and healthy (a stopped or unhealthy channel shows **No thumbnail**).
+- Its **Video** parameters — resolution, codec, bitrate, and bit depth.
+- Its **Audio** parameters — codec, mode, and bitrate where applicable.
+- A signal diagram showing the input and output type for the channel, for example **SDI** into **UDP** or **ASI** into **SDI**, connected by a line of status dots.
+
+When a channel has an active alarm, the card makes it visible:
+
+- The thumbnail area shows a severity badge, for example a red **Critical** badge.
+- The card background and signal diagram dots turn red or orange to match the alarm severity.
+
+## View Channel Details
+
+Select a channel card to open its detail view.
+
+At the top of the page you can see the channel name, its workflow label, and its status:
+
+- Select **Stop** to take the channel off air.
+- Select the three-dot menu for additional actions.
+- Use the channel selector on the left to move to a different channel without returning to the dashboard.
+
+Below the video preview, **Input status** and **Output status** report the live condition of the channel:
+
+- **Input status** — shows the input **Type**, **Status** (for example **Not receiving**), and **Service** identification.
+- **Output status** — shows the output **Type**, and its **Video scaling** and **Dynamic range** settings.
+
+The active alarms panel on the right stays scoped to the selected channel and shows **No alarm** when the channel is healthy.
+
+## Edit Channel Settings
+
+From a channel's detail view, use the three-dot menu to open its settings. Each section lists the current configuration with an independent **Modify** button:
+
+- **Channel display name**
+- **Workflow** — the channel type, for example **Reception (Decoding)**.
+- **Input** — input type, slot or port, and TS packet size.
+- **Audio** — configured audio tracks, with an **+ Add** button for additional tracks.
+- **Output** — output type, and slot or port.
+
+---
+
+## Create a Channel
+
+The channel creation wizard configures a new channel and its underlying input, video, audio, and output settings from the Essentials dashboard. A step list on the left tracks your progress, and the form for the current step is on the right. The steps after **Input** depend on the workflow you choose.
+
+### Start the Wizard
+
+Select **New channel** from the dashboard. You can also start a new channel from within an existing channel's detail view.
+
+Choose **Create a channel** to configure a channel from scratch, or **Duplicate an existing channel** to base it on an existing one. Enter a name for the channel and select **Next**.
+
+### Choose the Workflow
+
+Select the workflow type, then select **Next**.
+
+| Workflow | Min. Version | Description |
+| :-- | :-- | :-- |
+| **Encoding (Streaming)** | `1.12.0` | Encode for HTTP adaptive streaming with HLS and DASH outputs. |
+| **Encoding (Distribution)** | `1.12.0` | Encode for broadcast distribution with SRT, RF, IP, or ASI output. |
+| **Encoding (Contribution)** | `1.12.0` | Encode for field-to-studio contribution links. |
+| **Reception (Decoding)** | `1.13.0` | Receive, optionally decrypt, and decode a transport stream to baseband. |
+
+A workflow the device cannot run appears greyed out. **Reception (Gateway)** is not yet available.
+
+### Select the Input
+
+Choose the input type (for example **SDI**). If the input has multiple physical connections, choose the **Slot/Port** from the dropdown, then select **Next**.
+
+### Configure Video or Encoding
+
+The options at this step depend on the selected workflow:
+
+- **Encoding (Streaming)** — configure a **Video** ladder. Set the **Video Codec**, **Resolution**, **Frame rate**, and **Bitrate** for each rendition, then select **+ Add** to add further renditions.
+- **Encoding (Contribution)** and **Encoding (Distribution)** — this step is called **Encoding** and configures a single set of video parameters rather than a ladder.
+
+Select **Next** once video parameters are set.
+
+### Configure Audio
+
+Set the audio parameters:
+
+- **Audio codec**
+- **Audio Group**
+- **Mode**
+- **Bitrate**
+
+Select the trash icon to remove a track, or **+ Add** to configure an additional one. In a video ladder, the audio defined here is automatically assigned to every rendition.
+
+Select **Next**.
+
+### Configure the Output
+
+Output configuration varies by workflow:
+
+- **Encoding (Streaming)** — this step is informational. The channel produces HLS-TS, HLS-fMP4, and DASH segmentation types, each with its own URL available after creation. There are no fields to fill in.
+- **Encoding (Contribution)** and **Encoding (Distribution)** — choose an output type such as **SRT**, **RF**, **IP**, or **ASI**, and enter its connection details. For the full set of Reliable Transport configuration options available outside the wizard, see [Reliable Transport](https://docs.mediakind.com/beam/reliable-transport).
+
+Select **Next**.
+
+### Review and Create the Channel
+
+Review the channel summary. It covers the channel name, workflow, input, one entry per video rendition (or a single encoding entry outside the streaming workflow), the audio configuration, and the output. Select **Modify** next to any section to change those settings.
+
+Select **Create channel**.
+
+### Start the Channel
+
+The new channel opens in its detail view. Select **Start** to take it on air, then return to the dashboard to see it in the channel card grid.
+
+---
+
+## Create a Reception Channel
+
+A **Reception (Decoding)** channel receives a transport stream, optionally decrypts it, decodes the video and audio, and presents the result as baseband output. Use it when content arrives over satellite, ASI, IP, or SRT and needs to come back out as SDI or SMPTE ST 2110.
+
+Reception channels are created in the same wizard as every other channel. The steps differ because nothing is re-encoded — instead of Encoding and Audio steps, the wizard shows **Decrypt**, **Decoding**, and **Decoded Output**:
+
+**Name → Workflow → Input → Decrypt → Decoding → Decoded Output**
+
+<Steps>
+  <Step title="Choose the Workflow">
+    Select **Reception (Decoding)**, then choose an **Input resolution mode** of **UHD** or **SD/HD**.
+
+    If the device has no SDI card configured for UHD, selecting **UHD** shows an **Update required** notice: _"None of the SDI cards are configured to support UHD output. Please configure the card modes from the ASI/SDI Interface page."_ Use **Update** to go to that page, or choose **SD/HD** instead.
+
+    Select **Next**.
+  </Step>
+
+  <Step title="Select the Input">
+    Choose the transport the stream arrives on:
+
+    | Input Type | Notes |
+    | :-- | :-- |
+    | **SRT** | Reveals a choice between **SRT Listener** and **SRT Caller**, plus connection fields. |
+    | **IP** | Direct IP transport stream input. |
+    | **ASI** | Asynchronous Serial Interface input. |
+    | **Satellite** | Satellite demodulator input. |
+
+    For **SRT Listener**, configure:
+
+    | Field | Notes |
+    | :-- | :-- |
+    | **Listener interface** | The network interface on the device that accepts the connection. |
+    | **Listener port** | The port the device listens on, for example `3000`. |
+    | **Encryption** | Defaults to **None**. |
+    | **Latency** | Defaults to `125` ms. |
+
+    Select **Next**.
+  </Step>
+
+  <Step title="Choose the Decryption Method">
+    Select how the incoming stream is protected:
+
+    - **None** — for an unencrypted source.
+    - **BISS** — fixed session word decryption.
+    - **BISS-CA** — cycling session word with entitlement control messages.
+    - **DVB-CI** — Conditional Access Module (CAM) decryption.
+
+    Select **Next**.
+  </Step>
+
+  <Step title="Configure Decoding">
+    This step selects which program and elementary streams to decode.
+
+    - **Program number** — select **Auto** (default) or enter a specific program number.
+    - **Delay mode** — defaults to **Standard**.
+    - **Video** — **Auto-assign PID** is selected by default, or you can set a specific PID.
+    - **Audio** — **Auto-decode all audio tracks** decodes every audio track found in the stream and includes it in the output (SDI only). Clear this option to configure tracks individually; each track has its own **Auto-assign PID** and **Mode**, and **+ Add** adds another track.
+
+    Select **Next**.
+  </Step>
+
+  <Step title="Configure the Decoded Output">
+    Choose **SDI** or **SMPTE ST 2110 / NMOS**. Both carry the following common settings:
+
+    | Field | Notes |
+    | :-- | :-- |
+    | **Dynamic Range Conversion** | **None**, or **Convert to BT.709**. |
+    | **Video scaling** | **None**, or a target such as **1080p**. |
+
+    For **SDI** — choose the **Slot/Port** to output on. The **Audios** panel below is read-only and reflects what you configured in the Decoding step.
+
+    For **SMPTE ST 2110 / NMOS** — address the output on the network:
+
+    | Field | Notes |
+    | :-- | :-- |
+    | **Destination IP address** | Output stream unicast or multicast IPv4 address, for example `239.1.1.1`. |
+    | **Destination port** | For example `5005`. |
+    | **Network interface** | The interface the output leaves on. |
+    | **Auto source port** | Selected by default. Clear it to set the source port manually. |
+
+    <Note>
+      There is no explicit multicast option to select. An address in the class D range (`224.0.0.0/4`) is treated as multicast; anything outside that range is treated as unicast. The Advanced interface offers an explicit **Unicast** control where an exception to this check is needed.
+    </Note>
+
+    Select **Next**.
+  </Step>
+
+  <Step title="Review and Create the Channel">
+    **Review your channel settings** lists each section with its own **Modify** button so you can change one part without stepping back through the whole wizard.
+
+    Select **Create channel**.
+  </Step>
+</Steps>
+
+### Verify the Channel is Working
+
+The new channel opens in its detail view. Select **Start** to take it on air, then return to the dashboard.
+
+On the dashboard, a healthy reception channel shows:
+
+- **Reception (Decoding)** under the channel name, with the program it is decoding.
+- An **On Air** badge and a live thumbnail.
+- A signal diagram of the input and output types (for example **SRTCaller** into **SDI**) with green status dots at each end.
+
+A channel that is not receiving shows **Stopped** or **No thumbnail**, and its **Video** parameters stay empty.

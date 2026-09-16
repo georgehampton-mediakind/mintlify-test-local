@@ -1,0 +1,390 @@
+---
+title: "Compose Multiview Streams with the MK.IO Live API"
+sidebarTitle: "Multiview"
+description: "Create static multiview channels and events that compose multiple live inputs into a single tiled output using the MK.IO Live API."
+---
+
+Multiview is a production technique where multiple camera feeds or source streams are combined into a single tiled video output. Instead of broadcasting one camera at a time, a multiview output shows all feeds simultaneously, arranged in a grid or picture-in-picture layout. The Live API handles multiview composition through two resource types: `staticMultiviewEvents` and `staticMultiviewChannels`.
+
+## Which resource type to use
+
+Both resource types produce the same multiview output. The only difference is how they are billed and how long they run.
+
+| Resource | Billing | Use when |
+| --- | --- | --- |
+| `staticMultiviewEvents` | Per-minute | Sports matches, live shows, any broadcast with a defined start and end |
+| `staticMultiviewChannels` | Monthly flat fee, charged immediately on start | 24/7 production infrastructure that runs continuously |
+
+If you are running a 90-minute football match on a Saturday, use `staticMultiviewEvents`. If you are building a permanent control room feed that is always on, use `staticMultiviewChannels`.
+
+## How composition works
+
+When the Live API receives multiple input streams for a multiview resource, it routes each one into a processing template that composes them into a layout and then encodes the result. The template is where the composition happens. The Live API resource is the control plane: it tells the platform which streams to accept, which template to use, and where to send the output.
+
+### What a pin is
+
+Processing configs expose named input slots called **pins**. A pin is a labelled placeholder that says "a video feed goes here". A multiview config might expose four pins. When you create a multiview resource, each input includes a `transformInput` value that names its pin.
+
+This is how the platform knows which camera feed to put in which position. The template controls what happens at each pin (size, position, any overlays). The `transformInput` value on your resource input connects a specific source stream to that pin.
+
+Pin names are defined by the template and retrieved by reading the template's `status.inputPins[].name`. They are not standardized across templates, so always read them from your specific template before creating a resource.
+
+### Two composition modes
+
+There are two ways to configure how composition works, depending on how your template is built. A multiview resource always needs an **`encodingLive`** template, since that's what actually encodes the output, and optionally a **`multiviewComposing`** template if you want the layout defined separately.
+
+#### Mode 1: Layout inside the encodingLive template
+
+The simpler approach. Your `encodingLive` template handles both composition and encoding in one. The template defines the grid layout internally, and each flow input maps to a pin in that template. You only need one template reference in the resource spec.
+
+Common multiview preset examples include `default_1080p_2up`, `default_1080p_3up`, and `default_1080p_4up`.
+
+Use this mode when:
+
+- A single template handles both the composition layout and encoding settings.
+- The layout is fixed and does not need to change independently of encoding.
+- You want the simplest possible configuration.
+
+#### Mode 2: Separate multiviewComposing template
+
+The more flexible approach. You have two templates: an `encodingLive` template for encoding only, and a separate `multiviewComposing` template that defines the composition layout. You set both in the resource spec.
+
+The `transformInput` pin names come from the `multiviewComposing` template, not the `encodingLive` template.
+
+Use this mode when:
+
+- You want to change the visual layout without touching the encoding configuration.
+- Multiple events share the same encoding settings but have different camera arrangements.
+- Your production team manages layouts and encoding parameters separately.
+
+## The setup sequence
+
+Before you create a multiview resource, set up these dependencies in order:
+
+1. **A source for each input** (Media API): each camera feed needs its own source resource.
+2. **An encodingLive template** (Templates API): required for all multiview resources. List the current presets, create a customer config from one, then retrieve that config's pins.
+3. **A multiviewComposing template** (Templates API): required only for Mode 2.
+4. **An MK.IO asset** (Media API): live resources write encoded output into an asset.
+
+## End-to-end multiview walkthrough
+
+The following steps walk through the complete setup for a live multiview event with four cameras composing into a single tiled output.
+
+<Steps>
+  <Step title="Create content resources">
+    Content resources are named stream identifiers. Each camera feed gets its own content resource so the platform can track which sources supply which streams.
+
+    ```bash
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/camera-1" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{ "metadata": { "displayName": "Camera 1" } }'
+
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/camera-2" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{ "metadata": { "displayName": "Camera 2" } }'
+
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/camera-3" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{ "metadata": { "displayName": "Camera 3" } }'
+
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/camera-4" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{ "metadata": { "displayName": "Camera 4" } }'
+    ```
+
+    A `201 Created` response for each confirms the content resources are created. Creating the content identifier alone does not start media processing.
+  </Step>
+
+  <Step title="Create sources for each camera">
+    A source connects a content resource to a physical ingest transport. Create one `SRTListener` source per camera, linking each to its content resource:
+
+    ```bash
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources/camera-1-source" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "metadata": { "displayName": "Camera 1 Source" },
+        "spec": {
+          "contentName": "camera-1",
+          "networkName": "internet",
+          "transport": {
+            "type": "SRTListener",
+            "port": 5001,
+            "allowList": ["<CAMERA_1_PUBLIC_IP>"],
+            "latency": 0.5,
+            "maxBitrate": 30000000,
+            "ipResource": { "type": "External" }
+          }
+        }
+      }'
+    ```
+
+    Repeat for `camera-2-source` through `camera-4-source`, using ports `5002`, `5003`, and `5004` respectively, and setting `allowList` to each encoder's public IP address.
+
+    After each PUT, read the source back to get the allocated SRT connection URL from `status.transport.urls`:
+
+    ```bash
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources/camera-1-source" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+  </Step>
+
+  <Step title="Create an output asset">
+    The multiview resource writes its encoded output into an MK.IO asset. Create the asset before you create the live resource.
+
+    ```bash
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/match-multiview" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "properties": {
+          "storageAccountName": "<YOUR_STORAGE_ACCOUNT>",
+          "description": "Multiview archive for the match"
+        }
+      }'
+    ```
+  </Step>
+
+  <Step title="Set up your encodingLive template">
+    The `encodingLive` template controls how the multiview output is encoded and defines the input pins that map your camera feeds to positions in the layout.
+
+    List the presets available to the project:
+
+    ```bash
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/templating/presets/encodingLive" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+
+    Create your own config from the `default_1080p_4up` preset (if returned by the endpoint for your project):
+
+    ```bash
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/templating/configs/encodingLive/my-multiview-template" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "metadata": { "description": "Match Multiview Encoding" },
+        "spec": { "presetName": "default_1080p_4up" }
+      }'
+    ```
+
+    Retrieve its input pins:
+
+    ```bash
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/templating/configs/encodingLive/my-multiview-template" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+
+    Look at `status.inputPins` in the response. The returned `name` values are the exact strings you use as `transformInput`. Read the four returned pin names and use them in place of these placeholders:
+
+    ```json
+    "inputPins": [
+      { "name": "<INPUT_1_PIN>", "allowMultipleBindings": false },
+      { "name": "<INPUT_2_PIN>", "allowMultipleBindings": false },
+      { "name": "<INPUT_3_PIN>", "allowMultipleBindings": false },
+      { "name": "<INPUT_4_PIN>", "allowMultipleBindings": false }
+    ]
+    ```
+  </Step>
+
+  <Step title="Create the multiview event">
+    Wire everything together: the sources from Step 2 connect to pins from Step 4, the template is referenced, and the asset from Step 3 is named. Create with `spec.state` set to `Stopped`.
+
+    ```bash
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "metadata": {
+          "displayName": "Match Multiview"
+        },
+        "spec": {
+          "state": "Stopped",
+          "inputs": [
+            {
+              "contentName": "camera-1",
+              "transformInput": "<INPUT_1_PIN>"
+            },
+            {
+              "contentName": "camera-2",
+              "transformInput": "<INPUT_2_PIN>"
+            },
+            {
+              "contentName": "camera-3",
+              "transformInput": "<INPUT_3_PIN>"
+            },
+            {
+              "contentName": "camera-4",
+              "transformInput": "<INPUT_4_PIN>"
+            }
+          ],
+          "outputs": [],
+          "transform": {
+            "type": "StaticMultiviewEvent",
+            "assetName": "match-multiview",
+            "archiveWindowLength": "PT4H",
+            "encodingLive": {
+              "configRef": {
+                "name": "my-multiview-template",
+                "version": "latest"
+              }
+            }
+          }
+        }
+      }'
+    ```
+
+    The `transformInput` values must exactly match the pin names from `status.inputPins[].name`. Each input uses `contentName` which lets the platform resolve among candidates — it does not guarantee seamless media-aware failover. To select a specific source, use `sourceName` instead.
+  </Step>
+
+  <Step title="Confirm the dependencies">
+    Immediately before startup, retrieve every source or content resource, the asset, the config, and the multiview resource. Repeat the first two requests for all four cameras.
+
+    ```bash
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources/<SOURCE_NAME>" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/<CONTENT_NAME>" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/assets/match-multiview" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/templating/configs/encodingLive/my-multiview-template" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+
+    Check `spec.inputs` to confirm all four inputs have the correct content names and pin assignments. The resource `status.state` should be `Stopped` or `Pending`.
+  </Step>
+
+  <Step title="Start the resource">
+    When your camera encoders are ready, start the resource by patching `spec.state` to `Running`:
+
+    ```bash
+    curl -X PATCH "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "spec": {
+          "state": "Running"
+        }
+      }'
+    ```
+
+    Starting the resource incurs event billing. Begin sending from all four SRT encoders using their sources' returned URLs. Poll the state endpoint until startup completes:
+
+    ```bash
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview/state" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+  </Step>
+
+  <Step title="Monitor during the event">
+    While the event runs, use the full GET to check input resolution, output status, and metrics:
+
+    ```bash
+    curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview?\$detailedStatus=true" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+
+    - `status.inputs[].contentName` shows which content name each input resolved to.
+    - `status.metrics` contains metrics reported by the resource.
+    - `status.monitoring` contains thumbnail and metadata URLs if your template produces them.
+
+    Confirm that every encoder is sending. Resource state alone does not establish that every camera is delivering media.
+  </Step>
+
+  <Step title="Publish and verify playback">
+    Publish the archive asset with a streaming endpoint and streaming locator, then check the manifest plays.
+
+    ```bash
+    curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/streamingLocators/match-multiview-locator" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "properties": {
+          "assetName": "match-multiview",
+          "streamingPolicyName": "Predefined_ClearStreamingOnly"
+        }
+      }'
+    ```
+
+    List paths and build the playback URL:
+
+    ```bash
+    curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/streamingLocators/match-multiview-locator/listPaths" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+
+    Combine `properties.hostName`, optional `properties.cdnBasePath`, and the selected locator path:
+
+    ```
+    https://<HOST_NAME><CDN_BASE_PATH><LOCATOR_PATH>
+    ```
+
+    Check the composed picture to verify that all four cameras are flowing and tiled correctly.
+  </Step>
+
+  <Step title="Stop and clean up">
+    When the match ends, stop the resource:
+
+    ```bash
+    curl -X PATCH "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview" \
+      -H "Authorization: Bearer <YOUR_TOKEN>" \
+      -H "Content-Type: application/json" \
+      -d '{ "spec": { "state": "Stopped" } }'
+    ```
+
+    Billing stops once the resource transitions to `Stopped`. When you no longer need the resource, delete it:
+
+    ```bash
+    curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview" \
+      -H "Authorization: Bearer <YOUR_TOKEN>"
+    ```
+  </Step>
+</Steps>
+
+## Automating start and stop
+
+Rather than manually patching the state, you can pre-schedule start and stop times using scheduled operations. Create the scheduled operation after the resource is created and before the event starts:
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/match-multiview/scheduledOperations/match-window" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": {
+      "type": "MediaKind.ScheduledOperation.StartStop",
+      "startTime": "<START_TIME_UTC>",
+      "endTime": "<END_TIME_UTC>",
+      "correlationData": {
+        "matchId": "premier-league-round-5"
+      }
+    }
+  }'
+```
+
+See [Scheduled Operations](/api-guides/live/scheduled-operations) for the full guide.
+
+## What comes next
+
+<CardGroup cols={2}>
+  <Card title="Scheduled Operations" icon="clock" href="/api-guides/live/scheduled-operations">
+    Pre-schedule start and stop times for multiview events.
+  </Card>
+  <Card title="Core Concepts" icon="book" href="/api-guides/live/core-concepts">
+    Deep-dive on inputs, outputs, pins, and resource states.
+  </Card>
+  <Card title="Manage Templates" icon="file-code" href="/api-guides/live/manage-templates">
+    Create and configure encodingLive and multiviewComposing templates.
+  </Card>
+  <Card title="Manage Live" icon="play" href="/api-guides/live/manage-live">
+    Full reference for liveChannel and liveEvent operations.
+  </Card>
+</CardGroup>

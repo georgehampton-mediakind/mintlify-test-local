@@ -1,0 +1,252 @@
+---
+title: "MK.IO Media API Reference — 96 Endpoints"
+sidebarTitle: "Media API"
+description: "Full REST endpoint reference for the MK.IO Media API — assets, transforms, jobs, live events, streaming locators, content protection, and more."
+---
+
+The MK.IO Media API is the project-level REST API for managing media processing and delivery workflows in MK.IO. It provides endpoints for managing assets and storage, transforms and jobs, live events and outputs, streaming publication, filtering, and content protection. Most MK.IO integrations start here.
+
+<Info>
+  **Version:** v0.26.14 · **Endpoints:** 96 · **Groups:** 14 · **Spec:** OpenAPI 3.0.2
+
+  [Download OpenAPI spec](https://docs.mediakind.com/openapi/mkio/media-api.json)
+</Info>
+
+## Authentication
+
+All endpoints require a bearer token in the `Authorization` header:
+
+```http
+Authorization: Bearer <your_token>
+```
+
+Create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. See the [API tokens guide](/mkio/admin/api-tokens) for full instructions.
+
+## Base URL
+
+```
+https://app.mk.io
+```
+
+## Usage Pattern
+
+The typical Media API workflow follows three stages:
+
+<Steps>
+  <Step title="Create or reference core resources">
+    Register storage, create or reference assets, and define transforms with the encoding settings you need.
+  </Step>
+  <Step title="Run and monitor your workflow">
+    Submit VOD jobs or start live events, then poll the resource state until processing completes.
+  </Step>
+  <Step title="Publish playback">
+    Create a streaming locator linked to your asset, then call `listPaths` to retrieve the playback URLs.
+  </Step>
+</Steps>
+
+## Endpoint Groups
+
+### Asset Filters — 8 endpoints
+
+Manage account-level and asset-level filters that control what tracks and renditions are served during playback.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/accountFilters` | List Account Filters |
+| `GET` | `/api/v1/projects/{project_name}/media/accountFilters/{filter_name}` | Get Account Filter |
+| `PUT` | `/api/v1/projects/{project_name}/media/accountFilters/{filter_name}` | Create or Update Account Filter |
+| `DELETE` | `/api/v1/projects/{project_name}/media/accountFilters/{filter_name}` | Delete Account Filter |
+| `GET` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/assetFilters` | List Asset Filters |
+| `GET` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/assetFilters/{filter_name}` | Get Asset Filter |
+| `PUT` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/assetFilters/{filter_name}` | Create or Update Asset Filter |
+| `DELETE` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/assetFilters/{filter_name}` | Delete Asset Filter |
+
+### Assets — 8 endpoints
+
+Create, retrieve, update, and delete media assets. Also provides file access info, streaming locator listings, resource state, and track information.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/assets` | List Assets |
+| `GET` | `/api/v1/projects/{project_name}/media/assets/{asset_name}` | Get Asset |
+| `PUT` | `/api/v1/projects/{project_name}/media/assets/{asset_name}` | Create or Update Asset |
+| `DELETE` | `/api/v1/projects/{project_name}/media/assets/{asset_name}` | Delete Asset |
+| `POST` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/getFileAccessInfo` | Get File Access Information |
+| `POST` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/listStreamingLocators` | List Streaming Locators |
+| `GET` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/state` | Get Resource State |
+| `GET` | `/api/v1/projects/{project_name}/media/assets/{asset_name}/storage/` | Retrieve Tracks |
+
+### Content — 5 endpoints
+
+Manage content resources used as inputs and references in live and VOD workflows.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/content` | List Content |
+| `GET` | `/api/v1/projects/{project_name}/media/content/{name}` | Get Content |
+| `PUT` | `/api/v1/projects/{project_name}/media/content/{name}` | Create Content |
+| `PATCH` | `/api/v1/projects/{project_name}/media/content/{name}` | Update Content |
+| `DELETE` | `/api/v1/projects/{project_name}/media/content/{name}` | Delete Content |
+
+### Content Key Policies — 7 endpoints
+
+Define and manage DRM content key policies, including key retrieval with secrets.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/contentKeyPolicies` | List Content Key Policies |
+| `GET` | `/api/v1/projects/{project_name}/media/contentKeyPolicies/{policy_name}` | Get Content Key Policy |
+| `PUT` | `/api/v1/projects/{project_name}/media/contentKeyPolicies/{policy_name}` | Create Content Key Policy |
+| `PATCH` | `/api/v1/projects/{project_name}/media/contentKeyPolicies/{policy_name}` | Update Content Key Policy |
+| `DELETE` | `/api/v1/projects/{project_name}/media/contentKeyPolicies/{policy_name}` | Delete Content Key Policy |
+| `POST` | `/api/v1/projects/{project_name}/media/contentKeyPolicies/{policy_name}/getPolicyPropertiesWithSecrets` | Get Secrets |
+| `GET` | `/api/v1/projects/{project_name}/media/contentKeyPolicies/{policy_name}/state` | Get Resource State |
+
+### Destinations — 5 endpoints
+
+Create and manage output destinations for contributing live streams over RTMP or SRT.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/destinations` | List Destinations |
+| `GET` | `/api/v1/projects/{project_name}/media/destinations/{name}` | Get Destination |
+| `PUT` | `/api/v1/projects/{project_name}/media/destinations/{name}` | Create Destination |
+| `PATCH` | `/api/v1/projects/{project_name}/media/destinations/{name}` | Update Destination |
+| `DELETE` | `/api/v1/projects/{project_name}/media/destinations/{name}` | Delete Destination |
+
+### Jobs — 8 endpoints
+
+Submit, monitor, update, cancel, and delete encoding jobs associated with a transform.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/jobs` | List Jobs (all transforms) |
+| `GET` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs` | List Jobs (by transform) |
+| `GET` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs/{job_name}` | Get Job |
+| `PUT` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs/{job_name}` | Create a Job |
+| `PATCH` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs/{job_name}` | Update a Job |
+| `DELETE` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs/{job_name}` | Delete a Job |
+| `POST` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs/{job_name}/cancelJob` | Cancel a Job |
+| `GET` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}/jobs/{job_name}/state` | Get Resource State |
+
+### Live Events — 11 endpoints
+
+Create, start, stop, reset, allocate, and delete live events. Also includes resource state polling for events and live outputs.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/liveEvents` | List Live Events |
+| `GET` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}` | Retrieve a Live Event |
+| `PUT` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}` | Create a Live Event |
+| `PATCH` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}` | Update a Live Event |
+| `DELETE` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}` | Delete a Live Event |
+| `POST` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/allocate` | Allocate a Live Event |
+| `GET` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/liveOutputs/{output_name}/state` | Get Resource State (live output) |
+| `POST` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/reset` | Reset a Live Event |
+| `POST` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/start` | Start a Live Event |
+| `GET` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/state` | Get Resource State (live event) |
+| `POST` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/stop` | Stop a Live Event |
+
+### Live Outputs — 4 endpoints
+
+Manage live outputs attached to a live event for Live2VOD recording.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/liveOutputs` | List Live Outputs |
+| `GET` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/liveOutputs/{output_name}` | Get Live Output |
+| `PUT` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/liveOutputs/{output_name}` | Create Live Output |
+| `DELETE` | `/api/v1/projects/{project_name}/media/liveEvents/{event_name}/liveOutputs/{output_name}` | Delete Live Output |
+
+### Sources — 5 endpoints
+
+Define ingest source configurations used as inputs to live workflows.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/sources` | List Sources |
+| `GET` | `/api/v1/projects/{project_name}/media/sources/{name}` | Get Source |
+| `PUT` | `/api/v1/projects/{project_name}/media/sources/{name}` | Create Source |
+| `PATCH` | `/api/v1/projects/{project_name}/media/sources/{name}` | Update Source |
+| `DELETE` | `/api/v1/projects/{project_name}/media/sources/{name}` | Delete Source |
+
+### Storage — 9 endpoints
+
+Register and manage external storage instances and their access credentials.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/storage` | List Storage Instances |
+| `GET` | `/api/v1/projects/{project_name}/media/storage/{storage_name}` | Get Storage Instance |
+| `PUT` | `/api/v1/projects/{project_name}/media/storage/{storage_name}` | Create or Update Storage Instance |
+| `PATCH` | `/api/v1/projects/{project_name}/media/storage/{storage_name}` | Patch Storage Instance |
+| `DELETE` | `/api/v1/projects/{project_name}/media/storage/{storage_name}` | Delete Storage Instance |
+| `GET` | `/api/v1/projects/{project_name}/media/storage/{storage_name}/credentials` | List Storage Credentials |
+| `POST` | `/api/v1/projects/{project_name}/media/storage/{storage_name}/credentials` | Create Storage Credential |
+| `GET` | `/api/v1/projects/{project_name}/media/storage/{storage_name}/credentials/{credential_id}` | Get Storage Credential |
+| `DELETE` | `/api/v1/projects/{project_name}/media/storage/{storage_name}/credentials/{credential_id}` | Delete Storage Credential |
+
+### Streaming Endpoints — 11 endpoints
+
+Create, configure, scale, start, stop, and restart streaming endpoints that serve HLS and DASH output to viewers.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/streamingEndpoints` | List Streaming Endpoints |
+| `GET` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}` | Get Streaming Endpoint |
+| `PUT` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}` | Create Streaming Endpoint |
+| `PATCH` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}` | Update Streaming Endpoint |
+| `DELETE` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}` | Delete Streaming Endpoint |
+| `POST` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}/restart` | Restart Streaming Endpoint |
+| `POST` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}/scale` | Scale Streaming Endpoint |
+| `GET` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}/skus` | List Streaming Endpoint SKUs |
+| `POST` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}/start` | Start Streaming Endpoint |
+| `GET` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}/state` | Get Resource State |
+| `POST` | `/api/v1/projects/{project_name}/media/streamingEndpoints/{endpoint_name}/stop` | Stop Streaming Endpoint |
+
+### Streaming Locators — 7 endpoints
+
+Create and manage streaming locators that link an asset to a streaming policy. Retrieve playback URL paths and content keys.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/streamingLocators` | List Streaming Locators |
+| `GET` | `/api/v1/projects/{project_name}/media/streamingLocators/{locator_name}` | Get Streaming Locator |
+| `PUT` | `/api/v1/projects/{project_name}/media/streamingLocators/{locator_name}` | Create or Update Streaming Locator |
+| `DELETE` | `/api/v1/projects/{project_name}/media/streamingLocators/{locator_name}` | Delete Streaming Locator |
+| `POST` | `/api/v1/projects/{project_name}/media/streamingLocators/{locator_name}/listContentKeys` | List Content Keys |
+| `POST` | `/api/v1/projects/{project_name}/media/streamingLocators/{locator_name}/listPaths` | List URL Paths |
+| `GET` | `/api/v1/projects/{project_name}/media/streamingLocators/{locator_name}/state` | Get Resource State |
+
+### Streaming Policies — 4 endpoints
+
+Define reusable streaming policies that control DRM, encryption, and playback protocol settings.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/streamingPolicies` | List Streaming Policies |
+| `GET` | `/api/v1/projects/{project_name}/media/streamingPolicies/{policy_name}` | Get Streaming Policy |
+| `PUT` | `/api/v1/projects/{project_name}/media/streamingPolicies/{policy_name}` | Create or Update Streaming Policy |
+| `DELETE` | `/api/v1/projects/{project_name}/media/streamingPolicies/{policy_name}` | Delete Streaming Policy |
+
+### Transforms — 4 endpoints
+
+Define reusable transform presets that describe encoding parameters for VOD jobs.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/media/transforms` | List Transforms |
+| `GET` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}` | Get Transform |
+| `PUT` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}` | Create or Update Transform |
+| `DELETE` | `/api/v1/projects/{project_name}/media/transforms/{transform_name}` | Delete a Transform |
+
+## Example Request
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/media/assets" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+<Tip>
+  For workflow guides that combine multiple Media API resources, see the [API Guides](/api-guides/getting-started/which-api) section.
+</Tip>

@@ -1,0 +1,158 @@
+---
+title: "MK.IO Beam Contribution Technical Specifications"
+sidebarTitle: "Tech Specs"
+description: "Technical specifications for MK.IO Beam contribution workflows — supported codecs, formats, protocols, and hardware requirements."
+---
+
+This page lists the complete technical specifications for MK.IO Beam contribution workflows, covering input and output hardware, compressed output formats, video and audio encoding capabilities, metadata handling, satellite modulation, and monitoring options.
+
+## Input / Output Cards
+
+### Baseband Input
+
+Optional hardware required:
+
+- **SDI over IP (SMPTE ST 2022-6)**
+
+### Combined SDI and ASI Input/Output
+
+Optional cards:
+
+- **4-port card:** 4×HD-SDI or 4×3G-SDI or 1×12G-SDI or 4×ASI. Connector: BNC (F) 75 ohm
+- **8-port card:** 8×HD-SDI or 8×3G-SDI or 1×12G-SDI or 8×ASI. Connector: BNC (F) 75 ohm
+
+**Standards supported:**
+
+- HD-SDI: SMPTE 292M; 3G-SDI: SMPTE 424M; 12G-SDI: SMPTE 2082
+- Embedded audio: SMPTE 299M (HD) SDR/HDR
+- Signaling: SMPTE ST 425-5
+- External sync genlock (black and burst)
+- Max. ASI input rate: 208 Mbps
+- ASI packet length: 188/204 byte packets
+- ASI standard: EN50083-9
+
+### IP Output
+
+Optional cards:
+
+- **2×10GbE card:** Connector: Dual SFP+ cages. 10G BASE-T optical transceivers or 10GbE SFP DAC
+- **2×25GbE card:** Connector: Dual SFP28 cages. Supports 1GbE, 10GbE, or 25GbE. Can provide hardware acceleration for SMPTE ST 2110 input.
+
+---
+
+## Compressed Output
+
+### Transport Stream Output
+
+- Single or multi-service MPEG Transport Stream(s)
+- UDP or RTP encapsulated
+- RTMP/RTMPS
+
+### Reliable Transport
+
+**SRT and RIST input/output:**
+
+- Carriage of UDP or RTP streams over the SRT protocol
+- SRT listener or caller mode
+- RIST sender mode
+- RIST listener mode
+
+**Zixi input/output:**
+
+- Zixi sender
+- Zixi feeder or Zixi Receiver mode
+
+### High Availability
+
+- Automated (standalone) 1+1 output synchronization with PTS alignment (either SDI or ST 2110 inputs)
+
+---
+
+## Content Security
+
+### Encryption
+
+- BISS v1 Mode 1 and E
+- BISS v2 Fixed Key and CA Mode
+- SRT and RIST Encryption modes (fixed key 128/256 AES)
+
+---
+
+## Video Encoding
+
+- **Video codecs:** HEVC, H.264, MPEG-2, JPEG-XS
+- **Chroma & bit depth:** 4:2:2 10-bit / 8-bit; 4:2:0 8-bit (10-bit UHD)
+- **Resolutions:** 480i (SD) up to 2160p (UHD)
+- **Frame rates:** 23.98, 24, 25, 29.97, 50, 59.94
+
+| UHD | HD | SD |
+| :-- | :-- | :-- |
+| 4:2:2 10-bit or 4:2:0 8-bit HEVC | 4:2:2 10-bit or 4:2:0 8-bit MPEG-4 AVC or HEVC | 4:2:0 8-bit MPEG-2, MPEG-4 AVC or HEVC |
+|  | 4:2:2 or 4:2:0 8-bit MPEG-2 | 4:2:2 8-bit MPEG-2 |
+| 4:2:2 10-bit or 8-bit JPEG-XS | 4:2:2 10-bit or 8-bit JPEG-XS | 4:2:2 10-bit or 8-bit JPEG-XS |
+| 2160p at 23.98, 24, 25, 29.97, 50, or 59.94 fps | 1080i25/29.97, 720p50/59.94, 1080p50/59.94 | 480i 29.97, 576i 25 |
+
+---
+
+## Audio Encoding
+
+- **Audio codecs:** MPEG-1 Layer-II, AAC, HE-AAC, HE-AAC v2, Dolby Digital® 2.0/5.1, Dolby Digital Plus® 2.0/5.1, Dolby AC-3
+- **Audio channels:** Up to 8 stereo pairs per service
+- **Passthrough:** Dolby E®, Dolby Digital®, Dolby Digital Plus®, Linear PCM (as SMPTE 302)
+- **Data rate:** From 4.75 kbps to 320 kbps (from 64 to 1024 kbps for DD+)
+
+---
+
+## Metadata
+
+- **Subtitles:** Passthrough and translation for EIA-608/CEA-608 and EIA-708/CEA-708 Closed Captions, SCTE-20, DVB Teletext, DVB Subtitles, SCTE-27
+
+---
+
+## Satellite Modulator
+
+### Connectivity
+
+- RF output — SMA 50-ohm connector
+- RF monitoring output — SMA 50-ohm connector
+- 10 MHz Input/Output reference — SMA 50-ohm connector
+
+### Dual DVB Common Interface Option Card
+
+- Enables support for all major CAM modules
+- Multi-service decryption
+- Up to 2 CAM modules per option card
+
+### Modulation
+
+| Parameter | Specification |
+| :-- | :-- |
+| **Type** | DVB-S, DVB-DSNG, DVB-S2, DVB-S2X |
+| **Constellation** | QPSK, 8PSK, 16APSK to 32APSK |
+| **Roll-off** | DVB-S/DSNG: 35%; DVB-S2: 20%, 25%, or 35%; DVB-S2X: 5%, 10%, 15%, 20%, 25%, 35% |
+| **Symbol rate** | 0.05 to 36 MSym/s |
+
+### RF Output
+
+| Parameter | Specification |
+| :-- | :-- |
+| **L-Band frequency range** | 950 MHz to 2150 MHz (1 KHz step) |
+| **L-Band output power** | −35 dBm to +5 dBm (0.1 dB step) |
+| **IF frequency range** | 50 MHz to 180 MHz (1 Hz step) |
+| **IF output power** | −35 dBm to +5 dBm (0.1 dB steps) |
+| **IF monitor output power** | −20 dB on the RF output |
+
+### Other Functions
+
+- Carrier ID insertion
+- Spectrum inversion
+- Test mode: PRBS, dummy PL frame, carrier ID only
+- Configurable option to switch off or mute output at startup
+
+---
+
+## Monitoring and Control
+
+- **Remote control:** Via the MediaKind MK.IO portal
+- **Direct control and status monitoring:** Via web browser user interface and REST API
+- **Standard protocols:** SNMP, NTP, IGMP

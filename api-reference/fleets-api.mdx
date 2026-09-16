@@ -1,0 +1,114 @@
+---
+title: "MK.IO Fleets API Reference — 19 Endpoints"
+sidebarTitle: "Fleets API"
+description: "Full REST endpoint reference for the MK.IO Fleets API — device registration, backups, restores, software management, and support packages."
+---
+
+The MK.IO Fleets API is the project-level REST API for MK.IO Beam device fleet operations. It supports device administration use cases including inventory management, backup lifecycle operations, restore actions, service updates, and software tracking. Use this API to onboard Beam devices, protect their state with backups, and manage software versions across your fleet.
+
+<Info>
+  **Version:** v1.2.7 · **Endpoints:** 19 · **Groups:** 1 · **Spec:** OpenAPI 3.0.2
+
+  [Download OpenAPI spec](https://docs.mediakind.com/openapi/beam/fleets-api.json)
+</Info>
+
+## Authentication
+
+All endpoints require a bearer token in the `Authorization` header:
+
+```http
+Authorization: Bearer <your_token>
+```
+
+Create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. See the [API tokens guide](/mkio/admin/api-tokens) for full instructions.
+
+## Base URL
+
+```
+https://app.mk.io
+```
+
+## Usage Pattern
+
+<Steps>
+  <Step title="List devices and fleet state">
+    Retrieve the device inventory for your project to see registration status and current health.
+  </Step>
+  <Step title="Manage backups">
+    Create, upload, retrieve, rename, and delete device configuration backups to protect your fleet state.
+  </Step>
+  <Step title="Run restore and software operations">
+    Restore a backup to a device, update software, or remove services as needed.
+  </Step>
+</Steps>
+
+## Endpoint Groups
+
+### Devices — 19 endpoints
+
+All Fleets API operations are grouped under devices. This single group covers the full device lifecycle: registration, backup management, restores, software tracking, and support package operations.
+
+#### Backups
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/fleet/backups` | Get All Backups for a Project |
+| `GET` | `/api/v1/projects/{project_name}/fleet/backups/{backup_id}` | Get Backup Details |
+| `PATCH` | `/api/v1/projects/{project_name}/fleet/backups/{backup_id}` | Rename Device Backup |
+| `DELETE` | `/api/v1/projects/{project_name}/fleet/backups/{backup_id}` | Delete Device Backup |
+| `GET` | `/api/v1/projects/{project_name}/fleet/backups/{backup_id}/config` | Get Device Backup (download config) |
+| `POST` | `/api/v1/projects/{project_name}/fleet/uploadBackup` | Upload/Override a Backup tar.gz and Generate Metadata |
+
+#### Device Registration and Management
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/fleet/devices` | List Devices |
+| `GET` | `/api/v1/projects/{project_name}/fleet/devices/{name}` | Get Device |
+| `PUT` | `/api/v1/projects/{project_name}/fleet/devices/{name}` | Create Device |
+| `PATCH` | `/api/v1/projects/{project_name}/fleet/devices/{name}` | Update Device |
+| `DELETE` | `/api/v1/projects/{project_name}/fleet/devices/{name}` | Delete Device |
+
+#### Device Operations
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/v1/projects/{project_name}/fleet/devices/{name}/backup` | Create Device Backup |
+| `POST` | `/api/v1/projects/{project_name}/fleet/devices/{name}/removeServices` | Remove Selected Services from Device |
+| `POST` | `/api/v1/projects/{project_name}/fleet/devices/{name}/restore` | Restore Device Backup |
+
+#### Software Management
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/fleet/devices/{name}/software` | List Device Software |
+
+#### Support Packages
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages` | List Support Packages for a Device |
+| `POST` | `/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages` | Trigger Support Package Creation on a Device |
+| `GET` | `/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages/{package_name}` | Download a Support Package |
+| `DELETE` | `/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages/{package_name}` | Delete a Support Package |
+
+## Example Requests
+
+List all devices registered to a project:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/fleet/devices" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+Create a backup of a specific device:
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/fleet/devices/$DEVICE_NAME/backup" \
+  -H "Authorization: Bearer $MKIO_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+<Tip>
+  Use the [Infrastructure API](/api-reference/infrastructure-api) to define the sites and networks for your Beam deployment before registering devices with the Fleets API.
+</Tip>

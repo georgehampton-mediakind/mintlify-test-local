@@ -1,0 +1,171 @@
+---
+title: "Set Up SMPTE ST 2110 Input on MK.IO Beam"
+sidebarTitle: "SMPTE 2110"
+description: "Configure SMPTE ST 2110 uncompressed video and audio inputs on MK.IO Beam for IP-based broadcast contribution workflows."
+---
+
+SMPTE ST 2110 allows you to carry uncompressed video, audio, and ancillary data over IP networks, replacing traditional SDI cabling with Ethernet infrastructure. MK.IO Beam supports ST 2110 input for contribution workflows, enabling you to ingest professional IP video directly from cameras, production switchers, and other ST 2110 sources. PTP (Precision Time Protocol) synchronization is required for ST 2110 operation.
+
+## Limitations and Considerations for ST 2110 and PTP
+
+Before configuring ST 2110 input, review the following limitations that apply to the current version:
+
+- ST 2110 streams are carried over RTP. **RTP header extension is not supported** and should be turned off on the source. See [RFC 3550 §5.3.1](https://datatracker.ietf.org/doc/html/rfc3550#section-5.3.1) for details.
+- **Only PTP domain 0 is supported.** A workaround is to manually set the domain value in a configuration file.
+- ST 2110 support is limited to HD resolutions in the current version.
+
+### Supported ST 2110 Standards
+
+| Standard | Description |
+| :-- | :-- |
+| **SMPTE ST 2110-20** | Uncompressed video up to UHD resolution |
+| **SMPTE ST 2110-30/31** | Uncompressed audio |
+| **SMPTE ST 2110-40** | Data — VITC/Time code, AFD/BAR, Closed captioning, OP-47 Teletext, SMPTE 2031 Teletext |
+| **SMPTE ST 2022-7** | All ST 2110 essences can be input as ST 2022-7 redundant streams |
+| **NMOS IS-04 / IS-05** | NMOS registration and connection management |
+
+---
+
+## Configure SDP Files on MK.IO Beam
+
+ST 2110 is configured using SDP (Session Description Protocol) files on the **Input** tab of the Live Encoder component. See [Configure an SMPTE ST 2110 input](/beam/contribution/live-encoder#smpte-st-2110-input) for the Live Encoder steps.
+
+SDP files can be provided in two ways:
+
+- **A URL** where the SDP file can be retrieved from.
+- **A file path** to a location stored on the server. On the host, SDP files must be in the `/var/appliance/assets` directory. When configuring the Encode service, use this directory to specify the SDP file location.
+
+### Upload SDP Files via Asset Management
+
+If the Asset Management feature is enabled:
+
+<Steps>
+  <Step title="Navigate to Asset Management">
+    Navigate to **Asset Management** > **Assets**.
+  </Step>
+  <Step title="Add the Asset">
+    Click **Add** to add a new asset.
+  </Step>
+  <Step title="Select and Protect the File">
+    Select the SDP file, then check the **Protect the Asset when it is uploaded** checkbox.
+  </Step>
+  <Step title="Upload">
+    Click **Start Upload** to upload it.
+  </Step>
+</Steps>
+
+### Upload SDP Files via SCP (Asset Management Disabled)
+
+If the Asset Management feature is not enabled, transfer the files to the server using SCP:
+
+<Steps>
+  <Step title="Copy the File to the Server">
+    Copy the SDP file to the server using SCP. For example, using MobaXterm:
+
+    ```bash
+    scp /cygdrive/c/sdp-2110-20.sdp user@192.168.1.1:/tmp
+    ```
+  </Step>
+  <Step title="Move the File to the Assets Directory">
+    Connect to the unit via SSH and move the file to the correct location:
+
+    ```bash
+    sudo mv /tmp/sdp-2110-20.sdp /var/appliance/assets
+    ```
+  </Step>
+  <Step title="Configure the Path in the UI">
+    After copying the SDP file, configure it in the Live Encoding service user interface using the path:
+
+    ```
+    /var/appliance/assets/sdp-2110-20.sdp
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Configure PTP for ST 2110
+
+PTP is required for ST 2110 operation. Beam must be locked to a PTP Grand Master before ST 2110 input streams can be received correctly.
+
+### Set the PTP Interface and Domain
+
+PTP interface configuration is under the **System Settings** page.
+
+<Steps>
+  <Step title="Navigate to System Settings">
+    Navigate to the **Servers** view and click the **Details** button to display the server information. Go to the **System Settings** tab.
+  </Step>
+  <Step title="Configure the PTP Interface">
+    Under **Time sources**, select the **PTP** tab. Set **Interface** to the network interface that connects to the PTP Grand Master. Set **Domain number** to the required PTP domain.
+  </Step>
+  <Step title="Activate PTP as the Time Source">
+    If the system time source is not already set to PTP, click **Make active** to set it.
+  </Step>
+  <Step title="Save Changes">
+    Confirm all changes by clicking **Confirm**, then click **Save** at the bottom of the page.
+  </Step>
+</Steps>
+
+---
+
+## Checking PTP Operation
+
+### Check That PTP Services Are Running
+
+To check the `ptp4l` service:
+
+```bash
+systemctl status ptp4l.service
+```
+
+The output should show that the service is loaded and active:
+
+```
+ptp4l.service - Precision Time Protocol (PTP) service
+Loaded: loaded (/usr/lib/systemd/system/ptp4l.service; enabled;
+vendor preset: disabled)
+Active: active (running) since ...
+```
+
+To check the `phc2sys` service:
+
+```bash
+systemctl status phc2sys.service
+```
+
+The output should show that the service is loaded and active:
+
+```
+phc2sys.service - Synchronize system clock or PTP hardware clock (PHC)
+Loaded: loaded (/usr/lib/systemd/system/phc2sys.service; enabled;
+vendor preset: disabled)
+Active: active (running) since ...
+```
+
+### Check the PTP Grand Master
+
+Run the `pmc` tool to check the status of the PTP Grand Master. In the example below, PTP domain 0 is used (`-d 0`). Modify the `-d` option to specify a different PTP domain:
+
+```bash
+sudo pmc -u -b 0 -d 0 'GET TIME_STATUS_NP'
+```
+
+The text `gmPresent true` confirms that the Grand Master is detected:
+
+```
+    sending: GET TIME_STATUS_NP
+      043f72.fffe.ff60cb-0 seq 0 RESPONSE MANAGEMENT TIME_STATUS_NP
+             master_offset 13
+             ingress_time 1620380188201784144
+             cumulativeScaledRateOffset +0.000000000
+             scaledLastGmPhaseChange 0
+             gmTimeBaseIndicator 0
+             lastGmPhaseChange 0x0000'0000000000000000.0000
+    gmPresent true
+             gmIdentity b8599f.fffe.60ffc8
+```
+
+<Tip>
+  If `gmPresent` shows `false`, verify that the PTP interface is correctly set in System Settings and that the PTP Grand Master is reachable on the configured network interface.
+</Tip>

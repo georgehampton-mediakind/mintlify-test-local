@@ -1,0 +1,83 @@
+---
+title: "MK.IO Media Resource Model Explained"
+sidebarTitle: "Resource Model"
+description: "Understand how MK.IO organizes assets, transforms, jobs, live events, streaming locators, endpoints, and content key policies into coherent workflows."
+---
+
+MK.IO workflows combine resources for storage, processing, and delivery. The resources you use depend on whether the input is an on-demand file or a continuous live stream. Understanding how these resources relate to each other helps you design workflows, troubleshoot issues, and make efficient use of the API.
+
+## Organize media
+
+An [asset](/mkio/concepts/assets-and-storage) is a logical reference to files in connected cloud storage. Processing jobs and live outputs use assets as inputs or destinations. Streaming locators also reference assets when publishing content.
+
+Connect storage before you add or create assets. See [Connect Cloud Storage](/mkio/getting-started/connect-cloud-storage) for setup steps, and [Assets and Storage](/mkio/concepts/assets-and-storage) to understand how assets reference files in your storage containers.
+
+## Process on-demand media
+
+A [transform](/mkio/concepts/transforms-and-jobs) defines a reusable processing task for file-based content. A job applies that transform to an input and writes the result to an output asset.
+
+Transforms are defined once and reused across many jobs. You can define multiple outputs in a single transform — for example, an adaptive bitrate encode and a thumbnail image in one pass.
+
+Use [Video Processing](/mkio/vod/overview) for portal instructions. Use the [Transforms and Jobs API Guide](/api-guides/media/transforms-and-jobs) to automate the same workflow.
+
+## Process live media
+
+A [live event](/mkio/concepts/live-events) receives a continuous input for passthrough or encoding. A live output writes the processed stream to an asset and maintains the archive window used for playback.
+
+While the event is running, the archive window makes recent content available for time-shifted viewing. When you stop the event, the full recording persists in the output asset.
+
+Use [Live Events](/mkio/live/overview) for portal instructions. Use the [Live Streaming API Guide](/api-guides/media/live-streaming) for API workflows.
+
+## Publish media
+
+A [streaming locator](/mkio/concepts/streaming-and-playback) associates an asset with a streaming policy and provides the path used for playback. A [streaming endpoint](/mkio/concepts/streaming-and-playback) packages and delivers the content through HLS or DASH.
+
+You typically create one streaming endpoint per environment (for example, `production` and `staging`) and reuse it across many assets. A locator belongs to one asset, but any running streaming endpoint in the same project can serve its content.
+
+Use [Streaming Endpoints and Playback](/mkio/delivery/stream-content) to publish content in the portal. The [Publishing API Guide](/api-guides/media/publishing) covers the corresponding API resources.
+
+## Protect playback
+
+A [content key policy](/mkio/concepts/content-protection) defines how MK.IO issues content keys and authorizes protected playback. A streaming policy can refer to that content key policy when you create a locator.
+
+MK.IO supports PlayReady, Widevine, and FairPlay DRM systems. You can also configure token-based authorization so only authenticated viewers receive decryption keys.
+
+Use [Content Key Policies](/mkio/delivery/content-key-policies) for portal configuration guides. Use the [Content Protection API Guide](/api-guides/media/content-protection) for API-based workflows.
+
+## Resource relationship overview
+
+The diagram below shows how resources connect in a complete live or VOD workflow:
+
+```
+Storage account
+    └── Asset (files in storage)
+            ├── Job (VOD) → Output asset
+            │       └── Streaming locator
+            │               └── Streaming endpoint → HLS / DASH URL
+            └── Live output (Live)
+                    └── Streaming locator
+                            └── Streaming endpoint → HLS / DASH URL
+
+Live event → Live output → Asset
+Content key policy → Streaming locator (via streaming policy)
+```
+
+## Explore each resource
+
+<CardGroup cols={2}>
+  <Card title="Assets and Storage" icon="database" href="/mkio/concepts/assets-and-storage">
+    How assets reference files in connected storage containers.
+  </Card>
+  <Card title="Transforms and Jobs" icon="sliders" href="/mkio/concepts/transforms-and-jobs">
+    Reusable processing definitions and per-file job execution.
+  </Card>
+  <Card title="Live Events" icon="broadcast-tower" href="/mkio/concepts/live-events">
+    Ingest modes, live outputs, archive windows, and state lifecycle.
+  </Card>
+  <Card title="Streaming and Playback" icon="play" href="/mkio/concepts/streaming-and-playback">
+    Locators, endpoints, streaming policies, and playback URL formats.
+  </Card>
+  <Card title="Content Protection" icon="lock" href="/mkio/concepts/content-protection">
+    DRM systems, content key policies, and token authorization.
+  </Card>
+</CardGroup>

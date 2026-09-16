@@ -1,0 +1,81 @@
+---
+title: "Manage MK.IO Beam Edge Devices from the Cloud Portal"
+sidebarTitle: "Edge Devices"
+description: "Onboard Beam devices to MK.IO, monitor device status, push software updates, and manage backups from the MK.IO cloud portal."
+---
+
+MK.IO Beam device management is integrated into the MK.IO cloud portal. From a single interface you can onboard new devices, monitor their status on a map and unified dashboard, access the device UI remotely, push software updates, and manage backups and support packages — all without using a separate management application.
+
+Fleet management became available in April 2025 at no additional charge.
+
+## Onboard a Beam device
+
+When you set up a new Beam device, follow the guided onboarding workflow in the MK.IO portal:
+
+<Steps>
+  <Step title="Create or link your organization">
+    If you do not already have an MK.IO organization, create one. If you are adding devices to an existing organization, log in and navigate to **Organization Settings → Edge Devices**.
+  </Step>
+  <Step title="Add a payment method">
+    Beam device usage is billed through a payment method assigned to your organization. Add one from **Organization Settings → Billing** if you do not have one already.
+  </Step>
+  <Step title="Set up your project">
+    Create a project or select an existing one to associate with your Beam devices.
+  </Step>
+  <Step title="Register and activate the device">
+    Navigate to **Edge Devices** in the MK.IO portal and click **+ Add Device**. Enter the device identifier and follow the prompts to register and activate your Beam device. No API calls are required — you can complete this entirely through the portal UI.
+  </Step>
+</Steps>
+
+## Monitor device status
+
+The **Edge Devices** section provides:
+
+- **Unified device-status view**: Current operational state for all registered devices in your organization
+- **Device location map**: A geographic view of registered device locations
+- **Per-device detail**: Connectivity status, software version, and recent activity for each device
+
+Click any device in the list to open its detail view and inspect current status.
+
+## Remote access
+
+MK.IO provides remote access to the Beam device UI directly from the cloud portal. Use remote access to:
+
+- Inspect device configuration
+- Troubleshoot issues without physical access to the device
+- Verify connectivity and signal status
+
+Remote access sessions are logged for audit purposes.
+
+## Software updates
+
+Beam bundle downloads and software upgrades are available through MK.IO for connected devices. To apply an update:
+
+1. Go to **Edge Devices** and select the device you want to update.
+2. Open the **Software** section and review available updates.
+3. Click **Apply Update** to download and install the bundle.
+
+Updates are applied without interrupting active workflows when possible. Review the release notes for each bundle before applying in a production environment.
+
+## Backups and support packages
+
+From the device detail view, you can:
+
+- Create and download configuration backups for disaster recovery
+- Generate support packages that capture diagnostic information for troubleshooting
+
+Support packages include logs, configuration snapshots, and status information that MediaKind support may request when investigating device issues.
+
+## Add, edit, and remove devices
+
+You can add, edit, and remove devices directly in the MK.IO UI without using the API. To remove a device from management:
+
+1. Go to **Edge Devices** and select the device.
+2. Click **Remove Device** from the device detail view.
+3. Confirm the removal.
+
+Removing a device from MK.IO stops management and monitoring. The device itself is not affected unless you also perform a factory reset.
+
+## Beam product documentation
+
+For MK.IO Beam hardware setup, broadcast workflow configuration, and on-premises headend management, see the [MK.IO Beam documentation](/beam/introduction).

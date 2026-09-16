@@ -1,0 +1,101 @@
+---
+title: "Back Up and Restore Beam Device Configurations via API"
+sidebarTitle: "Backups & Restores"
+description: "Use the MK.IO Fleets API to back up device configurations and restore edge appliance state, protecting against data loss and enabling disaster recovery."
+---
+
+A backup is the safety net for Beam device operations. Take one before a software change or a service removal, and you have a configuration you can roll back to. A backup captures the device's services, templates, failover groups, server definitions, and local users. Backup and restore operations run asynchronously on the device and return `202 Accepted`.
+
+## Create a backup
+
+A backup is triggered with `POST` against the device. Use a descriptive `backupName`, such as one with a date, so its purpose is clear later.
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/fleet/devices/my-device/backup" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": { "displayName": "Pre-update backup" },
+    "spec": {
+      "backupName": "pre-update-20260415-100000",
+      "backupAssetFile": false
+    }
+  }'
+```
+
+The call returns `202 Accepted` and the backup completes on the device over the next while.
+
+<Warning>
+Configuration access on the device is blocked while a backup or restore is in progress. Wait for the operation to finish before making configuration changes.
+</Warning>
+
+## Browse backups
+
+List the backups in a project, and read one to get its stored file details:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/fleet/backups" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/fleet/backups/<BACKUP_ID>" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+A backup record carries its `timestamp`, the `blobStorageUrl` of the stored file, and a `signature` for integrity verification. The list endpoint supports `$filter` — see the Fleets API reference for the filterable fields.
+
+## Restore a backup
+
+Restore is also a `POST`, with the stored file path from the backup record. It returns `202 Accepted` and applies asynchronously.
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/fleet/devices/my-device/restore" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": { "displayName": "Restore pre-update snapshot" },
+    "spec": {
+      "restoreFilePath": "my-device/<BACKUP_ID>/pre-update-20260415-100000.tar.gz",
+      "restoreAssetFile": false
+    }
+  }'
+```
+
+<Warning>
+Confirm the backup identity before you restore it onto a live device.
+</Warning>
+
+## Upload an external backup
+
+If you already hold a `.tar.gz` backup file, upload it and let MK.IO generate its metadata:
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/fleet/uploadBackup" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/octet-stream" \
+  --data-binary @my-device-backup.tar.gz
+```
+
+## What goes wrong
+
+<Accordion title="Restoring a backup onto a different Beam server">
+  This is not supported. A backup restores to the device it came from. Cross-device restore is not available through the API.
+</Accordion>
+
+<Accordion title="Old backups disappearing">
+  A device keeps up to 30 local backups and deletes the oldest when that limit is reached. Download or upload any backups you must retain long-term.
+</Accordion>
+
+<Accordion title="Configuration changes blocked mid-operation">
+  Device configuration access is locked while a backup or restore runs. Wait for the operation to finish before making further changes.
+</Accordion>
+
+## What comes next
+
+<CardGroup cols={2}>
+  <Card title="Software Updates" icon="arrow-up-from-bracket" href="/api-guides/beam/software-updates">
+    Take a backup before changing software state.
+  </Card>
+  <Card title="Device Management" icon="server" href="/api-guides/beam/device-management">
+    Return to the device once protection is in place.
+  </Card>
+</CardGroup>

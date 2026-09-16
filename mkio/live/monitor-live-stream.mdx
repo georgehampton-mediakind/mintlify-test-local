@@ -1,0 +1,103 @@
+---
+title: "Monitor Live Streams and Events in MK.IO"
+sidebarTitle: "Monitor Streams"
+description: "Use MK.IO dashboards and APIs to monitor live event health, track ingest status, and check live output state during a broadcast."
+---
+
+MK.IO provides live event state and ingest status information through both the portal interface and the Media API. Monitoring your live stream helps you detect encoder disconnections early, confirm that your archive is writing correctly, and verify that your streaming endpoint is serving viewers.
+
+## Live event states
+
+A live event moves through a set of states that describe where it is in its lifecycle. You can read these states from the portal or by polling the API.
+
+| State | Meaning |
+| --- | --- |
+| `Stopped` | The event exists but is not active. No ingest or playback. |
+| `Starting` | MK.IO is provisioning the event. |
+| `Running` | The event is active and ready to receive an encoder signal. |
+| `Stopping` | The event is shutting down. |
+| `Deleting` | The event is being removed. |
+
+A live event in the `Running` state is ready for ingest, but that does not mean an encoder is connected. The ingest status tells you whether a stream is actually flowing.
+
+## Check ingest status in the portal
+
+Open **Live Events** in the left navigation and click the name of your live event. The event detail page shows:
+
+- **State**: The current lifecycle state of the event.
+- **Ingest URL**: The endpoint your encoder sends to.
+- **Last ingest**: When the event last received data from an encoder.
+- **Live outputs**: A list of active live outputs writing to storage assets.
+
+If the ingest status shows no incoming data but the event is in `Running` state, check your encoder connection and confirm the ingest URL matches what your encoder is sending to.
+
+## Poll event state with the API
+
+Use the Media API to read the live event state programmatically. This is useful for automated monitoring and alerting.
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/media/liveEvents/main-stage" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+The response includes `resourceState` (the lifecycle state), `input.endpoints` (the ingest URLs), and `created` and `lastModified` timestamps.
+
+## Monitor live outputs
+
+A live output writes the running stream to a storage asset. Each live event can have one or more live outputs with different archive windows. Check live output state to confirm that recording is active.
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/media/liveEvents/main-stage/liveOutputs" \
+  -H "Authorization: Bearer $MKIO_TOKEN"
+```
+
+The response lists each output, its associated asset name, archive window length, and provisioning state.
+
+## Monitor streaming endpoint health
+
+A running streaming endpoint is required to serve playback. From **Streaming Endpoints** in the left navigation, confirm that your endpoint is in the `Running` state. A stopped endpoint produces playback failures even if the live event and ingest are working correctly.
+
+<Warning>
+A running streaming endpoint incurs costs even when no content is being actively played. Stop it when it is no longer needed.
+</Warning>
+
+## Operational metrics
+
+MK.IO projects can publish Prometheus-compatible operational metrics for integration with external monitoring frameworks such as Grafana. Enable the metrics endpoint from your project settings.
+
+```bash
+curl -X PATCH "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/metricsEndpoint" \
+  -H "Authorization: Bearer $MKIO_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "spec": { "enabled": true } }'
+```
+
+The endpoint exposes current samples through `/federate`. Source values refresh approximately every 30 seconds. Use external Prometheus-compatible storage for retained history and trend analysis.
+
+<Note>
+Operational metrics describe delivery traffic — request rate and egress bitrate. They do not provide viewer counts, session counts, or concurrency data.
+</Note>
+
+## Use webhooks for event-driven alerts
+
+Instead of polling, you can configure webhook rules to receive notifications when live event state changes. MK.IO sends events such as `MediaKind.ChannelInstanceStarted`, `MediaKind.ChannelInstanceStopped`, and `MediaKind.ChannelInstanceError` to your endpoint.
+
+See [Configure MK.IO Webhooks](/mkio/admin/webhooks) for setup instructions.
+
+## Common issues
+
+<Accordion title="The live event is running but no stream appears in the player">
+  Confirm that:
+  1. Your encoder is sending to the correct ingest URL.
+  2. A streaming locator exists for the live output asset.
+  3. Your streaming endpoint is in the `Running` state.
+  4. The streaming locator's start time, if set, has passed.
+</Accordion>
+
+<Accordion title="The stream dropped and did not recover">
+  RTMP and RTMPS connections drop after 10 seconds with no data. Your encoder must reconnect automatically. Check your encoder's reconnect settings and confirm the network is stable. Common causes include encoder pauses between scenes, network packet loss, and idle video conferencing software.
+</Accordion>
+
+<Accordion title="The archive asset is missing content">
+  Verify the live output was created before the content you need was broadcast. Live outputs only archive content that arrives after they are created. Check the live output's `created` timestamp against the expected content window.
+</Accordion>

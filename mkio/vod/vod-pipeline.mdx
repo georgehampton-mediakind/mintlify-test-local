@@ -1,0 +1,130 @@
+---
+title: "Build a Complete VOD Pipeline in MK.IO"
+sidebarTitle: "VOD Pipeline"
+description: "End-to-end walkthrough: connect storage, upload a source file, create a transform, run a job, and publish the output for on-demand streaming."
+---
+
+This guide walks you through building a complete video on demand pipeline in MK.IO from the first configuration step to a working playback URL. By the end, you will have a source file encoded into adaptive bitrate HLS and DASH streams that viewers can play.
+
+## Prerequisites
+
+- An active MK.IO project
+- An Azure Storage account or other connected cloud storage
+- A source video file (MP4 recommended)
+- An API token (from **Organization Settings → API Tokens**)
+
+## Build the pipeline
+
+<Steps>
+  <Step title="Connect cloud storage">
+    Connect a storage account to your project so MK.IO can read source files and write output assets.
+
+    In the MK.IO portal, go to **Settings → Storage Accounts** and click **+ Add Storage Account**. Enter your Azure Storage account name and connection details, then click **Save**.
+
+    Once connected, the storage account appears in asset and job configuration dropdowns throughout the portal.
+  </Step>
+
+  <Step title="Upload your source file">
+    Go to **Assets → + Add Asset**. Configure the asset:
+
+    - **Asset name**: A descriptive identifier such as `source-my-video`
+    - **Container**: The blob container in your storage account
+    - **Storage account**: Your connected storage account
+
+    After creating the asset, click **Upload** to add your source file. Wait for the upload to complete before proceeding.
+
+    Alternatively, if your file is already in cloud storage, you can reference it by URL when you configure the job input in a later step.
+  </Step>
+
+  <Step title="Create an encoding transform">
+    Go to **Video Processing → Transforms → + Create Transform**.
+
+    Configure the transform:
+
+    - **Name**: A reusable identifier such as `encode-1080p`
+    - **Type**: Encoding
+    - **Preset**: Select **H.264 Multiple Bitrate 1080p** from the preset list
+
+    Click **Create**. This transform is now available for any job in your project.
+
+    <Tip>
+      Transforms are project-level resources. Create one transform per encoding configuration and reuse it across many jobs rather than creating a new transform for each video.
+    </Tip>
+  </Step>
+
+  <Step title="Submit a transcoding job">
+    Go to **Video Processing → Jobs → + Create Job**.
+
+    Configure the job:
+
+    - **Name**: A unique identifier such as `encode-my-video`
+    - **Transform**: Select `encode-1080p` from the dropdown
+    - **Input**: Click **Select existing asset**, choose `source-my-video`, and select your uploaded file
+    - **Output asset name**: A name for the encoded output such as `encoded-my-video`
+    - **Output storage account**: Your connected storage account
+
+    Click **Submit**. The job enters the processing queue immediately.
+  </Step>
+
+  <Step title="Wait for the job to finish">
+    Track progress on the **Video Processing** page. The job moves through these states: **queued → scheduled → processing → finished**.
+
+    Once the state shows **finished**, the output asset `encoded-my-video` appears on the **Assets** page with all encoded renditions.
+  </Step>
+
+  <Step title="Create a streaming endpoint">
+    Go to **Streaming Endpoints → + Create Streaming Endpoint**.
+
+    Configure the endpoint:
+
+    - **Name**: `production` (or another descriptive name)
+    - **Type**: Shared (for development) or Dedicated (for production)
+
+    Enable **Auto-start** to activate the endpoint immediately, then click **Create**.
+
+    <Warning>
+      A running streaming endpoint incurs costs even when no content is being played. Stop it when it is no longer needed.
+    </Warning>
+  </Step>
+
+  <Step title="Create a streaming locator">
+    Go to **Assets** and click `encoded-my-video`.
+
+    Scroll to **Streaming Locators** and click **+ Add Streaming Locator**:
+
+    - **Name**: `public-access`
+    - **Streaming policy**: `Predefined_ClearStreamingOnly`
+
+    Click **Add**.
+  </Step>
+
+  <Step title="Retrieve the playback URLs">
+    On the asset page, open the **Streaming Endpoint** dropdown and select your running `production` endpoint. Then open the **Streaming Locator** dropdown and select `public-access`. Click **Apply**.
+
+    MK.IO generates and displays the HLS and DASH playback URLs:
+
+    ```
+    https://<endpoint>.<region>.streaming.mediakind.com/<locator-id>/<manifest>.ism/manifest(format=m3u8-cmaf)
+    https://<endpoint>.<region>.streaming.mediakind.com/<locator-id>/<manifest>.ism/manifest(format=mpd-time-cmaf)
+    ```
+
+    Copy these URLs for use in your player or application. You can also test playback directly in the built-in MKPlayer on the asset page.
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="DRM Content Protection" icon="lock" href="/mkio/delivery/content-key-policies">
+    Add PlayReady, Widevine, or FairPlay DRM to your content.
+  </Card>
+  <Card title="Playback Filters" icon="filter" href="/mkio/delivery/playback-filters">
+    Customize manifests by limiting tracks or trimming content.
+  </Card>
+  <Card title="AI Dubbing" icon="language" href="/mkio/vod/ai-dubbing">
+    Generate multi-language dubbed audio tracks automatically.
+  </Card>
+  <Card title="Webhooks" icon="bell" href="/mkio/admin/webhooks">
+    Receive notifications when jobs complete.
+  </Card>
+</CardGroup>

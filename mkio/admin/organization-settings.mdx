@@ -1,0 +1,70 @@
+---
+title: "Manage Your MK.IO Organization and Projects"
+sidebarTitle: "Organization"
+description: "Configure your MK.IO organization settings — create projects, manage organization-level configuration, and control billing assignments across your account."
+---
+
+Your MK.IO organization is the top-level container for all your projects, users, teams, and billing configuration. Organization administrators manage who can access which projects, how costs are allocated across payment methods, and what integrations are connected to the account.
+
+## Organization structure
+
+MK.IO organizes resources in a hierarchy:
+
+- **Organization**: The top-level entity. All users, teams, projects, and payment methods belong to one organization.
+- **Projects**: Isolated environments within the organization. Each project has its own storage connections, assets, live events, and processing jobs.
+- **Teams**: Groups of users with roles and scopes that define what they can do within the organization and its projects.
+- **Payment methods**: Billing accounts assigned to one or more projects. Usage charges are allocated to the payment method assigned to each project.
+
+## Access organization settings
+
+Organization settings are accessible from the profile dropdown in the top-right corner of the MK.IO portal. Click your email address or profile icon, then select **Organization Settings**.
+
+From Organization Settings you can manage:
+
+- User invitations and team membership
+- API tokens (all tokens across the organization)
+- Webhooks and event notifications
+- Billing and payment methods
+- Marketplace integrations (AWS Marketplace)
+- Edge device management (Beam devices)
+
+## Create a project
+
+Projects separate your workflows and make it easy to allocate costs by product line, customer, or environment.
+
+To create a project, navigate to the project selector in the MK.IO portal header and click **+ New Project**. Provide a name and select the region where your content will be processed and stored. Each project requires a connected storage account before you can create assets or live events.
+
+<Note>
+Project names must be unique within your organization and cannot be changed after creation. Use a naming convention that reflects the project's purpose, such as `prod-sports`, `staging-news`, or `dev-testing`.
+</Note>
+
+## Manage billing assignments
+
+Each project must be assigned to a payment method. Organization administrators can view and change payment method assignments from the **Billing** section in Organization Settings.
+
+To move a project to a different payment method:
+
+1. Go to **Organization Settings → Billing**.
+2. Find the project in the payment method assignment list.
+3. Select a different payment method from the dropdown.
+4. Save the change.
+
+Moving a project between payment methods takes effect immediately for new usage charges. Historical charges remain associated with the original payment method.
+
+See [Billing & Usage](/mkio/admin/billing-and-usage) for full details on managing payment methods and viewing usage reports.
+
+## Connect cloud storage
+
+Every project requires at least one connected cloud storage account. Storage is where your assets, live recordings, and encoded output files reside.
+
+Go to **Settings → Storage Accounts** within a project and click **+ Add Storage Account**. MK.IO supports Azure Blob Storage. For production workloads, you can configure a private storage link to route traffic between MK.IO and your storage account over a private network endpoint.
+
+## Private storage links
+
+MK.IO supports private network links for Azure Storage accounts, which route traffic between MK.IO and your storage over a private endpoint rather than the public internet. Configuring a private link requires setup in both MK.IO and approval by the storage account owner in Azure.
+
+## Regional availability
+
+MK.IO is available in multiple cloud regions. Each project is created in a specific region, and processing, live events, and storage connections are scoped to that region. Supported regions include East US, West US, Central US, Europe West, Japan West, and others.
+
+See the cloud region support reference for the current list of available regions.

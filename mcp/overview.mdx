@@ -1,0 +1,149 @@
+---
+title: "MediaKind MCP Server: AI Tool Integration for Docs"
+sidebarTitle: "MCP Overview"
+description: "Connect your AI assistant to the MediaKind Model Context Protocol server to search documentation and browse API endpoints without an API key."
+---
+
+The MediaKind Model Context Protocol (MCP) server lets you connect your AI assistant to the full MediaKind documentation and API reference catalog. Search published guides, browse API endpoints by tag or path, and read complete endpoint details — all from within your AI tool. The server requires no API key and does not modify any of your MK.IO resources.
+
+## Connect Your AI Tool
+
+Use this server address with any client that supports Streamable HTTP:
+
+```
+https://docs.mediakind.com/api/mcp
+```
+
+For clients that accept a transport configuration object, use:
+
+```json
+{
+  "transport": "streamable-http",
+  "url": "https://docs.mediakind.com/api/mcp"
+}
+```
+
+The client manages the MCP session. After connecting, call `list_corpora` to verify the connection and see the current documentation collections and API names available.
+
+<Note>
+  The MCP server does not require an API key or authentication token. Its tools are read-only — they search and return documentation content without accessing or modifying your MK.IO resources.
+</Note>
+
+## Find the Right Source
+
+Search the collection that matches your question. Use `search_all_mkio_docs` when your question spans multiple collections.
+
+| Tool | Use it to |
+|:-----|:----------|
+| `list_corpora` | See available collections, API names, and the catalog revision. |
+| `search_all_mkio_docs` | Search MK.IO, MK.IO Beam, API guides, and API references together. |
+| `search_mkio_docs` | Find MK.IO product guides and concepts. |
+| `search_beam_docs` | Find MK.IO Beam configuration and operation documentation. |
+| `search_api_guide` | Find API authentication instructions, workflows, and concepts. |
+| `search_api_reference` | Search endpoint titles, tags, paths, and descriptions, optionally within one API. |
+
+All search tools require a `query` parameter. For example, call `search_mkio_docs` with:
+
+```json
+{
+  "query": "How do I create a streaming locator?"
+}
+```
+
+Product and guide searches return up to five distinct documents with short excerpts. Each result includes a document `id`, a title, and a canonical `url`. Results are JSON objects returned as text. A search with no relevant results reports `no_matches`.
+
+## Browse and Inspect Endpoints
+
+Use catalog tools when you need an exact endpoint or a complete list of operations. These tools do not substitute a similar endpoint for a missing one — they return `not_found` when no signature matches.
+
+| Tool | Inputs and result |
+|:-----|:-----------------|
+| `list_api_endpoints` | Browse endpoints. Optional `api_name` and `tag` filters narrow the list. |
+| `search_api_by_tag` | Browse endpoints with the exact resource `tag`, such as `Assets`. |
+| `get_api_endpoint` | Match an HTTP `method` and exact `path`. Add `api_name` if the signature exists in more than one API. |
+| `compare_api_versions` | Find endpoints matching a `query`, grouped by current API. Compares across APIs, not historical versions. |
+
+### Browsing with `list_api_endpoints`
+
+Call `list_api_endpoints` to browse the Media API's asset operations:
+
+```json
+{
+  "api_name": "media-api",
+  "tag": "Assets",
+  "limit": 20
+}
+```
+
+The response includes `total` and `next_cursor`. If `next_cursor` is not null, pass it as `cursor` with the same filters to continue paging. Listing defaults to 20 entries and accepts a `limit` from 1 to 50. A response may contain fewer entries to stay within its size limit.
+
+<Tip>
+  Use the API names returned by `list_corpora`. The aliases `media`, `management`, `fleet`, and `infra` are also supported. Unknown API names produce an input error rather than silently searching a different API.
+</Tip>
+
+### Looking up an exact endpoint with `get_api_endpoint`
+
+An exact lookup reports `not_found` when no signature matches, or `ambiguous` when you need to specify an API. A successful lookup returns the endpoint identity and document `id` for reading its full details.
+
+## Read Document Details
+
+Use `get_document` with an `id` returned by search or endpoint browsing. Replace the placeholder with the actual value:
+
+```json
+{
+  "id": "<DOCUMENT_ID>"
+}
+```
+
+The response includes document content and section headings. To read a particular section, pass its exact heading as `section` with the same `id`.
+
+### Reading OpenAPI endpoint details
+
+For an API endpoint, set `format` to `openapi` to read the exact source operation:
+
+```json
+{
+  "id": "<DOCUMENT_ID>",
+  "format": "openapi"
+}
+```
+
+References remain as `$ref` values. To follow a local reference, pass its value without the leading `#` as `pointer`, with the same endpoint `id` and `format`. Pass an empty `pointer` to read the complete specification, including shared parameters, security schemes, and server definitions.
+
+<Note>
+  OpenAPI content is JSON text. For a paginated response, concatenate the `content` fields from every page before parsing the JSON. Keep the same `format` and `pointer` when continuing. Markdown is a readable overview; use OpenAPI format when you need the complete schema.
+</Note>
+
+### Response size limits
+
+| Scope | Limit |
+|-------|-------|
+| Search responses | 8 KiB |
+| Document reads | 16 KiB per response |
+
+Large documents return `truncated: true` and a `next_cursor`. Pass that value as `cursor` — with the same document and section — to continue. Truncated content is incomplete: always read the continuation before relying on a full schema or procedure.
+
+## Handle Updates and Errors
+
+Cursors belong to a catalog revision and a set of filters. If the documentation changes or you change your filters, start again without the cursor.
+
+### Catalog updates
+
+The catalog refreshes within one minute. During publication, a search can report `index_updating` or `incomplete` while indexed content catches up with the current catalog. Retry shortly. A document that changes between discovery and reading reports `content_changed` rather than returning mismatched content.
+
+### Input validation
+
+| Condition | Result |
+|-----------|--------|
+| Blank query | Input error |
+| Query containing only punctuation | Input error |
+| Query longer than 2,000 characters | Input error |
+| Unknown `api_name` | Input error |
+| No matching results | `no_matches` |
+| No matching endpoint | `not_found` |
+| Multiple APIs match an endpoint | `ambiguous` |
+| Service failure | Error (separate from `no_matches`) |
+
+<Warning>
+  Service failures are reported as errors, separately from a valid search that returns no matches. If you receive an error, verify your server URL and retry. If the issue persists, check the [MediaKind status page](https://status.mediakind.com).
+</Warning>

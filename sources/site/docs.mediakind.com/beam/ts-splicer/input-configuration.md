@@ -1,0 +1,36 @@
+# Source: https://docs.mediakind.com/beam/ts-splicer/input-configuration
+
+# Configuring the input
+
+TS Splicer is designed to support live MPEG2-TS ingest multicast. Additionally, it integrates RIST support to receive TS multicast streams sent over the internet. To configure the service input, select the **Input** tab in the user interface.
+
+## Live multicast MPEG2-TS ingest
+
+[Section titled “Live multicast MPEG2-TS ingest”](https://docs.mediakind.com/beam/ts-splicer/input-configuration/#live-multicast-mpeg2-ts-ingest)
+
+- **type:** Select MPEG-TS/UDP
+- **input redundancy:** When two multicast input sources (primary and secondary) are accessible, choose between two modes. In the active/passive mode, the secondary source remains idle, not joining the multicast address or receiving UDP packets. The active/active mode lets both sources are captured simultaneously, offering statistics on transport and demux layers.
+- **input loss timeout**: Set to 1000ms by defaut, this is the time taken to switch between two sources if signal loss occurs.
+- **Switch on ES data loss**: Initiate a switch to the backup source in case of audio or video loss.
+- **Delay**: Only applicable if “Switch on ES data loss” is enabled. If audio or video is lost, it specifies the time to wait before switching to the backup source.
+
+In the **Primary** section of the UI, configure the live multicast MPEG2-TS details:
+
+- **Network interface:** Designate the network interface capturing the input stream.
+- **Stream address:** Define the input stream’s unicast or multicast IPv4 address.
+- **Port:** Input the port for capturing the stream.
+- **IGMPv3 source filtering:** Enumerate allowed IP addresses for IGMPv3, separated by commas.
+- **Input synchronization mode:** Depending on the input stream data, synchronize input via PMT program ID or stream PIDs.
+- **Program ID:** Select the appropriate program from the MTPS input stream.
+- **PCR PID**: Input the packet identifier for the Program Clock Reference, essential for synchronizing audio and video packets. If unspecified, it defaults to the output Video PID.
+
+To configure a secondary input, click the **+Add** button under the Primary section. This action mirrors your primary settings in a new secondary section.
+
+## Select Input streams for Primary (and Secondary, if configured)
+
+[Section titled “Select Input streams for Primary (and Secondary, if configured)”](https://docs.mediakind.com/beam/ts-splicer/input-configuration/#select-input-streams-for-primary-and-secondary-if-configured)
+
+- In the **Video ID** section, set the Video PID. If the input synchronization mode is set to PMT, video PID will be set to _auto._ Otherwise, specify the video PID to filter.
+- In the **Audio ID** section, add audio tracks by either PID or language.
+- In the **Subtitle ID** section, configure which subtitle tracks you wish to pass through to the output. You can select from the following subtitle types: Teletext, SCTE-27, DVB-Subtitles, ARIB B24. Set up filtering based either on PID or language.
+- Under **Metadata ID**: section covers passthrough for non-audio or video data, such as SCTE-35 signals, cuetones, AIT, EBIF, EISS, and PES metadata.

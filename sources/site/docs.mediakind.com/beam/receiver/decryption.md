@@ -1,0 +1,19 @@
+# Source: https://docs.mediakind.com/beam/receiver/decryption
+
+# Configure the decryption
+
+## Decryption
+
+[Section titled “Decryption”](https://docs.mediakind.com/beam/receiver/decryption/#decryption)
+
+MK.IO Beam supports several **Conditional Access (CA)** schemes for decrypting services from an incoming transport stream. If the service selected for decode is encrypted (scrambled), a **locked padlock** symbol is displayed next to the service name.
+
+**Example**:
+
+![decryption locked padlock](https://docs.mediakind.com/rx1-img/decryption_locked_padlock.png)
+
+When the service selected for decode is successfully being decrypted (descrambled), an **unlocked padlock** symbol is displayed next to the service.
+
+**Example**:
+
+![decryption unlocked padlock](https://docs.mediakind.com/rx1-img/decryption_unlocked_padlock.png)

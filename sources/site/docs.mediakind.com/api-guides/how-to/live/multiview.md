@@ -1,0 +1,113 @@
+# Source: https://docs.mediakind.com/api-guides/how-to/live/multiview
+
+# Multiview
+
+Multiview is a production technique where multiple camera feeds or source streams are combined into a single tiled video output. Instead of broadcasting one camera at a time, a multiview output shows all feeds simultaneously, arranged in a grid or picture-in-picture layout.
+
+The Live API handles multiview composition through two resource types: `staticMultiviewEvents` and `staticMultiviewChannels`.
+
+## Which resource type to use
+
+[Section titled “Which resource type to use”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#which-resource-type-to-use)
+
+Both resource types produce the same multiview output. The only difference is how they are billed and how long they run.
+
+| Resource | Billing | Use when |
+| --- | --- | --- |
+| `staticMultiviewEvents` | Per-minute | Sports matches, live shows, any broadcast with a defined start and end |
+| `staticMultiviewChannels` | Monthly flat fee, charged immediately on start | 24/7 production infrastructure that runs continuously |
+
+If for example you are running a 90-minute football match on a Saturday, use `staticMultiviewEvents`. If you are building a permanent control room feed that is always on, use `staticMultiviewChannels`.
+
+## How composition works
+
+[Section titled “How composition works”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#how-composition-works)
+
+When the Live API receives multiple input streams for a multiview resource, it routes each one into a processing template that composes them into a layout and then encodes the result. The template is where the composition happens. The Live API resource is the control plane: it tells the platform which streams to accept, which template to use, and where to send the output.
+
+### What a pin is
+
+[Section titled “What a pin is”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#what-a-pin-is)
+
+Processing configs expose named input slots called **pins** when the actual config declares them. A pin is a labelled placeholder that says “a video feed goes here”. A multiview config might expose four pins. When you create a multiview resource, each input includes a `transformInput` value that names its pin.
+
+This is how the platform knows which camera feed to put in which position. The template controls what happens at each pin (size, position, any overlays). The `transformInput` value on your resource input connects a specific source stream to that pin.
+
+Pin names are defined by the template and retrieved by reading the template’s `status.inputPins[].name`. They are not standardized across templates, so always read them from your specific template before creating a resource.
+
+### Two composition modes
+
+[Section titled “Two composition modes”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#two-composition-modes)
+
+There are two ways to configure how composition works, depending on how your template is built.
+
+There’s no separate “multiview” config type. The Templates API only has `encodingLive` and `multiviewComposing`, that’s the whole vocabulary. A multiview resource always needs an **`encodingLive`** template, since that’s what actually encodes the output, and optionally a **`multiviewComposing`** template if you want the layout defined separately.
+
+Common multiview preset examples include `default_1080p_2up`, `default_1080p_3up`, and `default_1080p_4up`. Discover the presets available to your project at runtime. When returned as `encodingLive`, these are Mode 1 presets where one config does both jobs.
+
+#### Mode 1: Layout inside the encodingLive template
+
+[Section titled “Mode 1: Layout inside the encodingLive template”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#mode-1-layout-inside-the-encodinglive-template)
+
+The simpler approach. Your `encodingLive` template is built to handle both composition and encoding in one. The template defines the grid layout internally, and each flow input maps to a pin in that template.
+
+You only need one template reference in the resource spec. The `transformInput` pin names come from the `encodingLive` template.
+
+Use this mode when:
+
+- A single template handles both the composition layout and encoding settings.
+- The layout is fixed and does not need to change independently of encoding.
+- You want the simplest possible configuration.
+
+#### Mode 2: Separate multiviewComposing template
+
+[Section titled “Mode 2: Separate multiviewComposing template”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#mode-2-separate-multiviewcomposing-template)
+
+The more flexible approach. You have two templates: an `encodingLive` template that handles encoding only, and a separate `multiviewComposing` template that defines the composition layout. You set both in the resource spec.
+
+The `transformInput` pin names come from the `multiviewComposing` template, not the `encodingLive` template.
+
+Use this mode when:
+
+- You want to change the visual layout without touching the encoding configuration.
+- Multiple events share the same encoding settings but have different camera arrangements.
+- Your production team manages layouts and encoding parameters separately.
+
+For example: a broadcast platform running events across different sports might use one `encodingLive` template for all of them (same output codec and bitrate ladder) but different `multiviewComposing` templates per sport (different number of cameras, different layout grids).
+
+## The setup sequence
+
+[Section titled “The setup sequence”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#the-setup-sequence)
+
+Before you create a multiview resource, you need to set up these dependencies in order:
+
+1. **A source for each input** (Media API): each camera feed or ingest point needs its own source resource. See [Content, sources, and destinations](https://docs.mediakind.com/api-guides/how-to/media/content-and-sources).
+2. **An encodingLive template** (Templates API): required for all multiview resources. List the current presets, create a customer config from one, then retrieve that config’s pins. See [Manage templates](https://docs.mediakind.com/api-guides/how-to/templates/manage-templates).
+3. **A multiviewComposing template** (Templates API): required only for Mode 2.
+4. **An MK.IO asset** (Media API): live resources write encoded output into an asset. See [Assets](https://docs.mediakind.com/api-guides/how-to/media/assets).
+
+For a complete walkthrough that covers all of these steps in order, see [Multiview setup walkthrough](https://docs.mediakind.com/api-guides/how-to/live/multiview/multiview-walkthrough).
+
+`transformInput` also applies to single-input Live resources. For multiview, each input normally binds to a different pin. Resolved inputs, source `Active` state, and event-level health do not prove that each tile receives media. Check every encoder’s contribution and verify that each expected tile updates in the composed picture.
+
+## Guides
+
+[Section titled “Guides”](https://docs.mediakind.com/api-guides/how-to/live/multiview/#guides)
+
+[End-to-end walkthrough](https://docs.mediakind.com/api-guides/how-to/live/multiview/multiview-walkthrough)
+
+### End-to-end walkthrough
+
+Follow a complete setup from sources and templates through to a running multiview event.
+
+[Static Multiview Event](https://docs.mediakind.com/api-guides/how-to/live/multiview/static-multiview-event)
+
+### Static Multiview Event
+
+Reference guide for creating and operating a per-minute multiview resource.
+
+[Static Multiview Channel](https://docs.mediakind.com/api-guides/how-to/live/multiview/static-multiview-channel)
+
+### Static Multiview Channel
+
+Reference guide for creating and operating a monthly-billed multiview resource.
