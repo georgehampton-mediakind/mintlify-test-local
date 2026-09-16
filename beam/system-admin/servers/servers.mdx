@@ -1,0 +1,54 @@
+---
+title: Manage servers
+sidebarTitle: Manage Servers
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The **Servers** view displays system information to monitor and manage servers. The statuses indicate server availability: **connected** or **connection lost**.
+
+## Server Status
+
+<Info>
+  The actions available are dependent on the installation type, server type and the user role.
+</Info>
+
+* Administrators can click the **Delete** <img src="/icons/ui/delete.svg" alt="Delete" className="mk-ui-icon" width="16" height="16" /> button to remove a server that is no longer in use in the system.
+* You can use the **Reboot** <img src="/icons/ui/reload.svg" alt="Reload" className="mk-ui-icon" width="16" height="16" /> button to restart the server by clicking **Yes** at the displayed **Are you sure?** confirmation message.
+* Click the **Details** <img src="/icons/ui/view.svg" alt="View" className="mk-ui-icon" width="16" height="16" /> button to display the server information ([Display server information (system)](/beam/system-admin/servers/servers#displaying-server-information-system)).
+* Click the **Stats** <img src="/icons/ui/chart.svg" alt="Chart" className="mk-ui-icon" width="16" height="16" /> button to view server statistics, such as CPU, memory, disk usage, and network statistics.
+* Click the **Support package** <img src="/icons/ui/package.svg" alt="Package" className="mk-ui-icon" width="16" height="16" /> button to [generate a support package](/beam/system-admin/maintenance/generate-support-package).
+* If the connection is lost when the server is in a failover group then check if failover occurred.
+* You can also check alarms or alarm history to investigate possible causes.
+* You can also check server information for IP configurations.
+
+## Server processing types
+
+Additional processing types are available from the **Servers** page.
+
+| Processing type | Required Software                                                                                                                                                                |
+| :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Controller      | Controller provides a centralized configuration and control interface, manages failover for Live Encoder, and offers a flexible licensing management for MediaKind applications. |
+| Arbiter         | A server which is fulfilling the role of the database arbiter.                                                                                                                   |
+
+## Display servers
+
+Servers are listed in a table. You can view server settings and usage statistics per server.
+
+1. Click **Servers** from the left-side menu. The table of servers displays.
+
+2. Edit the number of [rows displayed](/beam/web-interface/navigation#edit-the-number-of-rows-displayed) or use the [search bar](/beam/web-interface/navigation#use-the-search-bar) to filter the display.
+
+## Display server information (system)
+
+Check server functions and performance to manage server and service allocation, or to view license information. System settings and information displays for each server.
+
+1. Click **Servers** on the left-side menu.
+
+2. Click <img src="/icons/ui/view.svg" alt="View" className="mk-ui-icon" width="16" height="16" /> in the **Actions** column to view server information. Information based on the server type displays.
+
+3. Click the tabs to display server information.
+
+   * **General**
+   * **System Settings**
+   * **Statistics**

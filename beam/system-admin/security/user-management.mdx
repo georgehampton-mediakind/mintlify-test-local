@@ -1,0 +1,222 @@
+---
+title: User management
+sidebarTitle: User Management
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Manage users
+
+Administrators have rights to create users and assign groups. User groups reflect different user roles with specific permissions. Permissions authorize access to applications, menus and features.
+
+<Info>
+  Menu options depend on your processing type and product installation.
+</Info>
+
+### User groups
+
+A user group is a set of access rights and permissions. Permissions authorize users to either display or edit configurations. Users are assigned to at least one user group. A user can be assigned to multiple groups.
+
+<Info>
+  New users are automatically assigned to the **Monitoring** group.
+</Info>
+
+### User group permissions
+
+There are 3 default user groups. Permissions are either Read (R), Write (W), or Read and Write (R/W). Yes means the user group can carry out the action, but may be limited to specific options.
+
+<Info>
+  User group options depend on your processing type and product installation.
+</Info>
+
+|                  | Admin | Configuration | Monitoring | API |
+| :--------------- | :---- | :------------ | :--------- | :-- |
+| Services         | R/W   | R/W           | R          | R/W |
+| Servers          | R/W   | R/W           | R          | R/W |
+| Templates        | R/W   | R/W           | R          | R/W |
+| Failover         | R/W   | R/W           | R          | R/W |
+| Alarms and Stats | R     | R             | R          | R   |
+| Settings         | R/W   | N/A           | N/A        | R/W |
+| Restore          | Yes   | Yes           | No         | R/W |
+| Backup           | Yes   | Yes           | Yes        | R/W |
+| User Management  | R+W   | N/A           | N/A        | N/A |
+
+#### Failover default user rights per user group
+
+<Info>
+  Admin users have all rights.
+</Info>
+
+**Monitoring** users can (based on Failover control privilege):
+
+* View groups
+* View group details
+* View failover audit history
+* Trigger manual failover
+* Trigger a manual revert
+* Trigger a maintenance mode
+
+**Configuration** users (based on Failover configuration privilege):
+
+* View groups
+* View group details
+* Trigger manual failover
+* Trigger a manual revert
+* Trigger a maintenance mode
+* Create groups
+* Edit groups
+* Delete groups
+* Edit default failover mode
+* Edit timeout period
+
+| Group         | Services | Servers | Templates | System Center | Restore | Backup | User Management |
+| :------------ | :------- | :------ | :-------- | :------------ | :------ | :----- | :-------------- |
+| Admin         | R+W      | R+W     | R+W       | R+W           | Yes     | Yes    | R+W             |
+| Monitoring    | R        | R       | R         | N/A           | No      | Yes    | N/A             |
+| Configuration | R+W      | R+W     | R+W       | N/A           | Yes     | Yes    | N/A             |
+
+### Display the list of users
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> in the upper right corner of the window.
+2. Select **User Management**. The User Management Administration page displays.
+3. Select **Users**.
+
+The list of users displays. You can scroll to the end of the list to display the total number of users.
+
+### Add a new group
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> in the upper right corner of the window.
+
+2. Select **User Management**. The User Management Administration page displays.
+
+3. Select **Groups**. The list of groups displays. You can scroll to the end of the list to display the total number of groups.
+
+4. Select **Add Group**. You are prompted to enter group information.
+
+5. Enter the **Name** and define the **Permissions** for the group, as shown in the example below:
+
+   ![add new group](/_machine-assets/d1cf612d4a11dd79efef29214fc8699e05c20f389e6a74d0d1a53629dd9cc446.png)
+
+6. Select a **Save** option. The new **Group** appears in the list of groups.
+
+![group list](/_machine-assets/c7ac7f137a2edecb8abcf1f160f7a640cd0c4f4d0e9258d5e23648c959a76ca2.png)
+
+The group permissions for **Monitoring**, **Configuration**, **Admin** and **API** are listed below (permissions for these groups cannot be modified by the user):
+
+**Monitoring**: The users with **Monitoring** access can perform the following actions in the code:
+
+* Access the GUI
+* Backup databases
+* Manually perform a revert and failover of servers
+
+**Configuration**: The users with **Configuration** access can perform the following actions in the code, in addition to the permissions described in the **Monitoring** group above:
+
+* Restore databases
+* Create, edit and delete services
+* Create, edit and delete templates
+* Create and edit servers
+* Modify licenses
+* Create, edit and delete failover groups
+* Access settings
+* Modify SNMP configurations
+* Schedule jobs on services
+* Edit alarm overrides
+* Generate catalogs, outputs and assets
+
+**Admin**: The users with **Admin** privileges can perform the following actions in the code, in addition to the permissions described in the **Monitoring**, **Configuration** and **API** groups above (meaning, these users have the rights to perform everything in the system):
+
+* Modify external links and general settings
+* Delete licenses and servers
+* Reboot Servers
+
+**API**: The users with **API** privileges have the right to access the API.
+
+### Create a new user
+
+The Controller is a single access point for products. Administrators manage users, groups and permissions from the system center.
+
+1. [Display users](/beam/system-admin/security/user-management#displaying-the-list-of-users).
+
+2. Select **Add User**. You are prompted to enter User information.
+
+3. Enter the User information.
+
+   * **Username**
+   * **Password**
+
+4. Select a **Save** option.
+
+5. [Assign a user to a group](/beam/system-admin/security/user-management#assign-a-user-to-a-group) to manage user access [rights and permissions](/beam/system-admin/security/user-management#user-group-permissions). By default, new users are assigned to the **Monitoring** group.
+
+<Info>
+  An Admin user can edit or create other Admin users and profiles, including passwords and permissions.
+</Info>
+
+### Assign a user to a group
+
+Groups are a set of access rights and permissions. Permissions authorize users to either display or edit configurations. Give a user access rights by assigning the user to a group.
+
+1. [Display users](/beam/system-admin/security/user-management#displaying-the-list-of-users).
+
+2. Click the user in the list to display user information and permissions.
+
+3. Scroll to **Permissions** then use the arrows to add the group to the list of **Chosen groups**.
+   You can add multiple groups, or click **Choose all** to assign the user to all available groups.
+
+   ![view permissions arrows user mgt controller](/_machine-assets/06214b442ad9132587a72f9ae4afdedf6c8fde1f405de3e89f975b68d1c2078d.png)
+
+4. Click **Save**.
+
+### Link LDAP or Active Directory
+
+The MediaKind Controller can be linked with an external server (LDAP or *ActiveDirectory*) to identify and authenticate users. If activated, the authentication page displays before granting access to the **Home** page.
+
+<Info>
+  The LDAP connection parameters are defined in a dedicated configuration file. If using LDAP, the MediaKind Controller neither stores nor manages user passwords that are managed by the external LDAP server. Users defined on the external server can coexist with locally defined users.
+</Info>
+
+1. See [LDAP configuration](/beam/system-admin/security/ldap-management) for LDAP configuration procedures.
+2. Follow the steps.
+
+When users are first installed from the LDAP or *ActiveDirectory* server, they are by default, automatically assigned to the Monitoring group. The default group can be configured. Alternatively, LDAP can be configured to assign groups based on LDAP group membership. Administrators can [edit user groups](/beam/system-admin/security/user-management#editing-user-information) to [manage permissions](/beam/system-admin/security/user-management#user-group-permissions) and access rights.
+
+### Editing user information
+
+1. [Display users](/beam/system-admin/security/user-management#displaying-the-list-of-users).
+
+2. Select a **User**.
+
+3. Edit the user information:
+
+   * **Username**
+   * **Password**
+   * **Personal information**
+   * [Permissions](/beam/system-admin/security/user-management#user-group-permissions)
+
+4. Select a save option to continue or exit.
+
+<Info>
+  An Admin user can edit or create other Admin users and profiles, including passwords and permissions.
+</Info>
+
+### Edit a user password
+
+Any user can edit their password, but only users with admin or configuration permissions can edit passwords for other users.
+
+1. [Display the list of users](/beam/system-admin/security/user-management#displaying-the-list-of-users) in the System Center.
+
+2. Click the current **Admin** user from the list to edit.
+
+3. Click the **this form** link to change the password.
+
+   ![view user management mfvp controller change password](/_machine-assets/7213df160f427b72e7612a40407f890f849b7ac3ef2b44fed9e68ff1cd011334.png)
+
+4. Edit user profile settings then click **Save**.
+
+## Save options for user management
+
+| Save option           | Result                                                                                |
+| :-------------------- | :------------------------------------------------------------------------------------ |
+| Save\*\*              | The user is added to the list.                                                        |
+| Save and continue\*\* | Additional user information displays (groups and permissions).                        |
+| Save and add another  | User is added to the list and the add user page is refreshed to add another new user. |

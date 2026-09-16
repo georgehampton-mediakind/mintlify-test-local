@@ -1,0 +1,43 @@
+---
+title: Configuring the signal loss input
+robots: noindex, nofollow
+---
+
+You can configure a static image as the signal loss slate during signal loss events.
+
+1. Navigate to the **Configure Channels&#x20;**&#x61;pp > **Sources&#x20;**&#x74;ab > **Inputs**.
+
+   ![signal\_loss\_update.png](/images/vos360/3267043f62fa231fad1aa177.png)
+
+2. Enable the **Display a Video Slate** toggle to add a WebM video file. See [Configuring a WebM video file for signal loss](/vos360/user-guide/configuring-a-webm-video-file-for-signal-loss) for more information.
+
+3. Use the **Force Graphic Supports** toggle to do the following:
+
+   1. If enabled, the service allows future dynamic and seamless graphics reconfiguration even without graphics in the current configuration.
+
+   2. If not enabled and no graphics exist in the current configuration, adding graphics later will restart the service.
+
+   **Tip:** If you only need to configure graphics without dynamic or seamless reconfiguration, or if you want to enable or disable graphics through the Monitor Channels app, you don't need to enable this toggle.
+
+4. From the **Signal Loss Image**, click the **Change Image&#x20;**&#x69;con to select the image file for the signal loss slate insertion.
+
+5. From the **Upload by URL&#x20;**&#x74;ab, you can use an HTTP server URL to download the PNG image files.\
+   ![](/images/vos360/f8282299d68adf5673e4a8c6.png)
+
+6. Set the **Path** to download the picture.
+
+7. Define a **Label** to identify the picture easily.
+
+8. From the **File Uploader** tab, you can drag and drop your file for uploading to VOS, which allows the PNG files to download with local storage (no need for an external HTTP server). \
+   ![](/images/vos360/17f391f243f3de5b293d6892.png)
+
+9. The uploaded image is available in the **Library&#x20;**&#x74;ab and can be selected.
+
+10. Enable the **Insertion Settings&#x20;**&#x74;oggle to configure the insertion settings. This option delays slate insertion by counting erroneous/error-free windows for the source.\
+    **Note**: The signal loss slate period can be configured to delay the signal loss slate period, as well as the recovery from the signal loss slate, and have a longer tolerance of signal loss issues before displaying the signal loss slate. This applies to static or video signal loss slate.
+
+    1. **Insertion Threshold**: A counter counts the number of 5-second windows with input errors (signal loss, video missing, scrambled PID). When this counter reaches this value, the slate is inserted.
+
+    2. **Reset Threshold**: When the number of consecutive 5-second windows without error reaches this value, the counter of erroneous windows is reset.
+
+    3. **Revert Threshold**: A slate is removed when the number of consecutive 5-second windows without error reaches this value.

@@ -1,0 +1,92 @@
+---
+title: Configuring an IP source input
+robots: noindex, nofollow
+---
+
+IP inputs are used to ingest MPEG2-TS sources into VOS360 (SPTS, MPTS, or MBTS). In addition, watermark inputs are supported for the OTT packaging services.
+
+<Note>
+  **Note:&#x20;**&#x45;nsure that the multicast IP and port do not conflict with other network services and that your network is correctly configured (IGMP querier).
+</Note>
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.
+
+   ![](/images/vos360/42e1331ef9cf0123a67d3aad.png)
+
+2. In the **Input Source Name** field, enter the name of the new source.
+
+3. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+4. Below **Inputs**, configure the **Signal Loss** input by doing one of the following (refer to [Configuring a signal loss slate for a source input](/vos360/user-guide/configuring-a-signal-loss-slate-for-a-source-input) for details):
+
+   * Select the desired **Signal lost image**.
+
+   * Click the **Display a black screen** toggle to display a black screen during signal loss.
+
+   * Click the **Display a video slate&#x20;**&#x74;oggle to select the WebM file you have uploaded.
+
+   * Click **Remove** to delete the input if it is not required.
+
+   Note that signal loss is only supported in workflows that include transcoding.
+
+5. Click **+Input** icon and then select **IP**.
+
+   * Enter the multicast source **IP Address** and \
+     **Result**: The **Network** field appears, allowing you to select the subnet from which you expect to receive the multicast source.
+
+   * Enter the multicast source **Port** number.
+
+   * For MBTS sources: If you are using a range of contiguous ports, such as \[10001:10006], enter the **PORT END** number.\
+     For SPTS and MPTS source, this field must remain empty.
+
+     <Note>
+       **Info:&#x20;**&#x54;he maximum supported range is 32 ports.
+     </Note>
+
+   * Optionally, add a source-specific multicast IP address in the **SSM** field.
+
+   * For MBTS sources: Optionally, click the **Add&#x20;**&#x69;con to be able to enter multiple multicast IP addresses or non-contiguous ports.\
+     *MBTS source with non-contiguous ports*
+
+     ![](/images/vos360/f75a87bf7ac603363cfa8262.png)
+
+     \
+     *MBTS source with multiple multicast IP addresses*
+
+     ![](/images/vos360/60ed1827973f5809bcf336da.png)
+
+   * Click **Connect** to have VOS360 discover the source.\
+     If VOS360 cannot discover the source, an error message will display.
+
+   * Once the source is discovered, click **Choose from X programs** and then select the program you want to use.\
+     Only one program will be listed for SPTS sources.
+
+     ![](/images/vos360/50c1315aae4571e27f459de5.png)
+
+   * Click **Groom** to check the properties of the source and customize how it will be processed downstream.
+
+6. To add a backup MBTS input source, repeat the step 5.
+
+   <Note>
+     **Note:&#x20;**&#x46;or an SPTS/MPTS input of live transcoding service, source redundancy should be used instead.
+   </Note>
+
+   <Note>
+     **Note:&#x20;**&#x49;f the PIDs of the second input are different than the PIDs of the first input, an error will occur.
+   </Note>
+
+7. To enable **Seamless Protection Switching (SMPTE 2022-7)&#x20;**&#x66;or the source, toggle the selector to the **On** position. Set the network IP parameters to perform hitless input redundancy with TS over IP inputs based on SMPTE 2022-7. You can enter any valid Path Differential value in the range of 50 ms to 450 ms. The default value is 50 ms.
+
+8. To enable **Automatic Grooming**, toggle the selector to the **On&#x20;**&#x70;osition. Optionally, provide the **Program Number&#x20;**&#x74;o specify the program in the source to be processed. Otherwise, the service will use the **smallest&#x20;**&#x64;etected program number in the input source for processing. This means the service will start as long as one program is detected in the source.
+
+   <Note>
+     **Info:&#x20;**&#x41;utomatic Grooming can be used to minimize the effort of performing manual grooming for Live events. This allows users to start a service without a requirement of grooming the source, which would require a step to re-groom whenever the source changes.
+   </Note>
+
+9. (Optional) To configure an OTT Watermarking packaging service, you can configure inputs in the "Primary IP" section and add the **Watermark** from the drop-down menu by clicking the **"+Input**" button. Configure the Watermark inputs (those inputs are from a Watermark transcoding service output). The Watermark inputs are also displayed in IP type input.
+
+   ![](/images/vos360/d4fa075381c4fdc6fd75c237.png)
+
+   ![](/images/vos360/35c45af3e91a8baed300bdde.png)
+
+10. From the **Add source** pane, click **Create** to add the source.

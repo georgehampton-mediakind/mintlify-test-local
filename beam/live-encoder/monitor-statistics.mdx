@@ -1,0 +1,69 @@
+---
+title: Monitor service statistics
+sidebarTitle: Monitor service statistics
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+{ /* TODO: update links (especially ./parameters/) once MD files are created */}
+
+You can retrieve and monitor detailed statistics information on a service.
+
+<Info>
+  The <img src="/icons/ui/chart.svg" alt="Chart" className="mk-ui-icon" width="16" height="16" /> icon is only accessible when a Live encoding servive is associated to a server and then running.
+</Info>
+
+1. From the **Services** page, identify the service that you want to monitor and click the related <img src="/icons/ui/chart.svg" alt="Chart" className="mk-ui-icon" width="16" height="16" /> icon. The **Statistics** page displays.
+
+2. You can navigate between three tabs:
+
+* [**Media info**](/beam/live-encoder/monitor-statistics#media-info)
+* [**Input monitoring**](/beam/live-encoder/monitor-statistics#input-monitoring)
+* [**Outputs**](/beam/live-encoder/monitor-statistics#outputs).
+
+<Info>
+  You can customize the information displayed such as activating or deactivating the auto refresh by clicking the **Auto refresh** button.
+</Info>
+
+## Media info
+
+From the **Media info** tab, you can view the following information for each program:
+
+* Video statistics
+* Audio statistics
+* Preview of the video
+* List of other available programs
+
+![MFVP EL service statistics mediainfo](/_machine-assets/ca8d164a2c596a68e85639e6a76062436b1e188f057c9fa536c8561e948dc9b0.png)
+*Example of Service Statistics>Media info*
+
+## Input monitoring
+
+From the **Input monitoring info** tab, you can view the following information:
+
+* Quality indicators (ETR290)
+* RTP quality indicators
+* FEC quality indicators
+* Input CC Errors
+* Splice schedule
+
+![MFVP EL service statistics input](/_machine-assets/19bbdf2199dce329229b4e4fa68081cf79129c25dbf30a44cdda657cb3180f96.png)
+*Example of Service Statistics>Input monitoring*
+
+## Outputs
+
+From the **Outputs** tab, you can view the following information for each output:
+
+* PID number
+* Media type (audio, video, subtitles, metadata)
+* CC errors
+* Information
+
+![MFVP EL service statistics output](/_machine-assets/f87062f31522ae6131db7f25a919bcd0feb272f045ee47a725bf58f3fe9459dd.png)
+*Example of Service Statistics>Output monitoring*
+
+* Once you have configured an automated blackout and started a service, you can manually [activate or deactivate the blackout](/beam/live-encoder/configure/encoding/blackout-encoding#manually-activate-or-deactivate-a-blackout).
+* Once you have activated and configured the [Switch to CBR option](/beam/live-encoder/parameters/encoding/video#switch-to-cbr-parameters), and started the service, you can manually switch from Statmux to CBR (**Switch to CBR** button) or switch back from CBR to Statmux (**Switch to Statmux** button).
+
+  ![EL service statistics output switch to CBR](/_machine-assets/e9585a8571bb82122831c13660c6590b80461df588986156b0850075d09d4f40.png)
+  *Example of Service Statistics>Outputs with Switch to CBR option activated*

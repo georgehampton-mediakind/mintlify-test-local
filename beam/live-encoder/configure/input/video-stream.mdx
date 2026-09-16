@@ -1,0 +1,28 @@
+---
+title: Configure video in input stream
+sidebarTitle: Video
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+{ /* TODO: update links (especially ./parameters/) once MD files are created */}
+
+To select a video stream, follow these steps:
+
+1. Display services.
+
+2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service. The **General parameters** display.
+
+3. Select the **Input** tab.
+
+4. Go to the **Sources** > **Input streams selection** > **Video ID** section, then enter the appropriate value for each [video stream parameter](/beam/live-encoder/parameters/input/video-and-audio#video):
+
+   * **Video PID** (PID is only configurable if **Input synchronization mode** is set to **PidLocked** mode.)
+
+   * **Decoding capability**
+
+   * In case of **SMPTE ST 2110** input type, **Stream Index** and **SDP File Location**.
+
+5. In [IPTV export type](/beam/live-encoder/configure/encoding), you can delete the video input to get an audio-only service.
+
+6. Click **Save and continue** or **Save and exit** to save your changes.

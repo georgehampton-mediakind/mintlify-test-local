@@ -1,0 +1,30 @@
+---
+title: Creating VOS Playout clean and dirty outputs
+robots: noindex, nofollow
+---
+
+It is possible to create clean (no graphics layers) and dirty outputs (several graphics layers) by applying service layers filtering. This way, you can have several outputs for the same playout source.
+
+Use the following procedure to implement this feature:
+
+1. Navigate to **Configure Channels&#x20;**> **Services&#x20;**&#x74;ab.
+
+2. Create several services for your Playout source.
+
+3. Select one of the services for the Playout source.
+
+4. Click **Add-ons**.
+
+5. Set the **Playout&#x20;**&#x74;oggle to **On**. This will add the Filtered Graphics Layers menu, from which you can select the layers to filter (1 to 8).
+
+   ![filtered\_graphics\_layers.png](/images/vos360/8b7c7815473cd3e3f041924b.png)
+
+6. Perform the steps 3 to 5 for the other services of the Playout source.
+
+<Note>
+  **Info**: By selecting nothing in the filters, you create a dirty output and by selecting all layers, you create a clean output.
+</Note>
+
+<Note>
+  **Info**: The Playout add-on will only appear if your service is linked to a playout input.
+</Note>

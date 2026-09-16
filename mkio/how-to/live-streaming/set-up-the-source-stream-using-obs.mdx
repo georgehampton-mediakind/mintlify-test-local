@@ -1,0 +1,94 @@
+---
+title: Set up the source stream using OBS
+description: Configure OBS Studio to send a source stream to an MK.IO live event.
+sidebarTitle: Set up the source stream using OBS
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Open Broadcaster Software (OBS) Studio can send a camera, capture device, or test source to an MK.IO live event over RTMP. Configure the source, encoder, and MK.IO input URL before you start streaming.
+
+## Install OBS Studio
+
+1. Download and install OBS for your operating system on the [Open Broadcaster Software website](https://obsproject.com/).
+2. Start the application. OBS starts with a default scene but with no inputs selected.
+
+## Add a video source
+
+1. From the **Sources** panel, select the add icon.
+2. Select **Video Capture Device**.
+3. Select **Add Existing**, then select **OK**.
+4. From the **Device** list, select the video input for the broadcast.
+5. Leave the remaining settings unchanged and select **OK**.
+
+The input appears in the **Sources** panel and the video appears in the preview.
+
+### Add a browser test source
+
+If you do not have a capture device ready, you can use a browser source for a first test:
+
+1. Select the add icon under **Sources**.
+2. Select **Browser**.
+3. Name the source `Clock` and enter `https://vclock.com` as its URL.
+
+If the source shows a cookie-consent prompt, right-click the browser source, select **Interact**, and accept the prompt.
+
+## Add an audio source
+
+1. From the **Sources** panel, select the add icon.
+2. Select **Audio Input Capture**.
+3. Select **Add Existing**, then select **OK**.
+4. From the **Device** list, select the audio capture device for the broadcast.
+5. Leave the remaining settings unchanged and select **OK**.
+
+The audio capture device appears in the audio mixer.
+
+## Set up streaming and advanced encoding settings
+
+Before continuing, [start the live event](/mkio/how-to/live-streaming/set-up-a-live-streaming-event#start-streaming) and copy its **Input URL**.
+
+1. Select **Settings** in the **Controls** panel.
+2. Select **Stream** in the left menu.
+3. From **Service**, select **Show all**, then select **Custom**.
+4. In **Server**, paste the RTMP input URL without the final `/stream` suffix.
+5. In **Stream Key**, enter a valid stream name, such as `stream`.
+6. Select **Output** in the left menu.
+7. Set **Output Mode** to **Advanced**.
+8. On the **Streaming** tab, select the encoder settings for the computer's processor and capabilities:
+   * Set **Audio Encoder** to FFmpeg AAC or CoreAudio AAC.
+   * Set **Video Encoder** to x264.
+   * Use constant bitrate (CBR) rate control.
+   * Match **Keyframe interval** to the **Input key frame interval** configured in [MK.IO](/mkio/how-to/live-streaming/set-up-a-live-streaming-event#configure-a-live-event).
+
+## Set audio settings
+
+1. Select **Output** > **Audio**.
+2. Set **Audio Bitrate** for the source.
+3. Set **Sample Rate** to 48 kHz.
+
+## Set video settings
+
+1. Select **Output** > **Video**.
+2. Set **Output (Scaled) Resolution** to **1920x1080**.
+3. Set **Common FPS Values** for the source.
+4. Select **OK**.
+
+## Start streaming
+
+The combined video and audio bitrate must not exceed the live event's bandwidth limit.
+
+1. In the **Controls** panel, select **Start Streaming**.
+2. Return to the live event in MK.IO, then select **Apply**.
+3. Confirm that the source appears in the preview.
+4. Copy the playback URLs for use in a compatible player or application.
+
+## Check the OBS status
+
+Use the OBS status bar to check the source while it is running:
+
+* **Bitrate** shows how much data OBS sends each second. It should remain stable.
+* **Dropped frames** should remain at 0 percent. A rising value indicates a network or processor problem.
+* **FPS** shows the frame rate sent by OBS.
+* **CPU usage** should remain below 60 percent. Usage near 90 percent can affect the output quality.
+
+<img align="center" src="/images/obs-example.png" alt="OBS status bar showing stream bitrate, dropped frames, frame rate, and CPU usage" />

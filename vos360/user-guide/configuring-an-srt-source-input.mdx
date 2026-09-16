@@ -1,0 +1,57 @@
+---
+title: Configuring an SRT source input
+robots: noindex, nofollow
+---
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.\
+   ![](/images/vos360/42e1331ef9cf0123a67d3aad.png)
+
+2. In the **Input Source Name** field, enter the name of the new source.
+
+3. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+4. Below **Inputs**, configure the **Signal Loss** input by doing one of the following (refer to [Configuring a signal loss slate for a source input](https://confluence360.harmonicinc.com/display/VOS360DOC/.Configuring+a+signal+loss+slate+for+a+source+input+v1.25) for details):
+
+   * Select the desired **Signal lost image**.
+
+   * Click the **Display a black screen** toggle to display a black screen during signal loss.
+
+   * Click the **Display a video slate&#x20;**&#x74;oggle to select the WebM file you have uploaded.
+
+   * Click **Remove** to delete the input if it is not required.
+
+   Note that signal loss is only supported in workflows that include transcoding.
+
+5. Click the **Add Input** icon and then select **SRT**.
+
+6. Configure the following parameters:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>Connection Mode</p></td><td colSpan="1" rowSpan="1"><p><strong>Listener (Push)</strong>: No configurations required.</p><p><strong>Caller (Pull)</strong>: Fill in the IP Address and Port if the Caller (Pull) mode is selected. The Caller (Pull) mode can be used for enabling SRT failover/path redundancy - SRT Path Redundancy for a transition between inputs in case of input loss.</p><blockquote><p><strong>Note:</strong> 1+1 geo-redundancy supports SRT Caller (Pull) & Listener (Push) enabled source.</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Path Redundancy Mode</p></td><td colSpan="1" rowSpan="1"><p>Select the following options from the drop-down menu:</p><ul><li><p><strong>Off</strong>: No source redundancy will be enabled for SRT input.</p></li><li><p><strong>Socket Group</strong>: A group containing multiple SRT sockets can be configured for redundancy setup. R<span>edundant packets that arrive over another link are simply discarded</span><span>. </span>For example,</p><ul><li><p>Stream 1:  IP Address 1, Port 1, Network 1</p></li><li><p>Stream 2:  IP Address 2, Port 2, Network 2</p></li><li><p>......</p></li><li><p>Stream (n):  IP Address (n), Port (n), Network (n)</p></li></ul></li><li><p><strong>2022-7</strong>: T<span>wo SRT streams can be configured with the same data using different routes to the destination (use SMPTE 2022-7 redundancy to add a backup input stream).  Each SRT source stream can be routed through a different network path with "More Settings" including SRT passphrase, Latency, and Stream ID. For example,</span></p><ul><li><p><span>Stream 1: IP Address 1, Port 1, Network 1, Latency 1, Decryption Type 1, Steam ID 1</span></p></li><li><p><span>Stream 2: IP Address 2, Port 2, Network 2, Latency 2, Decryption Type 2, Steam ID 2</span><br /></p></li></ul></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>IP Address</p></td><td colSpan="1" rowSpan="1"><p>The IP address of the SRT source.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>The Port used by the SRT source.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Network</p></td><td colSpan="1" rowSpan="1"><p>The <span>subnet from which the SRT source is received.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>More Settings</p></td><td colSpan="1" rowSpan="1"><p>If the Path Redundancy Mode is selected with "2022-7", click the "More Settings" button to configure the Latency, Decryption Type, and Steam ID for the two SRT streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Latency</p></td><td colSpan="1" rowSpan="1"><p><span>The value must be an integer in milliseconds between 20 and 8000 ms (i.e. min. 20 ms, max. 8000 ms), the default value is 1000 ms.</span></p><p><span>The latency parameter is applied to SRT Caller (Pull) and Listener (Push) inputs.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Decryption Type</p></td><td colSpan="1" rowSpan="1"><p>Possible values: No Encryption, AES-128, AES-192, AES-256</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><span>Stream ID</span></p></td><td colSpan="1" rowSpan="1"><p><span>You can configure different stream IDs for network paths as required for ST 2022-7 redundancy.</span></p></td></tr></tbody>
+     </table>
+   </div>
+
+7. (Optional)  In addition to the Primary source input, you can create a secondary input for the same SRT source (e.g. 2nd SRT) as redundancy by clicking the **+&#x20;**&#x62;utton and selecting **SRT**.
+
+   <Note>
+     **Note:&#x20;**&#x54;he Caller Connection Mode needs to be configured for both the Primary and Secondary inputs.
+   </Note>
+
+8. Click **Connect**.\
+   **Result**: VOS360 discovers the input source after a few seconds. If it cannot find the input source, the following message will appear: No data found. Please check your source.
+
+9. Choose a program from the list and, optionally, click **Play** to view the video source.\
+   **Result**: If any issues with the transport stream are detected, then a **Grooming needed** alert appears.
+
+10. &#x20;If grooming is needed, proceed with grooming the source input.
+
+11. To enable **Automatic Grooming**, toggle the selector to the **On&#x20;**&#x70;osition. Optionally, provide the **Program Number&#x20;**&#x74;o specify the program in the source to be processed. Otherwise, the service will use the "smallest" detected program number in the input source for processing. This means the service will start as long as one program is detected in the source.
+
+    <Note>
+      **Info:&#x20;**&#x41;utomatic Grooming can be used to minimize the effort of performing manual grooming for Live events. This allows you to start a service without a requirement of grooming the source, which would require a step to re-groom whenever the source changes.
+    </Note>
+
+12. From the **Add source** pane, click **Create** to add the source.

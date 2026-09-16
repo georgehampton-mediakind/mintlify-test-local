@@ -1,0 +1,60 @@
+---
+title: Adding local programs to the multiplexer
+robots: noindex, nofollow
+---
+
+A local program is a program (service) within a multiplexed transport stream that lacks an input program source. It can comprise various data type components (PIDs) derived from different input sources, excluding audio/video components.
+
+VOS360 enables the creation of locally generated services within the Program Map Table (PMT). This allows the creation of a new program in a transport stream for re-muxing input data components present as ghost PIDs. It can be used for the download services to deliver application or software updates.
+
+## Prerequisite
+
+Create a source in the Configure Broadcast app.
+
+1. Navigate to the **Configure Broadcast** app.
+
+2. Create a Multiplexer (mux) by doing the following:
+
+   ![](/images/vos360/e89bae63cf8c97d3b2ec9ac3.png)
+
+   1. Click on the "**+ Multiplexer"&#x20;**&#x62;utton.
+
+   2. Select the appropriate MPTS profile without PSIP configured. \{e.g. DVB MPTS, ATSC 1.0 (No PSIP) MPTS}.
+
+   3. Enable the **Unreferenced PIDS/Local Programs&#x20;**&#x63;heckbox. Note: The "**Unreferenced PIDS**" checkbox will be displayed if the MPTS (with PSIP) profile is configured.
+
+   4. Configure other mux properties. (Refer to [Adding a program to the multiplexer](/vos360/user-guide/adding-a-program-to-the-multiplexer) for details.)
+
+   5. Click the **Create&#x20;**&#x62;utton.
+
+3. Add a new program.
+
+   ![](/images/vos360/4c806d56c015e35935d5fcb7.png)
+
+   1. Create a local program by clicking the + button on the mux.
+
+   2. Set the **Program Name** (required).
+
+   3. Set the **Program Number&#x20;**(required).
+
+   4. Set the **PMT PID&#x20;**(required).
+
+   5. Configure other parameters.
+
+   6. Click **Save**.
+
+4. Configure the PMT mode (Generate/Passthrough):\
+   ![](/images/vos360/028000bc7948fba3514fb977.png)
+
+   1. Edit the **PMT Mode**.
+
+   2. Select the appropriate **PMT Mode**: Generate/Passthrough.
+
+   3. For the "Passthrough" PMT mode, configure the **PMT Input&#x20;**&#x73;ource.
+
+   4. For the "Passthrough" PMT mode, configure the **PMT Input PID**.
+
+5. From the **Descriptors&#x20;**&#x74;ab, add the PMT and SDT descriptors on the program level.\
+   ![](/images/vos360/38aac81b3120bf98453d76a8.png)
+
+6. Click **Save**.

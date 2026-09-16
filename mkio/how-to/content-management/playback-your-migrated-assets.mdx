@@ -1,0 +1,56 @@
+---
+title: Enable assets for streaming
+description: Set up streaming endpoints and locators to make imported or migrated assets available for playback.
+sidebarTitle: Enable assets for streaming
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+After you import, upload, or create assets in MK.IO, you need two components before viewers can play them:
+
+* A **Streaming Endpoint**: the origin server that serves content to players and CDNs
+* A **Streaming Locator**: attached to each asset, it generates playback URLs and controls access
+
+For full step-by-step instructions including configuration options, streaming policies, and DRM, see [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content).
+
+## Quick steps
+
+<Steps>
+  <Step title="Create and start a streaming endpoint">
+    <span id="create-and-start-a-streaming-endpoint" className="mk-legacy-anchor" />
+
+    Go to **Streaming Endpoints** and click **+ Create Streaming Endpoint**. Give it a name, choose **Shared** for testing or **Dedicated** for production, and start it.
+
+    <Warning>
+      Running streaming endpoints incur costs even when idle. Stop endpoints you are not actively using.
+    </Warning>
+  </Step>
+
+  <Step title="Create a streaming locator on your asset">
+    <span id="create-a-streaming-locator-on-your-asset" className="mk-legacy-anchor" />
+
+    Open the asset, scroll to **Streaming Locators**, and click **+ Add Streaming Locator**. Give it a unique name and select `Predefined_ClearStreamingOnly` for basic unprotected streaming.
+  </Step>
+
+  <Step title="Apply and get playback URLs">
+    <span id="apply-and-get-playback-urls" className="mk-legacy-anchor" />
+
+    Select your running endpoint and the locator from the dropdowns on the asset page, then click **Apply**. MK.IO generates HLS and DASH playback URLs immediately.
+  </Step>
+
+  <Step title="Test playback">
+    <span id="test-playback" className="mk-legacy-anchor" />
+
+    Use the built-in MKPlayer on the asset page to verify the stream plays correctly before distributing the URLs.
+  </Step>
+</Steps>
+
+## Migrating from Azure Media Services
+
+If you are enabling playback for assets imported from AMS:
+
+* Your existing content does not need to be re-encoded: MK.IO streams files directly from your connected Azure storage.
+* Streaming locator names from AMS are not automatically carried over. Create new locators with your preferred names in MK.IO.
+* If you previously used AMS streaming endpoints, remember that MK.IO endpoint names form part of the playback URL. Choose names that reflect your production setup.
+
+For large-scale AMS migrations, see [Bulk asset migration from AMS storage](/mkio/how-to/content-management/add-an-asset-in-mkio/bulk-asset-migration-from-ams-storage).

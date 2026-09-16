@@ -1,0 +1,187 @@
+---
+title: Monitoring the Reliable Transport service
+sidebarTitle: Monitoring
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Service alarms
+
+The  user interface allows you to access active and cleared alarms list for each service.
+
+Alarms information can be accessed for any service, either started or stopped, by clicking the "Alarm" button in front of each service.
+
+If a service is running, information about **Active alarms** as well as **Alarms history** is available. If a service is not running, only the Alarms history is available.
+
+For each running service:
+
+* If no alarms are active, the corresponding line on the Services page will show the alarm (<img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" />) button in light gray on the right of the service name.
+* If any alarms are active, the corresponding line on the Services page will show the alarm (<img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" />) button with a color indicating the level of severity.
+
+1. From the **Services** page, identify the service that you want to monitor.
+
+2. Click the related <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> icon in the **Alarm** column.
+
+![rt view alarms](/_machine-assets/e8865714aa621b072cf9e30134a1c69744dc910630e3dfef4aeb0f6a96ca845f.png)
+
+Depending on the severity of the alarm, the <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> will appear in different colors and will display the most severe color alarm in case of multiple alarms.
+
+* <img src="/icons/ui/alarm-red.svg" alt="Alarm red" className="mk-ui-icon" width="16" height="16" /> (critical alarm): the service is not running as expected, customer operations are affected.
+* <img src="/icons/ui/alarm-yellow.svg" alt="Alarm yellow" className="mk-ui-icon" width="16" height="16" /> (major alarm): issues are affecting the service which may result in it not running as expected and could affect customer operations.
+* <img src="/icons/ui/alarm-green.svg" alt="Alarm green" className="mk-ui-icon" width="16" height="16" /> (minor alarm): minor issues are affecting the service, but it is running as expected and customer operations are not affected.
+* <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> (notice): an expected, meaningful event has happened for the service, worth logging in the Alarms history.
+
+From this page, you can access the following information:
+
+* The active alarms table applied on the current server including:
+  * date and time of the alarm rise
+  * alarm description (label)
+  * alarm severity
+  * detailed information
+* The alarm history table including:
+  * date and time of the alarm rise
+  * alarm description (label)
+  * alarm status
+  * alarm severity
+  * server on which the service was applied when the alarm raised.
+  * detailed information
+
+### Alarms raised by the Reliable Transport service
+
+{/*
+  Update according to microservices/worker/worker/src/lib/Alarms.cpp
+  "Maximum input connections have been established" excluded as not currently used and could cause confusion about available functionality
+  */}
+
+| Name                                                        | Description                                                                                                                                                                                        | Values   |
+| :---------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
+| No Reliable Transport input connection                      | Input connection cannot be established                                                                                                                                                             | Critical |
+| No Reliable Transport input data                            | No packets are received in input                                                                                                                                                                   | Critical |
+| Packets skipped on Reliable Transport input                 | Packets have been dropped during the last 10 seconds                                                                                                                                               | Major    |
+| Encryption error (input)                                    | Error with input encryption configuration                                                                                                                                                          | Critical |
+| No input connections have been established                  |                                                                                                                                                                                                    | Notice   |
+| No Reliable Transport output connection                     | Output connection cannot be established                                                                                                                                                            | Critical |
+| No Reliable Transport output data                           | No packets are being sent to output                                                                                                                                                                | Critical |
+| Packets error on Reliable Transport output                  | Problems detected in the output. E.g. packets being skipped                                                                                                                                        | Major    |
+| Encryption error (output)                                   | Error with encryption configuration                                                                                                                                                                | Critical |
+| No output connections have been established                 | Output is listening but no connections have been started                                                                                                                                           | Notice   |
+| Maximum output connections have been established            | The maximum configured number of output connections has been reached. Further connection requests will be denied.                                                                                  | Notice   |
+| Connection with license server lost                         | Connection with the license server was lost. The service will only run for a grace period, after which functionality will be disabled unless connection with the license server is re-established. | Major    |
+| Functionality disabled; connection with license server lost | Service not running because connection with the license server has been lost and the grace period expired.                                                                                         | Major    |
+| License period expires soon                                 | Additional information is provided when this alarm is raised, specifying when the current license will expire.                                                                                     | Major    |
+| Undefined Reliable Transport alarm                          | An unexpected error occurred for the service                                                                                                                                                       | Critical |
+| Failed to start Prometheus metrics                          | Metrics are not available for this service                                                                                                                                                         | Minor    |
+
+### Example
+
+Below is an example for the alarms page of a Reliable Transport configuration using UDP input and SRT Listener output.
+
+![rt alarms example](/_machine-assets/2eb2360b6658b55d223bbc610c89883af93049f333aa46fdad04751e250a0a2c.png)
+
+As per the previous sections described, both active and historic alarms are listed. The following information can be gleamed from it:
+
+* The page URL above shows this Alarms page applies to service "Demo UDP - SRT"
+* Active alarms
+  * There is 1 currently raised alarm with "notice" severity.
+  * This is an info level message advising that no outgoing connections to the output listener have been established (e.g. due to no incoming client requests).
+  * It has been raised at 10:11:03 UTC by server "srt-1".
+* Alarm history
+  * Other than the currently raised alarm, a "critical" severity alarm has been raised and cleared before.
+  * This was a "No Reliable Transport input data" alarm, impacting the configuration running in server srt-1.
+  * Further info is presented identifying providing details on why the alarm is raised. In this case, "No UDP packets being received".
+  * The missing input alarm was raised at 09:50:37 UTC and cleared at 10:12:00 UTC.
+
+## Service statistics
+
+When a Reliable Transport configuration is running, you can retrieve and monitor on  user interface detailed statistics information.
+
+1. From the **Services** page, identify the service that you want to monitor.
+
+2. Click the related <img src="/icons/ui/pie-chart.svg" alt="Pie chart" className="mk-ui-icon" width="16" height="16" /> icon in the **Stats** column.
+
+<Info>
+  The <img src="/icons/ui/pie-chart.svg" alt="Pie chart" className="mk-ui-icon" width="16" height="16" /> is only accessible when an service configuration is associated to a server and then running.
+</Info>
+
+![rt view alarms](/_machine-assets/e8865714aa621b072cf9e30134a1c69744dc910630e3dfef4aeb0f6a96ca845f.png)
+
+The **Statistics** page is displayed showing:
+
+* On the left side of the page, the statistics for the service input.
+* On the right side of the page, the statistics for the service output.
+
+This is an example for a configuration using UDP input and an SRT Listener output. At the time, 2 clients were connected to the Listener output.
+
+![rt stats udp srt listener](/_machine-assets/1d54c53d7fc26d05612bb77fc2305a71418254f15d414d19e910f98d9ffe7928.png)
+
+Depending on the service Input Mode and Output mode configuration, the page will show different information.
+
+If Input/Output Mode is **UDP**, the following statistics will be available:
+
+| Information                  | Details                                                                   |
+| :--------------------------- | :------------------------------------------------------------------------ |
+| Connection details           | UDP source.  Top-right of the Input/Output Statistics panel               |
+| Received/Transmitted Packets | Number of packets received/transmitted; expected to increment constantly. |
+| Receive/Transmit Rate        | In Mb/s.                                                                  |
+
+If Input/Output Mode is **SRT Caller** or **SRT Listener**, the following stats will be available:
+
+| Information                  | Details                                                                                                                                                                                                                                                                                                                                            |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Connection details           | Listener address and number of connected clients (output listener only). Top-right of the Input/Output Statistics panel                                                                                                                                                                                                                            |
+| Uptime                       | Time since the connection was established; expected to increment constantly.                                                                                                                                                                                                                                                                       |
+| Received/Transmitted Packets | Number of packets received/transmitted; expected to increment constantly.                                                                                                                                                                                                                                                                          |
+| Retransmitted Packets        | Number of packets which required retransmission; expected to be zero or increment very slowly in time. A rapid increase may indicate potential instability in the network connection.                                                                                                                                                              |
+| Lost Packets                 | Number of packets lost; expected to be zero. If not zero and incrementing, there may be issues with the network connection and the quality of other services using SRT as input could be affected.                                                                                                                                                 |
+| Dropped Packets              | Number of packets dropped; expected to be zero. If not zero and incrementing, there may be issues with the network connection; quality of other services using SRT as input could be affected. It may be possible to reduce the number of dropped packets by changing the configuration for *Latency* and *Maximum Bandwidth Overhead* parameters. |
+| Receive/Transmit rate        | In Mb/s                                                                                                                                                                                                                                                                                                                                            |
+| Link Bandwidth               | Bandwidth of the link in Mb/s. It should not be too much smaller than Receive/Transmit rate to prevent packet drop.                                                                                                                                                                                                                                |
+| Round Trip Time              | Measured for the current connection between caller and listener, in milliseconds. Could be used to tune the *Latency* and *Maximum Bandwidth Overhead* parameters.                                                                                                                                                                                 |
+| Receive/Transmit buffer      | Size of the receive/transmit buffer in milliseconds.                                                                                                                                                                                                                                                                                               |
+
+<Info>
+  For SRT Listener outputs with multiple connections it is possible to monitor individual statistics for each connection using the dropdown in front of the field Display statistics for connection.
+</Info>
+
+If Input/Output Mode is **Zixi Feeder** or **Zixi Receiver**, the following stats will be available:
+
+| Information                         | Details                                                                         |
+| :---------------------------------- | :------------------------------------------------------------------------------ |
+| Uptime                              | Time elapsed since the Zixi connection was started.                             |
+| Packets                             | Total number of sent data packets, including retransmitted packets.             |
+| Out of order Packets                | Total number of packets not in order (but will be reordered).                   |
+| Dropped Packets                     | Displays the total number of packets dropped since the beginning of the stream. |
+| Duplicate Packets                   | Total number of duplicated packets.                                             |
+| Overflow packets                    | Total number of overflow packets.                                               |
+| Packet rate                         | Transmitted/received packets per second.                                        |
+| Packets Jitter                      | In milliseconds.                                                                |
+| Round Trip Time                     | In milliseconds.                                                                |
+| Latency                             | In milliseconds.                                                                |
+| Congested                           | Link congestion status (flag – true/false).                                     |
+| Transmit/Receive rate               | In Mb/s.                                                                        |
+| ARQ Packets:                        | Total number of Automatic Repeat reQuest packets.                               |
+| FEC Packets                         | Total number of Forward Error Correction packets.                               |
+| ARQ recovered Packets               | Total number of ARQ packets which were recovered.                               |
+| FEC Recovered Packets               | Total number of FEC packets which were recovered.                               |
+| Not Recovered Packets               | Total number of packets which were not recovered (FEC or ARQ).                  |
+| Error Correction Duplicated Packets | Total number of duplicated error correction packets.                            |
+| Error Correction Requests           | Total number of error correction requested packets.                             |
+| Error Correction Overflow           | Total number of error correction overflow packets.                              |
+
+If Input/Output Mode is **RIST Caller** or **RIST Listener**, the following stats will be available:
+
+| Information                  | Details                                                                                                                                                                                             |
+| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Connection details           | Listener address and number of connected clients (output listener only). Top-right of the Input/Output Statistics panel                                                                             |
+| Uptime                       | Time since the connection was established; expected to increment constantly.                                                                                                                        |
+| Received/Transmitted Packets | Number of packets received/transmitted; expected to increment constantly.                                                                                                                           |
+| Retransmitted Packets        | (Output only) Number of packets which required retransmission; expected to be zero or increment very slowly in time. A rapid increase may indicate potential instability in the network connection. |
+| Lost Packets                 | (Input only) Number of packets lost. Out-of-order packets are also treated as lost. Lost packets may be recovered.                                                                                  |
+| Dropped Packets              | (Input only) Number of packets dropped. These packets are too late to be played and can no longer be recovered.                                                                                     |
+| Receive/Transmit rate        | In Mb/s                                                                                                                                                                                             |
+| Round Trip Time              | Measured for the current connection between caller and listener, in milliseconds.                                                                                                                   |
+| Quality                      | Quality of the RIST connection. 100% means all packets are sent successfully the first time.                                                                                                        |
+
+<Info>
+  For RIST Listener outputs with multiple connections it is possible to monitor individual statistics for each connection using the dropdown in front of the field Display statistics for connection.
+</Info>

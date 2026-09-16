@@ -1,0 +1,33 @@
+---
+title: Assets
+---
+
+# Assets
+
+The Assets API is central to managing content in this system. An Asset in this API represents a direct link between the application
+and a storage container where content is stored. Ondemand Jobs and LiveEvent LiveOutputs both output encoded content into an 
+Asset. And StreamingLocators reference an asset to describe and prepare it for playback.
+
+When you create an asset via this API, you can optionally omit the `container` field. This is standard way to consume 
+this API. The system will generate a container name and will create the container for you in the selected storage account.
+IF the container already exists in remote storage, your request will fail unless a DeletionPolicy is defined for the asset. This is 
+to prevent accidental or unintentional deletion of stored content when the asset is deleted.
+
+Deleting an asset record will, by default, retain the associated container in remote storage. This behavior can be changed by defining a
+DeletionPolicy.
+
+* [List Assets](/api-reference/media-api/assets/list-assets)
+
+* [Get Asset](/api-reference/media-api/assets/get-asset)
+
+* [Create or Update Asset](/api-reference/media-api/assets/create-or-update-asset)
+
+* [Delete Asset](/api-reference/media-api/assets/delete-asset)
+
+* [Get file access information](/api-reference/media-api/assets/get-file-access-information)
+
+* [List Streaming Locators](/api-reference/media-api/assets/list-streaming-locators)
+
+* [Get resource state](/api-reference/media-api/assets/get-resource-state)
+
+* [Retrieve tracks.](/api-reference/media-api/assets/retrieve-tracks)

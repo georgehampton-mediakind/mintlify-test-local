@@ -1,0 +1,35 @@
+---
+title: Webhook Rules
+---
+
+## Webhook Rules
+
+This API allows you to create and manage webhook rules to receive real-time notifications for various supported events.
+
+
+### How to Configure:
+1. **Define the webhook URL** – Specify where to send notifications.
+2. **Set authentication details** – Use the `authentication` section to include sensitive authentication headers or query parameters.
+    - These values will **not** be returned when a user reads the webhook configuration.
+3. **Set additional headers and queryParams** – Use the top-level `headers` and `queryParams` fields to include any
+ non-authentication details if needed.
+4. **Choose the events** – Select the events for which you want to receive updates.
+
+### Supported Events:
+You can configure webhooks to receive updates for the following events:
+
+
+MediaKind.JobStarted | MediaKind.JobFinished | MediaKind.StreamingLocatorCreated | MediaKind.ChannelInstanceStarted | MediaKind.ChannelInstanceStopped | MediaKind.ChannelInstanceError | MediaKind.ScheduledOperationAccepted | MediaKind.ScheduledOperationCompleted | MediaKind.ScheduledOperationError | MediaKind.ScheduledOperationOngoing
+
+Events will be delivered according to the [Cloud Event specification](https://github.com/cloudevents/spec?tab=readme-ov-file),
+see [our webhook docs](https://docs.mediakind.com/mkio/how-to/managing-your-organization/webhooks) for more information.
+
+* [List Webhook Rules](/api-reference/management-api/webhook-rules/list-webhook-rules)
+
+* [Get Webhook Rule](/api-reference/management-api/webhook-rules/get-webhook-rule)
+
+* [Create or Update Webhook Rule](/api-reference/management-api/webhook-rules/create-or-update-webhook-rule)
+
+* [Delete Webhook Rule](/api-reference/management-api/webhook-rules/delete-webhook-rule)
+
+* [Get Webhook Events](/api-reference/management-api/webhook-rules/get-webhook-events)

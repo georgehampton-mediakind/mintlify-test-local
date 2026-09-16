@@ -1,0 +1,55 @@
+---
+title: Build with the Fleets API
+description: Use the Fleets API to register Beam devices, protect them with backups, manage software, and collect diagnostics.
+sidebarTitle: Fleets API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Fleets API is the operational API for MK.IO Beam devices. Use it to register devices into a project, protect their configuration with backups, manage software versions, and collect support packages when you need diagnostics.
+
+## API overview
+
+| Detail    | Value                                             |
+| --------- | ------------------------------------------------- |
+| Base path | `/api/v1/projects/{project_name}/fleet/`          |
+| Scope     | Project                                           |
+| Reference | [Fleets API reference](/api-reference/fleets-api) |
+
+## How the main resources connect
+
+The Fleets API revolves around a few resource types:
+
+1. A **device** represents the Beam device record in MK.IO.
+2. A **backup** is a configuration snapshot you can restore later.
+3. **Software** settings on the device control desired and preloaded versions.
+4. A **support package** is a diagnostic bundle generated on the device and uploaded to storage.
+
+That means a typical operational flow is: register the device, take backups before risky changes, control software state through device patch operations, and collect support packages when something goes wrong.
+
+## Common workflow patterns
+
+<CardGroup cols={1}>
+  <Card title="Operate a Beam device" icon="server">
+    1. [Register and manage devices](/api-guides/how-to/fleets/device-management)
+    2. [Back up configuration before changes](/api-guides/how-to/fleets/backups-and-restores)
+    3. [Control software versions](/api-guides/how-to/fleets/software-and-updates)
+    4. [Collect a support package for diagnostics](/api-guides/how-to/fleets/software-and-updates)
+  </Card>
+</CardGroup>
+
+## Guides
+
+<CardGroup cols={2}>
+  <Card title="Manage devices" href="/api-guides/how-to/fleets/device-management">
+    Register devices, inspect state, and work through the core day-to-day operations.
+  </Card>
+
+  <Card title="Backups and restores" href="/api-guides/how-to/fleets/backups-and-restores">
+    Create backups before changes, inspect stored backup metadata, and restore safely.
+  </Card>
+
+  <Card title="Software and updates" href="/api-guides/how-to/fleets/software-and-updates">
+    Control desired and preloaded software versions and collect support packages for diagnostics.
+  </Card>
+</CardGroup>

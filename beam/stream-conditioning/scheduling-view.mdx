@@ -1,0 +1,28 @@
+---
+title: Operations scheduling view
+sidebarTitle: Operation Scheduling View
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Once the connection to SCTE 224 database has been configured, and operations mapped against those SCTE 224 events, **Stream Conditioning** service will automatically create and store the operations/actions into its scheduling & control database.
+
+<Info>
+  Scheduling view is only available if the service is started.
+</Info>
+
+To visualize the scheduling & control timeline, follow these steps:
+
+1. You can either:
+
+   1. Click on the timeline button located at the top right corner of a **Stream Conditioning** configuration page.
+
+      ![Prisma timeline icon top right corner](/_machine-assets/bd05f99dd98b320cf239c726018ed4cdb14b29047c10d100b1fc33896a469b85.png)
+
+   2. or click on the timeline button from the **Actions** list of configured service.
+
+      ![Prisma timeline icon service actions](/_machine-assets/afe006df85d23f8cd5929c7bedf0af93ef75002ade9d29824f2ff71f9d21facb.png)
+
+As a result, when events from the SCTE 224 database match criteria configured under **Stream Conditioning** service, the operations will appear in the timeline.
+
+![Scheduling and Control Operation timeline](/_machine-assets/a585879d15f966f46d51abea60825b969d6b40b446009fcf1dba70985a44cd19.png)

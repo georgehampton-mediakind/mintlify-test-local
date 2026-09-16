@@ -1,0 +1,130 @@
+---
+title: Streaming locators
+description: Understand how streaming locators and policies expose asset files for playback or download.
+sidebarTitle: Streaming locators
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A **streaming locator** publishes the files in an asset under a selected streaming policy. The policy controls available protocols, downloads, and encryption, while optional filters can modify the generated manifest.
+
+A locator provides the path that a [streaming endpoint](/mkio/understanding/core-concepts/endpoints) uses to deliver an asset or live recording.
+
+The final URL pattern for your video will be a concatenation of the Streaming Endpoint domain name and the Streaming Locator that links to your asset. The names you assign to each resource will determine the path URL of your video.
+
+<Info>
+  To make video assets available to clients for playback, you must create a Streaming Locator and then build streaming URLs once you have a functional Streaming Endpoint.
+</Info>
+
+By default, a streaming locator is valid immediately and remains valid until it or its asset is deleted. You can set an expiry and other properties to control when and how clients access the content.
+
+When creating a Streaming Locator, you must specify an Asset name and a Streaming Policy name. The Streaming Policy can optionally point to a Content Key Policy for encryption. See [Content Keys](/mkio/understanding/core-concepts/content-protection) for more information.
+
+A [Streaming Endpoint](/mkio/understanding/core-concepts/endpoints) must exist to play your Streaming Locator and enable you to scale your output based on viewer concurrency.
+
+<div className="flex justify-center my-8">
+  <img src="/images/undestandlocator.png" alt="Streaming Locator Concept" />
+</div>
+
+Streaming Locators can have a many-to-one relationship with a Streaming Policy, allowing different Streaming Locators to provide different start times and connection types to different clients while all using the same permission and duration settings.
+
+## Locator state
+
+A streaming locator has a `resourceState`, set by the system:
+
+| State      | Meaning                                                                                                    |
+| :--------- | :--------------------------------------------------------------------------------------------------------- |
+| `Creating` | The locator is being provisioned.                                                                          |
+| `Created`  | The locator is provisioned and available for playback (subject to its start/end time and any suppression). |
+| `Updating` | Changes to the locator are being applied.                                                                  |
+| `Deleting` | The locator is being removed.                                                                              |
+| `Deleted`  | The locator no longer exists.                                                                              |
+| `Error`    | The locator failed to provision or update.                                                                 |
+
+## Streaming formats and encryption modes
+
+The following combinations of streaming formats, DRMs, and encryption modes are currently supported in MK.IO:
+
+| DRM           | HLS (CMAF) | DASH (CMAF) |
+| :------------ | :--------- | :---------- |
+| **ClearKey**  | cbc        | cbc & cenc  |
+| **Widevine**  | cenc       | cenc        |
+| **PlayReady** | cenc       | cenc        |
+| **FairPlay**  | cbcs-aapl  | n/a         |
+
+## Streaming Policies
+
+Streaming Policies enable you to define streaming protocols and encryption options for your Streaming Locators. With MK.IO, you get several predefined Streaming Policies out of the gate for trial or production use.
+
+| Streaming Policy                          | Description                                                                                                                                                                                                                            |
+| :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Predefined\_ClearStreamingOnly**        | Clear streaming only                                                                                                                                                                                                                   |
+| **Predefined\_ClearKey**                  | Enable HLS/DASH encrypted with envelopeEncryption with MK.IO issuing the content key.                                                                                                                                                  |
+| **Predefined\_MultiDrmCencStreaming**     | Enable streaming with DASH encrypted with commonEncryptionCenc with MK.IO issuing the PlayReady and Widevine license                                                                                                                   |
+| **Predefined\_MultiDrmStreaming**         | Enable streaming with DASH encrypted with commonEncryptionCenc with MK.IO issuing the PlayReady and Widevine licenses, or for allowing streaming with HLS encrypted with commonEncryptionCbcs with MK.IO issuing the FairPlay license. |
+| **Predefined\_DownloadOnly**              | Download only                                                                                                                                                                                                                          |
+| **Predefined\_DownloadAndClearStreaming** | Download and clear streaming                                                                                                                                                                                                           |
+
+You can also create your own Streaming Policies if the predefined policies do not meet your needs.
+
+## Streaming URLs
+
+The URLs for streaming content may be obtained either from the UI or by calling the **listPaths** endpoint on the streaming locator API resource.
+
+The overall structure of the streaming URL is:
+
+`/<streamingLocatorID>/<serverManifestName>.ism/manifest(<options>)`
+
+**The supported options are:**
+
+* `format=m3u8-cmaf` for HLS with CMAF segments
+* `format=mpd-time-cmaf` for DASH with CMAF segments
+* `filter=...` with a semicolon-separated list of Asset Filters or Account Filters to be applied
+* `encryption=cbc` for AES-128 encryption scheme (AES CBC full-segment encryption)
+* `encryption=cbcs-aapl` for CBCS encryption scheme (AES CBC sample-based encryption)
+* `encryption=cenc` for CENC encryption scheme (AES CTR sample-based encryption)
+* `start=...` specifying the start of playback in a live event or recording (ISO8601 UTC)
+* `end=...` specifying the end of playback in a live event or recording (ISO8601 UTC)
+* `vbegin=...` specifying the start of playback in a VOD asset (ISO8601 duration)
+* `vend=...` specifying the end of playback in a VOD asset (ISO8601 duration)
+
+**For example:**
+
+`/fecebb23-46f6-490d-8b70-203e86b0df58/bigbuckbunny.ism/manifest(format=m3u8-cmaf,encryption=cbcs-aapl,filter=myAccountFilter;myAssetFilter)`
+
+## Download URLs
+
+The URLs for download content can be obtained either from the UI or by calling **listPaths** on the Streaming Locator resource in the API.
+
+Use a download policy when a client needs direct access to files in an asset. Common uses include moving content into an editing or post-production workflow, downloading generated thumbnails or subtitles, and supporting compatible progressive-download clients.
+
+The download URL has a simpler structure with no options:
+
+`/<streamingLocatorID>/filename`
+
+**For example:**
+
+`/fecebb23-46f6-490d-8b70-203e86b0df58/Thumbnail1_000001.png`
+
+## Playback availability window
+
+The availability of the Streaming Locator for playback can be constrained to a specific time window using the `startTime` and `endTime` fields in the Streaming Locator resource via the API or the `Expiration time` field in the UI.
+
+* If a request is made for the Streaming Locator **before** the start time, the Streaming Endpoint will respond `404 Not Found`.
+* If a request is made for the Streaming Locator **after** the end time, the Streaming Endpoint will respond `410 Gone`.
+
+## Suppressing a locator
+
+A Streaming Locator can be suppressed instead of deleted. A suppressed locator returns `404 Not Found` for every request, the same response as a locator whose start time has not yet been reached. Use this to temporarily pull content from playback without losing the locator's configuration. The Streaming Policy can be configured to return a different status code instead of `404` for this case; ask MediaKind support if you need this.
+
+## See also
+
+<CardGroup cols={2}>
+  <Card title="Publish content for streaming" href="/mkio/how-to/content-delivery-publishing/stream-content" icon="tower-broadcast">
+    Step-by-step guide to creating locators and applying them to assets.
+  </Card>
+
+  <Card title="Streaming Endpoints" href="/mkio/understanding/core-concepts/endpoints" icon="server">
+    How endpoints serve content to players and CDNs.
+  </Card>
+</CardGroup>

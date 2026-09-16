@@ -1,0 +1,59 @@
+---
+title: Contribution
+description: Guides for MK.IO Beam contribution workflows including input setup, low-latency tuning, and transport configuration.
+sidebarTitle: Contribution
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+<Note>
+  **Check which interface you are using**
+
+  The guides linked from this page configure MK.IO Beam through the **Advanced** interface, where a workflow is a **feed** made up of individual services. If your device runs the **Essentials** interface, build the workflow as a **channel** instead: see [Create a channel](/beam/essentials/create-a-channel). Both interfaces control the same settings underneath, so these pages stay useful as reference for the detail behind a channel.
+</Note>
+
+MK.IO Beam for contribution is engineered to meet the demands of modern live content acquisition, delivering pristine video quality with maximum efficiency. Its flexible architecture allows for field reconfiguration for IP or satellite contribution, up to 4:2:2 10-bit UHD targeted at a range of server options. It’s ideally suited to live events, where we can offer the flexibility of paying on a pure consumption basis
+
+MK.IO Beam connects to the cloud, enabling direct and automated control, monitoring and life cycle management via the MK.IO cloud portal for the ultimate in efficient operations.
+
+## Common Workflows:
+
+### Input setup
+
+<CardGroup cols={2}>
+  <Card title="Configure SMPTE ST 2110 Input" href="/beam/contribution/how-to/setup-smpte-2110-input" icon="network-wired">
+    How to configure SMPTE ST 2110 Input
+  </Card>
+
+  <Card title="Configure SDI/ASI Cards" href="/beam/system-admin/maintenance/setup-sdi-asi-card" icon="microchip">
+    How to configure SDI/ADI cards
+  </Card>
+</CardGroup>
+
+<span id="low-latency--reliability" className="mk-legacy-anchor" />
+
+### Low Latency & Reliability
+
+<CardGroup cols={2}>
+  <Card title="Minimise End-to-end Delay" href="/beam/contribution/how-to/minimize-end-to-end-delay" icon="stopwatch">
+    How to minimise the end-to-end delay.
+  </Card>
+
+  <Card title="Drop IP/ASI output on input loss" href="/beam/contribution/how-to/drop-output-on-input-loss" icon="gauge-high">
+    How to drop IP/ASI output on input loss.
+  </Card>
+</CardGroup>
+
+### Transport
+
+<CardGroup cols={2}>
+  <Card title="Configure SRT/Zixi/RST" href="/beam/reliable-transport/service-management" icon="globe">
+    How to configure SRT/Zixi/RST
+  </Card>
+
+  <Card title="Configure sattelite modulator" href="/beam/contribution/configure-feed-components/satellite-modulator" icon="satellite-dish">
+    How to configure the satellite modulator
+  </Card>
+</CardGroup>
+
+<br />

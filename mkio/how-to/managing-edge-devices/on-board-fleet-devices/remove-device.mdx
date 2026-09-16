@@ -1,0 +1,61 @@
+---
+title: Remove edge devices
+description: How to remove an edge device from MK.IO.
+sidebarTitle: Removing a device
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Remove an edge device through the MK.IO portal or Fleet API when it should no longer belong to the project.
+
+## Remove a device
+
+<span id="remove-a-device-using-the-mkio-ui" className="mk-legacy-anchor" />
+
+### Remove a device using the MK.IO UI
+
+1. Log in to MK.IO.
+2. Open the project you want to remove the device from and go to the **Devices** page.
+3. Click on the device you want to remove. If needed, use **Search here**.
+4. Click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" /> then **Delete device**.
+5. Click **Delete** to confirm.
+
+<span id="remove-using-the-mkio-api" className="mk-legacy-anchor" />
+
+### Remove using the MK.IO API
+
+To remove a device, send a DELETE request:
+
+```http
+DELETE https://app.mk.io/api/v1/projects/project_name/fleet/devices/device1
+```
+
+### Resolve removal warnings
+
+The API (and UI) displays a warning if either of the following is true:
+
+* The device does not have an up-to-date usage report.
+* The last usage report shows services were still running on the device.
+
+To resolve this:
+
+1. Confirm the device is powered on and can connect to MK.IO. Check the **Connected** status under **Appliance** > **Fleet**.
+2. Stop all services on the device. Use the
+   [remote UI](/mkio/how-to/managing-edge-devices/access-the-remote-device-ui) if needed.
+3. Wait for the usage report to update. This can take 10 to 20 minutes.
+4. Retry the DELETE request.
+
+### Force delete an unreachable device
+
+If the device cannot be accessed due to hardware failure, force the deletion by
+adding query parameters to the request:
+
+```http
+DELETE https://app.mk.io/api/v1/projects/project_name/fleet/devices/device1?force=true&reason=<reason>&notes=<notes>
+```
+
+| Parameter | Description                                                                                                   |
+| --------- | ------------------------------------------------------------------------------------------------------------- |
+| `force`   | Set to `true` to enable force deletion.                                                                       |
+| `reason`  | One of: `Failed`, `Maintenance`, `Storage`, `Other`.                                                          |
+| `notes`   | A description of the reason. Required when `reason` is `Other`. Minimum 5 characters, maximum 255 characters. |

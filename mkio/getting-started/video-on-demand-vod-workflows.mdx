@@ -1,0 +1,59 @@
+---
+title: Publish your first VOD asset
+description: Add a video asset, process it with a reusable transform, and publish the output for on-demand playback in MK.IO.
+sidebarTitle: Publish your first VOD asset
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Follow the standard Video on Demand (VOD) workflow from source video to playback URL. Each stage links to the canonical guide that explains the portal fields and alternatives.
+
+## Prerequisites
+
+You need:
+
+* An [MK.IO account and project](/mkio/getting-started/account-setup-and-first-steps).
+* A [connected cloud storage account](/mkio/getting-started/connect-cloud-storage).
+* A source video file.
+
+## Add the source asset
+
+Choose how MK.IO should access the source content:
+
+* [Upload files from your device](/mkio/how-to/content-management/add-an-asset-in-mkio/import-files-from-your-device).
+* [Reference existing cloud storage content](/mkio/how-to/content-management/add-an-asset-in-mkio/reference-existing-storage).
+* [Import Azure Media Services assets](/mkio/how-to/content-management/add-an-asset-in-mkio/import-your-ams-assets).
+
+After the asset appears in MK.IO, [verify its files and tracks](/mkio/how-to/content-management/verify-your-assets-in-mkio) before processing it.
+
+## Configure the transform
+
+A transform is a reusable processing configuration. [Configure VOD transforms](/mkio/how-to/video-processing-encoding/configure-transformations) explains the transform types available in the portal and how to create one from a built-in preset.
+
+For a first adaptive bitrate output, the existing guide uses an encoding transform with the **H.264 Multiple Bitrate 1080p** built-in preset.
+
+## Run the processing job
+
+A job applies the transform to the source asset and writes the result to an output asset. Follow [Run VOD processing jobs](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs) to select the transform, source asset, output storage, and priority.
+
+Wait for the job to reach the `Finished` state, then open and verify the output asset.
+
+## Publish the output asset
+
+[Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content) takes you through the two resources required for playback:
+
+1. A running streaming endpoint that supplies the delivery hostname.
+2. A streaming locator that publishes the output asset under a streaming policy.
+
+After both resources are applied, MK.IO displays HTTP Live Streaming (HLS) and Dynamic Adaptive Streaming over HTTP (DASH) playback URLs on the asset.
+
+## Verify playback
+
+1. Open the output asset.
+2. Confirm that the streaming endpoint is running and the locator is applied.
+3. Play the asset in the built-in MKPlayer.
+4. Open **Show all URLs** if you need the HLS, DASH, or download paths allowed by the streaming policy.
+
+## Automate the workflow
+
+[Automate a VOD pipeline](/api-guides/how-to/media/vod-pipeline) follows the same asset, transform, job, locator, and endpoint sequence through an application programming interface (API), using the Media API.

@@ -1,0 +1,98 @@
+---
+title: Job with input clipping
+description: Limit a VOD processing job to a specific absolute or relative time range in the source.
+sidebarTitle: VOD job with input clipping
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+In some cases, you might want to apply a transform to only a specific portion of the source asset. MK.IO enables this by allowing you to set time for the input in the job configuration.
+
+Setting a time range to a job input is not exposed in the UI and must be configured using the job endpoint in [MK.IO API](/api-reference/media-api).
+
+MK.IO jobs support two types of input: `#Microsoft.Media.JobInputAsset` and `#Microsoft.Media.JobInputHttp`. Both input types can be clipped prior to applying the transform.
+
+The start and end parameters can be either relative to the content using `#Microsoft.Media.AbsoluteClipTime` or based on UTC time using `#Microsoft.Media.UtcClipTime`. For VOD content, UTC time is not applicable, in this case absolute clip time should be used instead.
+
+## Use absolute time to transcode a portion of an asset
+
+The following job generates a new asset containing only the first 3 minutes of an input asset.
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name/jobs/job_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+    "properties": {
+        "input": {
+            "files": [
+                "my_asset.mp4"
+            ],
+            "assetName": "myasset",
+            "@odata.type": "#Microsoft.Media.JobInputAsset",
+            "start":
+            {
+                "@odata.type":"#Microsoft.Media.AbsoluteClipTime",
+                "time":"PT0S"
+            },
+            "end":
+            {
+                "@odata.type":"#Microsoft.Media.AbsoluteClipTime",
+                "time":"PT3M"
+            }            
+        },
+        "outputs": [
+            {
+                "assetName": "clipped-asset",
+                "@odata.type": "#Microsoft.Media.JobOutputAsset"
+            }
+        ]
+    }
+}
+'
+```
+
+## Use UTC time to clip a live event
+
+The following job extracts a time range between two Coordinated Universal Time (UTC) values from a live-event asset:
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name/jobs/job_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+    "properties": {
+        "input": {
+            "files": [
+                ""
+            ],
+            "assetName": "live-event-output",
+            "@odata.type": "#Microsoft.Media.JobInputAsset",
+            "start":
+            {
+                "@odata.type":"#Microsoft.Media.UtcClipTime",
+                "time":"2024-07-26T08:30:00.000Z"
+            },
+            "end":
+            {
+                "@odata.type":"#Microsoft.Media.UtcClipTime",
+                "time":"2024-07-26T08:40:00.000Z"
+            }            
+        },
+        "outputs": [
+            {
+                "assetName": "clipped-asset",
+                "@odata.type": "#Microsoft.Media.JobOutputAsset"
+
+            }
+        ]
+    }
+}
+'
+```

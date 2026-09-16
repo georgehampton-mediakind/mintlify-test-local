@@ -1,0 +1,114 @@
+---
+title: ClearKey Encryption
+description: Set up ClearKey encryption for HLS and DASH streams in MK.IO, with or without JWT token authentication.
+sidebarTitle: ClearKey Encryption
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+ClearKey provides basic content encryption with the lowest possible latency for media encryption and decryption. It works with both HLS and DASH playback. ClearKey does not use a full DRM license server, making it simpler to set up than Widevine, PlayReady, or FairPlay.
+
+## Prerequisites
+
+* A running streaming endpoint.
+* An asset verified to play without encryption using `Predefined_ClearStreamingOnly`.
+
+## ClearKey without token restriction
+
+Use this configuration when you want basic encryption without requiring a JWT token for license acquisition. This is useful for testing or low-security scenarios.
+
+<Steps>
+  <Step title="Create the content key policy">
+    <span id="create-the-content-key-policy" className="mk-legacy-anchor" />
+
+    1. Navigate to **Content Key Policies** and select **Create Content Key Policy**.
+    2. Enter a descriptive **name** (for example, `clearkey-open`).
+    3. Select **Add** next to the **Clear Key** section.
+    4. Enter a **policy option name**.
+    5. Under **Use token restriction**, select **No**.
+    6. Select **Add**, then **Create**.
+  </Step>
+
+  <Step title="Create a streaming locator">
+    <span id="create-a-streaming-locator" className="mk-legacy-anchor" />
+
+    1. Navigate to your asset and select **Add streaming locator**.
+    2. Enter a **name** for the locator.
+    3. Set **Streaming policy** to `Predefined_ClearKey`.
+    4. Set **Content key policy** to the ClearKey policy you created.
+    5. Select **Add**.
+  </Step>
+
+  <Step title="Get the playback URLs">
+    <span id="get-the-playback-urls" className="mk-legacy-anchor" />
+
+    Select the streaming locator you created, choose a running streaming endpoint, and select **Apply**. MK.IO generates HLS and DASH playback URLs.
+  </Step>
+
+  <Step title="Test playback">
+    <span id="test-playback" className="mk-legacy-anchor" />
+
+    1. Navigate to the **MKPlayer** page.
+    2. Select **HLS** as the protocol and **ClearKey** as the DRM.
+    3. Paste the HLS playback URL.
+    4. Select **Play**.
+
+    For DASH playback, select **DASH** as the protocol and provide the ClearKey license acquisition URL: this URL is displayed at the bottom of the asset streaming locator page.
+  </Step>
+</Steps>
+
+## ClearKey with JWT token restriction
+
+Add a JWT token requirement to ClearKey encryption for an additional layer of access control.
+
+<Steps>
+  <Step title="Create the content key policy">
+    <span id="create-the-content-key-policy-1" className="mk-legacy-anchor" />
+
+    1. Navigate to **Content Key Policies** and select **Create Content Key Policy**.
+    2. Enter a descriptive **name** (for example, `clearkey-jwt`).
+    3. Select **Add** next to the **Clear Key** section.
+    4. Enter a **policy option name**.
+    5. Under **Use token restriction**, select **Yes**.
+    6. Configure the token fields:
+       * **Token type**: `JWT`
+       * **Issuer**: a string of your choice (for example, your company name).
+       * **Audience**: a string of your choice (for example, your audience identifier).
+       * **Primary verification key**: a Base64-encoded string. You can generate this by encoding a passphrase at a site such as `base64encode.org`. For example, encoding `mycompanyaudience` produces `bXljb21wYW55YXVkaWVuY2U=`.
+    7. Select **Add**, then **Create**.
+  </Step>
+
+  <Step title="Create a streaming locator">
+    <span id="create-a-streaming-locator-1" className="mk-legacy-anchor" />
+
+    1. Navigate to your asset and select **Add streaming locator**.
+    2. Enter a **name** for the locator.
+    3. Set **Streaming policy** to `Predefined_ClearKey`.
+    4. Set **Content key policy** to the ClearKey JWT policy you created.
+    5. Select **Add**, then select the locator and select **Apply**.
+
+    The player page may show a `DRM_FAILED_LICENSE_REQUEST` error. This is expected because the encrypted stream requires a JWT token that has not been provided yet.
+  </Step>
+
+  <Step title="Generate a JWT token">
+    <span id="generate-a-jwt-token" className="mk-legacy-anchor" />
+
+    Follow the [JWT token authentication guide](/mkio/how-to/drm-content-protection/jwt-token-authentication) to generate a token using the same issuer, audience, and primary verification key you configured in the content key policy.
+  </Step>
+
+  <Step title="Test playback">
+    <span id="test-playback-1" className="mk-legacy-anchor" />
+
+    1. Navigate to the **MKPlayer** page.
+    2. Select your protocol (**HLS** or **DASH**) and **ClearKey** as the DRM.
+    3. Paste the playback URL in **Source URL**.
+    4. For HLS: the license URL is auto-populated (`HLS_AES`). For DASH: paste the ClearKey license acquisition URL.
+    5. In the **License request headers** field, enter the authorization header with your JWT token:
+
+    ```json
+    {"Authorization": "Bearer <your-jwt-token>"}
+    ```
+
+    6. Select **Play**.
+  </Step>
+</Steps>

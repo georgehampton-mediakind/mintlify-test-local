@@ -1,76 +1,17 @@
 ---
-title: "MK.IO Beam Contribution: Configure Feed Components"
-sidebarTitle: "Feed Components"
-description: "Configure the mux, reliable transport, and other feed components in an MK.IO Beam contribution workflow for robust broadcast-grade delivery."
+title: Configure the feed components
+sidebarTitle: Configure feed components
 ---
 
-After a feed has been created, you must configure each service within the feed individually to build the complete MK.IO Beam contribution chain. The feed components work together to encode, multiplex, and deliver your live content to its destination.
+<span id="_top" className="mk-legacy-anchor" />
 
-<Warning>
-  When editing component parameters, do not modify any interfaces configured to use the `tap0` or `lo` interfaces. These are used internally to pass data between services.
-</Warning>
+After a feed has been created, each service within the feed must be individually configured to create the entire MK.IO Beam configuration. Thus, you will configure:
 
-## Feed Components Overview
+* [the Live Encoder service](/beam/contribution/configure-feed-components/live-encoder)
+* optionally [the Multiplexer service](/beam/multiplexer)
+* optionally [the Satellite Modulator](/beam/contribution/configure-feed-components/satellite-modulator)
 
-A standard contribution feed on MK.IO Beam consists of the following configurable components:
+The Reliable Transport service is not included in any of the MK.IO Beam feed templates.
+It can be added separately via the **Services** page. See [Reliable Transport Configuration](/beam/contribution/configure-feed-components/reliable-transport)
 
-- [**Live Encoder**](/beam/contribution/live-encoder) — required. Compresses the baseband input into an MPEG Transport Stream.
-- [**Multiplexer**](https://docs.mediakind.com/beam/multiplexer) — optional. Combines multiple encoded services into a single transport stream.
-- [**Satellite Modulator**](https://docs.mediakind.com/beam/contribution/configure-feed-components/satellite-modulator) — optional. Modulates the transport stream for satellite uplink.
-
-The Reliable Transport service is **not** included in any of the MK.IO Beam feed templates. It must be added separately via the **Services** page. See [Configure a Reliable Transport Service](#configure-a-reliable-transport-service) below.
-
----
-
-## Configure the Multiplexer Service
-
-The Multiplexer service combines multiple encoded services into a single MPEG Transport Stream output. For detailed information and all configuration parameters, refer to the [Multiplexer documentation](https://docs.mediakind.com/beam/multiplexer).
-
----
-
-## Configure a Reliable Transport Service
-
-Although the Reliable Transport service is not included in all MK.IO Beam feed templates, you can add one separately and connect it to the input or output of a feed. A common use case is adding Reliable Transport to the output of an Encoder and Multiplexer feed to provide SRT, Zixi, or RIST output over an unmanaged IP network.
-
-To create a Reliable Transport service, see [how to create a new Reliable Transport service](https://docs.mediakind.com/beam/reliable-transport/service-management#create-a-new-reliable-transport-service).
-
-### Configure Reliable Transport for Output
-
-If you are configuring a Reliable Transport service to take the output from another service and deliver it over a reliable transport protocol, follow these steps:
-
-<Steps>
-  <Step title="Set the Output Mode">
-    In the **Output** section of the Reliable Transport service configuration, set the **Output Mode** to **SRT Caller** (or the appropriate mode for your protocol).
-  </Step>
-
-  <Step title="Match the Upstream Service Output">
-    Configure the **Network Interface**, **Stream Address**, and **Port** with the same values as the upstream service's output. This connects the Reliable Transport service to receive from the encoder or multiplexer.
-  </Step>
-
-  <Step title="Save">
-    Click **Save and exit** to finalize the configuration.
-  </Step>
-</Steps>
-
-<Tip>
-  For the full set of SRT, Zixi, and RIST configuration options — including listener and caller modes, encryption, and link characteristics — see [Reliable Transport Configuration](https://docs.mediakind.com/beam/reliable-transport/service-management).
-</Tip>
-
----
-
-## Related Guides
-
-<CardGroup cols={2}>
-  <Card title="Live Encoder" icon="video" href="/beam/contribution/live-encoder">
-    Configure input type, video and audio encoding, output parameters, and advanced settings.
-  </Card>
-  <Card title="SMPTE ST 2110 Input" icon="network-wired" href="/beam/contribution/smpte-2110">
-    Set up uncompressed IP video input using SMPTE ST 2110 and PTP.
-  </Card>
-  <Card title="Tech Specs" icon="file-lines" href="/beam/contribution/tech-specs">
-    Supported codecs, formats, protocols, and hardware for contribution workflows.
-  </Card>
-  <Card title="Contribution Overview" icon="satellite-dish" href="/beam/contribution/overview">
-    Contribution workflow overview, common use cases, and how-to guide index.
-  </Card>
-</CardGroup>
+When editing component parameters, do not modify any interfaces which have been configured to use the “tap0” or “lo” interfaces as those are used internally to pass data between the services.

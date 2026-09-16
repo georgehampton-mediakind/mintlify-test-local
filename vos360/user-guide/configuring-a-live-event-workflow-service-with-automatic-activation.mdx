@@ -1,0 +1,133 @@
+---
+title: Configuring a Live Event Workflow service with Automatic Activation
+robots: noindex, nofollow
+---
+
+The automatic service activation feature enables users to schedule the activation of a Live Event Workflow service at a specified time.
+
+* When a Live Event Workflow service is created, it remains in the OFFLINE state until activated. To utilize this feature, perform the following:
+
+  * Configure the event’s start time to utilize this feature.
+
+  * Set an end time to automatically stop the service.
+
+  * Optionally, set up a preroll duration.
+
+* The automatic service activation can be enabled globally or at service level.
+
+## Configure automatic service activation
+
+The automatic service activation is only configurable through the **Monitor Event&#x20;**&#x42;asic Settings **APIs**.
+
+The following API endpoints are required:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Endpoint Type</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Endpoint</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Description</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="2"><p>GET</p></td><td colSpan="1" rowSpan="1"><p><code>/monitor/v1/live-events/basic-settings</code></p></td><td colSpan="1" rowSpan="1"><p>Get the global settings, shared by all services.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><code>{"/monitor/v1/live-events/basic-settings/{id}"}</code></p></td><td colSpan="1" rowSpan="1"><p>Get the service-specific settings for the provided service id.</p></td></tr><tr><td colSpan="1" rowSpan="2"><p>PATCH</p></td><td colSpan="1" rowSpan="1"><p><code>/monitor/v1/live-events/basic-settings</code></p></td><td colSpan="1" rowSpan="1"><p>Set the global settings shared by all services. They will supersede the default settings.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><code>{"/monitor/v1/live-events/basic-settings/{id}"}</code></p></td><td colSpan="1" rowSpan="1"><p>Set service-specific settings for the provided service id. They will supersede both default and global settings.</p></td></tr></tbody>
+  </table>
+</div>
+
+To configure the feature, you need to update the **autoOnline** settings, described as follows :
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Field</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Description</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Type & Validation</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Default</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>enabled</p></td><td colSpan="1" rowSpan="1"><p>Automatic Service Activation is enabled when set to true; disabled when set to false.</p></td><td colSpan="1" rowSpan="1"><p>Boolean value <br /><strong>true </strong>| <strong>false</strong></p></td><td colSpan="1" rowSpan="1"><p><strong>false</strong></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>delay</p></td><td colSpan="1" rowSpan="1"><p>Indicates how much time before the start time will the service be activated. Expressed in <strong>seconds</strong>.</p></td><td colSpan="1" rowSpan="1"><p>Positive Number</p><p>Minimum value is 300 (5mn)</p></td><td colSpan="1" rowSpan="1"><p>1800 (ie 30mn)</p></td></tr></tbody>
+  </table>
+</div>
+
+## Workflow
+
+1. Enable the Automatic Service Activation (either globally or at service-level), and set up the delay if the default value does not suit your use case.
+
+2. Set up the Global values. \
+   Using the `/monitor/v1/live-events/basic-settings` API as indicated above, set the global values as needed.
+
+3. Configure the Service-level workflow.
+
+   1. From the **Configure Channels&#x20;**&#x61;pp:
+
+      * Create a Live event service **without activating it**.
+
+      * It will be in OFFLINE state.
+
+   2. (Optional) From `/monitor/v1/live-events/basic-settings/{id}` API endpoint:
+
+      * If the Automatic Service Activation is not enabled globally, you need to enable it specifically for each service.
+
+      * Using this API, update the **autoOnline** settings:
+
+        * Set **enabled&#x20;**&#x74;o true.
+
+        * If required, update the **delay** field to fit this specific event’s needs.
+
+   3. From the **Monitor Channels&#x20;**&#x61;pp:
+
+      * **Do not bring your service online.**
+
+      * Set &#x61;**&#x20;start time**.
+
+      * Optionally set a preroll duration and an end time.
+
+![image-20251015-131543.png](/images/vos360/b225edfe50c8b44ce4eb1ba2.png)
+
+<Note>
+  **Notes**:
+
+  * The Start Time and End Time need to be configured at least 5 minutes in the future.
+
+  * The End time needs to be greater than the start time.
+
+  * If a preroll duration is also set, the preroll start (i.e. start time minus preroll duration) needs to be set at least in 5 minutes in the future.
+</Note>
+
+## Response
+
+![image-20251015-132953.png](/images/vos360/29443c1afafb8b42a6f5bcb5.png)
+
+All Live Event settings come with an **autoOnlinelevel** field (in read-only), indicating from where the shown value comes from. The possible values are:
+
+* **DEFAULT**: The shown value is the system’s default value. It is used only when no Global or Service level settings exist.
+
+* **GLOBAL**: The shown value is a global user-defined value, which can be updated with the basic-settings endpoint. It is used whenever no Service-level setting exist for a service.
+
+* **EVENT**: The shown value is a service-specific value, which can be updated with the basic-settings/\{id} endpoint. It is specific to the current service.
+
+## Miscellaneous
+
+<Note>
+  **Info**: The expected automatic activation time is processed based on the following:
+
+  * Event’s start time
+
+  * Minus the preroll duration (if defined)
+
+  * Minus automatic activation delay
+</Note>
+
+<Note>
+  **Note**: This feature only triggers the online action automatically, with the same limitations as a manual online action.
+
+  * The service may not start at the expected time due to lack of resources.
+
+  * If the source is not available, there will be no service output
+</Note>
+
+<Note>
+  **Notes**:
+
+  * If the expected automatic activation time is already in the past, the service is automatically activated as soon as the start time is set and activation is enabled.
+
+  * If this time is modified in the future (by increasing the start time or decreasing the preroll duration or activation delay) while the service is already online, the service will remain online and will not be set back offline.
+
+  * The activation delay cannot be set to less than 5 minutes to ensure that the service allocation and preparation states are completed before the activation time under nominal conditions (with resources available, etc.).
+
+  * If the activation time is in the past and the user attempts to set the service back offline, this feature will reactivate it. To take the service offline, the activation time must be changed to a future time, or the automatic activation must be disabled (at least for that service).
+</Note>

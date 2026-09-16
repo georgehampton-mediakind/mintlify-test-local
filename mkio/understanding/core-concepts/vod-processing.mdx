@@ -1,0 +1,31 @@
+---
+title: Video Processing
+description: Understand the transform types used to re-encode, convert, or enhance VOD assets.
+sidebarTitle: Video Processing
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Re-encode, transform, or enhance your video assets
+
+MK.IO’s Video-on-Demand (VOD) encoding allows you to process video files into various formats and bitrates, ensuring optimal playback quality and compatibility across different devices and networks.
+
+## Concepts
+
+MK.IO’s video processing is built on two primary components: **Transforms** and **Jobs**.
+
+#### Transforms
+
+A **Transform** defines the specific processing instructions that will be applied to your media. There are several categories of transforms available:
+
+* **[Encoding Transform](/mkio/reference/encoding-transform-presets/encoding-transform)**: Single-bitrate and multi-bitrate transforms that transcode your video into H.264 or H.265 content, with resolutions ranging from SD to 4K.
+* **[AI pipeline transform](/mkio/understanding/core-concepts/vod-processing/ai-workflows)**: Runs an AI pipeline against your content, covering transcription, translation, and dubbed-audio generation.
+* **[Asset Conversion Transform](/mkio/reference/encoding-transform-presets/asset-conversion-transform)**: Enables format conversion from various live event or VOD assets into the latest MP4 format supported by MK.IO.
+* **[Thumbnail generation transform](/mkio/reference/encoding-transform-presets/how-to-generate-thumbnails)**: Generates individual thumbnails, sets of thumbnails, or sprite files for video assets.
+* **[Track insertion transform](/mkio/reference/encoding-transform-presets/add-a-track-to-a-vod-asset)**: Adds new tracks to a VOD asset and automatically updates the client and server manifests.
+
+These are the only transform types available. A Transform's output is limited to one of these preset types per output.
+
+#### Jobs
+
+A **Job** is the actual request to apply a specific Transform to an input asset. The Job processes the input data and outputs the results to a specified destination asset. See [Transforms & Jobs](/mkio/understanding/core-concepts/transforms-and-jobs) for job states, input types, and priority.

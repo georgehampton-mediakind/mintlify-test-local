@@ -1,0 +1,32 @@
+---
+title: Supported encryption methods
+robots: noindex, nofollow
+---
+
+Different encryption modes and DRM systems are supported depending on the OTT output format.
+
+Key rotation is supported for HLS, DASH, CMAF and HSS.
+
+&#x20;See below which DRM systems are supported by each OTT output format.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>ABR format</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Supported Encryption mode</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Encryption/DRM system</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="8"><p>HLS-sTS</p><p> </p><p /><p> </p><p> </p></td><td colSpan="1" rowSpan="3"><p>AES-128 CBC<br />(MPEG-CENC 'cbcs' protection scheme)</p></td><td colSpan="1" rowSpan="1"><p>AES Encryption (Native)</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Sample AES Encryption (Native)</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Apple FairPlay</p></td></tr><tr><td colSpan="1" rowSpan="5"><p>AES-128 CTR<br />(MPEG-CENC 'cenc' protection scheme)</p></td><td colSpan="1" rowSpan="1"><p>Common Encryption</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>AuthenTec PlayReady</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Discretix PlayReady *</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Irdeto PlayReady</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Secure Media</p></td></tr><tr><td colSpan="1" rowSpan="4"><p>HLS-fMP4</p></td><td colSpan="1" rowSpan="3"><p>AES-128 CBC</p><p>(MPEG-CENC 'cbcs' protection scheme)</p></td><td colSpan="1" rowSpan="1"><p>AES Encryption (Native)</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Sample AES Encryption (Native)</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Apple FairPlay</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>MPEG-CENC 'cbcs' protection scheme</p><p>OR</p><p>MPEG-CENC 'cenc' protection scheme</p></td><td colSpan="1" rowSpan="1"><p>Common Encryption</p><p>(PlayReady, Widevine, Marlin...)</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>HSS</p></td><td colSpan="1" rowSpan="1"><p>AES-128 CTR<br />(MPEG-CENC 'cenc' protection scheme)</p></td><td colSpan="1" rowSpan="1"><p>PlayReady</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>MPEG-DASH</p></td><td colSpan="1" rowSpan="1"><p>MPEG-CENC 'cenc' protection scheme</p><p> </p></td><td colSpan="1" rowSpan="1"><p>Common Encryption (MPEG-CENC)</p><p>(PlayReady, Widevine, Marlin...)</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>CMAF DASH **</p></td><td colSpan="1" rowSpan="2"><p> </p><p>MPEG-CENC 'cbcs' protection scheme</p><p>OR</p><p>MPEG-CENC 'cenc' protection scheme</p></td><td colSpan="1" rowSpan="1"><p>Common Encryption (MPEG-CENC)</p><p>(PlayReady, Widevine, Marlin...)</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>CMAF HLS **</p></td><td colSpan="1" rowSpan="1"><p>Common Encryption (MPEG-CENC)</p><p>(Apple FairPlay, PlayReady, Widevine, Marlin...)</p></td></tr></tbody>
+  </table>
+</div>
+
+(\*) Key rotation is not supported due to format-specific limitation.
+
+(\*\*) Live only
+
+Note: Several protection schemes are defined in MPEG-CENC standard:
+
+* MPEG-CENC 'cbc1' protection scheme = AES-128 CBC mode, with full encryption
+
+* MPEG-CENC 'cbcs' protection scheme = AES-128 CBC mode, with partial encryption
+
+* MPEG-CENC 'cenc' protection scheme = AES-128 CTR mode, with full encryption
+
+* MPEG-CENC 'cens' protection scheme = AES-128 CTR mode, with partial encryption

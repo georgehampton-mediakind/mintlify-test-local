@@ -1,0 +1,129 @@
+---
+title: Create an asset or account filter
+description: Create asset or account filters that modify live and VOD manifests without changing the source asset.
+sidebarTitle: Create an asset filter
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+When delivering content through live streaming or Video on Demand (VOD), you may need more flexibility than the default asset manifest provides. MK.IO can generate dynamic manifests based on predefined filters.
+
+Filters allow you to define specific subsets of your media content within an Asset that will be available to viewers. Filters can be based on time constraints and track constraints. You can combine multiple constraints in a single filter.
+
+* **Time range constraints**: You can select specific portions of the media content to show to viewers by defining the start and end times. For live media, you can also define the maximum rewind window and the broadcast delay.
+* **Track constraints**: You can select tracks (video, audio and text) and the associated qualities that you want to make available to target specific viewers. For example, you can filter on a specific language or/and on a particular video bitrate.
+
+<Info>
+  Asset filters can only be applied to the asset with which they were created, and last as long as the asset exists. Account filters can be applied to any asset in your account, and last for the lifetime of the account.
+</Info>
+
+## Preserve required track types
+
+When you configure track constraints for an asset filter in the MK.IO interface, do not assume that an unmentioned track type remains in the filtered manifest. A filter that contains only an Audio or Text rule can omit required Video or Audio tracks. The resulting manifest may fail playback or contain audio without video. It may also return a Hypertext Transfer Protocol (HTTP) 500 response.
+
+Add an explicit rule for every track type that the filtered manifest must retain. Broad bitrate ranges can preserve Video and Audio tracks while a separate rule excludes a specific language or named track.
+
+For example, use these constraints to preserve Video and Audio tracks while excluding the Audio track named `audio-spanish`:
+
+| Track | Type      | Value           |
+| :---- | :-------- | :-------------- |
+| Video | Bitrate = | `1-`            |
+| Audio | Bitrate = | `1-`            |
+| Audio | Name ≠    | `audio-spanish` |
+
+Use these constraints to preserve Video and Audio tracks while excluding Polish subtitles:
+
+| Track | Type       | Value   |
+| :---- | :--------- | :------ |
+| Video | Bitrate =  | `1-`    |
+| Audio | Bitrate =  | `1-`    |
+| Text  | Language ≠ | `pl-PL` |
+
+The range `1-` includes tracks with a bitrate of 1 bit per second (bps) or higher. If you use a more restrictive bitrate range or a four-character code (FourCC) rule, match the value to the renditions and codecs in the asset. A filter value that does not match the asset's track metadata can remove a required stream.
+
+To create an asset filter or an account filter:
+
+1. Log in to [MK.IO](https://app.mk.io) and select a subscription.
+2. From the left-hand side menu, navigate to **Assets** to see your list of available assets, then click on the name of the asset for which you want to create an asset filter. This will display the asset's properties.
+3. Scroll to the bottom of the page to find the **Asset filters** or **Account filters** panel, which lists any filter already applied to that asset, then click **+ Add Asset filter** or **+ Add Account filter** depending on your needs.
+4. Enter a name for the asset filter then select the filter type.
+
+* For a time constraints-based filter, select if the time range is based on timestamp or on UTC date & time (live event only), then fill in the required information. For live media, you can also define the maximum rewind window and the broadcast delay.
+* For a track constraints-based filter select the tracks (video, audio, or text) and the associated qualities that you want to include or exclude in the output. You can create as many filters as needed.
+
+<table>
+  <thead>
+    <tr>
+      <th style={{"textAlign":"left"}}>
+        Type
+      </th>
+
+      <th style={{"textAlign":"left"}}>
+        Possible values
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td style={{"textAlign":"left"}}>
+        Bitrate
+      </td>
+
+      <td style={{"textAlign":"left"}}>
+        The bitrate (in bps) can be specified as a single numeric value (for example, `100000`) or as a range (for example, `500000-1000000`). The range can also be partial. `1000000-` includes any track with a bitrate of 1,000,000 bps or higher, while `-1000000` includes any track with a bitrate of 1,000,000 bps or lower.
+      </td>
+    </tr>
+
+    <tr>
+      <td style={{"textAlign":"left"}}>
+        FourCC
+      </td>
+
+      <td style={{"textAlign":"left"}}>
+        The video codec may be `avc1`, `hev1`, or `hvc1`.
+        The audio codec may be `mp4a` or `ec-3`.
+      </td>
+    </tr>
+
+    <tr>
+      <td style={{"textAlign":"left"}}>
+        Language
+      </td>
+
+      <td style={{"textAlign":"left"}}>
+        Language tag to include, as specified in RFC 5646 (see [https://datatracker.ietf.org/doc/html/rfc5646](https://datatracker.ietf.org/doc/html/rfc5646)).
+      </td>
+    </tr>
+
+    <tr>
+      <td style={{"textAlign":"left"}}>
+        Name
+      </td>
+
+      <td style={{"textAlign":"left"}}>
+        Name of the track as specified in the manifest.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Values are not case-sensitive.
+
+5. Click **Create** to validate the creation of the asset filter.
+
+Once created, you will be able to [associate your filter with a **Streaming Locator**](/mkio/how-to/content-delivery-publishing/stream-content#create-a-streaming-locator).
+
+## Verify playback
+
+Apply the filter to a streaming locator, then request the playback URL. Confirm that:
+
+* The manifest request succeeds without an HTTP 500 response.
+* Video and each required Audio track play.
+* The track targeted by the exclusion rule is absent.
+
+If playback fails or a required track is missing, compare every filter value with the asset's track metadata. Adjust the preservation rules to match the asset before testing again.
+
+## Configure filters with the API
+
+Use the [Playback filters API Guide](/api-guides/how-to/media/playback-filters) to create asset or account filters and apply them when publishing content.

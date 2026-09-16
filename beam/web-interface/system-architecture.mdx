@@ -1,0 +1,40 @@
+---
+title: System and architecture description
+sidebarTitle: Solution architecture
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The web interface provides a single access point to monitor components, manage users, and configure solutions from end-to-end. Configuration and control are separated for flexible resource allocation
+
+## Software and applicative layers
+
+The platform design relies on a **micro-services architecture** to promote modularity and software component independence. The solution is split into a Front-End (UI) and a Back-End (API) layer. Each layer is interfaced through a REST API.
+
+![schema architecture controller](/_machine-assets/b21864c984435d81317da08599bdda7f4c0638d85f2aed0724e46a56d3c25ad9.png)
+
+<Info>
+  If menus or options in the web interface are grayed then contact your administrator about user rights.
+</Info>
+
+### UI Layer (Front-End)
+
+The generic UI framework provides a same environment to display the web pages for all compatible products:
+
+* Web pages (services, servers, etc.) are shared across the product line.
+* Certain web pages are specific to each processing type (statistics, services, etc.).
+
+### API Layer (Back-End)
+
+The Back-End features are triggered through a REST API that can be used either from a *Command Line Interface*, or from the Front-End Layer. The API layer allows:
+
+* A centralized redundant database.
+* The logic handling for cross-products and product specific features.
+
+## High availability
+
+Management access is provided through a Virtual IP, allowing for a **single connection access**. This is based on an **active/active** implementation that ensures high availability.
+
+![schema active active controller](/_machine-assets/3808fae2fa70f6bf10781077dd45a18a3cf413ee5e4058bf37bd3c7434c1901a.png)
+
+The **database is synchronized in real-time** between both nodes. **In case of failure, the remaining node is instantly ready** to process requests. If the primary server fails, then the Virtual IP is seamlessly re-assigned to the secondary server. **This mechanism involves *arbiter* software**, installed on a separate server. This arbiter server is in charge of electing the primary database if the network is partitioned (in the event of communication loss between synchronized databases).

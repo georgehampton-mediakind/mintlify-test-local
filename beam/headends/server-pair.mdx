@@ -1,54 +1,38 @@
 ---
-title: "MK.IO Beam Server-Pair Headend: Redundancy Setup Guide"
-sidebarTitle: "Server Pair"
-description: "Configure two MK.IO Beam servers as a redundant pair using chain or mesh redundancy for fault-tolerant channel processing and distribution."
+title: Server pair & redundancy
+sidebarTitle: Server pair
 ---
 
-Two servers running MK.IO Beam for headends can be configured as a server pair, offering various redundancy options. The redundancy mode you choose depends on the desired system behavior, available inter-chassis bandwidth, and whether service-level or server-level failover is required.
+<span id="_top" className="mk-legacy-anchor" />
 
-## Chain Redundancy
+Two servers running MK.IO Beam for headends can be configured as a server pair, which offers various redundancy options with the options being chosen depending on the desired system behavior.
 
-Chain redundancy provides simplified server-level redundancy between two servers.
+## Chain redundancy
 
-![Server pair with chain redundancy](https://docs.mediakind.com/beam-img/ServerPairChainRedundancy.png)
+Chain redundancy provides simplified server-level redundancy.
+
+![ServerPairChainRedundancy](/beam-img/ServerPairChainRedundancy.png)
 
 Chain redundancy is appropriate for 1+1 server use cases where:
 
-- There is no benefit to meshing the Live Encoding services from one server to the other's Multiplexers to provide additional redundant sources.
-- Inter-chassis network bandwidth is limited and cannot carry all cross-server traffic.
+* There is no benefit to “meshing” the Encoding Live services from one server to another, to provide additional/secondary redundant sources to each multiplexer within the server pair.
 
-In chain redundancy, each server operates independently as a complete processing chain. If one server fails, its services are moved to the backup server.
+* When inter-chassis network bandwidth is limited.
 
-## Mesh Redundancy
+## Mesh redundancy
 
 Mesh redundancy provides optimal service-level combined with server-level redundancy.
 
-![Server pair with mesh redundancy](https://docs.mediakind.com/beam-img/ServerPairMeshRedundancy.png)
+![ServerPairMeshRedundancy](/beam-img/ServerPairMeshRedundancy.png)
 
 Mesh redundancy is appropriate for 1+1 server cases where:
 
-- Service-level redundancy is required or beneficial — for example, with SDI sources where a single SDI feed could be lost or damaged and switching just one service is needed.
-- The inter-network infrastructure can carry all traffic between the server pair providing redundant sources, meaning there is adequate network bandwidth.
+* Service-level redundancy is required/beneficial. For example, with SDI sources where a single SDI feed could be lost/damaged and switching just one service is required.
 
-With mesh redundancy, you must use the externally visible interfaces for all service outputs that are to be meshed between the two server partners.
+* The inter-network infrastructure can carry all traffic between the server pair providing redundant sources, i.e. there is adequate network bandwidth.
 
-Mesh source redundancy between Live Encoding services and Multiplexer services is achieved by offering the Live Encoding sources of one server as an additional set of sources to the other server's Multiplexers.
+With mesh redundancy it is necessary to use the externally visible interfaces for all service outputs which are to be meshed between single server partners.
 
-<Note>
-  The mesh redundancy diagram above shows both Multiplexers within the pair outputting simultaneously (Active/Active). Active/Standby operation is also supported.
-</Note>
+Mesh source redundancy between Live Encoding services and Multiplexer services is achieved by offering the Live Encoding sources of one server as an additional set of sources to the other.
 
-## Choosing Between Chain and Mesh
-
-| Consideration | Chain Redundancy | Mesh Redundancy |
-| :-- | :-- | :-- |
-| Inter-chassis bandwidth requirement | Low | High |
-| Granularity of failover | Server level | Server or service level |
-| SDI single-feed failure protection | No | Yes |
-| Configuration complexity | Lower | Higher |
-
-## Next Steps
-
-- Scale to distributed workers: [High Availability Deployment](/beam/headends/high-availability)
-- Configure packager redundancy: [Packager](/beam/headends/packager)
-- Review failover group configuration: [Servers and Failover](/beam/system-admin/servers-and-failover)
+The above diagram shows that both Multiplexers within the pair are outputting (aka Active/Active). Active/Standby is also supported.

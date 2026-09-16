@@ -1,0 +1,28 @@
+---
+title: Configuring SRT output for a mux service
+robots: noindex, nofollow
+---
+
+Secure Reliable Transport (SRT) is an open source transport technology that optimizes streaming performance across the Internet. It does so through the following ways:
+
+* Encrypting video streams.
+
+* Recovering from severe packet loss.
+
+* Dynamically adapting to changing network conditions.
+
+![](/images/vos360/ae2429557082bb4bcf864822.png)
+
+SRT supports AES encryption for end-to-end security. SRT has its roots in the UDP-based Data Transfer (UDT) protocol. While UDT was designed for high throughput file transmission over public networks, it does not do well with live video. SRT is a significantly modified version that supports live video streaming.
+
+The protocol was derived from the [UDT project](https://en.wikipedia.org/wiki/UDP-based_Data_Transfer_Protocol), which was designed for fast file transmission. It provides the reliability mechanism by utilizing similar methods for connection, sequence numbers, acknowledgements, and re-transmission of lost packets. It utilizes selective and immediate (NAK-based) re-transmission.
+
+Low-latency video transmission across IP-based networks typically takes the form of MPEG-TS unicast or multicast streams using the UDP protocol and protected by FEC. Achieving the same low latency between sites in different cities, countries, or even continents is more challenging. The characteristics of a stream from a source network are completely changed by transmission over the public internet, which introduces delays, jitter, and packet loss. To achieve low-latency streaming, SRT had to address timing issues. SRT includes a mechanism that recreates the signal characteristics on the receiver side, dramatically reducing the need for buffering. This functionality is part of the SRT protocol itself, so once data comes out of an SRT connection on the receiver side, the stream characteristics have been properly recovered. The mechanism is based on controlled latency, with source time transmission (timestamp-based packet delivery).
+
+* [Creating the output from a cloud source (LRS ingress)](/vos360/user-guide/creating-the-output-from-a-cloud-source-lrs-ingress)
+
+* [Configuring the output of the mux service](/vos360/user-guide/configuring-the-output-of-the-mux-service)
+
+* [Creating the output from cloud edges (LRS egress)](/vos360/user-guide/creating-the-output-from-cloud-edges-lrs-egress)
+
+* [Receiving the SRT output](/vos360/user-guide/receiving-the-srt-output)

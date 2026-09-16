@@ -1,0 +1,164 @@
+---
+title: Transcription and translation transforms
+description: Configure AI pipeline transforms for VOD transcription and translation in MK.IO, with examples for generating subtitles and multi-language caption tracks.
+sidebarTitle: Transcription and translation transforms
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+VOD transcription and VOD translation transforms use MK.IO's AI pipeline to generate subtitle and caption tracks from video audio. Both transform types use the `#MediaKind.AIPipelinePreset` value for the `@odata.type` attribute, and they are created using the transform endpoint in the [MK.IO API](/api-reference/media-api).
+
+<Info>
+  VOD transcription and VOD translation are only available for MP4 content.
+</Info>
+
+## VOD transcription
+
+A VOD transcription transform generates a text transcript from the audio track of a video asset. Once the resulting transcript file is available, you can insert it as a subtitle track using a [track insertion transform](/mkio/reference/encoding-transform-presets/add-a-track-to-a-vod-asset).
+
+<span id="configuration-parameters-1" className="mk-legacy-anchor" />
+
+### Configuration parameters
+
+| Parameter       | Description                                                                                           |
+| :-------------- | :---------------------------------------------------------------------------------------------------- |
+| `@odata.type`   | Must be set to `#MediaKind.AIPipelinePreset`                                                          |
+| `pipeline name` | `Predefined_ACSVodTranscription`                                                                      |
+| `language`      | Language spoken in the audio to transcribe                                                            |
+| `phrases`       | Words or phrases expected in the audio. Providing domain-specific terms improves recognition accuracy |
+
+<span id="transform-example-1" className="mk-legacy-anchor" />
+
+### Transform example
+
+The example below configures a transform that transcribes audio in `en-US`. A custom phrase list improves recognition accuracy for domain-specific terms.
+
+Once the transform exists, use it to [create a job on a VOD asset](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs).
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/<project_name>/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+    "properties": {
+        "description": "Transcription en-US",
+        "outputs": [
+            {
+                "preset": {
+                    "@odata.type": "#MediaKind.AIPipelinePreset",
+                    "pipeline": {
+                        "name": "Predefined_ACSVodTranscription",
+                        "arguments": {
+                            "VodTranscription": [
+                                {
+                                    "name": "language",
+                                    "value": "en-US"
+                                },
+                                {
+                                    "name": "phrases",
+                                    "value": [
+                                        "Cyperus papyrus",
+                                        "Heliotropium indicum",
+                                        "Zamioculcas zamiifolia",
+                                        "Monstera deliciosa",
+                                        "Alocasia odora",
+                                        "Tillandsia cyanea",
+                                        "Drosera capensis",
+                                        "Euphorbia tirucalli",
+                                        "Ficus lyrata",
+                                        "Calathea orbifolia"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
+'
+```
+
+## VOD translation
+
+A VOD translation transform transcribes the audio track and translates the output into one or more target languages, generating caption files for each. Once the translation job completes, use track insertion transforms to add the resulting VTT files to your encoded asset.
+
+### Configuration parameters
+
+| Parameter         | Description                                                                                           |
+| :---------------- | :---------------------------------------------------------------------------------------------------- |
+| `@odata.type`     | Must be set to `#MediaKind.AIPipelinePreset`                                                          |
+| `pipeline name`   | `Predefined_ACSVodTranslation`                                                                        |
+| `language`        | Language spoken in the audio to transcribe                                                            |
+| `targetLanguages` | Languages into which the transcription should be translated                                           |
+| `phrases`         | Words or phrases expected in the audio. Providing domain-specific terms improves recognition accuracy |
+
+### Transform example
+
+The example below configures a transform that transcribes audio in `en-US` and translates the output into `pt-PT`, `fr-FR`, and `es-ES`. A custom phrase list improves recognition accuracy for domain-specific terms.
+
+Once the transform exists, use it to [create a job on a VOD asset](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs).
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/<project_name>/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+    "properties": {
+        "description": "Transcription en-US, translation fr-FR pt-PT es-ES",
+        "outputs": [
+            {
+                "preset": {
+                    "@odata.type": "#MediaKind.AIPipelinePreset",
+                    "pipeline": {
+                        "name": "Predefined_ACSVodTranslation",
+                        "arguments": {
+                            "VodTranscription": [
+                                {
+                                    "name": "language",
+                                    "value": "en-US"
+                                },
+                                {
+                                    "name": "targetLanguages",
+                                    "value": [
+                                        "pt-pt",
+                                        "fr-FR",
+                                        "es-ES"
+                                    ]
+                                },
+                                {
+                                    "name": "phrases",
+                                    "value": [
+                                        "Cyperus papyrus",
+                                        "Heliotropium indicum",
+                                        "Zamioculcas zamiifolia",
+                                        "Monstera deliciosa",
+                                        "Alocasia odora",
+                                        "Tillandsia cyanea",
+                                        "Drosera capensis",
+                                        "Euphorbia tirucalli",
+                                        "Ficus lyrata",
+                                        "Calathea orbifolia"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
+'
+```
+
+## Track insertion
+
+Once a VOD transcription or VOD translation job completes, use [track insertion transforms](/mkio/reference/encoding-transform-presets/add-a-track-to-a-vod-asset) to insert the generated VTT files into a previously encoded asset as subtitle or caption tracks.

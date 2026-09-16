@@ -1,0 +1,2137 @@
+{
+  "components": {
+    "schemas": {
+      "ConfigGetMetadata": {
+        "properties": {
+          "created": {
+            "description": "The time when the resource was created",
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdBy": {
+            "description": "ID of the user who created the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "createdByEmail": {
+            "description": "Email of the user who created the resource",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "description": "Optional description of revision of the configuration.",
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "hash": {
+            "description": "Hash of this configuration.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "id": {
+            "description": "The ID of the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A dictionary of labels associated with the resource",
+            "example": {
+              "label1": "value1",
+              "label2": "value2"
+            },
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the resource",
+            "type": "string"
+          },
+          "tags": {
+            "description": "Tags for this revision of the config.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": {
+            "description": "Type of configuration.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "updated": {
+            "description": "The time when the resource was last updated",
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedBy": {
+            "description": "ID of the user who last updated the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "updatedByEmail": {
+            "description": "Email of the user who last updated the resource",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "ConfigGetMetadata",
+        "type": "object"
+      },
+      "ConfigGetSchema": {
+        "properties": {
+          "kind": {
+            "description": "The kind of record.",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/ConfigGetMetadata",
+            "description": "Metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/ConfigGetSpec",
+            "description": "Specification."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ConfigGetStatus",
+            "description": "Computed status including available input/output pin names."
+          }
+        },
+        "required": [
+          "metadata"
+        ],
+        "title": "ConfigGetSchema",
+        "type": "object"
+      },
+      "ConfigGetSpec": {
+        "properties": {
+          "config": {
+            "additionalProperties": {},
+            "description": "The contents of the config.",
+            "type": "object"
+          },
+          "parameters": {
+            "description": "Parameters exposed by this configuration.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigParameterSchema"
+            },
+            "type": "array"
+          }
+        },
+        "title": "ConfigGetSpec",
+        "type": "object"
+      },
+      "ConfigGetStatus": {
+        "properties": {
+          "inputPins": {
+            "description": "Available input pin names for this template.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigPinSchema"
+            },
+            "type": "array"
+          },
+          "outputPins": {
+            "description": "Available output pin names for this template.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigPinSchema"
+            },
+            "type": "array"
+          }
+        },
+        "title": "ConfigGetStatus",
+        "type": "object"
+      },
+      "ConfigListSchema": {
+        "properties": {
+          "@odata.nextLink": {
+            "description": "@odata.nextLink URL if the page length and number of items match.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "supplemental": {
+            "$ref": "#/components/schemas/ListResponseSupplementalSchema",
+            "description": "Supplemental info",
+            "readOnly": true
+          },
+          "value": {
+            "description": "A list of objects",
+            "items": {
+              "$ref": "#/components/schemas/ConfigGetSchema"
+            },
+            "readOnly": true,
+            "type": "array"
+          }
+        },
+        "required": [
+          "supplemental",
+          "value"
+        ],
+        "title": "ConfigListSchema",
+        "type": "object"
+      },
+      "ConfigParameterSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "description": "Optional description of the parameter.",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the parameter.",
+            "example": "source_id_0",
+            "type": "string"
+          },
+          "paths": {
+            "description": "List of paths in the config where this parameter applies. Each path must be unique.",
+            "example": "[\"/input/sources/0/id\"]",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "paths"
+        ],
+        "title": "ConfigParameterSchema",
+        "type": "object"
+      },
+      "ConfigPinSchema": {
+        "properties": {
+          "allowMultipleBindings": {
+            "description": "Whether multiple flow inputs/outputs can reference this pin.",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The pin name to use for transformInput or transformOutput.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ConfigPinSchema",
+        "type": "object"
+      },
+      "ConfigPutMetadata": {
+        "properties": {
+          "description": {
+            "default": "",
+            "description": "Optional description of revision of the configuration.",
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Labels for this revision of the config.",
+            "maxProperties": 32,
+            "type": "object"
+          },
+          "tags": {
+            "description": "Tags for this revision of the config.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "title": "ConfigPutMetadata",
+        "type": "object"
+      },
+      "ConfigPutSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "config": {
+            "additionalProperties": {},
+            "description": "The contents of the config.",
+            "type": "object"
+          },
+          "parameters": {
+            "description": "Parameters exposed by this configuration.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigParameterSchema"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "config"
+        ],
+        "title": "ConfigPutSpec",
+        "type": "object"
+      },
+      "Error": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail",
+            "description": "Pertinent information about the error"
+          },
+          "ref": {
+            "description": "A reference to the request that caused the error.",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP status code",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "error",
+          "status",
+          "ref"
+        ],
+        "title": "Error",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "description": "The error code.",
+            "type": "string"
+          },
+          "detail": {
+            "description": "The error message.",
+            "type": "string"
+          },
+          "extraDetail": {
+            "additionalProperties": {},
+            "description": "Extra information regarding this error.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "detail"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "ListResponseSupplementalSchema": {
+        "properties": {
+          "count": {
+            "description": "Number of items returned",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "kind": {
+            "description": "Type of items in the list",
+            "readOnly": true,
+            "type": "string"
+          },
+          "operation": {
+            "description": "Operation type. Should always say 'list'",
+            "readOnly": true,
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfoSchema",
+            "description": "Pagination info",
+            "readOnly": true
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/ProjectInfoSchema",
+            "description": "Project info",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "kind",
+          "count",
+          "operation",
+          "pagination"
+        ],
+        "title": "ListResponseSupplementalSchema",
+        "type": "object"
+      },
+      "PaginationInfoSchema": {
+        "properties": {
+          "end": {
+            "description": "Position of the last item in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "records": {
+            "description": "Total number of items returned in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "start": {
+            "description": "Position of the first item in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total number of items in the project",
+            "readOnly": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "records",
+          "total"
+        ],
+        "title": "PaginationInfoSchema",
+        "type": "object"
+      },
+      "PresetConfigPutSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "presetName": {
+            "description": "Use the config contents from this Preset name.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "presetName"
+        ],
+        "title": "PresetConfigPutSpec",
+        "type": "object"
+      },
+      "ProjectInfoSchema": {
+        "properties": {
+          "id": {
+            "description": "Project ID",
+            "readOnly": true,
+            "type": "string"
+          },
+          "name": {
+            "description": "Project name",
+            "readOnly": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ProjectInfoSchema",
+        "type": "object"
+      },
+      "TemplatingConfigPutSchema": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/ConfigPutMetadata",
+            "description": "Metadata."
+          },
+          "spec": {
+            "description": "Specification for the template",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ConfigPutSpec"
+              },
+              {
+                "$ref": "#/components/schemas/PresetConfigPutSpec"
+              }
+            ]
+          }
+        },
+        "required": [
+          "spec"
+        ],
+        "title": "TemplatingConfigPutSchema",
+        "type": "object"
+      },
+      "TemplatingTypeSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "description": "A description of how this type of configuration is used.",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the configuration type.",
+            "type": "string"
+          },
+          "openapi": {
+            "description": "An optional link to an openapi reference doc.",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "TemplatingTypeSchema",
+        "type": "object"
+      },
+      "TemplatingTypesSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "types": {
+            "description": "List of supported types.",
+            "items": {
+              "$ref": "#/components/schemas/TemplatingTypeSchema"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "types"
+        ],
+        "title": "TemplatingTypesSchema",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "MK.IO Templates API",
+    "version": "1.0.8"
+  },
+  "openapi": "3.0.2",
+  "paths": {
+    "/api/v1/projects/{project_name}/templating/configs": {
+      "get": {
+        "description": "## Listing, Sorting and Filtering Configurations\n\nThis endpoint returns the list of configurations in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned configurations from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for configurations to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying configurations based on their labels. Labels are a set of key-value pairs that can be used to identify configurations with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of configurations.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 configurations from the list.\n\n`?$orderby=name desc` - Sorts configurations by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns configurations that match the provided name.\n\n\n`?$orderby=created desc` - Sorts configurations by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns configurations created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns configurations with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns configurations with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns configurations with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/configs",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigListSchema"
+                }
+              }
+            },
+            "description": "A list of configurations"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List the latest versions of configurations.",
+        "tags": [
+          "Templating"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/configs/{config_type}": {
+      "get": {
+        "description": "## Listing, Sorting and Filtering Configurations\n\nThis endpoint returns the list of configurations in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned configurations from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for configurations to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying configurations based on their labels. Labels are a set of key-value pairs that can be used to identify configurations with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of configurations.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 configurations from the list.\n\n`?$orderby=name desc` - Sorts configurations by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns configurations that match the provided name.\n\n\n`?$orderby=created desc` - Sorts configurations by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns configurations created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns configurations with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns configurations with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns configurations with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/configs/{config_type}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigListSchema"
+                }
+              }
+            },
+            "description": "A list of configurations"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List the latest versions of configurations.",
+        "tags": [
+          "Templating"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}": {
+      "delete": {
+        "description": "RBAC Capability Required: `templating.configs.delete`",
+        "operationId": "[delete]_/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template deleted."
+          },
+          "204": {
+            "description": "Nothing to delete."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete all versions of this configuration.",
+        "tags": [
+          "Templating"
+        ]
+      },
+      "get": {
+        "description": "RBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigGetSchema"
+                }
+              }
+            },
+            "description": "Configuration"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get the latest version of this configuration.",
+        "tags": [
+          "Templating"
+        ]
+      },
+      "put": {
+        "description": "This will create a new Configuration object, or a new version of a Configuration if one with this name exists.\nAny tags set in this request will be removed from any other version of this Configuration.\n\nRBAC Capability Required: `templating.configs.create`",
+        "operationId": "[put]_/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplatingConfigPutSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigGetSchema"
+                }
+              }
+            },
+            "description": "Updated configuration"
+          },
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigGetSchema"
+                }
+              }
+            },
+            "description": "Created configuration"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Create a new configuration, or a new version of a configuration.",
+        "tags": [
+          "Templating"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}/versions": {
+      "get": {
+        "description": "## Listing, Sorting and Filtering Configurations\n\nThis endpoint returns the list of configurations in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `hash`, `id`, `labels`, `name`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned configurations from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for configurations to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `hash`, `id`, `labels`, `name`, `tag`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying configurations based on their labels. Labels are a set of key-value pairs that can be used to identify configurations with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of configurations.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 configurations from the list.\n\n`?$orderby=name desc` - Sorts configurations by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns configurations that match the provided name.\n\n\n`?$orderby=created desc` - Sorts configurations by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns configurations created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns configurations with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns configurations with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns configurations with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}/versions",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigListSchema"
+                }
+              }
+            },
+            "description": "A list of objects"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get all versions of this configuration.",
+        "tags": [
+          "Templating"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}/versions/{version}": {
+      "delete": {
+        "description": "Delete one version of the configuration.\nYou cannot delete the version tagged as `latest`.\n\nRBAC Capability Required: `templating.configs.delete`",
+        "operationId": "[delete]_/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}/versions/{version}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "version",
+            "required": true,
+            "schema": {
+              "title": "Version",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration version deleted."
+          },
+          "204": {
+            "description": "Nothing to delete."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete a version of a configuration by hash or by tag.",
+        "tags": [
+          "Templating"
+        ]
+      },
+      "get": {
+        "description": "Return the version of the configuration which has the given name and hash, or name and tag, or an error if that combination does not exist.\n\nRBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/configs/{config_type}/{name}/versions/{version}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "version",
+            "required": true,
+            "schema": {
+              "title": "Version",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigGetSchema"
+                }
+              }
+            },
+            "description": "A single configuration"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get a version of a configuration by hash or by tag.",
+        "tags": [
+          "Templating"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/presets": {
+      "get": {
+        "description": "## Listing, Sorting and Filtering Configurations\n\nThis endpoint returns the list of configurations in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned configurations from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for configurations to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying configurations based on their labels. Labels are a set of key-value pairs that can be used to identify configurations with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of configurations.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 configurations from the list.\n\n`?$orderby=name desc` - Sorts configurations by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns configurations that match the provided name.\n\n\n`?$orderby=created desc` - Sorts configurations by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns configurations created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns configurations with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns configurations with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns configurations with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/presets",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigListSchema"
+                }
+              }
+            },
+            "description": "A list of configurations"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List the latest versions of configurations.",
+        "tags": [
+          "Templating Presets"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/presets/{config_type}": {
+      "get": {
+        "description": "## Listing, Sorting and Filtering Configurations\n\nThis endpoint returns the list of configurations in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned configurations from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for configurations to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `hash`, `id`, `labels`, `name`, `type`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying configurations based on their labels. Labels are a set of key-value pairs that can be used to identify configurations with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of configurations.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 configurations from the list.\n\n`?$orderby=name desc` - Sorts configurations by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns configurations that match the provided name.\n\n\n`?$orderby=created desc` - Sorts configurations by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns configurations created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns configurations with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns configurations with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns configurations with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/presets/{config_type}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigListSchema"
+                }
+              }
+            },
+            "description": "A list of configurations"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List the latest versions of configurations.",
+        "tags": [
+          "Templating Presets"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/presets/{config_type}/{name}": {
+      "get": {
+        "description": "RBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/presets/{config_type}/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "config_type",
+            "required": true,
+            "schema": {
+              "title": "Config_Type",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigGetSchema"
+                }
+              }
+            },
+            "description": "Configuration"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get the latest version of this configuration.",
+        "tags": [
+          "Templating Presets"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/templating/types": {
+      "get": {
+        "description": "RBAC Capability Required: `templating.configs.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/templating/types",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplatingTypesSchema"
+                }
+              }
+            },
+            "description": "Configuration type data"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get information on the types of configuration supported by this project.",
+        "tags": [
+          "Templating"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "servers": [
+    {
+      "description": "MK.IO API Server",
+      "url": "https://app.mk.io/"
+    }
+  ],
+  "tags": [
+    {
+      "description": "## Templating\n\nConfigurations are stored by type, and identified by name.\nYou can upload multiple versions of the same configuration, each version will be identifiable by its hash.\nYou may also assign a tag to a configuration version to make it easier to identify.\nThe latest uploaded version of each configuration is automatically tagged as \"latest\".\n\nThe supported types of configuration are:\n- contentDecisioning: Configuration of alternate content decisioning, supporting placement requests in SCTE-130 format.\n- contentProcessing: Configuration for real-time content processing such as decoding.\n- encodingLive: Configuration for real-time live encoding.\n- manifestConditioning: Configuration for conditioning of SCTE-35 signals in packaging manifests.\n- manifestConditioningPlugin: Plugin for conditioning of SCTE-35 signals in packaging manifests.\n- multiviewComposing: Configuration for combining multiple sources into a multiview output.\n- splicing: Configuration for real-time media insertion or switching.\n- streamConditioning: Configuration for SCTE-35 manipulation, slate/logo insertion, and live/file switching.\n- streamPersonalization: Configuration of real-time manifest manipulation, for ad insertion or blackout.\n- streamPersonalizationPlugin: Plugin for real-time stream processing such as ad insertion, or blackout.\n- viewingPolicyManager: Configuration of media schedules, viewing rights, and content restrictions.\n- viewingPolicyManagerPlugin: Plugin for importing or transforming media schedule and viewing rights metadata.",
+      "name": "Templating"
+    },
+    {
+      "description": "## Templating Presets\n\nPredefined Configurations that can be used to create a Templating Configuration for a Project.\nConfigurations are stored by type, and identified by name.\n\nThe supported types of configuration are:\n- contentDecisioning: Configuration of alternate content decisioning, supporting placement requests in SCTE-130 format.\n- contentProcessing: Configuration for real-time content processing such as decoding.\n- encodingLive: Configuration for real-time live encoding.\n- manifestConditioning: Configuration for conditioning of SCTE-35 signals in packaging manifests.\n- manifestConditioningPlugin: Plugin for conditioning of SCTE-35 signals in packaging manifests.\n- multiviewComposing: Configuration for combining multiple sources into a multiview output.\n- splicing: Configuration for real-time media insertion or switching.\n- streamConditioning: Configuration for SCTE-35 manipulation, slate/logo insertion, and live/file switching.\n- streamPersonalization: Configuration of real-time manifest manipulation, for ad insertion or blackout.\n- streamPersonalizationPlugin: Plugin for real-time stream processing such as ad insertion, or blackout.\n- viewingPolicyManager: Configuration of media schedules, viewing rights, and content restrictions.\n- viewingPolicyManagerPlugin: Plugin for importing or transforming media schedule and viewing rights metadata.",
+      "name": "Templating Presets"
+    }
+  ]
+}

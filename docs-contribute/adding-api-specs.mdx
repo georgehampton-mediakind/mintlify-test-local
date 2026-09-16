@@ -1,0 +1,223 @@
+---
+title: Adding an API to the API Reference
+description: How to add, organize, update, and verify pinned OpenAPI specifications.
+sidebarTitle: Adding API Specs
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The [API Reference](/api-reference) is generated from the pinned specifications below `public/openapi/`. The directory structure is the API inventory: adding a supported specification automatically adds its API pages, landing-page entry, sidebar entry, search records, and machine-readable output.
+
+You do not register a normal specification in application code. Use the optional catalog metadata only when the defaults are insufficient.
+
+The renderer supports OpenAPI 3.x and Swagger 2.0 documents in JSON or YAML (`.json`, `.yaml`, or `.yml`). It converts Swagger 2.0 at build time and reports constructs that it cannot convert faithfully.
+
+## Choose the product and category
+
+Place each specification in one of these layouts:
+
+```text
+public/openapi/<product>/<spec>.json
+public/openapi/<product>/<spec>.yaml
+public/openapi/<product>/<category>/<spec>.yml
+```
+
+The first folder is the product key. The optional second folder is the category key.
+
+For example:
+
+```text
+public/openapi/
+├── mkio/
+│   ├── media-api.json
+│   └── management-api.json
+├── beam/
+│   └── channels-api.json
+└── example-product/
+    ├── status-api.json
+    ├── content/
+    │   ├── catalog-api.json
+    │   └── search-api.yaml
+    └── subscriber/
+        └── accounts-api.json
+```
+
+This produces:
+
+* An **Example Product** product section.
+* An ungrouped **Status API** card.
+* **Content** and **Subscriber** category cards, each containing every API in that folder.
+* Generated category pages such as `/api-reference/example-product/content`.
+
+Moving a specification between category folders changes its category without changing its API route. Moving it to another product changes the default route prefix, so coordinate a compatibility route with the documentation-platform maintainer before making that move.
+
+### Directory rules
+
+* Use lowercase kebab-case for product folders, category folders, and specification filenames.
+* Use exactly one product folder and no more than one optional category folder.
+* Do not put specifications directly in `public/openapi/`.
+* Do not add unrelated files, symlinks, or deeper directory levels below `public/openapi/`.
+* Do not add an empty product folder. A product is discovered when it contains at least one specification.
+
+The build fails on unsupported files or layouts. It does not silently omit them.
+
+## Add a product
+
+Create a product folder and add at least one specification. No application-code change is required:
+
+```text
+public/openapi/my-product/status-api.json
+```
+
+The fallback display name is derived from the folder (`my-product` becomes **My Product**). Add product metadata only when you need a branded label or explicit position, such as `MK.IO`, or need to place the product before other products.
+
+## Add or update a pinned specification
+
+Copy the reviewed specification into its product or category folder. The committed file is the input to normal builds and the file served by the **Download OpenAPI spec** link.
+
+The default API route is the product key plus the filename stem. For example:
+
+```text
+public/openapi/example-product/content/search-api.yaml
+```
+
+uses this API route:
+
+```text
+/api-reference/example-product-search-api
+```
+
+The optional category folder is deliberately absent from the API route, so reorganizing categories does not break API or endpoint links.
+
+The display title defaults to the specification's `info.title` value. Fix an incorrect title in the authoritative specification when possible.
+
+## Use catalog metadata only when required
+
+`src/config/api-catalog-metadata.mjs` contains sparse exceptions. It is not a second API inventory and cannot hide, add, or reclassify a specification.
+
+Supported metadata is:
+
+| Location   | Field             | Use                                                                                                                  |
+| :--------- | :---------------- | :------------------------------------------------------------------------------------------------------------------- |
+| `products` | `title`           | Branded product label that cannot be derived from the folder name.                                                   |
+| `products` | `order`           | Product position on the landing page and in the sidebar.                                                             |
+| `groups`   | `title`           | Branded category label that cannot be derived from the folder name.                                                  |
+| `groups`   | `order`           | Category position within its product.                                                                                |
+| `specs`    | `slug`            | Preserve an established public API route. Do not use it for routine naming preferences.                              |
+| `specs`    | `title`           | Preserve an established display title when the source title cannot be corrected.                                     |
+| `specs`    | `order`           | Position within the containing product or category.                                                                  |
+| `specs`    | `upstream`        | Stable authoritative HTTPS URL used by the explicit update command.                                                  |
+| `specs`    | `aiSearch`        | Existing AI Search instance assigned by the documentation-platform maintainer.                                       |
+| `specs`    | `legacySpecPaths` | Previous paths below `/openapi/` that must redirect to the pinned file's current path.                               |
+| `specs`    | `tryItSend`       | Set to `false` to omit the request builder's send action. Defaults to `true`.                                        |
+| `specs`    | `tryItAuth`       | Set to `false` to omit authentication from the endpoint page, request builder, and code samples. Defaults to `true`. |
+| `specs`    | `tryItNote`       | Explanatory text shown at the top of the request builder.                                                            |
+
+Keys below `specs` are paths relative to `public/openapi/`. Keys below `groups` use `<product>/<category>`.
+
+```js
+export const API_CATALOG_METADATA = {
+  products: {
+    'my-product': { title: 'MY.Product', order: 30 },
+  },
+  groups: {
+    'my-product/subscriber': { title: 'Subscriber APIs', order: 20 },
+  },
+  specs: {
+    'my-product/subscriber/accounts-api.json': {
+      slug: 'established-accounts-api',
+      order: 10,
+      upstream: 'https://api.example.com/openapi.json',
+    },
+  },
+}
+```
+
+Stale metadata, duplicate slugs, invalid routes, and unsupported metadata fields fail validation. There is intentionally no `hidden` field: remove a specification only through an explicit, reviewed removal with a URL and search-index disposition.
+
+## Control order and display names
+
+Without metadata, products, categories, and APIs use deterministic folder-path order. Use numeric `order` metadata only when presentation order matters. Items with an explicit order appear before unnumbered items; ties fall back to path order.
+
+Within an individual specification, tag groups, endpoints, and schemas follow their order in the OpenAPI document. Fix that ordering in the authoritative specification.
+
+The folder structure drives both the API landing page and sidebar:
+
+```text
+EXAMPLE PRODUCT
+  Status API
+  ▸ Content
+      ▸ Catalog API
+      ▸ Search API
+  ▸ Subscriber
+      ▸ Accounts API
+```
+
+Each category is one card on the API Reference landing page. Opening it shows all specifications in that category as individual API cards. No API is hidden behind a hand-maintained allowlist.
+
+## Configure an upstream refresh
+
+When the authoritative specification has a stable public HTTPS URL, add `upstream` to that specification's sparse metadata entry. Then run:
+
+```bash
+pnpm update:openapi
+```
+
+Upstream refresh currently requires a `.json` destination and an upstream response containing JSON. Locally pinned YAML specifications remain supported, but update them through a reviewed documentation change.
+
+The command discovers the same specification set used by the site, selects entries with `upstream`, and fetches them with a 30-second timeout and bounded response size. It validates every response before replacing any pinned file. If one response or promotion fails, the existing pinned set remains unchanged or is recovered as a set.
+
+The command does not discover semantic versions. It pins the valid document currently returned by each configured URL. Specifications without `upstream` remain manually pinned.
+
+Do not add remote fetching to `prebuild`, `build`, or a normal documentation pull request. These workflows must remain deterministic and use committed files only.
+
+## Nightly upstream refresh
+
+The **Refresh OpenAPI specs and deploy** GitHub Actions workflow runs daily at 02:17 UTC and can be started manually by a documentation-platform maintainer.
+
+It:
+
+1. Checks out the latest `main` branch.
+2. Refreshes every discovered specification with an `upstream` URL.
+3. Runs the complete tests and production build even when nothing changed.
+4. Stops without publishing if fetching, validation, testing, or building fails.
+5. Commits changed pinned files to `main` with the configured protected-branch credential.
+6. Publishes the verified site, then refreshes Algolia and the production AI Search indexes.
+
+Normal pull requests never contact upstream specification servers. The scheduled workflow becomes active only when its workflow file is on the default branch.
+
+The workflow uses a repository secret named `OPENAPI_UPDATE_TOKEN`. Do not paste that token into an issue, pull request, documentation file, workflow file, or chat. A repository administrator owns its permissions and rotation.
+
+## Verify the API
+
+Run:
+
+```bash
+pnpm test:api-ref
+pnpm test:node
+pnpm build
+```
+
+Open [http://localhost:3000/api-reference](http://localhost:3000/api-reference) while `pnpm dev` runs, then check:
+
+* The product and optional category appear in the expected order.
+* The API is present on the landing page, category page, and sidebar.
+* The overview title, description, version, server, tags, operations, and schemas match the specification.
+* The **Download OpenAPI spec** link resolves to the pinned file.
+* Existing endpoint and raw-spec URLs still resolve when compatibility metadata was added.
+
+Build errors prefixed `[api-sources]` describe inventory, layout, metadata, or parsing failures. Warnings prefixed `[api-ref]` identify content-model issues such as unresolved references, circular schemas, missing operation identifiers, or Swagger 2.0 conversion limitations. Review every warning before publication.
+
+## What is generated automatically
+
+Each discovered specification gets:
+
+* A landing-page entry and sidebar entry derived from its folder placement.
+* An overview at `/api-reference/<api-slug>`.
+* One page per tag group and endpoint.
+* Request and response schemas, code samples, and the interactive request builder.
+* Schema documentation below `/api-reference/<api-slug>/schemas`.
+* Search records and static Markdown endpoint pages.
+
+The header's **API Reference** menu remains a deliberately curated shortlist. Add a link there only when the API should be globally prominent; discovery does not place every API in the header.

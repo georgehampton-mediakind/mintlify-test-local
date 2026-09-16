@@ -1,0 +1,38 @@
+---
+title: Streaming Policies
+---
+
+# Streaming Policies
+
+!! **NOTE: DRM integrations can be tricky. Please contact us to work together on an integration! We want to hear from customers like you!** !!
+
+Streaming Policies are the starting point for securing content. A default set of streaming policies is provided, which should be sufficient for most use cases.
+
+These include:
+- *Predefined_DownloadOnly* - This is a no-DRM policy that permits only download of content, with no streaming playback.
+- *Predefined_ClearStreamingOnly* - This is a no-DRM policy that permits only streaming playback of content, with no download.
+- *Predefined_DownloadAndClearStreaming* - You guessed it, this is a no-DRM policy that permits both download and streaming playback of content.
+- *Predefined_ClearKey* - Content is protected by a static key, which secures video from casual piracy, but is not a robust DRM solution.
+- *Predefined_MultiDrmCencStreaming* - DRM for PlayReady (e.g. Xbox), Widevine (e.g. Android). 
+- *Predefined_MultiDrmStreaming* - DRM for PlayReady (e.g. Xbox), Widevine (e.g. Android), FairPlay (e.g. iOS).
+
+Integrating DRM is, unfortunately, not as simple as selecting a policy and moving on. Here is a brief overview of the steps required to integrate DRM:
+
+First you need a content key policy. This is a separate API with facilities for defining an array of DRM configuration for each of the major 
+DRM implementations (PlayReady, Widevine, FairPlay), along with any other DRM implementation you wish to support. Alongside this DRM configuration,
+you must also define a restriction policy which determines who keys will be delivered to. We support AMS's 'token restriction' implementation, where
+a signed token (like a JWT) is generated for each user and provided to the license server with each request. The signature is validated and information
+can be extracted from the token body to determine if the user is authorized to receive the key. And on that note, you may also wish to provide a separate
+key server, as opposed to using the one provided by our API. Once you have these pieces in place, you'll need to create a streaming policy that references
+your content key policies and validate that it is working as expected. Your clients will need to derive and vend license server URLs to users on some devices,
+while on others you may be able to simply consume the in-band license server URL provided by our manifests. 
+
+So, pretty please, contact us to work together on an integration! We want to hear from customers like you!
+
+* [List Streaming Policies](/api-reference/media-api/streaming-policies/list-streaming-policies)
+
+* [Get](/api-reference/media-api/streaming-policies/get)
+
+* [Create or Update](/api-reference/media-api/streaming-policies/create-or-update)
+
+* [Delete](/api-reference/media-api/streaming-policies/delete)

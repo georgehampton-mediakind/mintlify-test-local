@@ -1,0 +1,57 @@
+---
+title: Transforms & Jobs
+description: Understand how reusable transforms and processing jobs fit into MK.IO VOD workflows.
+sidebarTitle: Transforms & Jobs
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Offerings are differentiated based on input type. There are two main input types: **Transforms** (file-based / VOD processing) and **Live Events** (live ingest and processing).
+
+## Transforms
+
+**Transforms** are for static (file-based / VOD) content stored in your connected cloud storage (for example, Azure Blob Storage containers or Amazon S3 buckets).
+
+For on-demand content, a **Transform** acts as a template for the tasks to be performed, and a **Job** connects a Transform to input content (for example, an Asset or an HTTPS URL) and produces an output **Asset**.
+
+A **Transform** is like a recipe. It helps you create the recipe once (Step 1), and submit Jobs using that recipe (Step 2).
+
+**You can:**
+
+1. Create a Transform.
+2. Submit Jobs under that Transform.
+3. List Transforms.
+4. Delete a Transform, if you are not planning to use it in the future.
+
+<Note>
+  Use Transforms to configure common tasks for processing video or audio files (for example encoding, thumbnail generation, track insertion, asset conversion, or AI processing).
+</Note>
+
+A Transform currently produces one output. Each output has a `preset` that defines the processing to perform, and a `relativePriority` (`High`, `Low`, or `Normal`) that MK.IO uses to order work across multiple Transform outputs.
+
+## Jobs
+
+A **Job** is the actual request to apply the Transform to a given input video or audio content. Once the Transform has been created, you can create Jobs in the **Video Processing** page or [using the API](/api-reference/media-api).
+
+A Job specifies information such as the location of the input content and the destination for the output. You can specify the input content two ways:
+
+* **An existing Asset**, optionally trimmed to a specific `start` and `end` point on the source timeline.
+* **An HTTPS URL**, including a SAS URL, with an optional base URI that gets concatenated with the file names you provide.
+
+Each Job also has a `priority` (`High`, `Low`, or `Normal`, default `Normal`) that determines its place in the processing queue relative to other Jobs, and optional `correlationData`: key/value pairs you provide that are echoed back in the Job's state events, useful for tying a Job back to something in your own system.
+
+## Job state
+
+A Job moves through the following states, tracked by the system:
+
+| State        | Meaning                                            |
+| :----------- | :------------------------------------------------- |
+| `Scheduled`  | The Job has been accepted and is waiting to start. |
+| `Queued`     | The Job is queued for processing.                  |
+| `Processing` | The Job is actively running.                       |
+| `Finished`   | The Job completed and produced its output Asset.   |
+| `Error`      | The Job failed.                                    |
+| `Canceling`  | A cancellation request is being applied.           |
+| `Canceled`   | The Job was canceled before it finished.           |
+
+Poll the Job resource or subscribe to webhooks to know when a Job reaches `Finished` or `Error`. The output Asset is not ready to use until then.

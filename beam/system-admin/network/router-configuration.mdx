@@ -1,0 +1,85 @@
+---
+title: Router configuration
+sidebarTitle: Configure Routers
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The **Router settings** window enables users to configure the router parameters by establishing the connection and control of the SDI Router. This is performed by setting the input labels and using these labels to map the inputs for the Live Encoder services.
+
+The output connections must be configured to map the router outputs to the input SDI ports of the encoder servers.
+
+## Display the router configuration settings
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> to display the system center menu.
+2. Click **Settings** > **Router settings**. The **Router settings** display.
+
+   ![router display](/_machine-assets/a9740c0b9682716144adc14f932e56f5616e859b7d2a703118f837b8fd10fb1a.png)
+
+## Add a new router configuration
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> to display the system center menu.
+2. Click **Settings** > **Router settings**. The **Router settings** display.
+3. Click **Add router**. The **Router Configuration** parameters display.
+4. Enter the parameters to configure the router.
+
+<Info>
+  For more details on the parameters below, see [Router parameters](/beam/system-admin/maintenance/parameters#router-parameters).
+</Info>
+
+![view router configuration](/_machine-assets/20b92bb75fc869bfde8aa1cfa3283db228ce2b9eb765ded65e35f4c344e61807.png)
+
+5. Click **Create** to save the configuration and return to list of routers.
+
+## Edit an existing router configuration
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> to display the system center menu.
+2. Click **Settings** > **Router settings**. The **Router settings** display.
+3. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the router configuration.
+
+<Info>
+  For more details on the parameters below, see [Router parameters](/beam/system-admin/maintenance/parameters#router-parameters).
+</Info>
+
+![router edit](/_machine-assets/5801c8ed2f6bde05e5749f9730616f08aae91ba45f4ccd808af588509679cb95.png)
+
+4. Click **Update** to save the configuration and return to list of routers.
+
+## Import a router configuration
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> to display the system center menu.
+
+2. Click **Settings** > **Router settings**. The **Router settings** display.
+
+3. Click **Import router**. The **Import Router** display appears, enabling you to import a router configuration file (yaml) from another system.
+   ![import router](/_machine-assets/fddd74413a503e50ad4c19580aab7c3427aa521e2df5338f933dd938894ee08c.png)
+
+4. Click **Select file**.
+
+5. Select the required file then click **Open**. The file appears in the **Import Router** window.
+
+   ![import router json](/_machine-assets/b67e754f34ee2be777a66e3ca72c9b48643af80fc4a16c8084b935c66c782b6b.png)
+
+6. Click **Import**. The imported file displays in the list in the **Router settings** tab.
+
+## Export a router configuration
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> to display the system center menu.
+2. Click **Settings** > **Router settings**. The **Router settings** display.
+3. Click <img src="/icons/ui/download.svg" alt="Download" className="mk-ui-icon" width="16" height="16" />. The **Downloads** window display appears showing the location of the exported router from which can now be used in another system.
+
+## View router crosspoints
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> to display the system center menu.
+
+2. Click **Settings** > **Router settings**. The **Router settings** display.
+
+3. Click <img src="/icons/ui/view.svg" alt="View" className="mk-ui-icon" width="16" height="16" />. The **Router Crosspoints** display, showing the crosspoints set on the router.
+
+4. Select the **Show uncontrolled** checkbox to view the state of the entire router, including the inputs and outputs that have not been labelled or connected.
+
+5. Toggle between Auto **refresh** and **No refresh** to enable or disable an automatic refresh.
+
+   ![router crosspoints](/_machine-assets/f35f1429c06c6d3eb2abd10c35b7680cbba3934c06e97f1963f2fafef58bee99.png)
+
+6. Click **Back** to return to **Router settings** tab.

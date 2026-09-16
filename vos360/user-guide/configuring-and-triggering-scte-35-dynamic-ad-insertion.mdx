@@ -1,0 +1,57 @@
+---
+title: Configuring and triggering SCTE-35 dynamic ad insertion
+robots: noindex, nofollow
+---
+
+To configure the SCTE-35 trigger settings:
+
+1. Navigate to the **Playout Monitor** app and click the ![settings.png](/images/vos360/1079dbd0818794b1e25c7778.png) icon on the right side.
+
+2. Select the **Trigger Settings&#x20;**&#x6F;ption from the drop-down menu.
+
+3. Press the **+ Add Trigger** button from the pop-up window.
+
+4. Click **Add SCTE35**, add a **Trigger Name**, and define if the SCTE35 source is an **On-air source** or a **Custom source**.
+
+   ![scte35\_trigger.png](/images/vos360/8d53fd0eee4520087b899ed5.png)
+
+5. Select **None**, **Any**, or **All** for the **Match Signal** field, where:
+
+   1. NONE - all asserts must be false to trigger
+
+   2. ANY - one of the asserts must be true to trigger
+
+   3. ALL - all asserts must be true to trigger
+
+6. Add the **Assert**. This refers to a list of xpath expressions to test the SCTE35 section in XML format (as defined in SCTE-35 2019a standard). For instance: **SpliceInfoSection/SpliceInsert\[@spliceEventId=’1073741825’]**. \
+   The supported parameters are:
+
+   * &#x20;For a splice\_insert message: spliceEventId, outOfNetworkIndicator, uniqueProgramId, duration and autoReturn.
+
+   * &#x20;For a time\_signal message with segmentation\_descriptors: segmentationTypeId, segmentationEventId, webDeliveryAllowedFlag, noRegionalBlackoutFlag, deviceRestrictions, archiveAllowedFlag, segmentationDuration.
+
+7. After saving the trigger settings, a new potential SCTE-35 trigger will be displayed on the list of all triggers.
+
+   ![trigger\_settings.png](/images/vos360/14a603dd853fbc437bba7d4f.png)
+
+8. (Optional) Edit or delete the SCTE-35 trigger if needed.
+
+<Note>
+  **Note:&#x20;**&#x49;n order to trigger a take-next dynamic ad insertion, a playout source must be configured with an SCTE-35 data stream.
+</Note>
+
+1. Launch the **Playout Monitor** app.
+
+2. Select a live event.
+
+3. Add the next event with the **Start Mode** set to **External**.
+
+   ![vos360\_start\_mode\_external.png](/images/vos360/aefba47d75cbc6832f6a86dd.png)
+
+<Note>
+  **Note:&#x20;**&#x54;he supported types of SCTE-35 messages are the following:
+
+  * time\_signal with segmentation\_descriptor for Distributor Advertisement Start (0x32) or Distributor Placement Opportunity Start (0x36)
+
+  * splice\_insert with out\_of\_network\_indicator = 1
+</Note>

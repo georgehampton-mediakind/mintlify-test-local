@@ -1,0 +1,130 @@
+---
+title: Adding and configuring a multiplexer
+robots: noindex, nofollow
+---
+
+You can add a multiplexer to create mux services with MPTS output.
+
+1. From the **Configure Broadcast&#x20;**&#x61;pp, navigate to the **Configuration** tab.
+
+2. From the right pane, click the **+Multiplexer&#x20;**&#x62;utton to add the new multiplexer settings.\
+   **DVB multiplexer**
+
+   ![](/images/vos360/7291d294ded15aa1b5bbe7cd.png)
+
+   \
+   **ATSC multiplexer**
+
+   ![](/images/vos360/7291d294ded15aa1b5bbe7cd.png)
+
+3. Set the **General&#x20;**&#x70;arameters.
+
+   * **Name**: Name of the multiplexer that will appear in the configuration tab.
+
+   * **Profile**: Select the appropriate multiplexer profile.
+
+   * **TS Bitrate**: Click the edit button to change, if necessary, the Pool Bitrate defined on the profile.
+
+   * **VBR / CBR**: Click VBR to switch to CBR.
+
+   * **Multiple Pools**: Up to three pools can be declared in the same mux when setting up a TV service. You can select among the declared pools with the desired latency time configured for the video stream output. The possible options for Latency: Low, Reduced, Default.
+
+   * **TS ID&#x20;**/ **ON ID**: Set the Transport Stream identifier and the Original Network identifier if required.
+
+   * **PSIP Generator**: Select a PSIP Generator to get Full ATSC PSIP tables or PSIP EIT Tables (PSIP Fetch use case).
+
+     <Note>
+       **Note:&#x20;**&#x54;his field is only visible when a PSIP Generator has been previously created (refer to [Customizing global settings](/vos360/user-guide/customizing-global-settings)).
+     </Note>
+
+   * **Unreferenced PIDs**: Check the box to allow adding an unreferenced PID (ghost component) to the outside of the service in the multiplexer. For more information, see [Adding unreferenced PIDs into a service](/vos360/user-guide/adding-unreferenced-pids-to-the-multiplexer).
+
+     <Note>
+       **Note:&#x20;**&#x49;f the MPTS (No PSIP) profile is configured, the **Unreferenced PIDs/Local Programs&#x20;**&#x63;heckbox will be displayed for creating a local program.
+     </Note>
+
+   * **Multiplexer 1+1 Redundancy**: Not available in this release.
+
+   * **Scrambling**: This setting enables the scrambling feature of the multiplexer.
+
+     <Note>
+       **Note:&#x20;**&#x52;egardless of the profile chosen, the parameters are almost identical.
+     </Note>
+
+4. Set the **Destination&#x20;**&#x70;arameters:
+
+   * **Profile**: Select the appropriate destination profile.
+
+   * **Outputs**: By default, the IP output is proposed. You can also do the following:
+
+     * Add another output (IP or SRT) by clicking on the **+** button.
+
+     * Remove the default output and add the SRT output.
+
+   * **IP Address&#x20;**/ **Network&#x20;**/ **Port**: Set the destination IP parameters and select a port to egress.
+
+   * **Source IP Address** / **Port**: Set the source IP parameters for IGMPv3.
+
+5. By default, the new multiplexer is set to **OFF**. To activate the multiplexer, set the Status to **ON**.
+
+6. Click ***+*****Create**.
+
+**About DVB SI tables:**
+
+The following tables and settings are available on the DVB SI tab:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Table</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Table Mode</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Input</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Input PID</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>NIT</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None</p></li><li><p>Pass-through</p></li></ul></td><td colSpan="1" rowSpan="1"><p>Select from list</p></td><td colSpan="1" rowSpan="1"><p>Insert ID</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>TDT</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None</p></li><li><p>Pass-through</p></li></ul></td><td colSpan="1" rowSpan="1"><p>Select from list</p></td><td colSpan="1" rowSpan="1"><p>Insert ID</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>TOT</p></td><td colSpan="1" rowSpan="1"><p>Linked to TDT</p></td><td colSpan="1" rowSpan="1"><p>n/a</p></td><td colSpan="1" rowSpan="1"><p>n/a</p></td></tr></tbody>
+  </table>
+</div>
+
+![](/images/vos360/59fe86509b1e50cf302e5abf.png)
+
+**About ATSC profiles:**
+
+These profiles apply a default PID numbering on the program number starting from 1 or from 3.
+
+**First service (program number 1 or 3):**
+
+* PMT PID 0x030 (hex)
+
+* Video PID 0x031
+
+* Primary audio PID 0x034
+
+* Secondary audio PID (SAP and or descriptive) 0x035
+
+* Additional audio services on PIDs 0x036, 0x037, 0x038 0x039
+
+**Second service (program number 2 or 4):**
+
+* PMT PID is 0x040 (hex)
+
+* Video PID is 0x041
+
+* Audio 1 PID is 0x044
+
+* Audio 2 PID is 0x045 etc.
+
+This pattern continues for all remaining *channels.*
+
+When the selected ATSC profile is "ATSC 1.0 MPTS" or "ATSC 1.0 MPTS-first program is 3", then the PSIP is locally generated by the VOS and a 'PSIP' page is available:
+
+<Note>
+  **Note:&#x20;**&#x50;ay attention to the following related to PSIP Configurations on Multiplexer:
+
+  * **EIT/ETT Depth**: The PSIP fetch supports up to 48 hours of program guide data (EIT/ETT Depth).
+
+  * **EIT/ETT PIDs**: You can customize the Repetition rates for some EIT/ETT PIDs.
+
+  * For the **EIT/ETT Repetition Period&#x20;**&#x63;onfigurations, the **EIT-1 Repetition Period&#x20;**&#x69;s recommended to be less than 3 seconds. It is recommended to set the value as 2.8 seconds for optimal performance and accuracy.
+</Note>
+
+![](/images/vos360/31b937ed81008d07cd249fbf.png)
+
+Hovering above the Timezone field displays the Local Time and the Daylight saving settings.
+
+To declare and configure an external PSIP generator please refer to the section [Customizing global settings](/vos360/user-guide/customizing-global-settings).

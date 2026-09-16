@@ -1,0 +1,87 @@
+---
+title: Creating a secondary event
+robots: noindex, nofollow
+---
+
+You can create a secondary graphics event by simple drag-and-drop from the **Graphics** widget. Both live and file-based primary events support secondary graphics events. The following file types can be used to create secondary events:
+
+* JPG
+
+* PNG
+
+* TGA
+
+* SWF
+
+* FLV
+
+* WebM
+
+* WAV
+
+* HTML5
+
+<Note>
+  **Info:** You can create a secondary event for the on-air primary event. Note that the secondary event will be created with a start offset that gives it a start time of 2 seconds in the future.
+</Note>
+
+**Before you begin**\
+Upload graphic template files using the **Web Uploader** in the Asset Acquisition app, or using the Asset Acquisition REST API.
+
+1. Click the **Edit** slider button to activate Edit mode.
+
+2. Select an image file from th&#x65;**&#x20;Graphics** pane, drag it to the **Events&#x20;**&#x74;able and drop it onto the related primary event when the blue rectangle appears.\
+   **Result:** A secondary event is created (no confirmation is required). By default, the secondary event is assigned to the first graphic layer and inherits the duration of the primary event. Refer to [Editing a secondary event](/vos360/user-guide/editing-a-secondary-event) for instructions on configuring the layer, start and end mode, and dynamic text fields.
+
+3. Optionally, configure the graphic settings from the **Graphics** pane by clicking the ![](/images/vos360/53a790d55285c1f262d3fde4.png)icon for the image files:
+
+   ![](/images/vos360/0376c20e3bb28fdfe45d7692.png)
+
+   1. **Set anchor** (Applicable to **ALL&#x20;**&#x73;upported graphic types **EXCEPT HTML5** and **WAV**): This is used to set an anchor on the graphic/logo to run at a specific position.
+
+      * Top left position
+
+        <Note>
+          **Note:&#x20;**&#x54;his is the default value if not configured.
+        </Note>
+
+      * Top right position
+
+      * Top middle position
+
+      * Middle left position
+
+      * Middle right position
+
+      * Middle position
+
+      * Bottom left position
+
+      * Bottom right position
+
+      * Bottom middle position
+
+      <Note>
+        **Note:&#x20;**&#x49;f the anchor configuration is updated while the graphics are on air, the play of graphics will be restarted with the new anchor setting.
+      </Note>
+
+   2. **Set end behavior&#x20;**(Applicable to the **WebM&#x20;**&#x61;nd **FLV&#x20;**&#x67;raphic types): This is used to set the graphic to end in a specific behavior.
+
+      * *Loop*: If this is selected, the graphic will be set to "loop" at the end. (This is the default value if not configured.)
+
+      * *Still*: If this is selected, the graphic will be set to "still" at the end (Freeze the last frame).
+
+      * *Disappear*: If this is selected, the graphic will be set to "disappear" at the end (Nothing is displayed but the graphic is not unloaded).
+
+      <Note>
+        **Note:&#x20;**&#x49;f the end behavior is updated while the graphics are on air, the play of graphics will be restarted with the new behavior.
+      </Note>
+
+4. Optionally, repeat the previous step to create additional secondary events.\
+   By default, additional secondary events will be assigned to the next sequential graphic layer. On the **Events** table and on the timeline, secondary events are sorted first by start date/time, and then by layer. When multiple secondary events share the same start time, the secondary event that has been placed on the highest layer appears first.
+
+   <Note>
+     **Info:&#x20;**&#x4E;ote that changing the secondary event start time and/or layer may impact the order in which secondary events are sorted.
+   </Note>
+
+5. Click the **Edit** slider button to deactivate Edit mode.

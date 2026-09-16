@@ -1,0 +1,64 @@
+---
+title: Bulk import your AMS assets
+description: Bulk import Azure Media Services assets into MK.IO with the MediaKind migration tool.
+sidebarTitle: Bulk asset migration from AMS storage
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Practical steps for bulk importing video assets using MediaKind’s migration tool.
+
+Importing a large video library from Azure Media Services one at a time can be impractical and time-consuming. Below is a walk-through of how to leverage MediaKind’s bulk-ingest tool for a smooth and quick bulk migration of video assets:
+
+* from your AMS storage account to MK.IO
+* OR from one MK.IO subscription to another MK.IO subscription.
+
+You can retrieve the script for the MK.IO bulk-ingest tool in this public GitHub repository: [mediakind-video/ams-migration-tool](https://github.com/mediakind-video/ams-migration-tool).
+
+## Import your assets
+
+1. Navigate to the **Media Services** section of your AMS portal.
+2. Enter the MK.IO portal under the subscription instance to which you want to import your AMS assets.
+3. Build the program using the bulk-ingest script using the binary from [our public GitHub repository](https://github.com/mediakind-video/ams-migration-tool).
+4. In the command-line terminal, type in *mkio-ams-migration*.
+5. Import is available from AMS to MK.IO or from MK.IO subscription to MK.IO subscription in the same account.
+6. Populate the below parameters and their values:
+
+| Option                          | Value                                                                            |
+| :------------------------------ | :------------------------------------------------------------------------------- |
+| --azure-subscription\*          | Your Azure AMS account > Overview > Essentials > Subscription ID                 |
+| --azure-resource-group          | Your Azure AMS account > Overview > Essentials > Resource Group                  |
+| --azure-account-name            | Your Azure account ID                                                            |
+| --mediakind-import-subscription | Your subscription name, found under Dashboard > Subscription Summary             |
+| --mediakind-export-subscription | Your subscription name, found under Dashboard > Subscription Summary             |
+| --export                        | Pulls data from Azure Media Services (or MK.IO), creating a JSON file as output. |
+| --import                        | Reads the JSON file and inserts data into MK.IO.                                 |
+| --validate                      | Validates imported assets.                                                       |
+| --assets                        | Boolean: option defaults to false, but will set to true if flags are added.      |
+| --asset-filters                 | Boolean: option defaults to false, but will set to true if flags are added.      |
+| --streaming-locators            | Boolean: option defaults to false, but will set to true if flags are added.      |
+| --content-key-policies          | Boolean: option defaults to false, but will set to true if flags are added.      |
+| --streaming-endpoints           | Boolean: option defaults to false, but will set to true if flags are added.      |
+| --streaming-policies            | Boolean: option defaults to false, but will set to true if flags are added.      |
+| --migration-file value          | Specify migration file to use for import and/or export.                          |
+| --overwrite                     | Overwrite resources that already exist.                                          |
+| --debug                         | Enable debug logging while running the tool.                                     |
+| --workers                       | Number of workers to process assetFilters in parallel.                           |
+| --created-before                | Filters exports to resources created before the given date.                      |
+| --created-after                 | Filters exports to resources created after the given date.                       |
+
+To import from AMS to MK.IO the command will look like the example below:
+
+`./mkio-ams-migration --azure-subscription 29628ffc-5d07-4af3-88a8-3f710582a73b --azure-resource-group ams-test --azure-account-name amstest --mediakind-import-subscription migration --export --import --assets --streaming-locators --asset-filters --content-key-policies --streaming-endpoints`
+
+To import from MK.IO subscription to MK.IO subscription in the same MK.IO account, the command will look like the example below:
+
+`./mkio-ams-migration --mediakind-export-subscription mkioexportsubscription --mediakind-import-subscription mkioimportmigration --export --import --assets --streaming-locators --asset-filters --content-key-policies --streaming-endpoints`
+
+7. Run the migration using the information gathered in **Setup.**
+
+You can view the migration progress in the command terminal as the steps complete.
+
+<Info>
+  Need some help with your bulk migration from AMS to MK.IO? Take a look at this [tutorial ](https://support.mk.io/portal/en/kb/articles/how-to-migrate-all-your-content-from-ams-into-mk-io)in our support portal or visit the [MediaKind support center](https://support.mediakind.com).
+</Info>

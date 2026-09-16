@@ -1,0 +1,53 @@
+---
+title: External PlayReady License
+description: Use a third-party PlayReady license server with MK.IO instead of the built-in license delivery.
+sidebarTitle: External PlayReady License
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+By default, MK.IO handles PlayReady license delivery for your content. If you need to use a separate license server, you can configure a custom license acquisition URL in a streaming policy.
+
+## Configure an external license URL
+
+Create a streaming policy with a `customLicenseAcquisitionUrlTemplate` value for PlayReady using the MK.IO API:
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/streamingPolicies/policy_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer <YOUR_MKIO_JWT>' \
+     --data '
+{
+  "properties": {
+    "commonEncryptionCenc": {
+      "enabledProtocols": {
+        "download": false,
+        "dash": true,
+        "hls": false,
+        "smoothStreaming": false
+      },
+      "contentKeys": {
+        "defaultKey": {
+          "label": "cencDefaultKey"
+        }
+      },
+      "drm": {
+        "playReady": {
+          "customLicenseAcquisitionUrlTemplate": "https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=(contentkey:eNqVnXrElmo2NSsn7IXeEA==,kid:e13a7861-d8cc-4284-9245-7c835ebde9f0)"
+        }
+      }
+    }
+  }
+}
+'
+```
+
+Replace the `customLicenseAcquisitionUrlTemplate` value with the URL of your PlayReady license server.
+
+Use the streaming policy when preparing the asset for streaming. See [Stream live and VOD assets](/mkio/how-to/content-delivery-publishing/stream-content) for details.
+
+## Combine with explicit content keys
+
+You can combine an external PlayReady license URL with [explicit content keys](/mkio/how-to/drm-content-protection/explicit-content-keys) to build a complete DRM workflow where MK.IO does not manage the encryption keys or license delivery.

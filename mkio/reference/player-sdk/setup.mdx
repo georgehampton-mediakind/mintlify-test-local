@@ -1,0 +1,115 @@
+---
+title: Installation and setup
+description: Install the MKPlayer Web SDK from npm and initialise a player instance on your page.
+sidebarTitle: Installation and setup
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Install MKPlayer, add it to an HTML page, and create an initialised player instance before loading media.
+
+## Prerequisites
+
+* npm available in your project
+* A player license key from MediaKind
+* Your deployment domain added to the MediaKind license allowlist
+
+<Warning>
+  The player will not start if your domain is not allowlisted. You will see a `PLAYER_SETUP_MISSING_LICENSE_ALLOWLIST` error. Contact MediaKind to add your domain before going further.
+</Warning>
+
+## Install and initialise
+
+<Steps>
+  <Step title="Install the package">
+    <span id="install-the-package" className="mk-legacy-anchor" />
+
+    ```bash
+    npm i @mediakind/mkplayer
+    ```
+  </Step>
+
+  <Step title="Include the scripts in your page">
+    <span id="include-the-scripts-in-your-page" className="mk-legacy-anchor" />
+
+    Add `mkplayer.js` and `mkplayer-ui.css` to the `<head>` of your HTML page:
+
+    ```html
+    <head>
+      <title>My Video Player</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script type="text/javascript" src="./node_modules/@mediakind/mkplayer/mkplayer.js"></script>
+      <link rel="stylesheet" href="./node_modules/@mediakind/mkplayer/mkplayer-ui.css">
+    </head>
+    ```
+  </Step>
+
+  <Step title="Add a video container element">
+    <span id="add-a-video-container-element" className="mk-legacy-anchor" />
+
+    Add a `<div>` to your page `<body>`. MKPlayer uses this element as the playback container:
+
+    ```html
+    <body>
+      <div id="video-container"></div>
+    </body>
+    ```
+  </Step>
+
+  <Step title="Create a player instance">
+    <span id="create-a-player-instance" className="mk-legacy-anchor" />
+
+    In your JavaScript, get the container, build a configuration object, and pass both to `MKPlayer`:
+
+    ```javascript
+    const videoContainer = document.getElementById("video-container");
+
+    const playerConfig = {
+      key: "YOUR_PLAYER_LICENSE_KEY",
+      playback: {
+        muted: true,
+        autoplay: true
+      }
+    };
+
+    const player = new mkplayer.MKPlayer(videoContainer, playerConfig);
+    ```
+
+    The player is now initialised and ready to load a source. See [Loading and playing content](/mkio/reference/player-sdk/playback) for the next step.
+  </Step>
+</Steps>
+
+## Player configuration options
+
+The `MKPlayerConfig` object controls how the player behaves. All properties are optional except where noted.
+
+| Property    | Type                         | Description                                                                                                |
+| ----------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `key`       | `string`                     | Your player license key.                                                                                   |
+| `playback`  | `MKPlaybackConfig`           | Playback options such as `autoplay` and `muted`.                                                           |
+| `ui`        | `boolean`                    | Enables the built-in player UI. Requires `mkplayer-ui.css` to be loaded. Default: `false`.                 |
+| `events`    | `MKPlayerEventConfig`        | Map of player events to handler callbacks. You can also register handlers dynamically using `player.on()`. |
+| `analytics` | `MKAnalyticsConfig \| false` | Analytics configuration. Set to `false` to disable analytics even if the analytics module is loaded.       |
+| `buffer`    | `MKBufferConfig`             | Buffer configuration.                                                                                      |
+| `log`       | `MKLogConfig`                | Log level and output configuration.                                                                        |
+| `tweaks`    | `MKTweaksConfig`             | Advanced player tweaks. Use these only if you understand their effect on playback behaviour.               |
+
+## Additional requirements for Apple devices
+
+Safari on Mac, iPhone, and iPad requires an extra step to support secure URLs and custom HTTP headers via `setHttpHeaders`.
+
+1. Download `serviceWorker.js` from the MKPlayer SDK resources.
+2. Place the file at the root of the domain where your web app is hosted, for example `https://yourdomain.com/serviceWorker.js`.
+3. Explicitly enable `native_hls_parsing` in your player configuration:
+
+```javascript
+const playerConfig = {
+  key: "YOUR_PLAYER_LICENSE_KEY",
+  tweaks: {
+    native_hls_parsing: true
+  }
+};
+```
+
+The SDK enables `native_hls_parsing` by default if the property is not set, but setting it explicitly ensures consistent behaviour across environments.

@@ -1,91 +1,31 @@
 ---
-title: "MK.IO Infrastructure API Reference: Networks and Sites"
-sidebarTitle: "Infrastructure API"
-description: "Full REST endpoint reference for the MK.IO Infrastructure API — define and manage networks and sites for MK.IO Beam edge deployments."
+title: Infra API Reference
 ---
 
-The MK.IO Infrastructure API is the project-level REST API for infrastructure configuration in MK.IO. It focuses on network and site management for Beam deployment workflows — infrastructure resources are created, queried, updated, and retired here before Beam devices are registered. Use it alongside the Fleets API to define where your devices live and which networks are available to them.
+## Overview
 
-<Info>
-  **Version:** v1.1.4 · **Endpoints:** 10 · **Groups:** 2 · **Spec:** OpenAPI 3.0.2
-
-  [Download OpenAPI spec](https://docs.mediakind.com/openapi/beam/infrastructure-api.json)
-</Info>
+The MK.IO Infrastructure API is the project-level REST API for infrastructure configuration in MK.IO. It focuses on network and site management for operations workflows where infrastructure resources are created, queried, updated, and retired.
 
 ## Authentication
 
 All endpoints require a bearer token in the `Authorization` header:
+`Authorization: Bearer <your_token>`
 
-```http
-Authorization: Bearer <your_token>
-```
+You can create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. Follow the [API tokens guide](https://docs.mediakind.com/mkio/how-to/managing-your-organization/api-tokens) for more information.
 
-Create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. See the [API tokens guide](/mkio/admin/api-tokens) for full instructions.
+## Usage
 
-## Base URL
+Base URL: `https://app.mk.io`
 
-```
-https://app.mk.io
-```
+Typical usage pattern:
 
-## Usage Pattern
+* Create and maintain network and site resources.
+* Update or remove resources as requirements change.
 
-<Steps>
-  <Step title="Create and maintain networks">
-    Define the IP networks available at your Beam deployment locations. Networks are shared across sites within a project.
-  </Step>
-  <Step title="Create and maintain sites">
-    Define the physical or logical sites where Beam devices will be deployed, and associate them with the relevant networks.
-  </Step>
-  <Step title="Update or retire resources">
-    Update network or site definitions as your infrastructure evolves, or delete resources when they are no longer needed.
-  </Step>
-</Steps>
+Version: `1.1.4`
 
-## Endpoint Groups
+[Download OpenAPI specification](/openapi/beam/infrastructure-api.json)
 
-### Networks — 5 endpoints
+* [Networks](/api-reference/infrastructure-api/networks)
 
-Define and manage the IP networks available for Beam deployments within your project.
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/projects/{project_name}/infra/networks` | List Networks |
-| `GET` | `/api/v1/projects/{project_name}/infra/networks/{name}` | Get Network |
-| `PUT` | `/api/v1/projects/{project_name}/infra/networks/{name}` | Create Network |
-| `PATCH` | `/api/v1/projects/{project_name}/infra/networks/{name}` | Update Network |
-| `DELETE` | `/api/v1/projects/{project_name}/infra/networks/{name}` | Delete Network |
-
-### Sites — 5 endpoints
-
-Define and manage the physical or logical deployment sites where Beam devices operate.
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/projects/{project_name}/infra/sites` | List Sites |
-| `GET` | `/api/v1/projects/{project_name}/infra/sites/{name}` | Get Site |
-| `PUT` | `/api/v1/projects/{project_name}/infra/sites/{name}` | Create Site |
-| `PATCH` | `/api/v1/projects/{project_name}/infra/sites/{name}` | Update Site |
-| `DELETE` | `/api/v1/projects/{project_name}/infra/sites/{name}` | Delete Site |
-
-## Example Requests
-
-List all networks defined in a project:
-
-```bash
-curl -X GET "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/infra/networks" \
-  -H "Authorization: Bearer $MKIO_TOKEN"
-```
-
-Create a new site:
-
-```bash
-curl -X PUT "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/infra/sites/my-site" \
-  -H "Authorization: Bearer $MKIO_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"properties": {"description": "Primary broadcast facility"}}'
-```
-
-<Tip>
-  Infrastructure resources are typically created before Beam devices are onboarded. Complete your network and site definitions here, then use the [Fleets API](/api-reference/fleets-api) to register your devices into those sites.
-</Tip>
+* [Sites](/api-reference/infrastructure-api/sites)

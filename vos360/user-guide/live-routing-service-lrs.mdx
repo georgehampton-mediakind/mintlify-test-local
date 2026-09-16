@@ -1,0 +1,110 @@
+---
+title: Live Routing Service (LRS)
+robots: noindex, nofollow
+---
+
+<Note>
+  **Note:&#x20;**&#x43;loudLink will reach end of support life by the end of 2027. If you use CloudLink to ingest live sources from on-premises to the cloud, consider replacing it with the XOS appliance.
+</Note>
+
+The Harmonic Live Routing Service is a SaaS that is part of VOS360. It complements the VOS360 media processing and origin-packager SaaS. The LRS helps VOS360 by improving its availability, flexibility, and monitoring ability. LRS provides a global reach video router in the cloud through a combination of public internet and the cloud provider's inter-regional network.
+
+Important features of LRS include the following:
+
+* It is fully integrated with the Harmonic XOS, VOS360 media processing and playout workflows to bring live channels from customer premise to the cloud.
+
+* It acts as SRT listener to interface with the Harmonic CP9000 and XOS or third party SRT caller devices.
+
+* Point to multipoint distribution of the channels with or without VOS360 media processing.
+
+* Monitoring live feeds using popular tools such as VLC as SRT caller.
+
+* Facilitating blue/green VOS360 cluster upgrades without needing to reconfigure XOS or on-premise SRT caller devices.
+
+* Leverages inter-regional cloud networks for stable transmission of live channels across the globe.
+
+<Note>
+  **Note:&#x20;**&#x58;OS is not coupled with a VOS360 cluster. It is registered to the Harmonic Hub and coupled with a Hub account.
+</Note>
+
+**Cloud Source&#x20;**&#x6F;r **Cloud Edge** resources can be created for LRS by using the XOS or the VOS360 cluster. The resource can also be created using the Syndicate app available on the VOS360 web interface.
+
+**Cloud Source** can be considered as an endpoint in the cloud taking video channel from edge devices.
+
+For example, XOS or CP9000 is an edge device that sends live channel to the Cloud Source. XOS is able to create the Cloud Source endpoint when creating the uplink service in the XOS web interface. VOS360 user is able to create media processing or playout workflow by selecting the particular cloud source that is available their Hub account.
+
+**Cloud Edge** can be considered as an endpoint in the cloud distributing video channel to edge devices.
+
+For example, Cloud Edge can be used for XOS, VOS360, or third-party devices to receive the output from VOS360. This is especially useful for low latency distribution of statmux in the cloud with limited number of destinations.
+
+<Note>
+  **Note:&#x20;**&#x4D;ultiple Cloud Edges can connect to the same Cloud Source to pull the same channel.
+</Note>
+
+![](/images/vos360/d2cfaf42d76727e070ef870a.png)
+
+<Note>
+  **Note:&#x20;**&#x54;he LRS SRT listener endpoints use Domain Name as reference and not IP address.
+</Note>
+
+The benefit of using SRT listener endpoints is that it reduces configuration required for customer premise equipment due to static IP address change. Certain operation of the LRS might trigger IP address update but should not result in domain name update. In this case, the XOS or CP9000 would not require reconfiguration (CP9000 will support domain name SRT endpoint).
+
+## VOS360 Uplink Use Cases
+
+The diagram below shows a common use case by using the LRS uplinking live channel to the VOS360 clusters. A Cloud Source is created with channel feeding from the XOS or CP9000. VOS360 cluster is able to see this Cloud Source through the Channel or the Configure apps. VOS360 service can be created by using source with associated Cloud Source. As soon as the service in VOS360 is online, the Cloud Edge is created at specific cloud region for the VOS360 to consume. Multiple VOS360 clusters (running in the same Hub account) can consume the same Cloud Source at the same time. Typical use cases are:
+
+1. Blue/Green VOS360 cluster upgrade.
+
+2. Geo-Redundant VOS360 clusters.
+
+3. Production and Staging VOS360 clusters sharing same source channels.
+
+![](/images/vos360/9d80290780706abfb494f4aa.png)
+
+It is possible to consume the same Cloud Source by the same VOS360 cluster without feeding the same source twice from customer premise. This enables the use case of simulcast same channel for broadcast and OTT while different workflow is used.
+
+![](/images/vos360/7f873ab2d70dbf0c08f0dccc.png)
+
+It is possible to monitor the uplink channel before entering the VOS360 cluster. Since SRT protocol is able to traverse the internet as long as there is enough bandwidth, it is possible to monitor the feed from internet connected devices.
+
+![](/images/vos360/2bc7abfde5ff85015d62fab9.png)
+
+## VOS360 Downlink Use Cases
+
+For certain services such as statmux in the cloud with high bandwidth streams, low latency, and a limited number of destinations are required, the LRS could be used to bring the SPTS or MPTS from the cloud to the ground. Cloud Edges can be created for a VOS360 destination output. Each Cloud Edge can be located at different cloud region in order to extend the reach of the SRT connection through the stable global inter-regional network of the cloud service provider. Most tier-one ISP should have direct peering relationship with the big cloud provider data center in the region. There is limit on how many SRT connections for this point to point distribution model. The processing resource on a Cloud Source and Cloud Edge is limited. The number of output per Cloud Source/Cloud Edge vary from 3 to 10 depending on bitrate and encryption level used on the current size (CPU/Memory) of the container.
+
+![](/images/vos360/59adca6b4604604ecbce94d2.png)
+
+<Note>
+  **Info:&#x20;**&#x50;ublic CDN might not be designed for low-volume, high-throughput HTTP streaming especially with a large geographic distance from source to destinations. SRT provides direct one-to-one sessions from source to destination to handle low volume and high throughput requirement of MPTS content distribution.
+</Note>
+
+## SRT Encryption
+
+LRS supports encryption of the SRT session. The supported encryption modes (per [SRT open source library](https://github.com/Haivision/srt/blob/master/docs/encryption.md)) are AES-128, AES-192 and AES-256. A passphrase is needed as a shared secret between the caller and the listener for authentication. Data payload encryption key is generated based on the passphrase.
+
+The XOS and the VOS360 automatically create the LRS resources (Cloud Source/Destination) and configure the encryption parameters (encryption mode with AES-128 and passphrase)
+
+Also, AES-128 is used for the SRT session between LRS containers.
+
+When you use the Syndicate app to create the Cloud Source/Cloud Destination manually, you must select the encryption mode and to enter the passphrase. The SRT caller (e.g. CP9000) will need to use the same encryption mode and passphrase for successful SRT session setup.
+
+## SRT Network Requirement
+
+The SRT protocol uses Automatic Repeat Request (ARQ) with NAK/ACK messages to recover packet loss or packet reordering due to network impairment between the sender and receiver.
+
+The SRT sender and receiver maintain a buffer. The sender buffer is needed to handle packet retransmission. The receiver buffer is needed to handle packet reordering and packet retransmission. The buffer adds latency of the live stream. Latency of a SRT session is the larger of the configured latency at sender and receiver (since version 1.5 of SRTlib).
+
+Typically, the rule of thumb for SRT latency is 4 times the RTT (Round Trip Time) between the caller and listener. Four times RTT SRT latency is tested to be able to handle 10% packet drop and 1% of packet reordering.
+
+For example, the RTT between customer premise and the Azure East Asia region is 30ms. The latency configuration of the SRT should be 120ms or higher.
+
+By default, the SRT latency at LRS is 600ms.
+
+Bandwidth required for SRT has dependency on the amount of retransmission required. Since Forward Error Correction (FEC) is not used when compared with Zixi, the overhead of SRT should be less than Zixi under good network condition. 1.25x TS bitrate is recommended between SRT caller and listener.
+
+FEC is not an official feature in current released version of the SRT libraries.
+
+## Redundancy Scenarios
+
+There are many cases for uplink or downlink redundancy. The LRS passes through the MPEG-TS with no modification. However, it is able to perform input redundancy (not source redundancy) by switching from one source to another given that they are from the same encoding source. When a secondary input is created, the input redundancy is automatically activated.

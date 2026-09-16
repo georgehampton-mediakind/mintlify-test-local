@@ -1,0 +1,42 @@
+---
+title: Configure in-band metadata in input stream
+sidebarTitle: In-band metadata
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+{ /* TODO: update links (especially ./parameters/) once MD files are created */}
+
+To configure in-band metadata input stream, follow these step:
+
+<Info>
+  In our example, we consider that you have selected an MPEG-2 TS input.
+</Info>
+
+1. From the **Input** tab, go to the **Input streams selection** > **Metadata ID** section then click the **Add** button. The **Metadata selection** window displays.
+
+   ![view add input metadata el](/_machine-assets/d24f8fec6bcb29b49c57648b9f0c2c6bf7821888ed9582d4c2fef08430cf41e1.png)
+
+2. Select a [**Type**](/beam/live-encoder/parameters/input/metadata#in-band-metadata).
+
+   ![view metadata selection type](/_machine-assets/2e2f80dcc59eaa854dffc31d56e0576ef7892ae88e47f5e07b0a2102e90695ea.png)
+
+3. Enter or select the following information depending on the selected type:
+
+   1. Enter a [**PID**](/beam/live-encoder/parameters/input/metadata#in-band-metadata).
+
+   2. If you selected **SCTE-35** type, you can apply a **Delay**.
+
+   3. If you selected **Cuetones** type, select the audio source that you previously created.
+
+4. Click **Ok** to save.
+
+   * The in-band metadata stream is added to the list of metadata.
+   * The in-band metadata is automatically added to the **Encoding** tab.
+
+5. Click **Save and continue** or **Save and exit** to save your changes.
+
+{ /* TODO: Transition? Are the two next items necessary? */ }
+
+* You can [configure the metadata encoding](/beam/live-encoder/configure/encoding/metadata-encoding).
+* You can [add the metadata to the output stream](/beam/live-encoder/configure/output/configure-output#define-the-output-stream-composition).

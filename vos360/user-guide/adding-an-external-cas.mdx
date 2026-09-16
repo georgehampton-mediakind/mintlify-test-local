@@ -1,0 +1,72 @@
+---
+title: Adding an external CAS
+robots: noindex, nofollow
+---
+
+You can integrate an external CAS in the Scrambling app and then assign it to Broadcast services (used for IPTV or DTH workflows) using the Configure Channels app.
+
+The external CAS must use a standard DVB-CSA or AES algorithm, including external or internal EIS, and external ECMG and EMMG.
+
+Harmonic also supports scrambling IPTV services without the use of an external CAS.
+
+1. From the **Scrambling&#x20;**&#x61;pp, select **CAS > CA Systems**, and click **+ System**.
+
+2. Configure the following settings:
+
+   1. **CAS Name:** Type the name of the CAS.
+
+   2. **Super CAS ID:** Type the Super CAS ID string, which is composed of the two-byte CA system ID followed by the two-byte CA subsystem ID.
+
+3. Configure the **IP Address** and **Port** of the primary ECMG.
+
+4. Select **CAS > SCG**, and click **+ SCG**.
+
+5. Select the desired option from the **Algorithm&#x20;**&#x64;rop-down menu.
+
+   1. For scrambling most commonly used for DTH workflows (i.e. **NOT** including "**BISS2 mode 1/E**"), configure the following:
+
+      1. **SCG Name:** Set the name of the SCG.
+
+      2. **Name:** (Optional) Enter a label for the ECM ID.
+
+      3. **ECM ID:** Enter the Entitlement Control Message (ECM) provided by the CAS.
+
+      4. **CA System:** Select the created CA System.
+
+      5. **Access Criteria:** Set the access criterion. This must be in hexadecimal format with an even number of digits.
+
+      6. **Private Data:** Set the private data. This must be in hexadecimal format with an even number of digits.\
+         **Note:** This is used for the insertion of Private Data in the PMT CA descriptor which will be used for ECMs.
+
+   2. For scrambling commonly used for Contribution workflows, use the "**BISS2 mode 1/E**" scrambling, and configure the following:
+
+      1. **Clear Session Word:** Set the Session Word to be used during scrambling (sequence of 32 hexadecimal characters).
+
+      2. **Parity Bits:** Select the Parity Bits to be applied in TS packets.
+
+   3. For BISS mode 1 scrambling configure the following:
+
+      1. Clear Session Word - Set the Session Word to be used during scrambling (sequence of 12 hexadecimal characters).
+
+   4. For BISS mode E scrambling configure the following:
+
+      1. Encrypted Session Word - Set the Encrypted Session Word to be used during scrambling (sequence of 16 hexadecimal characters).
+
+      2. Injected ID - Set the Injected ID to be used during scrambling (sequence of 14 hexadecimal characters).
+
+6. Optionally, click **+ECM** to repeat the previous step for each set of access criteria.
+
+7. Optionally, add a backup **SCG**.
+
+8. Click **Save**.
+
+**Result**\
+You can assign the CAS to a Broadcast (IPTV/DTH) service when you configure the service in the **Configure Broadcast** app.
+
+<Note>
+  **Info**
+
+  * You can enable scrambling at the **Multiplexer level** by setting the **Scrambling&#x20;**&#x63;heckbox. (Refer to [<u>Adding and configuring a multiplexer</u>](https://confluence360.video.harmonicinc.com/wiki/spaces/V360DD/pages/361076313/Adding+and+configuring+a+multiplexer).)
+
+  * You can enable scrambling at the **Program/Component levels** by setting the **Enable Scrambling&#x20;**&#x61;nd **Scrambling Group**. (Refer to [<u>Adding programs to the multiplexer</u>](https://confluence360.video.harmonicinc.com/wiki/spaces/VOS360DOCC/pages/723453350/1.29+Adding+local+programs+to+the+multiplexer).)
+</Note>

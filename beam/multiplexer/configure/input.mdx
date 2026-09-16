@@ -1,0 +1,222 @@
+---
+title: Input source redundancy modes
+sidebarTitle: Input
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+If a source has bad health, Multiplexer can automatically switch to an alternative source. Conversely, if the secondary has bad health, it can prevent from an unnecessary redundancy switch. Monitoring the secondary provides the advantage of having a health report for all sources, allowing the automatic switch to use this information when necessary. However, this behavior has the drawback of higher CPU and network bandwidth usage.
+
+The behavior of the input source switch mechanism can be summarized into two modes:
+
+1. Automatic switch behavior **when the secondary sources are monitored**:
+   * If the active source input shows bad health, then a switch to another source reporting source with good health (green) occurs.
+   * If the active source reports PID or PIDs missing and they are reported as critical, then a switch to another source reporting source with good health (green) occurs.
+   * If the active source has missing PID or PIDs reported but only as warning, then no change occurs.
+2. Automatic switch behavior **when the secondary sources are not monitored**:
+   * If the active source input goes missing, then a switch to another source occurs.
+   * If the active source has missing PID or PIDs reported and they are reported as critical then a switch to another source occurs.
+   * If the active source has missing PID or PIDs reported but only as warnings, then no change occurs.
+
+<Info>
+  If all sources have bad health, the Multiplexer continues cycling through the sources until a source with good health (green) is available.
+</Info>
+
+## Input source health monitoring view
+
+The Input Redundancy Health view displays information on the health of an input source for all servers the configuration is assigned to. This page is an overview of redundant input sources, the input source health, the DVB services per source and you can manually switch between sources.
+
+Both the input name assigned by the user in the Multiplexer configuration and the input details are visible for added convenience. If the input is used for multiple output services and/or components, the full list under *Output Services* can be expanded by clicking it.
+
+![view input health sp](/_machine-assets/769889f8414a110b4d4f2f097be4c46e2d0f42041d7862dc9a0698f209d33d62.png)
+
+## Displaying health information for an input source
+
+The Input Redundancy health page can be used to monitor input sources and manually switch sources.
+
+1. Edit the **Multiplexing** service from the Services page. Alternatively, go to the services **Statistics** view.
+
+2. Select **Input redundancy** to display the input sources, and their redundancies and statuses.
+
+   ![view input health sp button highlight](/_machine-assets/36071b6de6b686e08d52f640c53df0d6d1b40fb802f0ff7906d3ad780a68ddc4.png)
+
+3. Hover the mouse over the status for a source to display information.
+
+   ![view input health details sp](/_machine-assets/cf972b04e6f72ddf0562fb42e5ff70cd916f044ce3fd72c3fe1d6ec7d5eb29d4.png)
+
+## Switching the active input source manually
+
+A transport stream is running with primary and secondary inputs.
+
+1. Display Services.
+
+2. Edit the **Multiplexing** service to display the transport stream.
+
+3. Select **Input Redundancy** to display the health page.
+
+4. Click <img src="/icons/ui/left-right.svg" alt="Left/Right" className="mk-ui-icon" width="16" height="16" /> to switch to the other input source.
+
+   ![view manually switch input source sp](/_machine-assets/32608a0514844850e069a8784c77b453654e57a1ce3cedec4cffa8cb4dc87116.png)
+
+The previously inactive source becomes active.
+
+## Automatic input source switch health monitoring
+
+You can monitor the health for individual input components (PIDs) or input DVB services. You can configure a missing component or DVB service to contribute to the health of an input source and trigger a redundancy switch if necessary.
+
+### Monitoring input source health at the service level
+
+1. Display Services.
+
+2. Edit the **Multiplexing** service to display the transport stream.
+
+3. Select the Transport Stream to display the **Properties** configuration.
+
+4. Configure the **Source Redundancy Mode** parameter to **Automatic with monitoring**.
+
+   ![view switch input source config sp](/_machine-assets/d51e17384d0df40a1480f756cf63eefa9520f334b4df2d0e2c1abb2f36504158.png)
+
+5. From the Output Stream tree, select the **Service** to display **Output** parameters.
+
+6. Select **Monitor health of all signalled Input components** to activate the automatic health monitoring for this service.
+
+7. Check the health of the input sources for this service:
+
+   1. Stop the primary source supplying the Multiplexer.
+
+   2. Click <img src="/icons/ui/left-right.svg" alt="Left/Right" className="mk-ui-icon" width="16" height="16" /> in the header menu to display the Input source health monitoring page.
+
+   3. Hover the mouse over the input source statuses to get more details.
+
+   As a result, the input source is showing an unhealthy status. The missing PIDs from the service are now reported as critical issues and they are labelled *Missing Mandatory Component*. If the secondary source is healthy, the input source automatic switches to the healthy input.
+
+### Monitoring input source health at the component level
+
+1. Display Services.
+
+2. Edit the **Multiplexing** service to display the transport stream.
+
+3. Select the Output component in the Transport Stream tree to display the **Properties** configuration.
+
+   ![view auto switch input source config sp](/_machine-assets/111c345c94ca9e55eb9befb118490e6b41b335a9ea31404c7e256a04c232e494.png)
+
+4. From the **Input** tab, select **Alarm if input component missing** to enable.
+
+5. From the **Input tab**, select **Contributes for input health Monitoring**.
+
+6. Check that the automatic switch occurs when necessary:
+
+   1. Stop the primary source for the PID.
+
+   2. Click <img src="/icons/ui/left-right.svg" alt="Left/Right" className="mk-ui-icon" width="16" height="16" /> in the header menu to display the Input source health monitoring page.
+
+   3. Hover the mouse over the input source statuses to get more details. The active input source switches to the healthy input source.
+
+## Using the Input Content panel
+
+To preview the inputs to the Multiplexer configuration being created, use the **Input Content** panel.
+
+![mux input content panel](/_machine-assets/e1892f8f1e26a06895fc09e828e32d091f3ed36189e02e840a48c97104f32dcb.png)
+
+The **Input Content** panel is pre-loaded with any input in use by a configuration output services.
+
+### Adding a new input to the Input Content panel on a new configuration or an existing configuration
+
+1. Click the plus (+) button next to the panel title banner.
+
+   ![mux input content panel plus](/_machine-assets/25f13e0a645287af7e45b9ffaf029a59eaaab70f404859b9f7f94ae172ae91c9.png)
+
+2. Fill the fields.
+
+   <Info>
+     The field validation similar to the output panel applies in this window. Invalid fields are highlighted in red and an error message shows.
+   </Info>
+
+   ![mux input content add](/_machine-assets/f52c7a8a53931d8d3cafea7bfbe6da43fe0274a2cc3369ec276b995ade2305d1.png)
+
+3. Once all the required fields are filled and valid, click **Add**. The newly created input shows, collapsed, in the **Input Content** panel.The new input enters the Loading state until it has extracted all the information or up to a maximum of 30 seconds.
+
+   ![new input loading](/_machine-assets/171755aad6fa57680872ad54b0f6fd2d1b09d8ca14de264c1bf82b3eb5abe10b.png)
+
+4. To expand the input, click the **arrow** to the left of the input entry. You can also expand the child service or the component entries to reveal all the information extracted.
+
+   ![mux input content expanded](/_machine-assets/d1c8fd8a8cd541ca14e90fff9da07d71e5b18450955daff6af19f5238dadc2ba.png)
+
+5. To use the input as a source, go to the **Properties** panel and click the **List of the existing sources** drop-down box.
+
+   ![mux input content list of existing sources](/_machine-assets/259370f8864ecec65fd00624594e5ff4d7f52298335fbe87c439df532d815bbe.png)
+
+6. Click the input. The input panel fields fill automatically. If there are multiple inputs that use this input as a source, it will also be set as a shared source.
+
+![mux input content shared source](/_machine-assets/17300790e16051c46ba7fdceec9878fba33622c624c70a5edb32d7cba10c4e99.png)
+
+<span id="drag--drop" className="mk-legacy-anchor" />
+
+### Drag & Drop
+
+<Info>
+  This is only supported from Multiplexer versions 21.3 onwards.
+</Info>
+
+Alternatively, it is possible to create output items by dragging items from the Input Content Panel to the Output Stream Panel. This heavily reduces the burden of manual data introduction and checking.
+
+When using the Drag & Drop functionality, a copy of the item that was dragged will be created in *snapshot* mode. This is ideal for remux head end scenarios, where multiple MPTS sources that are outside of the user’s control need to be manipulated. This process normally involves breaking the incoming MPTS sources apart and recombining the services into new output MPTS containing different sets of services. Since the user may not have control over the incoming transport streams, their only source of control of the output is in the mux configuration itself. In these types of systems, we would expect the user to explicitly configure the services and components being passed through along with PSI/SI manipulations required to make it "their" output.
+Because of this, when considering a UX based on dragging input items to the output we believe operations should work recursively on whole branches to produce a static output i.e. one that does not change because items have been added to the input.
+We are calling this the "snapshot approach" when discussing the drag and drop operations as it produces a fixed configuration based on the "snapshot" of the input when the user was editing the configuration.
+
+**Once the content finishes loading** in the Input Content Panel, click, hold, and drag the desired item to the desired target parent in the Output Stream panel. If it is dragged to a valid target, the target itself will be highlighted in green (see picture below) and the input item can be dropped. If the target is highlighted in red, it is not a valid operation and no action will take place.
+
+![mux input content drag drop 1](/_machine-assets/1eb590a7d438907410fc25fd281eebeb965625839b4581137ece1487fc7ba25d.png)
+
+Once the item is dropped to a valid target parent, a copy of it will be added to the output stream. Available configuration fields will be autofilled from the content extracted and displayed in the Input Content Panel. Any children items will be recursively added in the same way.
+
+Do any edits to the autofilled new items under the Output Stream panel. Save the configuration.
+
+![mux input content drag drop 2](/_machine-assets/c2e8dcf865009125b1610224473be65f769f910e43637e0bbcb3dd4e4b788db9.png)
+
+The following drag and drop operations are currently implemented:
+
+| Drag (Source) |            Drop to (Target)            | Mode     |
+| :-----------: | :------------------------------------: | -------- |
+|    Service    |       Transport Stream / Service       | Snapshot |
+|   Component   | Transport Stream / Service / Component | Snapshot |
+|   Descriptor  |         Component / Descriptor         | Snapshot |
+
+### Managing inputs in the Input Content panel
+
+You can manipulate the inputs added to the **Input Content** panel manually or retrieved from the configuration:
+
+* by using the buttons next to the **Input Content** panel title;
+* by right-clicking on each input to reveal the context menu.
+
+The buttons and options in the context menu are greyed out for any entry that is not a top-level input.
+
+![manage inputs](/_machine-assets/98066cff3c559390afa00e9fb20f5b2bf9c1150c39fa8412621fc9d48f6ccfbb.png)
+
+You can bring back the input details window:
+
+* by selecting **Edit Input**;
+* by clicking the **pencil** button.
+
+You can change any of the original input details. Once saved, the changes automatically apply to any output source that uses this input.
+
+If you select **Refresh Input** or click the **cycle arrows** button, the selected input enters the Loading stage again and extracts up-to-date information on the input.
+
+<Info>
+  Once loaded, the input-extracted information does not refresh automatically.
+</Info>
+
+You can delete inputs:
+
+* by selecting **Delete Input**;
+* by clicking the **trash can** button.
+
+<Info>
+  The inputs that are in use cannot be deleted. If the input is in use, the **Delete Input** option and the **trash can** button are greyed out.
+</Info>
+
+![input content cant delete](/_machine-assets/0ef227e219f533a38eebc79cdbeb9f8da552c4a647abe5da526bb2042a426871.png)
+
+<Info>
+  The inputs in the **Input Content** panel that are not in use are not saved when you exit or refresh the configuration page.
+</Info>

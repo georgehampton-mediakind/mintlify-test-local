@@ -1,0 +1,67 @@
+---
+title: Creating an audio grooming profile for MOV files
+robots: noindex, nofollow
+---
+
+Create audio/subtitle grooming profile for MOV files.
+
+<Note>
+  **Note:&#x20;**&#x57;hile grooming on MOV files is available for playout workflow, it does not apply for the VOD with transcode workflow.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x46;or playout channels, you can also apply audio grooming profile to primary events that use MOV assets in the playlist. To do so, specify the profile name in the playlist file or when creating or editing a primary event in the Playout Monitor app and with REST API call.
+</Note>
+
+**Before you begin**\
+Ensure that you have configured system languages in **Configure Channels > Settings**.
+
+1. Navigate to the **Asset Acquisition** app> **Settings** tab> **Profiles**.
+
+2. Click the **Create&#x20;**&#x62;utton to create a MOV grooming profile.
+
+3. Enter a **Profile Name**.
+
+4. Select how the grooming profile should be applied to the source audio:
+
+   * **Update missing fields only**
+
+   * **Override all fields**
+
+5. On the **Audio** tab, configure the following settings for each audio track:
+
+   * **Codec**: Select the codec to be used in the output.
+
+     <Note>
+       **Note:&#x20;**&#x4F;nly PCM audio is supported at this time.
+     </Note>
+
+   * **Channels**: Configure the channels to be used in the output. Each stereo pair must be configured to use the same language.
+
+   * **Languages**: Configure the languages to be used.
+
+     <Note>
+       **Note:&#x20;**&#x46;or playout assets, the languages you define for each audio and subtitle track must match the languages defined in the playout source.
+     </Note>
+
+   * **Type**: Select from the following:
+
+     * **Not defined**
+
+     * **Clean effects**
+
+     * **Hearing impaired**
+
+     * **Visual impaired commentary**
+
+6. On the **Subtitles** tab, click **Add**, and then configure the following settings:
+
+   * **ID**
+
+   * **Type**
+
+   * **Page**
+
+   * **Language**
+
+7. Click **Save**.

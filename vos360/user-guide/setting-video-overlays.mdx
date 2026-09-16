@@ -1,0 +1,26 @@
+---
+title: Setting video overlays
+robots: noindex, nofollow
+---
+
+You can insert video with some overlay as follows:
+
+* Logo: for Station ID purposes. (Refer to the sub-section for details.)
+
+* Graphics: crawl text or animated logo. (Refer to the sub-section for details.)
+
+* Video Insertion: for blackout purposes (not described in this document).
+
+* EAS-NET: video overlay can be performed according to the alert based on Station ID configured using the EAS-NET protocol.
+
+* Blackout Slate: in case of signal loss.
+
+  <div className="vos-table-scroll">
+    <table className="vos-source-table">
+      <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+      <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Trigger</strong></p></td><td colSpan="1" rowSpan="1"><ul><li><p>Auto (Default): Select this option if you need to trigger the blackout slate with both the SCTE-35 message and Monitor app. </p></li><li><p>ESAM Alternate Content: Select this option if you need to trigger the blackout slate with the Monitor app. Note that if this option is selected, do not configure the ESAM acquisition point ID or ESAM POIS endpoint for the service.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Zone Identity</strong></p></td><td colSpan="1" rowSpan="1"><p>(Optional) Enter the provided Zone identity received from the ESAM message.</p></td></tr></tbody>
+    </table>
+  </div>
+
+* Nielsen Watermark: for Nielsen watermark insertion purposes and the Nielsen parameters (SID, Check Digits, CBET SID, and CBET Check Digit) can be configured for the audio.

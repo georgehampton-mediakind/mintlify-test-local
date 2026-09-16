@@ -1,206 +1,210 @@
 ---
-title: "MK.IO Beam Release Notes: Software Updates and Changes"
-sidebarTitle: "Release Notes"
-description: "Release notes for MK.IO Beam software — new features, improvements, hardware support changes, and upgrade notes across software versions."
+title: MK.IO Beam Release Notes
+description: Version history and feature updates for MK.IO Beam releases.
+sidebarTitle: Release Notes
 ---
 
-This page lists the release notes for MK.IO Beam software, covering new features, improvements, and hardware support changes across versions.
+<span id="_top" className="mk-legacy-anchor" />
+
+<span id="mkio-beam-11401" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.14.0.1
 
-**4th September 2026**
+4th September 2026
 
-### New Features
+<span id="new-features-1" className="mk-legacy-anchor" />
 
-- Support for reception workflows using the Essentials UI
-- Automatic CPIX key rotation — see [Key Rotation](/beam/headends/packager)
-- MK.IO Beam ISO support for servers with hardware RAID'd disks — see [RAID and FakeRAID configuration](/beam/system-admin/iso-installation)
+### New features
 
----
+* Support for reception workflows using the Essentials UI
+* Automatic CPIX key rotation. See [Key Rotation](/beam/packager/parameters/hls-or-dash-over-cmaf/#compatible-cpix-ext-key)
+* BEAM ISO to support Servers with hardware RAIDed Disks. See [RAID and FakeRAID configuration](/beam/system-admin/iso-installation/raid-configuration)
+
+<span id="mkio-beam-11307" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.13.0.7
 
-**21st August 2026**
+21st August 2026
 
-### New Features
+### New features
 
-- Addition of an RT (reliable transport) failover group for high availability distributed deployments
-- Manual CPIX key rotation
+* Addition of an RT (reliable transport) failover group for high availability distributed deployments
+* Manual CPIX key rotation
 
----
+<span id="mkio-beam-11207" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.12.0.7
 
-**17th July 2026**
+17th July 2026
 
-### New Features
+### New features
 
-- Essentials UI for new customers only
-- Ability to change the audio line-up on a Receiver service without interruption in the video output (SDI output only)
-- Null Packet Removal from Multiplexer transport stream output bitrate — allows users to remove NULL packets (PID 0x1FFF) from the MPEG transport stream output
+* Essentials UI for new customers only
+* Ability to change the audio line-up on a Receiver service without interruption in the video output for SDI output only
+* Null Packet Removal from Multiplexer transport stream output bitrate allowing users to remove NULL packets (PID 0x1FFF) from the MPEG transport stream output
 
----
+<span id="mkio-beam-11104" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.11.0.4
 
-**2nd July 2026**
+2nd July 2026
 
-### New Features
+### New features
 
-- SMPTE ST 2110 end-to-end latency reduced to match SDI performance
-- Packager — CPIX key and credential support
-- Support for multiple UHD ST2110 outputs on a single Mellanox card
+* SMPTE ST 2110 end to end latency reduced to match SDI performance
+* Packager - CPIX key and credential support
+* Support for multiple UHD ST2110 outputs on a single Mellanox card
 
----
+<span id="mkio-beam-11002" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.10.0.2
 
-**29th May 2026**
+29th May 2026
 
-### New Features
+### New features
 
-- Support for 100G ST 2110 network card in MK.IO Beam
-- Support for ConnectX-6 Lx EN adapter card
-- Third-party software packages now persist across software upgrades
-- Ability to enter a Stream ID for an SRT session
+* Add Support for 100G ST 2110 Network Card in MK.IO Beam
+* Add support for ConnectX-6 Lx EN Adapter Card
+* Make 3pp software persistent over upgrade
+* Ability to enter a Stream ID for a SRT session
 
----
+<span id="mkio-beam-1905" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.9.0.5
 
-**24th April 2026**
+24th April 2026
 
-### New Features
+### New features
 
-- Configuration of IP settings for bonded interfaces on the UI
-- Creation and deletion of VLAN interfaces on the UI
-- Configuration of IP settings for VLAN interfaces on the UI
-- Configuration of route metrics on the UI to support multiple default gateways
-- Configuration of jumbo frames on the UI to simplify JPEG-XS encode configuration
-- Configuration of static routes on the UI
-- 8 tuners supported on the 4-port RF input card (Digital Devices SX8)
-- Dell SupportAssist information included in Beam support packages
+* Configuration of IP settings of bonded interfaces on the UI
+* Creation and deletion of VLAN interfaces on the UI
+* Configuration of IP settings of VLAN interfaces on the UI
+* Configuration of route metrics on the UI to allow support for multiple default gateways
+* Configuration of jumbo frames on the UI to simplify configuration of JPEG-XS encode
+* Configuration of static routes on the UI
+* 8 tuners supported on the 4-port RF input card (Digital Devices SX8)
+* Add information from Dell SupportAssist to Beam support package
 
----
+<span id="mkio-beam-1803" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.8.0.3
 
-**27th March 2026**
+27th March 2026
 
-### New Features
+### New features
 
-- H.264 High added to the list of Contribution codecs
-- Removal of the four-service limitation for SMPTE ST 2110 output
-- Support for down conversion modes: 1080i to 720p, 1080p to 720p, 720p to 1080i, UHD to 1080i, UHD to 1080p, UHD to 720p
-- Beam with distributed headends including Packaging
-- Static routes configuration now retained on upgrade
+* Add H.264 High to the list of Contribution codecs
+* Removal of the four service limitation for SMPTE ST 2110 output
+* Support for down conversion modes: 1080i to 720p, 1080P to 720P, 720P to 1080i, UHD to 1080i, UHD to 1080P, UHD to 720P
+* Beam with distributed headends including Packaging
+* Static routes configuration now retained on upgrade
 
----
+<span id="mkio-beam-1704" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.7.0.4
 
-**27th February 2026**
+27th February 2026
 
-### New Features
+### New features
 
-- ST2022-6 output over IP
-- UI configuration support for HTTPS Proxy
-- Support for Multi-Payload SMPTE ST 2110-40 VANC Reception
-- Reception — support for super low delay mode for 1080i video sources
-- Packager redundancy in Beam using a failover group
-- RF cards from Beam appliances now visible in the MK.IO Device page alongside IP and SDI/ASI cards
-- Beam with HA headends — support for Multiplexer redundancy
+* ST2022-6 output over IP
+* UI configuration support for HTTPS Proxy
+* Add Support for Multi-Payload SMPTE ST 2110-40 VANC Reception
+* Reception – support for super low delay mode for 1080i video sources
+* Packager redundancy in Beam using a failover group
+* MK.IO should pick up RF cards from Beam appliances and add them to the 'Device' page similar to 'IP' and 'SDI/ASI'
+* BEAM with HA Head ends - Support for Multiplexer redundancy
 
----
+<span id="mkio-beam-1605" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.6.0.5
 
-**30th January 2026**
+30th January 2026
 
-### New Features
+### New features
 
-- Support for router control for headend deployments of MK.IO Beam
-- HDR/SDR custom Look-up Table (LUT) upload and selection
-- Ability to enable/disable Packaging from the MK.IO Beam UI
-- CPIX integration using HMAC for live events and linear channels
-- Alarms exposed to Prometheus for viewing on a remote Grafana instance
-- Support for UHD decode over SMPTE ST 2110 output
-- Beam with HA headends — support for Packager and Live Encoder on separate servers
-- HTTPS access to packaged output
-- Splicing now supported in distributed headend deployments
+* Support for router control for headend deployments of MK.IO Beam
+* HDR/SDR custom Look-up Table (LUT) upload and selection
+* It is now possible to enable/disable Packaging on the MK.IO Beam UI
+* CPIX integration using HMAC for live events and linear channels
+* Include alarms exposed to Prometheus so they can be viewed on a remote Grafana instance
+* Support for UHD decode over SMPTE ST 2110 output
+* BEAM with HA Head ends - Support for Packager and EL on separate servers
+* Provide HTTPS access to Packaged output
+* Splicing now supported in Distributed Head end deployments
 
----
+<span id="mkio-beam-1504" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.5.0.4
 
-**27 November 2025**
+27 November 2025
 
-### New Features
+### New features
 
-- Introduction of the X20 server
-- Live-to-live splicing is now supported
-- Support for backup and apply of device configurations from MK.IO
+* Introduction of the X20 server
+* Live to live splicing is now supported
+* Support for backup and apply of device configurations from MK.IO
 
----
+<span id="mkio-beam-1403" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.4.0.3
 
-**31 October 2025**
+31 October 2025
 
-### New Features
+### New features
 
-- Support for high availability headend deployments with Live Encoding
-- Support for SD resolutions with SMPTE ST 2110 output
-- Improvements to decode latency
-- Bonding capability for all ports
+* Support for high availability headend deployments with Live Encoding
+* Support for SD resolutions with SMPTE ST 2110 output
+* Improvements to decode latency
+* Bonding capability for all ports
 
----
+<span id="mkio-beam-1300" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.3.0.0
 
-**9 October 2025**
+9 October 2025
 
-### New Features
+### New features
 
-- Introduction of X40 server
-- Support for multiple CI option cards in a single chassis
-- Software decode supports HDR to SDR dynamic range conversion
-- Software decode support for additional sub-sampled resolutions for 720p- and 1080i-based content
-- Support for running MK.IO Beam in a VM for controller use cases on ESXi virtualization
-- Support for installing the MK.IO Beam software ISO via BMC or iDRAC
-- PTP, clock source, and IGMP parameters configurable on the UI
-- Network status information available on the UI
+* Introduction of X40 server
+* Support for multiple CI option cards in a single chassis
+* Software decode supports HDR to SDR dynamic range conversion
+* Software decode support for additional sub-sampled resolutions for 720p- and 1080i-based content
+* Support for running MK.IO Beam in a VM for controller use cases on ESXI virtualization
+* Support for installing the MK.IO Beam software ISO via BMC or iDRAC
+* PTP, clock source and IGMP parameters can be configured on the UI
+* Network status information available on the UI
 
----
+<span id="mkio-beam-1201" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.2.0.1
 
-**5 August 2025**
+5 August 2025
 
-### New Features
+### New features
 
-- Introduction of C30 and H70 servers
-- Server pair 1+1 redundancy for headends
-- Support for multiple Digital Devices RF input cards in a single chassis
-- Receiver service support for AMD CPUs
-- Simplified JPEG-XS encode configuration
-- Support for ASI output on Dektec DTA-2127
+* Introduction of C30 and H70 servers
+* Server pair 1+1 redundancy for headends
+* Support for multiple Digital Devices RF input cards in a single chassis
+* Receiver service support for AMD CPUs
+* Simplification of JPEG-XS encode configuration
+* Support for ASI output on Dektec DTA-2127
 
----
+<span id="mkio-beam-1102" className="mk-legacy-anchor" />
 
 ## MK.IO Beam 1.1.0.2
 
-**23 June 2025**
+23 June 2025
 
-### New Features
+### New features
 
-- Support for E50 and E60 servers for contribution encode and headend use cases
-- 4:2:2 8-bit and 10-bit progressive and interlaced H.264 and H.265 HD software encode
-- RF input and SDI output via Dektec DTA-2127 RF input option card
-- 4:2:2 and 4:2:0 H.265 UHD software decode
-- 4:2:2 10-bit SMPTE ST 2110 output with software decode
-- The Dektec DTA-2178 8-port SDI option card now supported with reception — up to 8 baseband outputs per card, more with multiple cards
-- Hostname, IP, NTP, firewall zones, DHCP, and DNS parameters configurable on the MK.IO Beam web UI
-- New "Super Low" decode delay mode for lower latency decoding
-- Server health monitoring now available
-- Support for active-backup redundant bonded network management interfaces
+* Support for E50 and E60 servers for contribution encode and headend use cases.
+* 4:2:2 8-bit and 10-bit progressive and interlaced H.264 and H.265 HD software encode.
+* RF input and SDI output via Dektec DTA-2127 RF input option card.
+* 4:2:2 and 4:2:0 H.265 UHD software decode.
+* 4:2:2 10-bit SMPTE ST 2110 output with software decode.
+* The Dektec DTA-2178 8-port SDI option card is now supported with reception. It is possible to output up to 8 baseband outputs with one Dektec DTA-2178 card and more with multiple DTA-2178 cards.
+* Hostname, IP, NTP, firewall zones, DHCP and DNS parameters can be configured on the MK.IO Beam web UI.
+* New “Super Low” decode delay mode introduced for lower latency decoding.
+* Server health monitoring now available.
+* Support for active-backup redundant bonded network management interfaces.

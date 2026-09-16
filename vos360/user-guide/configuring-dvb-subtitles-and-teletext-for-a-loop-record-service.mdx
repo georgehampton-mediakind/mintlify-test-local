@@ -1,0 +1,76 @@
+---
+title: Configuring DVB subtitles and Teletext for a Loop Record service
+robots: noindex, nofollow
+---
+
+## Configure the playout source
+
+<Note>
+  **Notes**
+
+  * Only use 1 page per DVB subtitle component. Multiple pages in the same component (PID) at both input and output is not supported. If you need several pages, you must create as many components as necessary.
+
+  * Only use 1 teletext component. Multiple teletext components at both input and output is not supported. If you need several pages, you must include them all in the same component (PID).
+</Note>
+
+1. Use the **Configure Channels** app to create a playout source as described in [Configuring a playout service](/vos360/user-guide/configuring-a-playout-service).
+
+2. From your playout source, add the subtitle components in the **Data Streams** area.
+
+   ![vos\_dvb\_subtitle\_loop\_record.png](/images/vos360/e52fb1532ffc408b383a5f00.png)
+
+3. Check the **Enable Conversion** box. The subtitle page ID remapping only occurs when this box is checked.
+
+## Configure the loop record grooming
+
+<Note>
+  **Important:** You must define the grooming before creating the loop record service.
+</Note>
+
+<Note>
+  **Note:** The grooming defined for a loop record service must not be modified on the fly. All the record assets from this service have the same grooming.
+</Note>
+
+1. Navigate to the **Configure Channels** app.
+
+2. Click the Sources tab.
+
+3. Add an IP source as described in [Configuring an IP source input](/vos360/user-guide/configuring-an-ip-source-input).
+
+4. At the grooming stage, click the **Subtitle** tab.
+
+   ![vos\_dvb\_grooming\_loop\_record.png](/images/vos360/0389828b8b180545d43556a2.png)
+
+5. Adjust any values as needed.
+
+<Note>
+  **Notes**
+
+  * The playout service always uses information from the grooming process. The information from the stream are overridden.
+
+  * For DVB subtitles, the subtitle type cannot be modified from the user interface. You must use the REST API to make any modifications.
+
+  * You must not modify the Page ID.
+
+  * If changes are made, the playout service uses the modified data rather than the one contained in the live source.
+</Note>
+
+## How Teletext subtitles are handled by the playout service
+
+The playout service extracts the Teletext pages from the record asset. It then filters, modifies, and outputs them.
+
+For Teletext, the selection is based on language and type. VOS searches the live source to verify a page’s language and type correspond to those defined in the source playout. If they do not match, the type is extended to **Normal** and **Hearing impaired**.
+
+Pages that do not match the Playout source are filtered.
+
+The Page ID is remapped according to the value set in the playout source.
+
+## How DVB subtitles are handled by the playout service
+
+The playout service extracts the DVB subtitle pages from the record asset. It then filters, modifies, and outputs them.
+
+For DVB subtitles, the selection is based on language and type. VOS searches the live source to verify a page’s language and type correspond to those defined in the source playout. If they do not match, the type is extended to other values from the same category (category 'normal' is 0x10 to 0x16, category 'hard of hearing' is 0x20 to 0x26).
+
+Pages that do not match the Playout source are filtered.
+
+If "ENABLE CONVERSION" is set, the Page ID is remapped according to the value set in the playout source.

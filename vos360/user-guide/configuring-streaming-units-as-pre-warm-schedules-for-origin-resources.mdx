@@ -1,0 +1,74 @@
+---
+title: Configuring streaming units as pre-warm schedules for Origin resources
+robots: noindex, nofollow
+---
+
+1. Navigate to the **Origin&#x20;**&#x61;pp > **Reserved Capacity&#x20;**&#x74;ab.
+
+   ![](/images/vos360/ad37436777dc0378b90003d6.png)
+
+2. To schedule an event, click **+ Schedule** or **Schedule now**.
+
+   ![create-reserve-schedule.png](/images/vos360/cd6697e5ddd2ef2552233e8c.png)
+
+3. Configure the following settings:
+
+   * Event Name: Set the Event name that can be easily recognized.
+
+   * Start Time / End Time: Click the "Select time..." box to select a date and time.
+
+     * Start Time - If selecting a time in the past, the event will be started **immediately**. Note that you can schedule an event up to **1** year from now.
+
+     * End Time - This needs to be set in the future & after the Event Start Time.
+
+     * Note all times specified are in **UTC+0**.
+
+   * Streaming Units: This refers to the number of streaming units that will be used to enable the estimated egress throughputs from the Origin. VOS will perform auto-scaling to enable the optimal streaming unit allocation.
+
+     <Note>
+       **Info:&#x20;**&#x54;here are two numbers needed to define the number of SU (Streaming Unit) which would be required for an event: the expected peak requests per second (RPS) and the expected peak throughput (in Gbps) on the origin (not on the CDN).
+
+       Once you have an idea of RPS or throughput of this event, based on past events statistics or expected traffic level, you must define the number of 'Streaming units' to use. For the first event, it is recommended to include a buffer for the values and adjust for every following event.
+
+       1 SU per 200 Mbps or per 100 RPS.
+
+       Here are two examples:
+
+       * Event 1
+
+         * Expected peak RPS is 200
+
+         * Expected peak bandwidth 2 Gbps
+
+         * To support the RPS we would need 2 SU and to support the bandwidth 10 SU.
+
+         * The SU number to apply for this event should be 10 SU.
+
+       * Event 2
+
+         * Expected peak RPS is 10 000
+
+         * Expected peak bandwidth 3 Gbps
+
+         * To support the RPS we would need 100 SU and to support the bandwidth 15 SU.
+
+         * The SU number to apply for this event should be 100 SU.
+     </Note>
+
+   * Labels: This is optional. Extra labels can be added for filtering purposes.
+
+4. The event is scheduled. \
+   ![](/images/vos360/3e18073f44a88b06dfc72343.png)
+
+   <Note>
+     **Note:&#x20;**&#x54;o modify the schedule, click the pencil icon. To delete a scheduled event, click the X icon.
+   </Note>
+
+5. If an event is in progress/finished, you can click on the event and check the real-time/historic statistics.\
+   ![](/images/vos360/f5e16bcdf8bdbf22fbff2910.png)
+
+A schedule can be modified on the fly after it is started. For example: after the event started, the number of SU can be changed or the end time can be extended.
+
+<Note>
+  **Info:&#x20;**&#x54;he finished event is kept in the system for **7 days** from the end of the schedule. It is automatically removed afterward.
+</Note>

@@ -1,0 +1,27 @@
+---
+title: Troubleshooting the ISO installation
+sidebarTitle: Troubleshooting
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## If the installation stops and this message is displayed:
+
+![ISO install 008](/beam-img/ISO-install-008.png)
+
+* Check the MD5 of the ISO file against the supplied MD5 checksum.\
+  There are several ways to verify MD5 checksums. Please check online for a suitable method for your operating system.
+* Check host compatibility\
+  Contact MediaKind to confirm that your hardware is supported by MK.IO Beam
+
+<span id="if-iso-installation-fails-with-chassis-configuration-issues-relating-to-rtc-datetime-not-valid" className="mk-legacy-anchor" />
+
+## If ISO installation fails with Chassis configuration issues relating to "RTC date/time not valid":
+
+* Check the BIOS and ensure the Real Time Clock (RTC) is set to the correct time and date.
+
+## If ISO installation succeeds but the server fails to boot to Beam software:
+
+* Check Secure boot is disabled.
+* Check TPM support is disabled.\
+  Beam software uses a custom bootloader, and this requires the above BIOS options to be set.

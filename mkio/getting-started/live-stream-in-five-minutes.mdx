@@ -1,0 +1,181 @@
+---
+title: Live stream in five minutes
+description: Create an MK.IO live event, connect a live source, and play the stream through the shortest portal workflow.
+sidebarTitle: Live stream in five minutes
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This guide uses **Live Events**. For the **Live** interface, including reusable sources and multiview, start with [Live and multiview](/mkio/how-to/live-streaming/live).
+
+In this guide we will send a live video source via OBS to MK.IO and play it through the built-in player. This path uses Real-Time Messaging Protocol (RTMP) and the MK.IO portal, so you can see how the main live resources fit together before exploring advanced options.
+
+The five-minute workflow begins after your account, storage, and source encoder are ready.
+
+## What you will create
+
+Your source passes through four parts of MK.IO before you can watch it:
+
+1. A **live event** receives and encodes the RTMP source.
+2. A **streaming endpoint** supplies the delivery hostname.
+3. A **streaming locator** applies a streaming policy and provides the playback path.
+4. The built-in player opens the completed playback URL.
+
+The live event also records the stream to an asset in your connected cloud storage.
+
+## Prerequisites
+
+You need:
+
+* An [MK.IO account](/mkio/getting-started/account-setup-and-first-steps) and an [MK.IO project](https://app.mk.io/settings/overview/projects).
+* [Connected cloud storage](/mkio/getting-started/connect-cloud-storage) for the live recording.
+* OBS Studio or another encoder with a video and audio source ready to send.
+
+If you still need to prepare OBS, follow [Stream with OBS Studio](/mkio/how-to/live-streaming/set-up-the-source-stream-using-obs), then return here.
+
+<Warning>
+  **Resources incur charges while running**
+
+  Live events and streaming endpoints continue to incur charges while they are running. The final section shows which resources to stop after your test.
+</Warning>
+
+## Create your first stream
+
+<Steps>
+  <Step title="Create the live event">
+    <span id="create-the-live-event" className="mk-legacy-anchor" />
+
+    The live event receives your source and produces the encoded stream. The 720p encoding option gives this first workflow an adaptive output without requiring the source encoder to produce every output quality.
+
+    1. In the MK.IO portal, open **Live Events** from the left sidebar.
+    2. Select **+ Create Live Event** in the top right.
+    3. Enter a name for the event.
+    4. Select **Live Encoding (720p)** as the event type.
+    5. Select **RTMP** as the input protocol.
+    6. Select the storage account for the recording.
+    7. Select **Review**, then **Submit**.
+
+    ![create a live event.](/images/mkio/create-live-event.png)
+
+    For passthrough, Secure Reliable Transport (SRT), transcription, and archive settings, use [Configure a live event](/mkio/how-to/live-streaming/set-up-a-live-streaming-event).
+  </Step>
+
+  <Step title="Start a streaming endpoint">
+    <span id="start-a-streaming-endpoint" className="mk-legacy-anchor" />
+
+    A streaming endpoint is the origin service that delivers your content. You can reuse an existing running endpoint or, if the project does not have one, create it now:
+
+    1. Open **Streaming Endpoints**.
+    2. Select **+ Create Streaming Endpoint**.
+    3. Enter a name and base URL.
+    4. Select **Shared** for this first stream.
+    5. Create and start the endpoint.
+
+    ![start a streaming endpoint image.](/images/mkio/mkio-live-quickstart-endpoint.png)
+
+    <Info>
+      The endpoint must be running before it can deliver the stream. Select `Start streaming endpoint after creation` to start the endpoint immediatly, or alternatively you can go to the **Streaming Endpoints** page at anytime to start, stop, and manage your Streaming Endpoints
+    </Info>
+  </Step>
+
+  <Step title="Add the streaming locator">
+    <span id="add-the-streaming-locator" className="mk-legacy-anchor" />
+
+    A streaming locator publishes the live recording under a streaming policy. Return to your previously created Live Event and create the locator:
+
+    1. In the left sidebar select **Live Events**, then select your previously created **Live Event**.
+    2. Under **Streaming Locator**, select **+ Add streaming locator**.
+    3. Enter a unique name.
+    4. Select `Predefined_ClearStreamingOnly` as the streaming policy.
+    5. Leave the content key policy, expiration, and filters empty.
+    6. Select **Add**.
+    7. Select **Apply**
+
+    <Warning>
+      Its important to **Apply** the streaming locator once created, otherwise the Live Event cannot publish the stream!
+    </Warning>
+
+    ![Create streaming locator.](/images/mkio/create-streaming-locator.png)
+
+    `Predefined_ClearStreamingOnly` creates unprotected playback paths for this test. The locator supplies the path, while the endpoint supplies the hostname. [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content) explains both resources and the available protection options.
+  </Step>
+
+  <Step title="Send the source to MK.IO (OBS)">
+    <span id="send-the-source-to-mkio-obs" className="mk-legacy-anchor" />
+
+    Now its time to start the live event! Once your Live event has started, MK.IO will provide the input address that tells OBS where to send the stream.
+
+    1. **Start the live event** in MK.IO.
+    2. Copy the **Input URL**.
+    3. In OBS, open **Settings** > **Stream**.
+    4. Set **Service** to **Custom**.
+    5. Enter the Input URL without the `/stream` suffix as the **Server**.
+    6. Enter `stream` as the **Stream Key**.
+    7. Select **Start Streaming** in OBS.
+    8. When MK.IO receives the input, apply the streaming locator.
+
+    The `/stream` suffix becomes the OBS stream key, which is why you remove it from the server address. When MK.IO receives the source, it generates HTTP Live Streaming (HLS) and Dynamic Adaptive Streaming over HTTP (DASH) playback URLs.
+  </Step>
+
+  <Step title="FFmpeg">
+    <span id="ffmpeg" className="mk-legacy-anchor" />
+
+    Alternatively, if you would prefer to send a stream using a local FFmpeg command in the terminal, you can do so by copying the "Example FFmpeg command" within the live event view.
+
+    This command has the current live event input URL preflled for you: just copy, paste, and run in your terminal window:
+
+    ![Create streaming locator.](/images/mkio/exampleffmpeg.png)
+
+    You can then see via your terminal window:
+
+    1. The Ingest URL
+    2. The current bitrate and
+    3. the elapsed time of the stream.
+
+    Amongst a lot of other information! This can be usefull for simple monitoring and latency testing on systems where you either do not have OBS installed, or want to quickly test a stream.
+  </Step>
+
+  <Step title="Watch the stream">
+    <span id="watch-the-stream" className="mk-legacy-anchor" />
+
+    Once the live event shows that it is receiving your source, you are ready to watch the stream!
+
+    You can use the built-in player for this first test, or copy a playback URL if you want to test the stream in another player.
+
+    1. Open **Live Events** and select the live event you created.
+    2. Confirm that the event shows the incoming stream from OBS or FFmpeg.
+    3. Open the built-in player and start playback.
+    4. Check that you can see the video and hear the audio.
+
+    If you want to test playback outside the MK.IO portal, copy one of the generated HTTP Live Streaming (HLS) or Dynamic Adaptive Streaming over HTTP (DASH) URLs. Use the URL with a compatible external player or application.
+
+    If the player does not show video or audio, check the workflow in this order:
+
+    * Make sure OBS or FFmpeg is still sending the source.
+    * Confirm that the live event shows the incoming stream.
+    * Confirm that the streaming endpoint is running.
+    * Confirm that the streaming locator was created for the live event.
+
+    ![confirmplayback.](/images/mkio/confirmplayback.png)
+
+    When video and audio play, your first MK.IO live workflow is complete! The same locator paths can be used in a compatible external player or application.
+  </Step>
+</Steps>
+
+## Stop the test resources
+
+1. Stop streaming in OBS/FFmpeg.
+2. Stop the live event in MK.IO.
+3. Stop the streaming endpoint if it is no longer needed.
+
+The live recording remains in the selected storage account as an asset. You can process or publish that asset as Video on Demand (VOD) content after the event ends.
+
+## Your first live stream is complete
+
+Well done! You have now created a live event, sent a source to MK.IO, published it through a streaming endpoint and locator, and watched the result in the built-in player.
+
+## Continue with live streaming
+
+* [Explore the complete live workflow](/mkio/getting-started/live-streaming-workflows).
+* [Configure advanced live features](/mkio/getting-started/live-streaming-workflows/advanced-features).
+* [Build the workflow with the Media API](/api-guides/how-to/media/live-streaming).

@@ -1,0 +1,139 @@
+---
+title: Subtitles and captions
+description: Add, enable, disable, and style subtitle and caption tracks in MKPlayer.
+sidebarTitle: Subtitles and captions
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MKPlayer supports in-stream subtitles and captions from HLS and DASH manifests, as well as external subtitle tracks you add programmatically. You manage tracks through the `player.subtitles` API.
+
+**Subtitles** have a `kind` of `"subtitle"`. **Captions** (closed captions) have a `kind` of `"caption"`. The API handles both the same way.
+
+## Prerequisites
+
+You have an initialised `MKPlayer` instance with a source loaded. See [Loading and playing content](/mkio/reference/player-sdk/playback).
+
+## Enable and disable tracks
+
+After a source loads, list available subtitle tracks and enable the one you want:
+
+```javascript
+// List all available subtitle and caption tracks
+const tracks = player.subtitles.list();
+console.log(tracks);
+
+// Enable a track by its ID
+// By default, enabling one track disables all others
+player.subtitles.enable("track-id");
+
+// Enable a track without disabling others
+player.subtitles.enable("track-id", false);
+
+// Disable a track
+player.subtitles.disable("track-id");
+```
+
+Each track in the list is an `MKSubtitleTrack` object with the following properties:
+
+| Property  | Type      | Description                                                                                |
+| --------- | --------- | ------------------------------------------------------------------------------------------ |
+| `id`      | `string`  | Track identifier used to enable, disable, or remove the track.                             |
+| `label`   | `string`  | Display name shown to the user.                                                            |
+| `lang`    | `string`  | Language of the track.                                                                     |
+| `kind`    | `string`  | Either `"subtitle"` or `"caption"`.                                                        |
+| `enabled` | `boolean` | Whether the track is currently active.                                                     |
+| `forced`  | `boolean` | If `true`, the player automatically selects this track to match the active audio language. |
+| `url`     | `string`  | URL to the subtitle file, for external tracks.                                             |
+
+## Add external subtitle tracks
+
+You can add external subtitle tracks programmatically. Pass an `MKSubtitleTrack` object to `player.subtitles.add()`:
+
+```javascript
+player.subtitles.add({
+  id: "en-subs",
+  label: "English",
+  lang: "en",
+  kind: "subtitle",
+  url: "https://my-cdn.com/subtitles/en.vtt"
+});
+```
+
+Alternatively, include external tracks in the source configuration before calling `player.load()`:
+
+```javascript
+const sourceConfig = {
+  title: "My Stream",
+  hls: "https://my-cdn.com/mysource/hls/index.m3u8",
+  subtitleTracks: [
+    {
+      id: "en-subs",
+      label: "English",
+      lang: "en",
+      kind: "subtitle",
+      url: "https://my-cdn.com/subtitles/en.vtt"
+    }
+  ]
+};
+```
+
+## Remove a track
+
+```javascript
+player.subtitles.remove("track-id");
+```
+
+If the track is currently enabled, it is disabled before removal.
+
+## Style subtitles
+
+You can change subtitle appearance at runtime using `player.setSubtitleStyle()`. Pass a style options object with any combination of the supported properties:
+
+```javascript
+player.setSubtitleStyle({
+  fontSize: "50",
+  fontStyle: "normal",
+  fontFamily: "normal",
+  fontColor: "white",
+  fontOpacity: "75",
+  backgroundColor: "black"
+});
+```
+
+Supported style options:
+
+| Property          | Supported values                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `fontSize`        | `"1"` to `"100"`                                                                                  |
+| `fontStyle`       | `"normal"`, `"italic"`, `"bold"`                                                                  |
+| `fontFamily`      | `"Times New Roman"`, `"fantasy"`, `"cursive"`, `"serif"`, `"monospace"`, `"Font Awesome 5 Free"`  |
+| `fontColor`       | `"normal"`, `"white"`, `"black"`, `"red"`, `"green"`, `"blue"`, `"cyan"`, `"yellow"`, `"magenta"` |
+| `fontOpacity`     | `"0"` to `"100"`                                                                                  |
+| `backgroundColor` | `"normal"`, `"white"`, `"black"`, `"red"`, `"green"`, `"blue"`, `"cyan"`, `"yellow"`, `"magenta"` |
+
+## Subtitle overlay
+
+The player renders subtitles using a built-in overlay by default (`enableSubtitleOverlay: true`). To handle subtitle rendering yourself, disable the overlay and listen for cue events:
+
+```javascript
+const playerConfig = {
+  key: "YOUR_PLAYER_LICENSE_KEY",
+  enableSubtitleOverlay: false
+};
+```
+
+Then subscribe to cue events to receive subtitle text as it becomes active:
+
+```javascript
+player.on(mkplayer.MKPlayerEvent.CueEnter, (event) => {
+  // event.html contains the cue content
+  console.log("Subtitle cue entered: ", event.html);
+});
+
+player.on(mkplayer.MKPlayerEvent.CueExit, (event) => {
+  console.log("Subtitle cue exited");
+});
+```
+
+Note: the subtitle overlay is automatically disabled when the built-in UI (`ui: true`) is enabled. To use the overlay, keep `ui` disabled.

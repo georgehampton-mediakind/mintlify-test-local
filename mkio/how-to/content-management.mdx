@@ -1,0 +1,49 @@
+---
+title: Assets and storage
+description: Connect storage and manage the assets, files, tracks, filters, and playback resources used by MK.IO workflows.
+sidebarTitle: Assets and storage
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Assets organize the source files and outputs used by live and VOD workflows. Connect storage first, then choose how MK.IO should add or reference your media.
+
+## Connect storage
+
+* [Connect cloud storage](/mkio/getting-started/connect-cloud-storage) through the portal.
+* [Configure storage with the Media API](/api-guides/how-to/media/storage), including the `Google.Storage` provider defined by the API.
+* [Configure private storage access](/mkio/how-to/security-access-control/private-storage-link) when your storage does not use public network access.
+
+## Add assets
+
+<CardGroup cols={2}>
+  <Card title="Choose an asset workflow" href="/mkio/how-to/content-management/add-an-asset-in-mkio" icon="folder-plus">
+    Compare upload, existing storage, and Azure Media Services import workflows.
+  </Card>
+
+  <Card title="Reference existing storage" href="/mkio/how-to/content-management/add-an-asset-in-mkio/reference-existing-storage" icon="cloud">
+    Create an asset that references files already held in Azure Blob Storage or Amazon S3.
+  </Card>
+
+  <Card title="Upload from your device" href="/mkio/how-to/content-management/add-an-asset-in-mkio/import-files-from-your-device" icon="upload">
+    Upload local files to a new MK.IO asset.
+  </Card>
+
+  <Card title="Import AMS assets" href="/mkio/how-to/content-management/add-an-asset-in-mkio/import-your-ams-assets" icon="cloud-arrow-down">
+    Import assets from Azure Media Services storage.
+  </Card>
+</CardGroup>
+
+## Manage assets
+
+<CardGroup cols={2}>
+  <Card title="Add files to an existing asset" href="/mkio/how-to/content-management/add-files-to-an-existing-asset" icon="file-circle-plus" />
+
+  <Card title="Verify asset files and tracks" href="/mkio/how-to/content-management/verify-your-assets-in-mkio" icon="circle-check" />
+
+  <Card title="Create an asset filter" href="/mkio/how-to/content-management/create-an-asset-filter" icon="filter" />
+
+  <Card title="Publish imported assets" href="/mkio/how-to/content-management/playback-your-migrated-assets" icon="tower-broadcast" />
+</CardGroup>
+
+For automation, use the [Assets API Guide](/api-guides/how-to/media/assets) and [Playback filters API Guide](/api-guides/how-to/media/playback-filters).

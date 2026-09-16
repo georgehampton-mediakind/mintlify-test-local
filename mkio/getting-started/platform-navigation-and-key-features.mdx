@@ -1,0 +1,64 @@
+---
+title: Navigate the MK.IO portal
+description: Find project resources, organization settings, APIs, monitoring, and support in the MK.IO portal.
+sidebarTitle: Navigate the portal
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use the portal navigation to find the resources for a workflow. The main groups follow the sequence from organizing source media to creating and delivering video.
+
+## Select an organization and project
+
+If you belong to more than one organization, use the organization selector in the top-right corner to switch between them. Select a project to work with its storage, assets, processing resources, and delivery resources.
+
+## Organize media
+
+The **Organize** group contains the resources that connect MK.IO to your media.
+
+* **Assets**: Add media from connected storage, upload files, and manage asset filters. See [Assets and storage](/mkio/how-to/content-management).
+* **Storage**: Connect the cloud storage that holds your media. The portal workflow covers Amazon S3 and Azure Blob Storage. See [Connect cloud storage](/mkio/getting-started/connect-cloud-storage).
+
+For automated storage configuration, MK.IO provides an application programming interface (API) called the Media API. It also defines Google Cloud Storage registration through `Google.Storage`. See the [Storage API Guide](/api-guides/how-to/media/storage).
+
+## Create video workflows
+
+The **Create** group contains live and file-based processing resources.
+
+* **Live**: Create reusable sources, live events, and multiview streams. Start with [Live and multiview](/mkio/how-to/live-streaming/live).
+* **Live Events**: Configure a live event, connect an input, and create live outputs. See [Live events](/mkio/how-to/live-streaming).
+* **Video Processing**: Configure reusable transforms and submit jobs that apply them to input content. See [Video processing](/mkio/how-to/video-processing-encoding).
+
+Transforms and jobs appear together under **Video Processing** because a job runs a selected transform against an input.
+
+## Deliver and protect content
+
+The **Deliver** group contains the resources used to publish and play media.
+
+* **Content Key Policies**: Configure encryption, Digital Rights Management (DRM), and playback authorization. See [Content key policies](/mkio/how-to/drm-content-protection).
+* **Streaming Endpoints**: Run the origin service that packages and delivers live or on-demand content. See [Streaming endpoints and playback](/mkio/how-to/content-delivery-publishing).
+* **MKPlayer**: Test playback and integrate the web player. See the [MK Player Software Development Kit (SDK)](/mkio/reference/player-sdk).
+
+<span id="monitor-and-administer-mkio" className="mk-legacy-anchor" />
+
+## Monitor and administer MK.IO
+
+Use the operational and organization areas for tasks that span individual media workflows.
+
+* **Usage & Metrics**: Publish service metrics for monitoring. See [Monitor MK.IO services](/mkio/how-to/monitor-your-services).
+* **Organization Settings**: Manage users, teams, API tokens, webhooks, billing, and marketplace subscriptions. See [Organization settings](/mkio/how-to/managing-your-organization).
+* **Devices**: Onboard and manage devices connected to MK.IO. See [Edge devices](/mkio/how-to/managing-edge-devices).
+
+## Work with the APIs
+
+Use the [API Guides](/api-guides) when you need to automate a portal workflow. The [Live API Guide](/api-guides/how-to/live) covers template-based live processing and multiview. The [Media API Guide](/api-guides/how-to/media) covers sources, assets, publishing, and Media API live events, while the [Management API Guide](/api-guides/how-to/management) covers organizations, access, tokens, billing, and webhooks.
+
+Generate credentials from **Organization Settings** > **API Tokens** before making an API request. See [Create API tokens](/mkio/how-to/managing-your-organization/api-tokens) and [API authentication](/api-guides/getting-started/authentication).
+
+## Video walkthrough
+
+<div style={{"marginTop":"1.5rem","width":"100%"}}>
+  <div style={{"position":"relative","width":"100%","paddingBottom":"56.25%"}}>
+    <iframe src="https://www.youtube-nocookie.com/embed/q3cttJVWIjo?rel=0&controls=1&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0&playsinline=1&loop=1&playlist=q3cttJVWIjo" title="Platform navigation and key features video" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen={true} style={{"position":"absolute","top":0,"left":0,"width":"100%","height":"100%"}} />
+  </div>
+</div>

@@ -1,0 +1,64 @@
+---
+title: Using live inputs for a playout channel on Azure
+robots: noindex, nofollow
+---
+
+## Prerequisites
+
+[Configure a playout service](/vos360/user-guide/configuring-and-operating-a-playout-service)
+
+## Configure the ingress end point
+
+The ingress end point will allow to push a SRT stream to Azure.
+
+1. Open the **Syndicate** app.
+
+2. Under the **Cloud Source** tab, select **Create a new cloud source**.
+
+   ![](/images/vos360/0f404e78cbe04d501e40f0bf.png)
+
+3. Copy the cloud source ingest end point to configure the SRT device located on customer premises.
+
+   <Note>
+     **Note:&#x20;**&#x4D;ake sure that the video has the same format, same interlaced/progressive format, and same frame rate as the Playout source.
+   </Note>
+
+## Configure SRT input
+
+A playout service on Azure can only accept SRT input. Do the following to create an SRT input:
+
+1. Configure the egress end point.
+
+   * Open **Syndicate** app.
+
+   * Under the **Cloud Edges** tab, select **Create a new cloud edge**.\
+     \
+     ![](/images/vos360/4e9350ca29a07a81c8461a3f.png)
+
+   * Make sure to copy the srt url created, it will be used in the next step.
+
+## Create the SRT input
+
+1. Use the **Configure** app to create a SRT pull input
+
+2. IP address and port are found in the SRT URL created during the previous step.
+
+   ![](/images/vos360/85a1a1c11d8c6cb1d73a3049.png)
+
+## Create playout events from the SRT input
+
+1. Open the **Playout Monitor** app
+
+2. Drag and drop the SRT input from the Live feed tab to the playlist.
+
+   ![](/images/vos360/473777e4d184c30733c82561.png)
+
+3. You can also use an SRT input in an OPC schedule file. The source attribute must be set with the value "External In"
+
+OPC schedule part with a Live event:
+
+```text
+<PrimaryEvent endMode="Duration" scheduledDuration="00:01:59;28" scheduledStart="2020-03-01 14:38:00;02" startMode="Fixed">
+    <VideoMaterial materialId="srt" source="External In"/>
+</PrimaryEvent>
+```

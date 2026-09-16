@@ -1,0 +1,513 @@
+---
+title: Encoding transform
+description: Reference the built-in encoding presets available for MK.IO VOD transforms.
+sidebarTitle: Encoding transform
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+An **encoding transform** defines how MK.IO processes an input asset into one or more MP4 renditions. Select a built-in preset based on the required codec, resolution, bitrate ladder, and encoding tier.
+
+## Built-in presets
+
+MK.IO supports the following built-in presets:
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Built-in preset name
+      </th>
+
+      <th>
+        Video
+      </th>
+
+      <th>
+        Audio
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        AACGoodQualityAudio (Foundations)
+      </td>
+
+      <td>
+        n/a
+      </td>
+
+      <td>
+        192 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H264SingleBitrateSD (Foundations)
+      </td>
+
+      <td>
+        848x480 @ 30fps / 2200kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H264MultipleBitrateSD (Foundations)
+        H264MultipleBitrateSDWithCVQ (Advanced)
+      </td>
+
+      <td>
+        432x240 @ 30fps / 400kbps
+        640x360 @ 30fps / 650kbps
+        848x480 @ 30fps / 900kbps
+        848x480 @ 30fps / 1300kbps
+        848x480 @ 30fps / 1900kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H264SingleBitrate720p (Foundations)
+      </td>
+
+      <td>
+        1280x720 @ 30fps / 4500kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H264MultipleBitrate720p (Foundations)
+        H264MultipleBitrate720pWithCVQ (Advanced)
+      </td>
+
+      <td>
+        320x180 @ 30fps / 400kbps
+        640x360 @ 30fps / 600kbps
+        640x360 @ 30fps / 1000kbps
+        960x540 @ 30fps / 1500kbps
+        960x540 @ 30fps / 2250kbps
+        1280x720 @ 30fps / 3400kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H264SingleBitrate1080p (Foundations)
+      </td>
+
+      <td>
+        1920x1080 @ 30fps / 6750kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H264MultipleBitrate1080p (Foundations)
+        H264MultipleBitrate1080pWithCVQ (Advanced)
+      </td>
+
+      <td>
+        320x180 @ 30fps / 400kbps
+        640x360 @ 30fps / 600kbps
+        640x360 @ 30fps / 1000kbps
+        960x540 @ 30fps / 1500kbps
+        960x540 @ 30fps / 2250kbps
+        1280x720 @ 30fps / 3400kbps
+        1920x1080 @ 30fps / 4700kbps
+        1920x1080 @ 30fps / 6000kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H265SingleBitrate720p (Advanced)
+      </td>
+
+      <td>
+        1280x720 @ 30fps / 1800kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H265SingleBitrate1080p (Advanced)
+      </td>
+
+      <td>
+        1920x1080 @ 30fps / 3500kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H265SingleBitrate4K (Advanced)
+      </td>
+
+      <td>
+        3840x2160 @ 30fps / 9500kbps
+      </td>
+
+      <td>
+        128 kbps
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<Info>
+  Audio streams are encoded in stereo with HE-AAC audio codec.
+
+  If you require a different encoding ladder, contact [MK.IO support](https://support.mk.io).
+</Info>
+
+## Constant video quality presets
+
+The presets with `CVQ` in their name use Constant Video Quality (CVQ). These presets adjust the bitrate and encoding parameters to maintain consistent visual quality across the input content.
+
+Use a standard preset for content shorter than 30 seconds. For content longer than 60 seconds, the CVQ presets can reduce the output bitrate by 15 to 30 percent without a perceptible change in visual quality. Older Windows CE and Roku clients may not be compatible with CVQ output.
+
+CVQ presets use the Advanced encoding tier. See [MK.IO pricing](https://mediakind.com/mkio/pricing/) for current rates.
+
+## Input file formats
+
+| File formats (file extensions)       | Supported |
+| :----------------------------------- | :-------- |
+| MP4 (.mp4, .m4a, .m4v)               | Yes       |
+| MPEG2-PS, MPEG2-TS (.ts, .ps, .mpg)  | Yes       |
+| Matroska MKV (.mkv)                  | Yes       |
+| QuickTime (.mov)                     | Yes       |
+| MXF (.mxf)                           | Yes       |
+| Flash Video FLV (.flv)               | Yes       |
+| 3GP (.3gp, .3gpp)                    | Yes       |
+| Matroska WebM (.webm)                | Yes       |
+| ISMV (.ismv, .isma)                  | Yes       |
+| AVI (Uncompressed 8bit/10bit) (.avi) | Yes       |
+| Windows Media Format (WMV) (.wmv)    | Yes       |
+
+## Output file format
+
+MK.IO uses the MP4 format for Video on Demand (VOD) assets. An asset generated through VOD transcoding contains the following files:
+
+* MP4 files (`.mp4`), one per video rendition with all audio streams interleaved.
+* A server manifest (`.ism`) used as the access point for streaming endpoints.
+* A client manifest (`.mpd`).
+* Index files (`.mpi`), one per rendition, used to improve streaming-delivery performance.
+
+VOD transcoding uses the input filename as the prefix for all output files in the asset.
+
+Existing assets that use the earlier Smooth Streaming or MP4 layout remain deliverable through MK.IO streaming endpoints. Use an [asset conversion transform](/mkio/reference/encoding-transform-presets/asset-conversion-transform) when a newer workflow requires the current MP4v4 layout.
+
+## Input video codecs
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        File formats (file extensions)
+      </th>
+
+      <th>
+        Supported
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        H264/AVC, including AVCIntra
+      </td>
+
+      <td>
+        Main and High Profiles, 8-bit/10-bit
+        Up to 4:2:2
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        HEVC/H.265
+      </td>
+
+      <td>
+        Main Profile, 8-bit/10-bit
+        Up to 4:2:2
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        MPEG-2
+      </td>
+
+      <td>
+        Main and High Profiles
+        Up to 4:2:2
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Sony XAVC / XAVC S
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        DVCPro SD and HD
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Digital video DV and HDV
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        JPEG 2000
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Apple ProRes 422, including LT and HQ
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Apple ProRes 4444,  including XQ
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Sony XAVC
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Sony XDCAM IMX
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Sony XDCAM, including HD and EX
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Dolby Vision 5 and 8.1
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        V210 Video Picture Encoding
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        MPEG-1
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        VC-1
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        VP8
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        VP9
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        MJPEG
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        AV1
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Microsoft MPEG4v1, v2 and v3
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        H263
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Avid DNxHD and DNxHR
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Sorenson Spark
+      </td>
+
+      <td>
+        Yes
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Input audio codecs
+
+| File formats (file extensions)              | Supported                                 |
+| :------------------------------------------ | :---------------------------------------- |
+| AAC, including AAC-LC, HE-AAC, and HE-AACv2 | Up to 5.1                                 |
+| MPEG Layer 2                                | Yes                                       |
+| MP3 (MPEG-1 Audio Layer 3)                  | Yes                                       |
+| PCM, LPCM, DPCM and ADPCM                   | Yes                                       |
+| AES (SMPTE 331M and 302M, AES3-2003)        | Yes                                       |
+| Dolby E                                     | Passthrough only                          |
+| Dolby Digital (AC3)                         | Yes                                       |
+| Dolby Digital Plus (E-AC3)                  | Yes, including Dolby Atmos in passthrough |
+| DTS                                         | Yes                                       |
+| Opus                                        | Yes                                       |
+| Vorbis                                      | Yes                                       |
+| Apple Lossless Audio Code (ALAC)            | Yes                                       |

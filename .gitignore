@@ -1,0 +1,8 @@
+
+# Local development and migration evidence
+node_modules/
+.mintlify/
+_migration/
+
+# Local PDF archive preview; publish verified copies to R2 at cutover.
+/downloads/vos360/

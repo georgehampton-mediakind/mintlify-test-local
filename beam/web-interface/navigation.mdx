@@ -1,0 +1,143 @@
+---
+title: Menus and navigation
+sidebarTitle: Menus and navigation
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## User interface orientation
+
+Features, menus and options vary depending on your product and the MediaKind components installed.
+
+### Home page and dashboard overviews
+
+The **Home** page displays a dashboard with overviews for services, servers, templates and alarms. Click an overview to link to the related page.
+
+![home controller 4widgets v10.0](/ce1-img/beam_homepage_empty.png)
+
+### Health indicator and alarms banner
+
+The Health indicator and alarms banner displays in the upper right corner of the screen.
+
+Health indicator status:
+
+* Green: everything is OK.
+* Amber: something needs attention.
+* Red: something isn't working. Functionality could be limited.
+  If the indicator is amber or red, alarms will also be triggered.
+
+<Info>
+  You can click the Health indicator or the **Health** left menu to display an embedded Grafana page showing an overview of [Controller health](/beam/web-interface/navigation#health).
+</Info>
+
+### System Center for solution administration
+
+The **System Center** menu provides access to administration features. Administrators can manage users, system backups and restore options, as well as monitor servers, and manage settings.
+
+To access the **System Center**, click the <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> in the top right corner. The displayed menu includes a number of options for system administration and monitoring.
+
+Features are available depending on your user rights.
+
+| Group         | Restore | Backup | User Management | Settings |
+| :------------ | :------ | :----- | :-------------- | :------- |
+| Admin         | Yes     | Yes    | R+W             | Yes      |
+| Monitoring    | No      | Yes    | N/A             | Yes      |
+| Configuration | Yes     | Yes    | N/A             | Yes      |
+
+**Related information**\
+[System center](/beam/system-admin/system-administration#system-center)
+
+### Edit the number of rows displayed
+
+For most menu pages available in the Controller UI, you can display more or less rows in the table by selecting the number of rows to display.
+
+1. Use the left-side **Menu** panel to display a specific page.
+
+2. Scroll to the bottom of the selected page and edit the number of rows to display per page.
+
+   ![view rows per page mfvp unified ui](/_machine-assets/10999920db77ca549585176350351a2455dd17b68aa6cc9050f25349fef90710.png)
+
+### Use the search bar
+
+The **Search** bar displays in pages with table displays.
+
+1. Use the left-side **Menu** panel to display a specific page.
+
+2. Enter one or several keywords in the **Search** bar to filter the table.
+
+   Search requirements:
+
+   * Keyword based
+   * No wildcard
+
+   ![view search bar table small mfvp controller](/_machine-assets/57c9e516f88e0b13ed6edcf037904b8935ad5d3ba5387b7eb1d2b41893885aaf.png)
+   *Example: Server page*
+
+## Menus
+
+### Alarms
+
+The **Alarms** menu is a link to a page that centralizes alarms and events. There are other types of alarm pages (services, failover, etc.) that show alarm information in a similar table display.
+
+**Related information**\
+[Manage alarms and events](/beam/system-admin/maintenance/alarms-events)
+
+### Templates
+
+Templates are saved service configurations. Templates simplify the creation of services that share common settings and ensure configuration consistency across services.
+This menu only displays if Live Encoder component is used.
+
+<Info>
+  You can edit any service configuration, even if the parameters were created from a template. Deleting a template has no impact on existing services created from that template. Configurations and parameters in templates vary per service type.
+</Info>
+
+**Related information**\
+[Create a service from a template](/beam/live-encoder/create-service#create-a-service-from-a-template)
+
+### Failover
+
+You can configure **Failover** settings and groups for redundant systems. Go to the Failover display table to view running states and alarm statuses.
+
+![menu failover](/_machine-assets/1529f1831f28ba7dbc534c7038668e9c20e4e0220e93e1ec95a38711d8704fcf.png)
+
+<Info>
+  * All timestamps are in Universal Time (UTC) but you can customize them (see [Alarm display time](/beam/system-admin/maintenance/alarms-events#customize-alarm-display-time)).
+  * To optimize performance, **do not exceed 100 servers per failover group**.
+</Info>
+
+**Related information**\
+[Manage failover](/beam/system-admin/servers/failover)
+
+### Reports
+
+The reports menu provides access to specific information. You can export the report to a .csv file.
+
+<Info>
+  Menu displays vary depending on your product installation.
+</Info>
+
+### Settings
+
+You can access additional menus from the **Settings** menu. This menu only displays if the Packager or Live Encoder components are used.
+
+**Related information**\
+[Service settings](/beam/system-admin/maintenance/service-settings)
+
+### Health
+
+The Controller utilizes Prometheus and Grafana to enhance monitoring capabilities.
+The Health page presents a dashboard with various indicators to effectively monitor your solution. This page will look different depending on the deployment type.
+
+* The **At a glance** section displays key indicators for the Controller framework and service health including **Disk Space Used**. Alarms are triggered at 60% disk space usage, with critical alarms at 90%. Health indicators are also provided for the key-value store (etcd), the database (Mongo) and the message queue (Rabbit), as well as uptime CPU, CPU and memory usage.
+
+* Details on any alerts raised by the Controllers are also shown.
+
+* Additional expandable indicators offer more detailed information for advanced troubleshooting.
+
+At the top of the page, variables allow control over the displayed data. The **Data source** is particularly useful as it determines which Controller is used to serve the data.
+
+![controller health](/_machine-assets/c7feb0e31f7b7bd6c2803738e7a8e0d3d2d1aeccf7a133d8d3260811eed1a7a6.png)
+
+### External links to third-party tools
+
+Access third-party tools directly from the Controller. Once added to the system, external links are available from the left side menu panel.

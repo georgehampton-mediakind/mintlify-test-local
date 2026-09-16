@@ -1,139 +1,48 @@
 ---
-title: "MK.IO Live API Reference: 41 Endpoints for Live Streaming"
-sidebarTitle: "Live API"
-description: "Full REST endpoint reference for the MK.IO Live API — live channels, live events, static multiview channels and events, and scheduled operations."
+title: Live API Reference
 ---
-
-The MK.IO Live API provides live encoding and multiview capabilities for MK.IO. It covers template-based live channels and events, static multiview channels and events, and scheduled operations that let you start and stop resources at specific times. For templating, sources, destinations, assets, and streaming locators, consult the related [Templates API](/api-reference/templates-api) and [Media API](/api-reference/media-api).
-
-<Info>
-  **Version:** v0.0.23 · **Endpoints:** 41 · **Groups:** 5 · **Spec:** OpenAPI 3.0.2
-
-  [Download OpenAPI spec](https://docs.mediakind.com/openapi/mkio/live-api.json)
-</Info>
 
 ## Overview
 
-MK.IO **Live Events** support multiple input sources, multiple audio profiles, source switching, 1+1 redundancy, and a multitude of codecs and coding parameters. **Live Channels** are identical to live events but use monthly billing for long-running workloads. Both can output to assets for instant Live2VOD, and destinations can be configured to contribute your stream over RTMP or SRT.
+The MKIO Live API provides live encoding and multiview capabilities. Consult the related Media and Templates APIs for information about Templating, Sources, Destinations, Assets, and StreamingLocators.
 
-**Static Multiview Events** create a server-side tiled streaming experience for clients. Use Static Multiview to reach the broadest audience with support for H.264 and HEVC, SCTE-35 and SGAI, and DRM. Supported layouts include `2up`, `3up`, `3us`, `4up`, and `4us` — the number indicates connected sources, while `up` gives equal placement and `us` includes a spotlight.
+MK.IO LiveEvents support multiple input sources, multiple audio profiles, source switching, 1+1 redundancy, and a multitude of codecs and coding parameters that are described in our docs.
 
-**Static Multiview Channels** are the monthly-billing equivalent of Static Multiview Events.
+MK.IO LiveChannels are exactly the same as Live Events, only with monthly billing for long-running workloads. Live Events can output to Assets for instant Live2VOD and streaming, or Destinations can be optionally configured to contribute your live stream over RTMP/SRT to a remote address.
 
-All resources support **Scheduled Operations** to start and stop at specific times.
+MK.IO StaticMultiviewEvents create a server-side tiled streaming Multiview experience for clients. Use StaticMultiview to reach the biggest possible audience, with support for h.264 and HEVC, and whatever other core video capabilities (SCTE-35 and SGAI, DRM) you may require. Streaming Multiview takes multiple sources and integrates them into a tiled interface, preserving audio and captions for a seamless user experience. Supported layouts include 2up, 3up, 3us, 4up, 4us. The number indicates the number of connected sources, while the 'us/up' indicates whether the layout contains a 'spotlight', or whether the layout gives all sources equal placement.
+
+MK.IO StaticMultiviewChannels are exactly the same as StaticMultiview Events, only with monthly billing for long-running workloads.
+
+All resources in the MK.IO Live API support Scheduled Operations. Scheduled Operations allow you to start and stop Events and Channels at specific times. Additional operations, such as slate insertion/removal, and ad operations, may be supported in the future.
+
+## Template management
+
+[Template management](/api-reference/templates-api)
+
+[Content/ContentSource/Destination management](/api-reference/media-api)
 
 ## Authentication
 
 All endpoints require a bearer token in the `Authorization` header:
+`Authorization: Bearer <your_token>`
 
-```http
-Authorization: Bearer <your_token>
-```
+You can create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. Follow the [API tokens guide](https://docs.mediakind.com/mkio/how-to/managing-your-organization/api-tokens) for more information.
 
-Create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. See the [API tokens guide](/mkio/admin/api-tokens) for full instructions.
+## Usage
 
-## Base URL
+Base URL: `https://app.mk.io`
 
-```
-https://app.mk.io
-```
+Version: `0.0.23`
 
-## Related APIs
+[Download OpenAPI specification](/openapi/mkio/live-api.json)
 
-<CardGroup cols={2}>
-  <Card title="Templates API" icon="layer-group" href="/api-reference/templates-api">
-    Encoding configs and presets referenced by Live resources.
-  </Card>
-  <Card title="Media API" icon="film" href="/api-reference/media-api">
-    Sources, content, destinations, assets, and streaming locators.
-  </Card>
-</CardGroup>
+* [Live Channel](/api-reference/live-api/live-channel)
 
-## Endpoint Groups
+* [Live Event](/api-reference/live-api/live-event)
 
-### Live Channel — 10 endpoints
+* [Live Search](/api-reference/live-api/live-search)
 
-Manage long-running live channels with monthly billing, including scheduled start/stop operations and resource state.
+* [Static Multiview Channel](/api-reference/live-api/static-multiview-channel)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/projects/{project_name}/live/liveChannels` | List Live Channels |
-| `GET` | `/api/v1/projects/{project_name}/live/liveChannels/{name}` | Get Live Channel |
-| `PUT` | `/api/v1/projects/{project_name}/live/liveChannels/{name}` | Create or Replace Live Channel |
-| `PATCH` | `/api/v1/projects/{project_name}/live/liveChannels/{name}` | Update Live Channel |
-| `DELETE` | `/api/v1/projects/{project_name}/live/liveChannels/{name}` | Delete Live Channel |
-| `GET` | `/api/v1/projects/{project_name}/live/liveChannels/{name}/scheduledOperations` | List Scheduled Operations |
-| `GET` | `/api/v1/projects/{project_name}/live/liveChannels/{name}/scheduledOperations/{operation_name}` | Get Scheduled Operation |
-| `PUT` | `/api/v1/projects/{project_name}/live/liveChannels/{name}/scheduledOperations/{operation_name}` | Create or Update Scheduled Operation |
-| `DELETE` | `/api/v1/projects/{project_name}/live/liveChannels/{name}/scheduledOperations/{operation_name}` | Delete Scheduled Operation |
-| `GET` | `/api/v1/projects/{project_name}/live/liveChannels/{name}/state` | Get Resource State |
-
-### Live Event — 10 endpoints
-
-Create and control per-event live streams with scheduled operations and resource state polling.
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/projects/{project_name}/live/liveEvents` | List Live Events |
-| `GET` | `/api/v1/projects/{project_name}/live/liveEvents/{name}` | Get Live Event |
-| `PUT` | `/api/v1/projects/{project_name}/live/liveEvents/{name}` | Create or Replace Live Event |
-| `PATCH` | `/api/v1/projects/{project_name}/live/liveEvents/{name}` | Update Live Event |
-| `DELETE` | `/api/v1/projects/{project_name}/live/liveEvents/{name}` | Delete Live Event |
-| `GET` | `/api/v1/projects/{project_name}/live/liveEvents/{name}/scheduledOperations` | List Scheduled Operations |
-| `GET` | `/api/v1/projects/{project_name}/live/liveEvents/{name}/scheduledOperations/{operation_name}` | Get Scheduled Operation |
-| `PUT` | `/api/v1/projects/{project_name}/live/liveEvents/{name}/scheduledOperations/{operation_name}` | Create or Update Scheduled Operation |
-| `DELETE` | `/api/v1/projects/{project_name}/live/liveEvents/{name}/scheduledOperations/{operation_name}` | Delete Scheduled Operation |
-| `GET` | `/api/v1/projects/{project_name}/live/liveEvents/{name}/state` | Get Resource State |
-
-### Live Search — 1 endpoint
-
-Search across all live resources within a project in a single request.
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/projects/{project_name}/live/search` | List Live Resources |
-
-### Static Multiview Channel — 10 endpoints
-
-Manage long-running multiview channels with monthly billing, tiled layouts, and scheduled operations.
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels` | List Static Multiview Channels |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}` | Get Static Multiview Channel |
-| `PUT` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}` | Create or Replace Static Multiview Channel |
-| `PATCH` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}` | Update Static Multiview Channel |
-| `DELETE` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}` | Delete Static Multiview Channel |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}/scheduledOperations` | List Scheduled Operations |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}/scheduledOperations/{operation_name}` | Get Scheduled Operation |
-| `PUT` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}/scheduledOperations/{operation_name}` | Create or Update Scheduled Operation |
-| `DELETE` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}/scheduledOperations/{operation_name}` | Delete Scheduled Operation |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewChannels/{name}/state` | Get Resource State |
-
-### Static Multiview Event — 10 endpoints
-
-Create and control per-event multiview streams with tiled layouts and scheduled start/stop operations.
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents` | List Static Multiview Events |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}` | Get Static Multiview Event |
-| `PUT` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}` | Create or Replace Static Multiview Event |
-| `PATCH` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}` | Update Static Multiview Event |
-| `DELETE` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}` | Delete Static Multiview Event |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}/scheduledOperations` | List Scheduled Operations |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}/scheduledOperations/{operation_name}` | Get Scheduled Operation |
-| `PUT` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}/scheduledOperations/{operation_name}` | Create or Update Scheduled Operation |
-| `DELETE` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}/scheduledOperations/{operation_name}` | Delete Scheduled Operation |
-| `GET` | `/api/v1/projects/{project_name}/live/staticMultiviewEvents/{name}/state` | Get Resource State |
-
-## Example Request
-
-```bash
-curl -X GET "https://app.mk.io/api/v1/projects/$MKIO_PROJECT/live/liveEvents" \
-  -H "Authorization: Bearer $MKIO_TOKEN"
-```
-
-<Tip>
-  See the [Live event walkthrough](/api-guides/live/manage-live) to build a complete single-camera live stream, or the [Multiview walkthrough](/api-guides/live/multiview) for a composed tiled output.
-</Tip>
+* [Static Multiview Event](/api-reference/live-api/static-multiview-event)

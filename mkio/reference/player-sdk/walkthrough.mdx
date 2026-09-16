@@ -1,0 +1,432 @@
+---
+title: End-to-end walkthrough
+description: A complete working example of MKPlayer Web SDK integration covering setup, DRM, subtitles, and error handling.
+sidebarTitle: End-to-end walkthrough
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Build an MKPlayer integration from a blank HTML file to a working player that loads DRM-protected content, displays subtitles, and handles errors. Complete the sections in order because each one builds on the previous result.
+
+By the end you will have a self-contained page you can adapt for your own project.
+
+## What this covers
+
+* Installing MKPlayer and wiring up the HTML
+* Initialising the player with a full configuration
+* Loading DRM-protected content with Widevine, PlayReady, and FairPlay
+* Enabling subtitles and styling them at runtime
+* Subscribing to events and surfacing errors to the user
+* Cleaning up the player correctly when done
+
+## Prerequisites
+
+* npm available in your project
+* A player license key from MediaKind
+* Your deployment domain added to the MediaKind license allowlist
+* A Widevine and/or PlayReady license server URL for your content
+
+## The HTML page
+
+Start with a minimal HTML page. Include the MKPlayer script and stylesheet in `<head>`, and add a container `<div>` and a few controls in `<body>`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MKPlayer Example</title>
+  <script type="text/javascript" src="./node_modules/@mediakind/mkplayer/mkplayer.js"></script>
+  <link rel="stylesheet" href="./node_modules/@mediakind/mkplayer/mkplayer-ui.css">
+  <style>
+    #player-container { width: 100%; max-width: 960px; aspect-ratio: 16/9; background: #000; }
+    #status { margin-top: 8px; font-family: monospace; font-size: 14px; color: #c00; min-height: 20px; }
+  </style>
+</head>
+<body>
+  <div id="player-container"></div>
+  <p id="status"></p>
+
+  <script src="./player.js"></script>
+</body>
+</html>
+```
+
+The `status` paragraph is where you will surface error messages to the user. The actual player logic lives in `player.js`.
+
+## Step 1: Initialise the player
+
+In `player.js`, wait for the DOM to be ready, then create an `MKPlayer` instance.
+
+The player configuration sets your license key, enables the built-in UI, and registers event handlers inline. Subscribing to `Error` and `Playing` here ensures you catch events that fire early in the player lifecycle, before you have a chance to call `player.on()` after construction.
+
+```javascript
+// player.js
+
+const statusEl = document.getElementById("status");
+
+function setStatus(message) {
+  statusEl.textContent = message;
+}
+
+// Wait for the DOM to be ready before accessing elements
+window.addEventListener("load", () => {
+  const container = document.getElementById("player-container");
+
+  const playerConfig = {
+    key: "YOUR_PLAYER_LICENSE_KEY",
+    ui: true,
+    playback: {
+      // muted is required for autoplay to work in most browsers
+      muted: false,
+      autoplay: false,
+      // Prevent the video going fullscreen automatically on iOS
+      playsInline: true
+    },
+    events: {
+      [mkplayer.MKPlayerEvent.Playing]: () => {
+        setStatus("");
+      },
+      [mkplayer.MKPlayerEvent.Error]: (event) => {
+        setStatus(`Error ${event.code}: ${event.message}`);
+        console.error("MKPlayer error", event);
+      },
+      [mkplayer.MKPlayerEvent.StallStarted]: () => {
+        setStatus("Buffering...");
+      },
+      [mkplayer.MKPlayerEvent.StallEnded]: () => {
+        setStatus("");
+      }
+    }
+  };
+
+  const player = new mkplayer.MKPlayer(container, playerConfig);
+
+  loadContent(player);
+});
+```
+
+<Info>
+  Unmuted autoplay is blocked by most browsers unless the user has previously interacted with the page. If you need autoplay, set `muted: true`. The user can then unmute using the player controls.
+</Info>
+
+## Step 2: Load DRM-protected content
+
+Define `loadContent()` to build a source configuration and call `player.load()`. The `drm` block covers Widevine and PlayReady for Chrome, Firefox, and Edge, plus FairPlay for Safari on Apple devices. The player selects the first key system supported by the current browser.
+
+```javascript
+function loadContent(player) {
+  const sourceConfig = {
+    title: "My Protected Stream",
+    description: "An example of DRM-protected DASH and HLS playback",
+    poster: "https://my-cdn.com/content/poster.jpg",
+
+    // Provide both DASH and HLS. The player picks based on platform support
+    dash: "https://my-cdn.com/content/dash/manifest.mpd",
+    hls: "https://my-cdn.com/content/hls/index.m3u8",
+
+    drm: {
+      widevine: {
+        LA_URL: "https://your-widevine-license-server/license",
+        headers: {
+          "X-DRM-Token": "your-token-value"
+        }
+      },
+      playready: {
+        LA_URL: "https://your-playready-license-server/license",
+        utf8message: true,
+        plaintextChallenge: true,
+        headers: {
+          "Content-Type": "text/xml",
+          "X-DRM-Token": "your-token-value"
+        }
+      },
+      // FairPlay applies only to HLS sources on Apple devices
+      fairplay: {
+        LA_URL: "https://your-fairplay-license-server/license",
+        certificateURL: "https://your-fairplay-certificate-url",
+        headers: {
+          "X-DRM-Token": "your-token-value"
+        }
+      }
+    },
+
+    subtitleTracks: [
+      {
+        id: "en-subs",
+        label: "English",
+        lang: "en",
+        kind: "subtitle",
+        url: "https://my-cdn.com/content/subtitles/en.vtt"
+      },
+      {
+        id: "fr-subs",
+        label: "French",
+        lang: "fr",
+        kind: "subtitle",
+        url: "https://my-cdn.com/content/subtitles/fr.vtt"
+      }
+    ]
+  };
+
+  setStatus("Loading...");
+
+  player.load(sourceConfig)
+    .then(() => {
+      console.log("Source loaded successfully");
+      setupSubtitles(player);
+    })
+    .catch((error) => {
+      setStatus(`Failed to load source: ${error.message}`);
+      console.error("Load failed", error);
+    });
+}
+```
+
+## Step 3: Enable subtitles
+
+Once the source has loaded, list the available subtitle tracks and enable one by default. You can also let the player select a preferred language by setting `subtitleLanguage` in the `playback` configuration. This example selects the track explicitly so you can use its ID in the next step.
+
+```javascript
+function setupSubtitles(player) {
+  const tracks = player.subtitles.list();
+
+  if (tracks.length === 0) {
+    return;
+  }
+
+  // Log available tracks for debugging
+  console.log("Available subtitle tracks:", tracks.map(t => `${t.id} (${t.lang})`));
+
+  // Enable English subtitles by default if available
+  const englishTrack = tracks.find(t => t.lang === "en");
+  if (englishTrack) {
+    player.subtitles.enable(englishTrack.id);
+    applySubtitleStyle(player);
+  }
+}
+
+function applySubtitleStyle(player) {
+  player.setSubtitleStyle({
+    fontSize: "50",
+    fontStyle: "normal",
+    fontFamily: "normal",
+    fontColor: "white",
+    fontOpacity: "100",
+    backgroundColor: "black"
+  });
+}
+```
+
+## Step 4: Add remaining event handling
+
+Add event listeners after the player is created to handle the remaining playback lifecycle. This example registers them dynamically with `player.on()` instead of adding them to the configuration:
+
+```javascript
+function attachEvents(player) {
+  player.on(mkplayer.MKPlayerEvent.SourceLoaded, () => {
+    console.log("Source loaded");
+  });
+
+  player.on(mkplayer.MKPlayerEvent.PlaybackFinished, () => {
+    console.log("Playback finished");
+    setStatus("Playback complete.");
+  });
+
+  player.on(mkplayer.MKPlayerEvent.Destroy, () => {
+    console.log("Player destroyed");
+  });
+}
+```
+
+Call `attachEvents(player)` immediately after creating the player instance, before `loadContent()`.
+
+## Step 5: Clean up
+
+When the page unloads, or when you are done with the player, unload the source and destroy the instance to release all held resources:
+
+```javascript
+window.addEventListener("beforeunload", () => {
+  if (player) {
+    player.unload()
+      .then(() => player.destroy())
+      .catch(() => player.destroy());
+  }
+});
+```
+
+Do not call any player API methods after `destroy()`. The player will throw a `PLAYER_API_NOT_AVAILABLE` error.
+
+<span id="complete-playerjs" className="mk-legacy-anchor" />
+
+## Complete player.js
+
+Putting it all together:
+
+```javascript
+// player.js
+
+const statusEl = document.getElementById("status");
+
+function setStatus(message) {
+  statusEl.textContent = message;
+}
+
+function applySubtitleStyle(player) {
+  player.setSubtitleStyle({
+    fontSize: "50",
+    fontStyle: "normal",
+    fontFamily: "normal",
+    fontColor: "white",
+    fontOpacity: "100",
+    backgroundColor: "black"
+  });
+}
+
+function setupSubtitles(player) {
+  const tracks = player.subtitles.list();
+  if (tracks.length === 0) return;
+
+  const englishTrack = tracks.find(t => t.lang === "en");
+  if (englishTrack) {
+    player.subtitles.enable(englishTrack.id);
+    applySubtitleStyle(player);
+  }
+}
+
+function attachEvents(player) {
+  player.on(mkplayer.MKPlayerEvent.SourceLoaded, () => {
+    console.log("Source loaded");
+  });
+
+  player.on(mkplayer.MKPlayerEvent.PlaybackFinished, () => {
+    setStatus("Playback complete.");
+  });
+
+  player.on(mkplayer.MKPlayerEvent.Destroy, () => {
+    console.log("Player destroyed");
+  });
+}
+
+function loadContent(player) {
+  const sourceConfig = {
+    title: "My Protected Stream",
+    description: "An example of DRM-protected DASH and HLS playback",
+    poster: "https://my-cdn.com/content/poster.jpg",
+    dash: "https://my-cdn.com/content/dash/manifest.mpd",
+    hls: "https://my-cdn.com/content/hls/index.m3u8",
+    drm: {
+      widevine: {
+        LA_URL: "https://your-widevine-license-server/license",
+        headers: {
+          "X-DRM-Token": "your-token-value"
+        }
+      },
+      playready: {
+        LA_URL: "https://your-playready-license-server/license",
+        utf8message: true,
+        plaintextChallenge: true,
+        headers: {
+          "Content-Type": "text/xml",
+          "X-DRM-Token": "your-token-value"
+        }
+      },
+      fairplay: {
+        LA_URL: "https://your-fairplay-license-server/license",
+        certificateURL: "https://your-fairplay-certificate-url",
+        headers: {
+          "X-DRM-Token": "your-token-value"
+        }
+      }
+    },
+    subtitleTracks: [
+      {
+        id: "en-subs",
+        label: "English",
+        lang: "en",
+        kind: "subtitle",
+        url: "https://my-cdn.com/content/subtitles/en.vtt"
+      },
+      {
+        id: "fr-subs",
+        label: "French",
+        lang: "fr",
+        kind: "subtitle",
+        url: "https://my-cdn.com/content/subtitles/fr.vtt"
+      }
+    ]
+  };
+
+  setStatus("Loading...");
+
+  player.load(sourceConfig)
+    .then(() => setupSubtitles(player))
+    .catch((error) => {
+      setStatus(`Failed to load source: ${error.message}`);
+      console.error("Load failed", error);
+    });
+}
+
+window.addEventListener("load", () => {
+  const container = document.getElementById("player-container");
+
+  const playerConfig = {
+    key: "YOUR_PLAYER_LICENSE_KEY",
+    ui: true,
+    playback: {
+      muted: false,
+      autoplay: false,
+      playsInline: true
+    },
+    events: {
+      [mkplayer.MKPlayerEvent.Playing]: () => setStatus(""),
+      [mkplayer.MKPlayerEvent.Error]: (event) => {
+        setStatus(`Error ${event.code}: ${event.message}`);
+        console.error("MKPlayer error", event);
+      },
+      [mkplayer.MKPlayerEvent.StallStarted]: () => setStatus("Buffering..."),
+      [mkplayer.MKPlayerEvent.StallEnded]: () => setStatus("")
+    }
+  };
+
+  const player = new mkplayer.MKPlayer(container, playerConfig);
+
+  attachEvents(player);
+  loadContent(player);
+
+  window.addEventListener("beforeunload", () => {
+    player.unload()
+      .then(() => player.destroy())
+      .catch(() => player.destroy());
+  });
+});
+```
+
+## What to replace
+
+Before running this, replace the following placeholder values with your own:
+
+| Placeholder                                     | Replace with                                           |
+| ----------------------------------------------- | ------------------------------------------------------ |
+| `YOUR_PLAYER_LICENSE_KEY`                       | Your player license key from MediaKind                 |
+| `https://your-widevine-license-server/license`  | Your Widevine license server URL                       |
+| `https://your-playready-license-server/license` | Your PlayReady license server URL                      |
+| `https://your-fairplay-license-server/license`  | Your FairPlay license server URL                       |
+| `https://your-fairplay-certificate-url`         | Your FairPlay certificate URL                          |
+| `your-token-value`                              | Your DRM auth token or other required header values    |
+| All `https://my-cdn.com/...` URLs               | Your actual stream manifest, poster, and subtitle URLs |
+
+## Common issues at this stage
+
+**The player throws `PLAYER_SETUP_MISSING_LICENSE_ALLOWLIST`.**
+Your domain is not on the MediaKind license allowlist. Contact MediaKind to add it before testing.
+
+**The player throws `PLAYER_DRM_FAILED_LICENSE_REQUEST`.**
+The license server rejected the request. Check that your `LA_URL` is correct, that any required auth headers are present, and that the token has not expired.
+
+**Subtitles do not appear after `player.subtitles.enable()`.**
+Check that `enableSubtitleOverlay` is not set to `false` in your player configuration and that `ui` is set to `false`. The built-in subtitle overlay is disabled when `ui` is enabled. If you are using `ui: true`, the UI layer handles subtitle rendering.
+
+**Safari does not play back the stream.**
+Ensure you have placed `serviceWorker.js` at the root of your domain and set `tweaks: { native_hls_parsing: true }` in your player config. See [Installation and setup](/mkio/reference/player-sdk/setup) for details.

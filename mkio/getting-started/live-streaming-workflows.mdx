@@ -1,0 +1,56 @@
+---
+title: Live streaming workflows
+description: Choose and follow the MK.IO guides for live event configuration, source setup, publishing, monitoring, and recording.
+sidebarTitle: Live streaming workflows
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+An MK.IO live workflow receives a continuous source, processes or passes through the signal, records it to an asset, and publishes it for playback. Use this page to choose the guide for each part of that workflow.
+
+## Start with the shortest path
+
+For the **Live** interface, follow [Create an SRT source](/mkio/how-to/live-streaming/live/create-a-live-source), then [Create a live event](/mkio/how-to/live-streaming/live/create-a-live-event). For several sources in one picture, use [Create a multiview live event](/mkio/how-to/live-streaming/live/create-a-multiview-live-event).
+
+The **Live Events** workflow below uses the Media API resource model. [Live stream in five minutes](/mkio/getting-started/live-stream-in-five-minutes) takes you from a Real-Time Messaging Protocol (RTMP) source to a playback URL. Use it for a first test with OBS Studio or another prepared encoder.
+
+## Build a live workflow
+
+<CardGroup cols={1}>
+  <Card title="Live workflow" icon="tower-broadcast">
+    1. [Configure the live event](/mkio/how-to/live-streaming/set-up-a-live-streaming-event)
+    2. [Connect the source](/mkio/how-to/live-streaming/set-up-the-source-stream-using-obs)
+    3. [Publish the stream](/mkio/how-to/content-delivery-publishing/stream-content)
+    4. [Monitor the services](/mkio/how-to/monitor-your-services)
+  </Card>
+</CardGroup>
+
+### Configure the event
+
+[Configure a live event](/mkio/how-to/live-streaming/set-up-a-live-streaming-event) explains live encoding and passthrough modes, RTMP, Real-Time Messaging Protocol Secure (RTMPS), Secure Reliable Transport (SRT), archive settings, and optional transcription.
+
+### Connect the source
+
+Choose the source software you use:
+
+* [OBS Studio](/mkio/how-to/live-streaming/set-up-the-source-stream-using-obs)
+* [FFmpeg](/mkio/how-to/live-streaming/set-up-the-source-stream-using-ffmpeg)
+* [GStreamer](/mkio/how-to/live-streaming/set-up-the-source-stream-using-gstreamer)
+
+### Publish and monitor
+
+[Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content) explains streaming endpoints, locators, and playback URLs. [Monitor your services](/mkio/how-to/monitor-your-services) covers operational metrics for live events and streaming endpoints.
+
+### Use the recording
+
+MK.IO writes the live output to an asset in the selected storage account. After the event stops, you can process and publish that asset through the same guides used for Video on Demand (VOD):
+
+* [Configure VOD transforms](/mkio/how-to/video-processing-encoding/configure-transformations)
+* [Run VOD processing jobs](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs)
+* [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content)
+
+## Advanced live workflows
+
+* [Advanced live streaming features](/mkio/getting-started/live-streaming-workflows/advanced-features)
+* [Extended archive window](/mkio/how-to/live-streaming/extended-archive-window)
+* Automate the workflow through an application programming interface (API) with the [Live streaming API Guide](/api-guides/how-to/media/live-streaming).

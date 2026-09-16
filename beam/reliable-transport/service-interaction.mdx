@@ -1,0 +1,63 @@
+---
+title: Interact with an existing Reliable Transport service
+sidebarTitle: Interact with an existing Reliable Transport service
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Each Reliable Transport service is displayed within a row in the Services page.
+
+To interact with an existing service, identify the name of the service of interest in the list of available services. Use the search option at the top of the page if needed.
+
+## Start a service
+
+1. On the service row corresponding to the service to be started, click **Choose a server to run** and select the name of the server to which the service will be assigned. The service is not automatically started.
+
+2. Click <img src="/icons/ui/play-outline.svg" alt="Play outline" className="mk-ui-icon" width="16" height="16" /> to launch the service. The service Status changes to **starting** and then to **started**. The <img src="/icons/ui/play-outline.svg" alt="Play outline" className="mk-ui-icon" width="16" height="16" /> action button changes to <img src="/icons/ui/stop-outline.svg" alt="Stop outline" className="mk-ui-icon" width="16" height="16" />.
+
+## Stop a service
+
+**Important:** Stopping a running service could disrupt customer operations.
+
+1. On the service row corresponding to the service to be stopped, click <img src="/icons/ui/stop-outline.svg" alt="Stop outline" className="mk-ui-icon" width="16" height="16" /> on the right of the service row.
+
+2. On the dialog window that appears, confirm using the **Yes, stop it!** button.
+
+The service Status changes to **stopping** and then to **stopped**. The <img src="/icons/ui/stop-outline.svg" alt="Stop outline" className="mk-ui-icon" width="16" height="16" /> action button changes to <img src="/icons/ui/play-outline.svg" alt="Play outline" className="mk-ui-icon" width="16" height="16" />.
+
+## Edit a service
+
+**Important:** Editing a running service could disrupt customer operations! It is recommended that services are only edited when stopped.
+
+1. On the service row corresponding to the service to be edited, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> on the right of the service row.
+
+   The service configuration page appears.
+
+2. You can start editing your service.
+
+   **Important:** Changing encryption configuration for SRT Caller or Listener modes requires similar changes on the corresponding Listener and Caller for the stream to be properly managed
+
+3. Click **Save and continue** to save your changes and continue configuring the service, click **Save and exit** to save and finalize your service configuration and go back to the **Services** page, or click **Exit** to go back to the **Services** page without saving.
+
+## Delete a service
+
+**Important:** Once a service is deleted, it is not possible to recover it.
+
+1. Stop the service.
+
+2. Click <img src="/icons/ui/delete.svg" alt="Delete" className="mk-ui-icon" width="16" height="16" /> to delete the service.
+
+3. On the dialog window that appears, confirm using the **Yes, stop it!** button.
+
+The service row disappears from the Services page.
+
+## What is the `service_id`?
+
+Every service has a name provided by the user and used to identify it in the services page. It also has an “id” (short for “identifier”).
+
+Although users usually do not need to know about the existence and value of the service id, it is worth mentioning the following:
+
+* The `service_id` must be unique for each service managed by a Controller. It is a field present in the JSON configuration structure that is saved to file when the service is exported, and must be present in any imported configuration. If you wish to export a service and want re-import it to have a second service with exactly the same configuration, make sure that you change the `service_id` before importing the file again.
+* The `service_id` is visible on the browser address bar when you edit a service, in the last part of the address (e.g. `srt_9850ef9e49c0adf7baa91602e1c8`). This is useful to know because the same identifier is used to create the filename when the service configuration is exported. It can be useful to know if you export a service and you are not sure which service you have exported. In this situation you may also just open the exported file and check the service name, but because the `service_id` is unique, it can be used in case of multiple services with the same name.
+* For advanced interaction with your services, you may use the product API, in which case the `service_id` is often required.
+* Note that, no matter if your service is configured for SRT or Zixi connection, the `service_id` will always contain `srt` in its name.

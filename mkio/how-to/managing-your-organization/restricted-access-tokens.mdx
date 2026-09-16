@@ -1,0 +1,124 @@
+---
+title: Restricted access tokens
+description: Create scoped API tokens that grant a subset of your permissions for use in scripts and automation.
+sidebarTitle: Restricted access tokens
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A restricted access token lets you provide a token to an automation system or script without exposing all of your capabilities. It cannot grant more rights than you already have.
+
+**Role-based access control (RBAC)** in MK.IO is controlled by granting permissions to users. Each permission is composed of:
+
+* A **scope**: defines the resources the permission applies to.
+* A **role**: defines what capabilities are granted on those resources.
+
+For more details on RBAC in MK.IO, see [Access, users and teams](/mkio/how-to/managing-your-organization/access-users-and-teams).
+
+## View your RBAC capabilities
+
+Because a restricted access token cannot exceed your existing rights, the first step is to check what you have access to.
+
+Log in to the MK.IO application at [app.mk.io](https://app.mk.io), then open [app.mk.io/api/v1/user/rbac](https://app.mk.io/api/v1/user/rbac) in a second browser tab.
+
+The response is a JSON document that describes your capabilities. If you have access to multiple organizations, switch to the correct organization first to see the right set of capabilities.
+
+The `teams` field shows how your RBAC capabilities are derived. The `rbac` field is what you use when defining a restricted token.
+
+```json
+{
+  "rbac": {
+    "core.customer": {
+      "00000000-0000-0000-0000-000000000000": {
+        "core.customer": [
+          "get",
+          "update"
+        ],
+        "core.invite": [
+          "create",
+          "delete",
+          "get",
+          "update"
+        ],
+        "core.project": [
+          "assign",
+          "create",
+          "delete",
+          "get",
+          "update"
+        ]
+      }
+    },
+    "core.project": {
+      "11111111-1111-1111-1111-111111111111": {
+        "ams.asset": [
+          "create",
+          "delete",
+          "get",
+          "update"
+        ],
+        "ams.assetfilter": [
+          "create",
+          "delete",
+          "get",
+          "update"
+        ]
+      }
+    }
+  }
+}
+```
+
+This example shows capabilities on a single organization (`core.customer`) and a single project (`core.project`).
+
+## Create a restricted token
+
+Send a POST request to the tokens endpoint with a `permissions` object that is a strict subset of the `rbac` object you received above.
+
+```shell
+curl --request POST \
+     --url https://app.mk.io/api/v1/user/tokens \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer bearer-token' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "permissions": {
+    "core.project": {
+      "11111111-1111-1111-1111-111111111111": {
+        "ams.asset": [
+          "create",
+          "delete",
+          "get",
+          "update"
+        ]
+      }
+    }
+  },
+  "type": "restricted",
+  "description": "Restricted token for automation",
+  "expireDate": "2025-08-22T10:15:00.000Z",
+  "organizationId": "00000000-0000-0000-0000-000000000000"
+}
+'
+```
+
+This request creates a token scoped to asset management on project `11111111-1111-1111-1111-111111111111` only. Requests using this token will be denied for any operation outside that scope.
+
+If the request succeeds, the response includes the new token details and the JWT string.
+
+```json
+{
+  "metadata": {
+    "id": "00000000-0000-0000-0000-000000000000",
+    "type": "restricted",
+    "JWT": "eyJ..."
+  },
+  "spec": {
+    ...
+    ...
+  }
+}
+```
+
+Use the returned JWT for subsequent asset management operations.

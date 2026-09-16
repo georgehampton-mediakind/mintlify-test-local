@@ -1,0 +1,86 @@
+---
+title: Configuring AWS VPC peering between VPC and LRS
+robots: noindex, nofollow
+---
+
+## Requirements
+
+Make sure that you have the following:
+
+1. Access to Harmonic Hub [https://hub.harmonicinc.com/](https://hub.harmonicinc.com/)
+
+2. Your existing VPC in AWS.
+
+3. Your VPC details (e.g. region, AWS account ID, VPC ID, CIDR block).
+
+<Warning>
+  **Warning!**
+
+  &#x20;CIDR blocks of both peering sides should not overlap.
+</Warning>
+
+### Create AWS VPC peering
+
+1. Log in to Harmonic Hub.
+
+2. In header menu select the **My account** tab, and in the side menu select **Cloud Resource**.
+
+   ![](/images/vos360/a9842f031c04eb1b0879ebaf.png)
+
+3. In the Cloud Resource page select the **AWS** tab and click **+ Resource**.
+
+   ![](/images/vos360/c8abef1f828f57b97208df24.png)
+
+4. Specify the VPC peering name and select the requester region (same region as used for customer VPC). The requester information should be filled automatically.
+
+   <Note>
+     **Info:** If the requester information is not automatically filled, please contact Harmonic support to get required requester information and manually fill the requester fields.
+   </Note>
+
+   ![](/images/vos360/d719b84d69864064843cdea0.png)
+
+5. Specify the VPC peering accepter information, and use the customer AWS account and VPC information.
+
+   ![](/images/vos360/b361d495cb18279b8fa4e4e3.png)
+
+6. Click **Submit** and confirm the creation of VPC peering.
+
+   ![](/images/vos360/00123b82ac0229f2ba2e3013.png)
+
+7. The VPC peering connection entity creation process has been started and can be verified using the **VPC PEERING JOB ID** link.
+
+   ![](/images/vos360/e336c935271732c6e6c7c4d1.png)
+
+8. Note that manual configuration on accepter's side is required. Ensure the peering request is accepted before expiration. Request can be found in the accepter's **AWS account** > **VPC&#x20;**> **Peering connections**.
+
+   ![](/images/vos360/82cf97f1024a105205acfe4c.png)
+
+   The accepter's route table should be additionally configured with a route to the requester's CIDR block with the currently configured VPC peering as the target.
+
+   Route tables can be found in accepter's **AWS account&#x20;**> **VPC** > **Route tables**. Select the route table that corresponds to accepter's subnet.
+
+   ![](/images/vos360/b9b0daae5fa75af9e1f3aa53.png)
+
+   Add the route rule with requester's CIDR and VPC peering as the target.
+
+   ![](/images/vos360/d3f16f60bccfa44608b0f2d9.png)
+
+9. After VPC peering creation is finished, a green **Active** label should be present on the peering connection entity in the AWS peering list.
+
+   ![](/images/vos360/863bb697271afffc94b4e29b.png)
+
+### Delete AWS VPC peering
+
+1. Navigate to **Harmonic Hub** > **My account** > **Cloud Resource** and select the VPC you want to delete.
+
+2. Click **Delete** on the peering details page.
+
+   <Warning>
+     **Warning!**
+
+     Remember to double check if the Requester VPC ID and Accepter VPC ID are the correct pair to be deleted.
+   </Warning>
+
+3. The VPC peering connection entity deletion process has been started and can be verified using the **DELETE JOB ID** link.
+
+   ![](/images/vos360/4e93080d29c885791a94a787.png)

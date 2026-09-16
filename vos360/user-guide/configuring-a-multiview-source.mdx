@@ -1,0 +1,131 @@
+---
+title: Configuring a Multiview source
+robots: noindex, nofollow
+---
+
+The Multiview feature combines multiple video feeds into a single mosaic or "tiled" view for monitoring or delivery. It enables creating a stream with a background image and several tiles linked to different sources. Each source can be resized and positioned.
+
+Multiview source supports up to 16 SRT/IP live sources as tile sources, which by default can be synchronized with time code. It supports both IPTV and Multiscreen transcoding profiles.
+
+## Key Features
+
+* Composition: Combines several live input sources (tiles) onto a static background image.
+
+* Synchronization: Supports aligning video feeds using UTC timecodes or a "Freewheel" mode.
+
+* Layout Control: Tiles can be freely resized, positioned, and even overlapped within a 1920x1080 resolution.
+
+* Audio/Data: Supports audio passthrough and can include closed captions from a selected tile.
+
+## Create a Multiview source
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.
+
+   ![image-20260625-080955.png](/images/vos360/16ecf3596d3f6c44140453a1.png)
+
+2. Click the **Add Input** icon and then select **Multiview**.
+
+3. Configure the following parameters:
+
+   * **Resolution**: Only the 1920x1080 resolution is available.
+
+   * **Framerate**: Possible values are 25 fps, 29.97 fps, 50 fps, and 59.94 fps.
+
+   * **Synchronization mode**: Possible values are “By Timecode” and “Freewheel”. If “Freewheel” is selected, the “Delay”’ parameter is not visible.
+
+     * When “By Timecode” is enabled for synchronization:
+
+       * All sources will have UTC-based timecode.
+
+       * Each Multiview frame is generated with a UTC-based timecode. It is composed of source frames that have the same time codes.
+
+       * If the “Delay” parameter is set, the Multiview frame with timecode T will be generated at T + “Delay”.
+
+       * If your sources do not have UTC-based timecode, or if you do not need to synchronize the frame accurately with the sources, use the Freewheel mode.
+
+     * When “Freewheel” is enabled for synchronization, each frame will also be generated with a UTC-based timecode.
+
+   * **Background Image**: A background image can be set to display when a source is lost. Refer to [Configuring a signal loss image](/vos360/user-guide/configuring-the-signal-loss-input) for details.
+
+## Add sources to Multiview layout
+
+1. From the **Configure Channels** app, navigate to the **Sources** page and click the **Edit Layout&#x20;**&#x62;utton.
+
+   ![image-20260626-041258.png](/images/vos360/3df1b23ca95b56752f38a89e.png)
+
+2. From the **Multiview Editing** window, select one of the following modes:
+
+   * **Graphical**: Use this mode if your screen size is bigger than 1024 pixels. When using this mode, you can import a PNG or WebM file and use the "Auto Detect" button. Note that this is the default mode.
+
+   * **Form**: Use this mode on small screen sizes.
+
+3. Click the **+ Add Source** button to add sources and configure the source settings.
+
+   * **Source ID**: Select a source from the drop-down list. Available sources are IP and SRT, except for those used by demux (with label INTERNAL\_DEMUX).
+
+   * **X Position, Y Position, Width, Height**: Configure the positions and sizes for the sources.
+
+   * **Closed Captions**
+
+     * **Disable**
+
+     * **Passthrough**: If a source has Closed Captions Pass-through, all the other sources will have Closed Captions Disabled and cannot be changed.
+
+     * **Remux**: Create multiple remux caption services if needed. If a source has Closed Captions Remux, you will need to provide for this source a non-empty list of “Caption Service”.
+
+       * **Input Caption Service**: Must be between 1 and 63. This needs to be unique for this source.
+
+       * **Output Caption Service**: Must be between 1 and 63. This needs to be unique among all sources in the Multiview.
+
+       * **Language**: Select the language from the drop-down menu for the caption service.
+
+       * **Wide AR**: Possible values are 4:3 and 16:9.
+
+       * **Stream Name**: Use this to identify a stream in OTT packaging output.
+
+       * **Easy Reader**: Enable the Easy Reader functionality for the Closed Caption Service.
+
+       * **Default**: Use this to define the default subtitle in OTT packaging output. Only one can be true among all sources.
+
+   * **Mute**: When a source is muted:
+
+     * The video source is not inserted. Slate is inserted if defined.
+
+     * If the audio source is passthrough, then no audio is at the output.
+
+     * If the audio source is transcoded, then silence is generated.
+
+     * The Closed Caption source is not forwarded to the output.
+
+   * **Slate**: When a slate is defined, it will replace the video source when the video source is missing. It is resized if necessary. If you mute the source, the slate is also replacing the video source.
+
+     * The “Slate Image” can be selected in the Library (from Configure Graphics Template).
+
+     * If not yet present, you can add it using its URL. Only PNG and MP4 files can be added.
+
+4. Select the **Predefined Layouts&#x20;**&#x66;rom the drop-down menu. When a “predefined layout” is selected, all the selected sources are removed and replaced by new sources with Position (X, Y) and Size (Width, Height).\
+   **Note**: If any Source IDs were defined for the previous layout, they are used for the new layout.
+
+5. Configure additional settings for sources:
+
+   1. **Import Foreground.&#x20;**&#x41; foreground Graphic can be inserted to customize the Mosaic. You can only select a WebM as foreground. This WebM is referenced in multiviewSettings in ‘graphicsTemplateId’.
+
+      1. The WebM files are referenced via their URL.
+
+      2. The WebM files can be selected in the Library (from Configure Graphics Template).
+
+   2. **Auto Detect:&#x20;**&#x54;his button allows you to automatically add regions for sources. This analyzes the imported file to create, size, and position some sources. When the user clicks the button, the application detects transparent areas in the WebM file. For each transparent area found, a source is created with position and size values corresponding to that area.
+
+      **Note**: Auto-detection requires transparent regions in the foreground. This button is disabled if there are no transparency areas. Areas smaller than 32x18 pixels are not retained.
+
+   3. **Background:&#x20;**&#x43;hange the background color to ease the source region configuration.\
+      **Note**: This background color will not be stored inside Multiview input configurations. This color is not sent in the configuration and not saved. The default color is black.
+
+   4. **Magnetism:&#x20;**&#x59;ou can check "Magnetism" to ease the region move and resize using the mouse.
+
+   5. **Lock 16:9 aspect ratio:&#x20;**&#x59;ou can fix the aspect ratio to 16/9 for each source resize (this is the default mode).\
+      If you manually change the width, the height will be recalculated to maintain this aspect ratio. The same applies if you changes th height; the width will be recalculated. If you use the mouse to resize, the aspect ratio will be maintained at all times.
+
+      **Note**: The calculated values are rounded and automatically result in an even number. When the “Lock 16:9 aspect ratio” option is unchecked, you can resize the image without maintaining the aspect ratio.
+
+6. Click **Save** when completed.

@@ -1,0 +1,107 @@
+---
+title: DRM protection
+description: Configure Widevine, PlayReady, and FairPlay DRM for protected content playback in MKPlayer.
+sidebarTitle: DRM protection
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MKPlayer supports Widevine, PlayReady, and FairPlay DRM. You configure DRM by adding a `drm` property to your `MKSourceConfig` before calling `player.load()`. The player selects the first key system supported by the current platform.
+
+To support playback across browsers and devices, it is recommended to provide both a Widevine and a PlayReady configuration. FairPlay applies only to HLS sources on Apple devices.
+
+## Prerequisites
+
+You have an initialised `MKPlayer` instance and a loaded source. See [Installation and setup](/mkio/reference/player-sdk/setup) and [Loading and playing content](/mkio/reference/player-sdk/playback).
+
+## Configure DRM
+
+Add a `drm` object to your source configuration. Each key system is optional: include only the ones your licence server supports:
+
+```javascript
+const sourceConfig = {
+  title: "Protected Stream",
+  hls: "https://my-cdn.com/mysource/hls/index.m3u8",
+  dash: "https://my-cdn.com/mysource/dash/manifest.mpd",
+  drm: {
+    widevine: {
+      LA_URL: "https://your-widevine-license-server/license",
+      headers: {
+        "X-CustomHeader": "custom-value"
+      }
+    },
+    playready: {
+      LA_URL: "https://your-playready-license-server/license",
+      headers: {
+        "X-CustomHeader": "custom-value"
+      }
+    },
+    fairplay: {
+      LA_URL: "https://your-fairplay-license-server/license",
+      certificateURL: "https://your-fairplay-certificate-url",
+      headers: {
+        "X-CustomHeader": "custom-value"
+      }
+    }
+  }
+};
+
+player.load(sourceConfig);
+```
+
+## Widevine and PlayReady options
+
+Both `widevine` and `playready` accept the same core properties:
+
+| Property  | Type        | Description                                     |
+| --------- | ----------- | ----------------------------------------------- |
+| `LA_URL`  | `string`    | URL of the DRM licence server.                  |
+| `headers` | `MKHeaders` | Custom HTTP headers sent with licence requests. |
+
+### PlayReady on smart TVs
+
+Most smart TV platforms require `plaintextChallenge` and `utf8message` to be set for PlayReady licence requests to succeed:
+
+```javascript
+playready: {
+  LA_URL: "https://your-playready-license-server/license",
+  utf8message: true,
+  plaintextChallenge: true,
+  headers: {
+    "Content-Type": "text/xml"
+  }
+}
+```
+
+## FairPlay options
+
+FairPlay requires a `certificateURL` in addition to the licence server URL. It applies only to HLS sources on Apple devices.
+
+| Property                       | Type                 | Description                                                                                                         |
+| ------------------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `LA_URL`                       | `string`             | URL of the FairPlay licence server.                                                                                 |
+| `certificateURL`               | `string`             | URL to the FairPlay certificate. Required.                                                                          |
+| `headers`                      | `MKHeaders`          | Custom HTTP headers for licence requests.                                                                           |
+| `certificateHeaders`           | `MKHeaders`          | Custom HTTP headers for the certificate request.                                                                    |
+| `prepareContentId`             | `function`           | Callback to transform the content ID extracted from the HLS manifest before it is sent to the licence server.       |
+| `prepareMessage`               | `function`           | Callback to prepare the licence acquisition message before it is sent.                                              |
+| `prepareLicense`               | `function`           | Callback to transform the licence response before it is passed to the browser.                                      |
+| `prepareCertificate`           | `function`           | Callback to transform the certificate response before it is passed to the browser.                                  |
+| `withCredentials`              | `boolean`            | Send cookies and auth headers with licence requests. Default: `false`.                                              |
+| `licenseResponseType`          | `MKHttpResponseType` | Sets an explicit response type for the licence request. Default: `TEXT`.                                            |
+| `useUint16InitData`            | `boolean`            | Use `Uint16Array` instead of `Uint8Array` for init data. Depends on your FairPlay licence server. Default: `false`. |
+| `maxLicenseRequestRetries`     | `number`             | How many times to retry a failed licence request. Default: `1`. Set to `0` to disable retries.                      |
+| `maxCertificateRequestRetries` | `number`             | How many times to retry a failed certificate request. Default: `1`. Set to `0` to disable retries.                  |
+
+## Common DRM errors
+
+| Error code                                  | Meaning                                                                                                      |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `PLAYER_DRM_FAILED_LICENSE_REQUEST`         | The licence request failed. Check that `LA_URL` is correct and that required headers and tokens are present. |
+| `PLAYER_DRM_NO_KEY_SYSTEM`                  | The current platform does not support any of the key systems in the source config.                           |
+| `PLAYER_DRM_CERTIFICATE_ERROR`              | The FairPlay certificate could not be loaded or parsed. Check `certificateURL`.                              |
+| `PLAYER_DRM_INIT_DATA_MISSING`              | No DRM init data was found in the manifest or segments. Check your stream packaging.                         |
+| `PLAYER_DRM_RESTRICTED_OUTPUT`              | The device cannot securely present the content, for example due to a non-HDCP display.                       |
+| `PLAYER_NO_DRM_LICENSE_SERVER_URL_PROVIDED` | `LA_URL` is missing or invalid in the DRM config.                                                            |
+
+See [Events and error handling](/mkio/reference/player-sdk/events) for how to listen for and respond to DRM errors at runtime.

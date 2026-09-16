@@ -1,0 +1,311 @@
+---
+title: Thumbnail generation transform
+description: Create Media API transforms that generate individual thumbnails, image sequences, or sprite files from VOD assets.
+sidebarTitle: Thumbnail generation transform
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Extract one or more images from a Video on Demand (VOD) asset for posters, previews, or seek thumbnails. Create the transform through the Media API, then run it against the source asset.
+
+<Warning>
+  Thumbnail generation is only available for MP4 content and requires a server manifest (`.ism`) as the job input.
+</Warning>
+
+The portal does not create thumbnail generation transforms. Create the transform through the Media API, then select it when you run the processing job. If the source asset uses Smooth Streaming format, convert it first with an [asset conversion transform](/mkio/reference/encoding-transform-presets/asset-conversion-transform).
+
+You can extract a single image, an image sequence, or a sprite image.
+
+The thumbnail preset must use `#MediaKind.ThumbnailGeneratorPreset` for the `@odata.type` attribute.
+
+## Default thumbnail
+
+A standard VOD transcoding job generates one JPEG thumbnail at 50 percent of the size of the highest-resolution video rendition. Create a thumbnail generation transform when you need another position, size, format, image sequence, or sprite.
+
+## Configuration parameters
+
+The following parameters configure thumbnail generation:
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Parameter
+      </th>
+
+      <th>
+        Description
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        `format`
+      </td>
+
+      <td>
+        The output file format for the thumbnail. Can be either `Png` or `Jpeg`.
+        Only `Jpeg` can be used to produce sprite files.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `width`
+      </td>
+
+      <td>
+        The width of the output video for this layer. The value can be absolute (in pixels) or relative (in percentage). For example 50% means the output video has half as many pixels in width as the input.
+        If only width is given and value is in pixels, the height will be calculated to preserve aspect ratio.
+        If either width/height is defined as percentage, the other dimension must be the same percentage.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `height`
+      </td>
+
+      <td>
+        The height of the output video for this layer. The value can be absolute (in pixels) or relative (in percentage). For example `50%` means the output video has half as many pixels in height as the input.
+        If only height is given and value is in pixels, the width will be calculated to preserve aspect ratio.
+        If either width/height is defined as percentage, the other dimension must be the same percentage.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `start`
+      </td>
+
+      <td>
+        The position in the input video from where to start generating thumbnails. The value can be in ISO8601 format with second-level precision (For example, PT05S to start at 5 seconds) or a relative value to asset duration (For example, `10%` to start at 10% of stream duration).
+        The default value is 0, which means to start at the beginning of the asset.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `range`
+      </td>
+
+      <td>
+        The position relative to start time in the input video at which to stop generating thumbnails. The value can be in ISO8601 format with second-level precision (For example, PT5M30S to stop at 5 minutes and 30 seconds from start time) or a relative value to the asset duration (For example, `50%` to stop at half of stream duration from start time).
+        The default value is `100%`, which means to stop at the end of the asset.
+        If this value is `1`, only a single thumbnail will be generated at the start time.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `step`
+      </td>
+
+      <td>
+        The interval at which thumbnails are generated. The value can be in ISO8601 format with second-level precision (For example, `PT05S` for one image every 5 seconds) or a relative value to asset duration (For example, `10%` for one image every 10% of stream duration).
+        If step is not specified or if range is set to `1`, a single thumbnail will be generated.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `label`
+      </td>
+
+      <td>
+        Used to create the output filename as `{BaseFilename}_{Label}{Index}{Extension}`.
+        When generating sprites, the output VTT file will be named `{BaseFilename}_{Label}.vtt`
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `quality`
+      </td>
+
+      <td>
+        The compression quality of the JPEG images between 0 and 100. Default value is 70.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `spriteColumn`
+      </td>
+
+      <td>
+        Multiple thumbnails can be aggregated in a sprite image.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Transform examples
+
+The following transforms show how to use these parameters.
+
+Once the transform is in place, it can be used to [create a job on a given VOD asset](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs).
+
+## Transform to generate a single thumbnail
+
+The following transform generates a single PNG image 10 seconds after the content starts.
+The image is half the size of the highest-resolution input rendition.
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+  "properties": {
+    "outputs": [
+      {
+        "preset": {
+          "@odata.type": "#MediaKind.ThumbnailGeneratorPreset",
+          "thumbnails": [ 
+            {
+              "format": "Png",
+              "start": "PT10S",
+              "width": "50%",
+              "height": "50%"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+'
+```
+
+## Transform to generate multiple thumbnails
+
+The transform below generates one JPEG image every 30 seconds during 80 percent of the input content. The width determines the image size, and MK.IO calculates the height to preserve the aspect ratio.
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+  "properties": {
+    "outputs": [
+      {
+        "preset": {
+          "@odata.type": "#MediaKind.ThumbnailGeneratorPreset",
+          "thumbnails": [
+            {
+              "format": "Jpeg",
+              "start": "10%",
+              "range": "90%",
+              "step": "PT30S",
+              "width": "480",
+              "quality": 70
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+'
+```
+
+When a transform generates multiple thumbnails, MK.IO also creates a Web Video Text Tracks (WebVTT) file containing their timing.
+
+## Transform to generate a sprite file
+
+MK.IO can generate a sprite file and its associated WebVTT file.
+
+The transform below generates one JPEG image for every 1 percent of the content and organizes the images in a 10 by 10 sprite file.
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+  "properties": {
+    "outputs": [
+      {
+        "preset": {
+          "@odata.type": "#MediaKind.ThumbnailGeneratorPreset",
+          "thumbnails": [
+            {
+              "format": "Jpeg",
+              "start": "PT0S",
+              "range": "100%",
+              "step": "1%",
+              "width": "10%",
+              "height": "10%",
+              "spriteColumn": 10
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+'
+```
+
+Players can use sprite files for seek previews. See [Play a VOD asset with thumbnail seeking](/mkio/how-to/video-processing-encoding/playout-of-a-vod-asset-with-thumbnail-seeking).
+
+## Combined generation of thumbnail and sprite files
+
+One transform can contain multiple thumbnail configurations.
+
+The transform below generates one JPEG image for every 1 percent of the content and organizes the images in a 10 by 10 sprite file. It also generates one PNG thumbnail at a fixed size of 1920 by 960 pixels.
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+  "properties": {
+    "outputs": [
+      {
+        "preset": {
+          "@odata.type": "#MediaKind.ThumbnailGeneratorPreset",
+          "thumbnails": [
+            {
+              "format": "Jpeg",
+              "start": "PT0S",
+              "range": "100%",
+              "step": "1%",
+              "width": "10%",
+              "height": "10%",
+              "spriteColumn": 10,
+              "quality": 90,
+              "label": "Sprite"
+            },
+            {
+              "format": "Png",
+              "start": "PT01S",
+              "width": "1920",
+              "height": "960",
+              "label": "Thumbnail"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+'
+```
+
+## Download generated files
+
+Create a streaming locator on the output asset with the `Predefined_DownloadOnly` streaming policy to retrieve download URLs for generated thumbnails and sprite files. See [Streaming locators](/mkio/understanding/core-concepts/locators) for locator and download policy details.

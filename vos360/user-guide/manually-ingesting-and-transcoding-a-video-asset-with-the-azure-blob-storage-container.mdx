@@ -1,0 +1,67 @@
+---
+title: Manually ingesting and transcoding a video asset with the Azure Blob Storage container
+robots: noindex, nofollow
+---
+
+Assets may be uploaded to VOS360 into the provided Azure Blob Storage container for automatic registration onto the system.
+
+Once assets are registered to VOS360, the uploaded source file will be copied into internal storage, and the copy in the Azure Blob Storage container are cleaned up.
+
+Ingested assets may be processed with a transcoding profile, grooming profile, or both.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Processing Type</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Workflow</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Transcoding profile</p></td><td colSpan="1" rowSpan="1"><p>Transcoding will be performed with all valid audio and data tracks.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Grooming profile</p></td><td colSpan="1" rowSpan="1"><p>Assets can be used for playout channels only. OTT VOD delivery will be unavailable.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Transcoding+Grooming profile</p></td><td colSpan="1" rowSpan="1"><p>Transcoding will be performed according to the parameters specified in the grooming profile. For example, audio tracks may be selectively processed by languages.</p></td></tr></tbody>
+  </table>
+</div>
+
+1. Navigate to **Asset Acquisition** > **Settings**, ensure that **Decision Defaults&#x20;**&#x69;s turned off.
+
+2. On the **Asset Acquisition > Incoming > Upload** page, refer to the provided **Azure Blob Storage Address&#x20;**&#x74;o upload files to a connected Azure Blob containe&#x72;**.**
+
+   <Note>
+     **Note:&#x20;**&#x41;lternatively, assets may be ingested through the web uploader and HTTP(S). Please contact Harmonic technical support for more details.
+   </Note>
+
+   **Result:** Uploaded files appear in the **Decision Queue**.
+
+3. From the **Decision Queue**, select the files you wish to process.
+
+4. Select the appropriate transcoding profile.
+
+   <Note>
+     **Note:&#x20;**.mxf (MPEG-2/PCM) files do not support multiscreens passthrough profiles.
+   </Note>
+
+5. Optionally, select or configure a grooming profile.
+
+6. Optionally, choose a priority level for the job.
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>Rush</p></td><td colSpan="1" rowSpan="1"><p>Rush jobs are processed first. If any Normal jobs are in process, the Rush job will begin once the in-process job is complete.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Normal</p></td><td colSpan="1" rowSpan="1"><p>Normal jobs are processed after Rush jobs.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Backlog</p></td><td colSpan="1" rowSpan="1"><p>Backlog jobs are processed last.</p></td></tr></tbody>
+     </table>
+   </div>
+
+7. Click **Apply to selected**.\
+   **Result:** The job is added to the **Ready Queue** until the transcoding engine is ready to process it.
+
+   <Note>
+     **Note:&#x20;**&#x42;y default, a maximum of three jobs may be processed concurrently. When you select multiple source files and/or apply multiple profiles to source files, one job is created for each source file and profile combination.
+   </Note>
+
+8. Optionally, once the job begins, track its progress on the **Jobs** page.\
+   If an error occurs during processing, the job returns to the **Decision Queue**, where it can be re-transcoded or deleted.
+
+**Result**\
+Upon successful job completion, the assets become available in the **Library**, where you may preview the video in the embedded web player, obtain the output URL for playback (HLS, DASH, or SS), edit asset details, and generate new package types from the transcoded asset.
+
+<Note>
+  **Note:&#x20;**&#x4F;nce the file is uploaded and validated through the **Decision Queue** tab, the original file is deleted from the Blob container. The source file is only saved in VOS360.
+</Note>

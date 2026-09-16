@@ -1,0 +1,119 @@
+---
+title: Using AI to Write Docs
+description: How to use repository context and verification when AI tools draft or edit documentation.
+sidebarTitle: Using AI to Write Docs
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use an AI assistant to draft, restructure, or review documentation while keeping technical claims, source review, and publication decisions under human control.
+
+The repository is well suited to AI-assisted work because the canonical content, metadata, components, tests, and build rules are available as files. AI output still requires the same source verification, review, and preview workflow as human-authored output.
+
+## Load repository instructions
+
+The root `AGENTS.md` file tells an AI assistant which contributor guides to read and how to handle technical uncertainty. Tools that support repository instructions may load it automatically.
+
+If the tool does not, start with this instruction:
+
+> Read `AGENTS.md` at the repository root and every contributor guide it requires for this task. Do not invent technical content. Use the normal portable content contract and report anything you cannot verify.
+
+Do not paste confidential source material into an AI service that is not approved to receive it.
+
+## Give the assistant a bounded task
+
+State:
+
+* The reader outcome.
+* The product and workflow mode.
+* The exact source files, specifications, screenshots, or notes it may use.
+* The target file path.
+* Whether it may edit, only review, or only propose a draft.
+* The validation commands it must run.
+
+For a new page, use a prompt such as:
+
+> Create `src/content/docs/beam/how-to/configure-feed-source.md` from the supplied verified notes. Read and follow `AGENTS.md`. Use Markdown unless the content needs a supported portable component. Do not add facts that are absent from the notes. Mark inferred claims with the repository `VERIFY:` convention. Run the content-contract validator and `pnpm verify:local`, then report the source gaps and commands run.
+
+For an existing page, use a prompt such as:
+
+> Review `src/content/docs/mkio/admin/teams.md` against `AGENTS.md` and its neighbouring pages. Preserve every sourced technical claim. Improve the structure for the reader task, but ask before removing a step or changing a URL, command, field, or UI label. Run the relevant validators and report every unresolved issue.
+
+## Prefer portable output
+
+Ask the assistant to use:
+
+* Standard Markdown headings, paragraphs, links, lists, code, tables, and images.
+* Starlight aside directives for callouts.
+* A normal numbered list for a short procedure.
+* Starlight `Steps` for procedures that need nested code, images, or asides.
+* `Cards` and `Card` only for meaningful navigation choices.
+* `UiIcon` only for a verified product interface control.
+* `Fa` only for a supported general inline symbol.
+
+Do not ask an AI assistant to invent a component, add raw HTML, use executable MDX, or expand the compatibility baseline. `Callout`, `LegacySteps`, `Tabs`, and other advanced components remain grandfathered compatibility, not recommended authoring constructs. `RelatedTopics` has been removed. Use an ordinary Markdown link list for related documentation.
+
+## Review technical integrity
+
+Check every output for:
+
+* Exact product terminology.
+* Exact API paths, methods, parameters, required fields, enums, and response shapes.
+* Exact interface labels and capitalisation from supplied screenshots or notes.
+* Preserved prerequisites, warnings, steps, and edge cases.
+* A sourced way for the reader to verify success.
+* No unsupported inference presented as fact.
+
+An AI assistant can make prose more convincing without making it more accurate. Treat an unsourced precise detail as a defect, even when it sounds plausible.
+
+## Review content integrity
+
+Compare the source material and final diff. Confirm that the assistant:
+
+* Did not omit an image, attachment, table row, warning, or exception.
+* Did not reorder procedural steps without approval.
+* Did not change a URL or move a page without a redirect plan.
+* Did not place confidential material in a public source file.
+* Did not edit generated files in `dist/`, `.generated/`, or deployment-owned output.
+* Did not convert a rich source construct silently when no lossless representation exists.
+
+For a batch change, review representative pages and every reported transformation diagnostic. Do not accept a summary as proof that all pages converted correctly.
+
+## Validate the result
+
+Run the content-contract validator while iterating:
+
+```bash
+pnpm validate:content-contract
+```
+
+Run the complete verification before opening a pull request:
+
+```bash
+pnpm verify:local
+```
+
+The complete command runs Node tests, API reference tests, publication and archive checks, a deterministic production build, machine-output generation, and deployment-limit checks. It does not deploy or write to remote search, AI, archive, or content systems.
+
+Review the rendered pull request preview and the canonical source diff. Machine-readable Markdown is generated from the same semantic source during the production build, so inspect its diagnostics when the page uses MDX.
+
+## Use AI for review
+
+AI review is useful for bounded checks such as:
+
+* Finding claims that lack a cited repository source.
+* Comparing an API guide with its pinned OpenAPI specification.
+* Checking whether a page uses only the portable content contract.
+* Finding duplicated or conflicting contributor guidance.
+* Identifying broken links or missing alternative text.
+* Summarising a focused diff for a human reviewer.
+
+Do not delegate the final product approval, publication decision, or archive immutability decision to an AI tool.
+
+## Continue reading
+
+* [How to Contribute](/docs-contribute/contribute)
+* [Page Structure](/docs-contribute/page-structure)
+* [Component Reference](/docs-contribute/components)
+* [Prompt Library](/docs-contribute/prompt-library)

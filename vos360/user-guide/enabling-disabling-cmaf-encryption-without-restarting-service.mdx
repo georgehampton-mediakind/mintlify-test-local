@@ -1,0 +1,54 @@
+---
+title: Enabling/Disabling CMAF encryption without restarting service
+robots: noindex, nofollow
+---
+
+You can enable/disable encryption for live CMAF packaging (i.e. unified CMAF packaging with CMAF HLS and CMAF DASH) while service is running and without restart of the service.
+
+For instance, at time = T1, your playlist consists of segments 1-100 in clear format. At time = T2, you can dynamically enable encryption without affecting the existing segments. Segments 1-100 will continue to be delivered in clear format, ensuring uninterrupted access for your viewers. From segment 101 onward, which occurs after T2, all segments will be encrypted, enhancing the security of your live streaming. This encryption will apply to all subsequent segments (i.e., segment 102, 103, etc.), maintaining the continuity of your content delivery.
+
+## Prerequisites
+
+Configure a service with:
+
+* Origin destination defined with the destination profile having CMAF packaging profile.
+
+* DRM Add-ons turned on.
+
+1. Navigate to the **Public API&#x20;**&#x61;pp.
+
+2. Under **Monitor Service**, navigate to **POST/monitor/v1/services/\{id}/toggle\_drm**.
+
+   ![monitor-post-param.png](/images/vos360/e4d00921cd45193c79192e2d.png)
+
+3. Use the HTTP POST method to specify time to enable/disable encryption.
+
+   * Query parameter:
+
+     * **id** - service ID
+
+   * Request body parameters:
+
+     * **drmControlState** - enable/disable the encryption for packaging (currently only for CMAF packaging).\
+       Available options are:
+
+       * DEFAULT (i.e. following existing DRM configuration of service)
+
+       * FORCE\_UNENCRYPTED
+
+     * **timeToProcessChangeInUtc** - specify time to enable/disable encryption.\
+       Value must be:
+
+       * UTC represented in format of YYYY-MM-DDTHH:mm:ssZ (e.g. 2021-03-04T12:34:56Z)
+
+       * \>= 4 seconds from current time.
+
+4. From the VOS notification, verify the warnings indicating packaging output is forced to be unencrypted.
+
+   ![alarm-vos.png](/images/vos360/f82dc0041e43a9977c2ad90e.png)
+
+5. From the **Monitor Channels** app, verify the warnings indicating output is forced to be encrypted.
+
+   ![alarm-monitor.png](/images/vos360/7d301484077c81d5de63eccf.png)
+
+**Result:** Anyone who has started playing back encrypted CMAF HLS (or CMAF DASH) content earlier remain unaffected. Others start playing back with unencrypted CMAF HLS (or CMAF DASH) output.

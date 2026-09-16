@@ -1,0 +1,83 @@
+---
+title: On-board edge devices common workflow
+description: How to connect an edge device to MK.IO and register it to a project with the most common workflow.
+sidebarTitle: Common workflow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Register an edge device with the standard portal workflow. Set the device Control interface IP, open the local web UI, copy its short code, and enter the code in MK.IO.
+
+## Prerequisites
+
+* You can access the device's local web UI at `http://<Control-IP-Address>`, where `<Control-IP-Address>` is the IP address of the *Control* interface of the edge device.
+
+<span id="overview-of-adding-the-device-to-mkio" className="mk-legacy-anchor" />
+
+## Overview of adding the device to MK.IO
+
+This on-boarding process has two parts:
+
+1. From the device's local web UI, [connect the device to MK.IO](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/common-workflow#connect-the-device-to-mkio-from-the-device-ui). The UI displays a **short code**.
+2. Use the short code to register the device [via the MK.IO UI](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/common-workflow#add-the-device-using-the-mkio-ui).
+
+Once registered, the device is available for monitoring and control through MK.IO.
+
+<Info>
+  **Remote on-boarding**
+
+  The two steps above do not need to be completed by the same person. In a remote on-boarding scenario, the engineer installing the device can pass the short code verbally to an MK.IO user with permission to register it.
+</Info>
+
+<Steps>
+  <Step title="Configure an HTTP proxy (optional)">
+    <span id="configure-an-http-proxy-optional" className="mk-legacy-anchor" />
+
+    A proxy only needs to be configured when internet connectivity for MK.IO is only possible via a proxy.
+
+    1. Open the device's local web UI: `http://<Control-IP-Address>`.
+    2. Go to **Appliance** > **Fleet**.
+    3. Select <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> next to the **Connected** field.
+    4. Enter the **Proxy IP Address**, **Port**, **Username**, and **Password**.
+    5. Select **Apply**.
+  </Step>
+
+  <Step title="Connect the device to MK.IO from the device UI">
+    <span id="connect-the-device-to-mkio-from-the-device-ui" className="mk-legacy-anchor" />
+
+    1. Open the device's local web UI: `http://<Control-IP-Address>`.
+    2. Go to **Appliance** > **Fleet**. After a few seconds, additional information appears.
+    3. Confirm the **Connected** field shows **Yes**. This confirms the device can reach MK.IO. Select <img src="/icons/ui/wrench.svg" alt="Wrench" className="mk-ui-icon" width="16" height="16" /> to run diagnostics if needed.
+    4. Confirm that the **Registered** field shows **No** before you complete registration.
+    5. Copy the **short code** (eight random letters and numbers) from this page.
+
+    <Warning>
+      The short code rotates periodically. Keep the device UI open until you complete registration because the UI updates automatically when the code changes.
+    </Warning>
+  </Step>
+
+  <Step title="Add the device using the MK.IO UI">
+    <span id="add-the-device-using-the-mkio-ui" className="mk-legacy-anchor" />
+
+    The device must have connected to MK.IO before you can register it. If the **Connected** field showed **No** in the previous step, resolve that before continuing.
+
+    1. In a separate browser tab, log in to MK.IO. If you do not have an account, see [Sign up to MK.IO](/mkio/getting-started/account-setup-and-first-steps).
+    2. Open the project you want to add the device to and go to the **Devices** page.
+    3. Select **Add device**, then enter the short code, a display name, and the site.
+    4. Select **Add**. The device appears in the list of edge devices.
+  </Step>
+
+  <Step title="Verify on-boarding">
+    <span id="verify-on-boarding" className="mk-legacy-anchor" />
+
+    Once the device is registered, go back to **Appliance** > **Fleet** in the device's local web UI. The **Registered** field shows **Yes** and displays the device's name.
+
+    You can now [view device information](/mkio/how-to/managing-edge-devices/display-device-information) and [access the remote UI](/mkio/how-to/managing-edge-devices/access-the-remote-device-ui).
+  </Step>
+
+  <Step title="Update device software">
+    <span id="update-device-software" className="mk-legacy-anchor" />
+
+    Once the device is registered, before commissioning, [update the device software to the latest version](/mkio/how-to/managing-edge-devices/update-device-software).
+  </Step>
+</Steps>

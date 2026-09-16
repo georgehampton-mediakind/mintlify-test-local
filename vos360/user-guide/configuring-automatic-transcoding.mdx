@@ -1,0 +1,38 @@
+---
+title: Configuring automatic transcoding
+robots: noindex, nofollow
+---
+
+When configured, automatic transcoding will be performed on source files as well as manually uploaded files.
+
+1. Navigate to **Asset Acquisition** > **Settings**, turn on **Decision Defaults**.
+
+   ![](/images/vos360/6e6f0791f844b317e5906186.png)
+
+2. Configure the following settings:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Priority</strong></p></td><td colSpan="1" rowSpan="1"><p>Choose the default priority level for each transcoding job:</p><ul><li><p><strong>Rush</strong> jobs are processed first. If any Normal jobs are currently processing, the Rush job will begin once the current job is complete.</p></li><li><p><strong>Normal</strong> jobs are processed after Rush jobs.</p></li><li><p><strong>Backlog</strong> jobs are processed last.</p><blockquote><p><strong>Note:</strong> By default, a maximum of 100 jobs may be processed concurrently.</p></blockquote></li></ul></td></tr></tbody>
+     </table>
+   </div>
+
+3. Below **Profile(s)**, delete the profile that is added by default by clicking the **x&#x20;**&#x61;nd select the appropriate transcoding profile from the drop-down menu if assets are to used for OTT VOD delivery. If assets are to be used for channel origination playout only, leave **Profile(s)** empty.
+
+4. If specific transcoding profile needs to be applied accordingly to the source properties, select **Source resolution based&#x20;**&#x64;efault decisions and configure transcoding profile for SD sources, for HD sources and for UHD sources.
+
+5. (Optional) Below **Groom MXF with Profile / Groom MP4 with Profile / Groom TS with Profile / Groom MOV with Profile**, if grooming is required, select the appropriate grooming profile from the drop-down menu that you have created through **Asset Acquisition&#x20;**>**&#x20;Settings** > **Profiles**.
+
+6. (Optional) If a grooming profile has not been created, click **Add** **in Profiles** under the relevant input source type (MXF/MP4/MOV/TS) and then do the following:
+
+   * Create a new grooming profile.
+
+   * Configure settings for each audio track in the source.
+
+   * If necessary, configure subtitle grooming settings.
+
+   * Click **Save**.
+
+7. From the **Settings** tab, click **Save**.

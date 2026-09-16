@@ -1,0 +1,287 @@
+---
+title: Content, sources, and destinations
+description: Create content identifiers, attach ingest sources using SRT, UDP, SDI, or HLS transports, and define egress destinations using the Media API.
+sidebarTitle: Content, sources, and destinations
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Content, sources, and destinations are the ingest and egress building blocks for Live API workflows. They are managed through the Media API and referenced by name in Live API resource inputs and outputs.
+
+* **Content** is a named logical identifier for a stream. It carries no transport settings.
+* **Sources** attach an ingest transport to content on a specific network. A source is how a stream physically arrives.
+* **Destinations** define where a resource output is delivered. A destination is how a stream physically leaves.
+
+## Content
+
+### Create a content resource
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/channel-1" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": {
+      "displayName": "Channel 1"
+    }
+  }'
+```
+
+The content name is set in the URL path. It must match `^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$`. A content resource has no spec fields; it is a named identifier only.
+
+### Get and list content
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/channel-1" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+The response includes `status.state`, which is `Active` when one or more live resources are using this content, or `Inactive` otherwise.
+
+### Update content
+
+PATCH updates `metadata.displayName` and `metadata.labels` only. Content has no mutable spec fields.
+
+### Delete content
+
+```bash
+curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/content/channel-1" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+If the resource does not exist, the API returns `204`.
+
+## Sources
+
+A source associates content with a transport on a specific network. When a Live API resource specifies a `contentName` as its input, the system resolves which sources supply that content on a network the resource can reach. You can also reference a source directly by `sourceName` to bypass content resolution.
+
+### Create a source
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources/encoder-london" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": {
+      "displayName": "Encoder London"
+    },
+    "spec": {
+      "contentName": "channel-1",
+      "networkName": "internet",
+      "transport": {
+        "type": "SRTListener",
+        "port": 5000,
+        "latency": 0.5,
+        "maxBitrate": 30000000,
+        "ipResource": {
+          "type": "External"
+        }
+      }
+    }
+  }'
+```
+
+After creation, `status.transport.urls` contains the allocated connection URL for listener-type transports.
+
+### Update a source
+
+`networkName`, transport `type`, and transport settings such as the listener port and latency are set at creation. Source PATCH supports the following changes:
+
+| Field                                               | Applies to                                                             |
+| :-------------------------------------------------- | :--------------------------------------------------------------------- |
+| `spec.contentName`                                  | Assign the source to content, or set `null` to remove the association. |
+| `spec.transport.passPhrase`                         | `SRTCaller` and `SRTListener`.                                         |
+| `spec.transport.allowList`                          | `SRTListener`.                                                         |
+| `spec.transport.url`                                | `SRTCaller` and `HLSPullInput`.                                        |
+| `spec.transport.user` and `spec.transport.password` | `HLSPullInput`.                                                        |
+
+For example, update the SRT listener allowlist without recreating the source:
+
+```bash
+curl -X PATCH "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources/encoder-london" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{ "spec": { "transport": { "allowList": ["<ENCODER_PUBLIC_IP>"] } } }'
+```
+
+Replace `<ENCODER_PUBLIC_IP>` with the encoder's public IP address. Retrieve the source afterwards and confirm `spec.transport.allowList`. Changes to the destination resource use a different update contract, described under [Destinations](/api-guides/how-to/media/content-and-sources#destinations).
+
+### Source transport types
+
+The `transport.type` field determines which other fields apply.
+
+#### SRTListener
+
+The system opens an SRT listener. Encoders or upstream systems connect to it.
+
+| Field                  | Default  | Immutable | Description                                                        |
+| ---------------------- | -------- | --------- | ------------------------------------------------------------------ |
+| `port`                 | 5000     | Yes       | The port to listen on.                                             |
+| `latency`              | 0.5      | Yes       | Minimum latency in seconds.                                        |
+| `maxBitrate`           | 30000000 | Yes       | Maximum bitrate in bits per second.                                |
+| `maxOverheadBandwidth` | 100      | Yes       | Maximum overhead bandwidth percentage (5 to 100).                  |
+| `encryptionStandard`   | `None`   | Yes       | `None`, `AES128`, `AES192`, or `AES256`.                           |
+| `passPhrase`           | `""`     | No        | Passphrase for encrypted connections. Can be updated via PATCH.    |
+| `allowList`            | Not set  | No        | IP addresses permitted to connect. Can be updated via PATCH.       |
+| `ipResource.type`      | Not set  | Yes       | `External` to reserve a public IP. `None` or omit for on-premises. |
+
+#### SRTCaller
+
+The system calls out to a remote SRT listener.
+
+| Field                | Required | Immutable | Description                                                     |
+| -------------------- | -------- | --------- | --------------------------------------------------------------- |
+| `url`                | Yes      | No        | URL of the remote SRT listener. Can be updated through PATCH.   |
+| `latency`            | No       | Yes       | Minimum latency in seconds. Default 0.5.                        |
+| `maxBitrate`         | No       | Yes       | Maximum bitrate in bits per second.                             |
+| `encryptionStandard` | No       | Yes       | `None`, `AES128`, `AES192`, or `AES256`.                        |
+| `passPhrase`         | No       | No        | Passphrase for encrypted connections. Can be updated via PATCH. |
+
+#### UDP
+
+The system receives a UDP stream.
+
+| Field | Required | Immutable | Description                       |
+| ----- | -------- | --------- | --------------------------------- |
+| `url` | Yes      | Yes       | The UDP multicast or unicast URL. |
+
+#### SDI
+
+Content arrives via SDI.
+
+| Field | Required | Immutable | Description               |
+| ----- | -------- | --------- | ------------------------- |
+| `url` | Yes      | Yes       | The SDI input identifier. |
+
+#### HLSPullInput
+
+The system pulls from an HLS source.
+
+| Field      | Required | Immutable | Description                                                         |
+| ---------- | -------- | --------- | ------------------------------------------------------------------- |
+| `url`      | Yes      | No        | The HLS manifest URL. Can be updated through PATCH.                 |
+| `user`     | No       | No        | Username for HLS pull authentication. Can be updated through PATCH. |
+| `password` | No       | No        | Password for HLS pull authentication. Can be updated through PATCH. |
+
+### List and get sources
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources/encoder-london" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Source status includes `state` (`Active` or `Inactive`), `networkDisplayName`, `shortId`, and `transport.urls` for listener-type transports.
+
+### Source state and encoder connections
+
+A source is `Active` while an active flow uses it. This state does not mean that an encoder is connected or that media is arriving. It can remain `Active` after FFmpeg or another encoder stops sending.
+
+For an SRT listener input, request `Running` on the live resource first. Start the encoder as soon as the resource enters `Starting`. Do not wait for source `Active` before sending.
+
+An established listener connection confirms that the encoder reached the listener. It does not confirm live media flow. After the live resource reaches `Running`, verify the expected video and audio through playback. See [Verify media delivery](/api-guides/how-to/live/monitor-live#verify-media-delivery).
+
+### Delete a source
+
+```bash
+curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/sources/encoder-london" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+If the source does not exist, the API returns `204`.
+
+## Resolving content
+
+When a live resource's input uses `contentName` instead of a direct `sourceName`, the platform selects a candidate that can supply that content. Network reachability constrains resolution: a source declares its `networkName`, and the flow must be able to reach that network.
+
+If more than one source is attached to the same content name on reachable networks, the platform selects one. This resolution does not by itself guarantee seamless media-aware failover when an encoder stops sending. To select a specific source, reference it directly by `sourceName`. You can also use a [flow input refiner](/api-guides/how-to/live/core-concepts/inputs#flow-input-refiners) to narrow the candidates.
+
+### Chain live resources
+
+Content can also resolve to another flow's output rather than a source, if that flow publishes the content name on its output. This is what makes chaining flows together with `contentName` possible, as an alternative to referencing the upstream flow directly by `flowName`.
+
+### Inspect resolved inputs
+
+Use `?$detailedStatus=true` when reading a live resource's resolved inputs. Each `status.inputs` entry reports `sourceName` and `sourceDisplayName` for a source, or `upstreamFlowName` for another flow's output. Resolution still does not confirm media flow. See [Monitor live resources](/api-guides/how-to/live/monitor-live) for the full status object and source telemetry.
+
+## Destinations
+
+A destination defines where a live resource output is delivered. A destination uses a transport for protocol-based egress, or an `aquilaSourceId` for Aquila-based routing. Only live resources that can reach the destination's network can use it.
+
+### Create a destination
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/destinations/playout-system" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": {
+      "displayName": "Playout System"
+    },
+    "spec": {
+      "networkName": "internet",
+      "transport": {
+        "type": "SRTListener",
+        "port": 6000,
+        "latency": 0.5,
+        "maxBitrate": 15000000,
+        "ipResource": {
+          "type": "External"
+        }
+      }
+    }
+  }'
+```
+
+Destination transport settings are create-time fields. Destination PATCH accepts metadata only. To change a passphrase, allowlist, network, or other transport setting, recreate the destination. Source and destination PATCH operations do not have the same mutability.
+
+To send output to an Aquila source instead of a transport, set `aquilaSourceId` in place of `transport`:
+
+```json
+"spec": {
+  "aquilaSourceId": "1bfa932d36604506824fdd78642ad08f"
+}
+```
+
+### Destination transport types
+
+Destinations support the following transport types:
+
+| Type             | Description                                                                         |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| `SRTListener`    | The system opens an SRT listener. Downstream systems connect to receive the stream. |
+| `SRTCaller`      | The system calls out to a remote SRT listener at the specified `url`.               |
+| `UDP`            | The system pushes UDP to the specified `url`.                                       |
+| `RTMPPushOutput` | The system pushes RTMP to the specified `url`. Set `streamKey` if required.         |
+
+For SRTListener destinations, `status.transport.urls` contains the allocated connection URL after creation.
+
+### List and get destinations
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/destinations" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/destinations/playout-system" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Destination status includes `state` (`Active` or `Inactive`), `networkDisplayName`, and `transport.urls`.
+
+### Delete a destination
+
+```bash
+curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/destinations/playout-system" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## What comes next
+
+* [Manage live channels and events](/api-guides/how-to/live/manage-live): create live resources that read from your sources.
+* [Multiview](/api-guides/how-to/live/multiview): compose multiple source inputs into a single multiview output.
+* [Manage templates](/api-guides/how-to/templates/manage-templates): create the encoding templates your live resources require.

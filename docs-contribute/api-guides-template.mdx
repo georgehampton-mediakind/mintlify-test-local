@@ -1,0 +1,108 @@
+---
+title: API guide template
+description: The structure, sourcing rules, and depth model every page in the API guides section must follow.
+sidebarTitle: API guide template
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This page defines how to write a page in the API guides section (`/api-guides/`). It extends, and does not replace, the [Style Guide](/docs-contribute/style-guide) and [Page Structure](/docs-contribute/page-structure). Read those first. This page adds only the rules that are specific to API guides.
+
+The API guides have one failure mode to avoid above all others: paraphrasing the OpenAPI specification. The [API reference](/api-reference/media-api) already renders the specification in full. A guide that lists the same fields adds nothing, and it stops exactly where the difficulty starts. A guide earns its place by carrying the judgement the reference cannot: why a resource exists, the smallest payload that actually works, how to choose between variants, and what goes wrong.
+
+## The two sources, and what each one owns
+
+Every API guide draws on two sources. Keep their jobs separate.
+
+| Source                    | Location                 | Owns                                                                                                                                                                 |
+| :------------------------ | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The OpenAPI specification | `public/openapi/*.json`  | The *shape*: exact field names, enum values, discriminator strings, required fields, status codes. This is the source of truth for anything a request body contains. |
+| The MK.IO product docs    | `src/content/docs/mkio/` | The *meaning* for the Media and Management APIs: what a concept is, why you would pick one option over another, and the real-world gotchas.                          |
+| The Beam product docs     | `src/content/docs/beam/` | The *meaning* for the Fleets API, and occasionally the Infrastructure API.                                                                                           |
+
+**Do not cross the product line.** MK.IO is the cloud media platform; its docs (`mkio/`) back the Media and Management API guides. Beam is the on-premises product; its docs (`beam/`) back the Fleets API guides (almost always) and sometimes Infrastructure. Beam is not related to the Media API. Never source Beam content into a Media or Management guide, and never source MK.IO media content into a Fleets guide.
+
+The rule that follows from this:
+
+* **Take shape from the spec.** Field names, enums, and discriminator values in a guide must match the spec exactly. Do not invent or approximate them.
+* **Take meaning from the product docs.** The "why" and "when" come from the relevant page under `mkio/understanding/` or `mkio/how-to/`. Link to that page so the reader can go deeper.
+* **Leave the exhaustive enumeration to the reference.** When a property expands into many variants (for example a discriminated union with twenty options), the guide teaches the common case and the decision, then links to the reference for the long tail. Do not transcribe the union.
+
+## Depth model: the opinionated path
+
+API guides follow the *opinionated path*. The guide teaches the common case end to end, with one complete, runnable example, then defers the long tail to the reference.
+
+Concretely:
+
+* Show the **smallest payload that actually works**, filled with real values. Never use an empty placeholder such as `"options": []` as the worked example. An empty array is not a working request.
+* Cover the **two or three most common variants** with a decision table and a real, filled-in example of each. Send everything rarer to the reference.
+* When you defer, defer to a **specific** place: link the reference page, and where possible name the schema the reader should look for.
+
+The test: a developer who follows the guide top to bottom ends up with a request that runs and protects the common case, without opening the reference. They open the reference only when their needs exceed the common case.
+
+## Page structure
+
+An API guide is a how-to page (see [Content Types](/docs-contribute/page-structure#choose-the-page-type)). Use these sections, in this order. Omit a section only when it genuinely does not apply.
+
+### 1. The mental model (intro)
+
+Open with the model, not a forward reference. State what the resource is, how it relates to the other resources in the workflow, and when the reader reaches for it. Two to four sentences. Pull the concept from the matching `mkio/` page.
+
+Do not write "This page explains...". Write the explanation.
+
+### 2. The minimal working example
+
+The smallest complete request that produces a useful result, with real values. Prose before the code block says what the request does. Prose after it explains the non-obvious fields and the expected response. Every placeholder uses `<PLACEHOLDER_NAME>` and is explained.
+
+### 3. Choosing between variants
+
+A decision table that maps the reader's *situation* to the *choice*, followed by a filled example of each common variant. The table answers "which one do I use", not "what are all the options". Columns are typically: the situation, the value or schema to use, and a one-line consequence.
+
+### 4. What goes wrong
+
+The gotchas. The silent failures. The "this request succeeds but playback fails because...". This is the highest-value section and the one the reference can never contain. Source it from the `mkio/how-to/` pages, which often document these directly.
+
+### 5. Related operations (optional)
+
+Short list of the follow-up calls a reader will likely need next (list, get, delete), each with a one-line `curl`. Keep it brief. This is not a reference dump.
+
+### 6. Where to go deeper
+
+Two kinds of links, separated clearly:
+
+* The **product docs** for conceptual depth (`mkio/...`).
+* The **API reference** for the complete field-level truth, named to the specific API.
+
+## Tone: avoid the machine-generated tells
+
+The [Style Guide](/docs-contribute/style-guide) covers voice. API guides have a few extra habits to avoid, because draft API documentation tends to drift into them:
+
+* **No dramatic one-line fragments.** Sentences such as "The split matters." or "An empty array is not a working request." read as theatrical in a technical document. Fold the point into a full sentence that explains the consequence.
+* **Avoid the "not X, it is Y" rhythm.** Stating a thing by first negating its opposite is a recognisable tell. State the thing directly.
+* **No novelistic verbs for routine actions.** Write "You need a content key policy when..." rather than "You reach for a content key policy when...". The reader is configuring an API, not narrating a story.
+* **Do not expand acronyms a developer audience already knows.** The reader is a developer integrating an API. Never spell out ubiquitous web, format, or cloud terms: write `HTTP`, `HLS`, `DASH`, `ISO 8601`, `URL`, `JSON`, `REST`, `API`, `SDK`, `AWS`, `S3`, `AES`, `RTMP`, `CDN`, `UTC`, `VOD`, `DRM`, and `JWT` bare. "Hypertext Transfer Protocol Live Streaming (HLS)" is exactly the kind of noise to avoid. Where an acronym is part of a product name, use the name: "the Media API", never "the Media Application Programming Interface (API)". Expand on first use **only** genuinely niche or domain-specific terms a backend developer may not know, and keep the gloss short: SAS (Shared Access Signature), SRT (Secure Reliable Transport), DVR, GOP.
+* **Vary sentence length, but do not chase punchiness.** A run of very short sentences for effect is a tell. Let sentences be as long as the idea needs.
+
+## Flagging inferred content for review
+
+Some of the most useful content is inferred: a recommendation, a gotcha implied across several product-doc pages, a "most people want X" judgement that no single source states outright. This content is welcome, but it must be verifiable before publish.
+
+Mark any claim you inferred (rather than took directly from the spec or a single product-doc page) with an HTML comment immediately above it:
+
+```md
+<!-- VERIFY: Inferred that CENC multi-DRM is the common default because it covers
+     Chrome/Edge/Android without FairPlay certificate setup. Confirm with product. -->
+```
+
+HTML comments do not render, so they never reach the reader. Before a section ships, a maintainer searches for `VERIFY:` and either confirms the claim and deletes the comment, or corrects the prose. A page is not ready to publish while it still contains `VERIFY:` markers.
+
+## Checklist before opening a pull request
+
+* [ ] Every field name, enum, and discriminator value matches `public/openapi/*.json` exactly.
+* [ ] The worked example is complete and runnable, not an empty placeholder.
+* [ ] The page teaches a decision, not a transcription of the spec.
+* [ ] Conceptual claims link to the matching `mkio/` page.
+* [ ] The reference link names the specific API.
+* [ ] Every inferred claim carries a `VERIFY:` comment, or has been confirmed and the comment removed.
+* [ ] The page passes the [Style Guide](/docs-contribute/style-guide): no em dashes, no contractions, second person, prose around every code block.

@@ -1,0 +1,49 @@
+---
+title: Adding subtitles to a video asset
+robots: noindex, nofollow
+---
+
+Asset Acquisition supports uploading sidecar subtitles including SRT, STL, SCC, NCI, PAC, WebVTT, Cheetah files, and DVB Subtitles, up to 50 MB.
+
+<Note>
+  **Info:&#x20;**&#x54;he sidecar PAC subtitle (.pac file type) is supported for VOD transcoding and OTT packaging to WebVTT and TTML text (Eng, Arb, Fra) output.
+</Note>
+
+1. From the **Library** tab, select the asset you want to edit.
+
+2. Click the **Subtitles** tab, and browse to and select the subtitle file you want to add, or drag and drop the subtitle file.
+
+3. Set the subtitle **Language**.
+
+4. Set the subtitle **Type**. You can choose from the following:
+
+   * Normal
+
+   * Hard of hearing
+
+     <Note>
+       **Info:&#x20;**&#x53;idecar subtitles files can be marked as audio descriptions for hard-of-hearing accessibility. The corresponding tagging of the subtitles track is done in OTT playlists for VOD.
+     </Note>
+
+5. Optionally, add more subtitle files.
+
+   <Note>
+     **Info:&#x20;**&#x59;ou may add up to 4 subtitle files per video asset.
+   </Note>
+
+6. Click **Save**.
+
+   <Note>
+     **Important:&#x20;**&#x41;fter you add subtitles to a video, you must re-transcode the asset.
+   </Note>
+
+7. From the **Library** tab, select the same video asset.
+
+8. From the **Video Assets** tab, find the desired transcoding profile and then click **Generate**.
+
+9. Click **Generate now** to confirm.\
+   **Result:** The asset is sent to the **Ready** queue for processing, and then to the **Jobs** queue. The new asset will be available in the **Library** when the job is complete.
+
+   <Note>
+     **Note:&#x20;**&#x44;ue to CDN caching, the video available for preview might not update right away.
+   </Note>

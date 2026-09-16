@@ -1,0 +1,105 @@
+---
+title: Custom Claims in Policies
+description: Use custom JWT claims to differentiate between multiple DRM policy options in MK.IO.
+sidebarTitle: Custom Claims in Policies
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+When a content key policy contains multiple options for the same DRM system, MK.IO needs a way to determine which option to use for a given license request. Custom claims in the JWT token solve this by letting MK.IO match the token's claims against the `requiredClaims` defined in each policy option.
+
+## How custom claims work
+
+1. You define `requiredClaims` on each policy option with a `claimType` and `claimValue`.
+2. When a license request arrives, MK.IO inspects the JWT token for matching claims.
+3. The policy option whose required claims match the token is selected for license delivery.
+
+This is useful when you want the same content key policy to serve different license configurations, for example, a persistent license and a time-limited license, based on the viewer's entitlements.
+
+## Create a policy with custom claims
+
+Use the MK.IO API to create a content key policy with multiple options that use different required claims:
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/contentKeyPolicies/content_policy_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer <YOUR_MKIO_JWT>' \
+     --data '
+{
+    "properties": {
+        "options": [
+            {
+                "name": "widevine-persistent",
+                "restriction": {
+                    "issuer": "issuer",
+                    "audience": "audience",
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyTokenRestriction",
+                    "restrictionTokenType": "Jwt",
+                    "primaryVerificationKey": {
+                        "keyValue": "12345678",
+                        "@odata.type": "#Microsoft.Media.ContentKeyPolicySymmetricTokenKey"
+                    },
+                    "requiredClaims": [
+                        {
+                            "claimType": "persistency",
+                            "claimValue": "permanent"
+                        }
+                    ]
+                },
+                "configuration": {
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyWidevineConfiguration",
+                    "widevineTemplate": "{}"
+                }
+            },
+            {
+                "name": "widevine-2h",
+                "restriction": {
+                    "issuer": "issuer",
+                    "audience": "audience",
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyTokenRestriction",
+                    "restrictionTokenType": "Jwt",
+                    "primaryVerificationKey": {
+                        "keyValue": "12345678",
+                        "@odata.type": "#Microsoft.Media.ContentKeyPolicySymmetricTokenKey"
+                    },
+                    "requiredClaims": [
+                        {
+                            "claimType": "persistency",
+                            "claimValue": "2hours"
+                        }
+                    ]
+                },
+                "configuration": {
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyWidevineConfiguration",
+                    "widevineTemplate": "{}"
+                }
+            }
+        ],
+        "description": ""
+    }
+}
+'
+```
+
+In this example, the policy has two Widevine options:
+
+* **widevine-persistent**: selected when the JWT token contains `"persistency": "permanent"`.
+* **widevine-2h**: selected when the JWT token contains `"persistency": "2hours"`.
+
+## Include custom claims in the JWT token
+
+When generating the JWT token, add the custom claim to the payload:
+
+```json
+{
+  "iss": "issuer",
+  "aud": "audience",
+  "persistency": "permanent"
+}
+```
+
+MK.IO matches this claim against the `requiredClaims` in the policy options and selects the corresponding configuration for license delivery.
+
+The content key policy can then be used when preparing the asset for streaming. See [Stream live and VOD assets](/mkio/how-to/content-delivery-publishing/stream-content) for details.

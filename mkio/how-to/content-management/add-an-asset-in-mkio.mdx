@@ -1,0 +1,79 @@
+---
+title: Create an asset
+description: Create an asset in MK.IO to hold and manage your media content.
+sidebarTitle: Create an asset
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+An asset in MK.IO is a container for your media content: it groups your video, audio, subtitle files, and encoding outputs together and links them to a location in your cloud storage (Azure Blob Storage or Amazon S3). You create an asset first, then add content to it.
+
+<Info>
+  You need at least one storage account connected before creating assets. See [Connect cloud storage](/mkio/getting-started/connect-cloud-storage).
+</Info>
+
+## Steps
+
+<Steps>
+  <Step title="Go to Assets">
+    <span id="go-to-assets" className="mk-legacy-anchor" />
+
+    Navigate to **Assets** in the left sidebar and click **+ Create Asset**.
+  </Step>
+
+  <Step title="Choose a source">
+    <span id="choose-a-source" className="mk-legacy-anchor" />
+
+    * **From a storage account**: Creates an asset linked to your cloud storage. Use this when pointing to existing files or creating an empty location for new files.
+    * **From local files**: Uploads files from your device and creates the asset in one step. See [Upload from your device](/mkio/how-to/content-management/add-an-asset-in-mkio/import-files-from-your-device).
+  </Step>
+
+  <Step title="Fill in the details">
+    <span id="fill-in-the-details" className="mk-legacy-anchor" />
+
+    | Field                   | Description                                                                                       |
+    | ----------------------- | ------------------------------------------------------------------------------------------------- |
+    | **Storage account**     | The connected Azure or S3 account where this asset's files will live                              |
+    | **Storage container**   | The container (Azure) or bucket (S3) name. Use lowercase letters, numbers, and hyphens.           |
+    | **Storage directory**   | Optional subfolder path within the container                                                      |
+    | **Asset name**          | The display name you will see in MK.IO                                                            |
+    | **Description**         | Optional notes                                                                                    |
+    | **Upon asset deletion** | Whether deleting the asset also deletes files from storage. You cannot change this setting later. |
+  </Step>
+
+  <Step title="Create">
+    <span id="create" className="mk-legacy-anchor" />
+
+    Click **Add**. The asset is created and linked to the storage location you specified.
+  </Step>
+</Steps>
+
+<Warning>
+  If you point to an existing container and the asset appears empty, the container name may be misspelled or the wrong storage account selected. The field is case-sensitive. See [Verify your assets](/mkio/how-to/content-management/verify-your-assets-in-mkio) for troubleshooting.
+</Warning>
+
+## Next steps
+
+Once the asset exists, add content and prepare it for streaming:
+
+<CardGroup cols={2}>
+  <Card title="Content already in Azure or S3" href="/mkio/how-to/content-management/add-an-asset-in-mkio/reference-existing-storage" icon="cloud">
+    Point an asset at existing cloud storage, find the container name, and troubleshoot empty assets.
+  </Card>
+
+  <Card title="Upload from your device" href="/mkio/how-to/content-management/add-an-asset-in-mkio/import-files-from-your-device" icon="upload">
+    Upload files from your computer directly into the asset.
+  </Card>
+
+  <Card title="Verify the asset" href="/mkio/how-to/content-management/verify-your-assets-in-mkio" icon="circle-check">
+    Confirm files and tracks are visible before publishing.
+  </Card>
+
+  <Card title="Migrating from AMS?" href="/mkio/how-to/content-management/add-an-asset-in-mkio/import-your-ams-assets" icon="arrows-rotate">
+    Reference existing AMS asset containers without re-encoding.
+  </Card>
+</CardGroup>
+
+## Automate asset management
+
+Use the [Assets API Guide](/api-guides/how-to/media/assets) to create assets, reference source files, retrieve tracks, and manage asset lifecycle operations through the Media API.

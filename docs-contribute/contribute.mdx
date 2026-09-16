@@ -1,0 +1,244 @@
+---
+title: How to Contribute
+description: Practical guide for contributing to docs.mediakind.com.
+sidebarTitle: How to Contribute
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use this guide to add or update documentation, preview the result, and submit it for review. Read the [Style Guide](/docs-contribute/style-guide) and [Page Structure](/docs-contribute/page-structure) before writing a new page.
+
+## Understand the publishing flow
+
+The repository is the reviewed publication boundary for `docs.mediakind.com`:
+
+1. Create a branch from `main`.
+2. Change authored content or its metadata.
+3. Run the local checks that fit your change.
+4. Open a pull request into `main`.
+5. Review both the source diff and the Cloudflare preview.
+6. Resolve review comments and wait for the required approval.
+7. Merge the pull request to publish the verified build.
+
+Do not commit directly to `main`. Keep a pull request focused on one product change or coherent documentation outcome.
+
+## Choose a contribution path
+
+### Make a small change in GitHub
+
+Use the GitHub editor for a small Markdown correction:
+
+1. Open the file below `src/content/docs/`.
+2. Select the pencil **Edit** control.
+3. Make the correction.
+4. Select **Create a new branch for this commit**.
+5. Name the branch `docs/<short-description>`.
+6. Select **Propose changes** and open a pull request.
+7. Review the rendered preview before requesting approval.
+
+Use a local checkout for changes that add files, images, tables, components, or several related pages. The local workflow catches structural and content-contract errors before continuous integration (CI).
+
+### Work in a local checkout
+
+Install Node.js 22 and enable the repository pnpm version:
+
+```bash
+corepack enable
+corepack prepare pnpm@10.11.1 --activate
+```
+
+Clone the repository and install the pinned dependencies:
+
+```bash
+git clone <REPOSITORY_URL>
+cd mk-online-doc
+pnpm install --frozen-lockfile
+```
+
+Create a branch from the latest `main`:
+
+```bash
+git switch main
+git pull --ff-only origin main
+git switch -c docs/<SHORT_DESCRIPTION>
+```
+
+Start the development server:
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Content changes reload automatically.
+
+## Add a page
+
+Create a Markdown file below the relevant product folder:
+
+```text
+src/content/docs/example-product/how-to/configure-output.md
+```
+
+The file appears automatically at `/example-product/how-to/configure-output`. The shared catalog also places it in the sidebar and pagination sequence. You do not need to register a normal page in application code.
+
+Start with the minimum frontmatter:
+
+```yaml
+---
+title: Configure an output
+description: Configure and verify an output for Example product.
+---
+```
+
+Use `sidebar.order` only when the default alphabetical position is unsuitable. Pages without an explicit order follow ordered siblings and sort by label.
+
+Use `.md` by default. Rename the file to `.mdx` only when it needs a supported card, Starlight steps, or inline icon. See the [Component Reference](/docs-contribute/components) for the complete normal content contract.
+
+## Add a folder
+
+Create the folder and its pages. Add an `index.md` landing page when the folder needs its own clickable route:
+
+```text
+src/content/docs/example-product/operations/
+  index.md
+  monitor-services.md
+  recover-a-service.md
+```
+
+The catalog derives the group label from the landing-page title or the folder name. Use section navigation metadata only when the information architecture needs a deliberate override or virtual grouping.
+
+## Add a product
+
+A product is discovered from its root landing page. Create a folder and declare `section.kind: product` in its `index.md`:
+
+```yaml
+---
+title: Example product
+description: Operate and integrate Example product.
+section:
+  kind: product
+  label: Example product
+  order: 30
+---
+
+# Example product
+
+Use Example product to describe the verified product purpose.
+```
+
+Add normal pages below the product folder. The root `description` is the product summary used by shared user-interface projections. A normal product does not require edits to `astro.config.mjs`, header components, homepage components, sidebar components, or search registration.
+
+The catalog derives:
+
+* Product header and homepage entries.
+* Sidebar navigation and pagination.
+* Route-aware local search scopes.
+* Global machine-readable Markdown and LLM inclusion according to publication policy.
+
+External Algolia and AI Search services are separate operational systems. Ask the documentation-platform maintainer to confirm their section facets, indexes, or namespaces before launching a product that needs a dedicated external scope.
+
+### Add optional product navigation
+
+Most products do not need navigation configuration. Use `section.navigation` on the product root only for a deliberate exception:
+
+* `overrides` changes a derived label or order.
+* `groups` creates an explicit virtual group from known top-level items.
+* `links` adds an approved external navigation item.
+* `featuredLinks` curates up to six header links.
+* `cardLinks` curates product-card links on the homepage.
+
+The build rejects metadata that references an unknown page, duplicates a navigation key, or uses an invalid route. Do not repeat the complete file tree in metadata.
+
+## Add images
+
+Use either content-local or shared static images:
+
+* Put a page-specific image beside its Markdown file and use a relative link. Astro processes this form.
+* Put an image shared by several pages below `public/images/` and use a root-relative link.
+
+Always add meaningful alternative text. Use lowercase, descriptive file names with hyphens. Keep static asset paths below the Cloudflare routing length limit described in [Page Structure](/docs-contribute/page-structure#add-images-and-assets).
+
+## Control publication
+
+Normal documentation is public. Do not use navigation metadata as an access-control mechanism.
+
+* `sidebar.hidden: true` removes a page from navigation but does not stop publication or indexing.
+* `visibility: public-unindexed` publishes HTML while excluding search-engine and machine-output channels.
+* `visibility: restricted` fails a public build. It does not publish a private page.
+* `draft: true` keeps a page out of the production site.
+
+See [Page Structure](/docs-contribute/page-structure#set-publication-fields) for the complete policy.
+
+## Handle specialist changes
+
+Some changes have an additional source-of-truth contract:
+
+* Follow [Adding API Specs](/docs-contribute/adding-api-specs) for API reference changes. Normal builds use pinned specifications and never fetch upstream content. The nightly refresh handles only entries with an explicit `upstream` URL after the workflow is merged to `main`.
+* Ask the documentation-platform maintainer before changing `src/data/archive-manifest.json`. Archive entries represent immutable external PDF artifacts and generate public archive routes and redirects.
+* Add a redirect in `src/lib/redirect-rules.mjs` when an existing public page moves. Mention every changed URL in the pull request.
+* Do not edit `dist/`, `.generated/`, generated Markdown, LLM bundles, sitemaps, or `_redirects`. The build recreates them.
+
+## Verify the change
+
+Run the complete repository verification before requesting review:
+
+```bash
+pnpm verify:local
+```
+
+For a quick writing iteration, run the content-contract validator first:
+
+```bash
+pnpm validate:content-contract
+```
+
+`pnpm verify:local` runs every Node test, the API reference test suite, all build validators, and the production build. It does not deploy, reindex search, upload archives, or write to remote AI services.
+
+Review these outputs before submitting:
+
+* The source diff contains only intended authored or configuration changes.
+* The local page renders correctly at desktop and narrow widths.
+* Internal links and images resolve.
+* Procedures, tables, callouts, cards, and inline icons retain their meaning.
+* Machine-output diagnostics do not report unsupported content.
+* The pull request preview matches the source change.
+
+## Submit the pull request
+
+Commit and push the focused change:
+
+```bash
+git add <CHANGED_FILES>
+git commit -m "docs: <SHORT_SUMMARY>"
+git push -u origin docs/<SHORT_DESCRIPTION>
+```
+
+Open a pull request into `main`. Include:
+
+* The reader outcome and product affected.
+* Source material used to verify technical claims.
+* URLs added, changed, or redirected.
+* Any content deliberately excluded from the change.
+* The verification commands you ran.
+
+Request product subject-matter review and the repository owner review. A preview deployment is a review aid. It does not replace review of the canonical Markdown, metadata, or generated-output diagnostics.
+
+## Avoid common mistakes
+
+* Do not use `npm install`.
+* Do not add `_meta.json` files.
+* Do not include `.md` or `.mdx` in internal URLs.
+* Do not add arbitrary MDX imports, expressions, raw HTML, or components.
+* Do not expand the compatibility baseline to bypass a content-contract error.
+* Do not manually register a normal product in several application files.
+* Do not put generated deployment output in `public/`.
+* Do not run `pnpm update:openapi` as part of a normal content build.
+
+## Continue reading
+
+* [Style Guide](/docs-contribute/style-guide)
+* [Page Structure](/docs-contribute/page-structure)
+* [Component Reference](/docs-contribute/components)
+* [Markdown Reference](/docs-contribute/markdown-reference)
+* [Using AI to Write Docs](/docs-contribute/using-ai)

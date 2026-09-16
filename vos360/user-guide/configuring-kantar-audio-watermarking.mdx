@@ -1,0 +1,115 @@
+---
+title: Configuring Kantar audio watermarking
+robots: noindex, nofollow
+---
+
+The Kantar audio watermarking feature allows for marking live baseband audio streams with inaudible information.
+
+## Retrieving Kantar Audio Watermarking Library Version installed on VOS360
+
+1. Navigate to **VOS360 Apps** > **Configure Channels&#x20;**&#x61;pp.
+
+2. Click **Settings** > **General&#x20;**&#x74;ab.
+
+3. Verify the **Kantar Audio Watermarking Library Version** (e.g. 2.0.0.0.1).
+
+   ![](/images/vos360/166c85c8c3464d5891264844.png)
+
+## Uploading Kantar Product and Audience Licenses to VOS360
+
+1. Navigate to **VOS360 Apps** > **Configure Channels&#x20;**&#x61;pp.
+
+2. Click **Settings** > **Advanced&#x20;**&#x74;ab.
+
+3. From the **Kantar Snap Watermarking Licenses** section, upload the license files to the VOS360 system:
+
+   ![](/images/vos360/8b525d73e691b8b7e8c9bc8d.png)
+
+   * **Product Licenses ("LIC" Type)**: Click **Select...** from the **License File Path** to upload a valid Product license to VOS360 (with the "LIC" file type).
+
+   * **Audience Licenses ("AUD" Type)**: Click **Select...** from the **License File Path&#x20;**&#x74;o upload a valid Audience license to VOS360 (with the "AUD" file type).
+
+4. Specify the **License Name** for the Kantar license files uploaded.
+
+## Configuring Kantar Watermarking on the IPTV/Multiscreen profile
+
+1. Navigate to **VOS360 Apps** > **Lab Wizard&#x20;**&#x61;pp.
+
+2. Select the appropriate *IPTV&#x20;*&#x6F;r *Multiscreen&#x20;*&#x70;rofile as a starting point for saving the Kantar Watermarking configurations.
+
+3. From the **Audio** configuration section on the left pane, select whether to work in the **Match by Language&#x20;**&#x6F;r **Match by Source Label&#x20;**&#x6D;ode.
+
+4. From the **Audio Spec** table on the right pane, configure the following:
+
+   * If using the **Match by Language&#x20;**&#x6D;ode: For each language in the top row for which a *Kantar&#x20;*&#x77;atermark is needed, set the *Kantar Snap Watermarking&#x20;*&#x70;arameter to **True**.
+
+     ![](/images/vos360/74ad2eac53fe47e0f716c155.png)
+
+   * If using the **Match by Source Label&#x20;**&#x6D;ode: Add/update rows with the needed source labels, and for each row set the *Kantar Snap Watermarking* parameter to **True** to enable watermarking.
+
+     ![](/images/vos360/3fe460820be1ecdfe79d2e26.png)
+
+   * When the **Customize spec for Audio** pop-up appears, click **Yes, override to manual mode** to accept.
+
+   * For any mode, audio *Processing&#x20;*&#x6D;ust be in the *convert* mode, with a *Sample Rate* of *48kHz*.
+
+5. When the profile configuration is done, save it as a new version or profile.
+
+## Configuring Kantar Watermarking on the IPTV/Multiscreen service
+
+1. Navigate to **VOS360 Apps** > **Configure Channels&#x20;**&#x61;pp > **Services&#x20;**&#x74;ab.
+
+2. Click the **+ Service&#x20;**&#x62;utton.
+
+3. On the **Profile&#x20;**&#x74;ab, select the IPTV/Multiscreen profile with *Kantar Watermarking* enabled on some languages or source labels (Ensure that source grooming is accurate) that the service will use.
+
+4. On the **Source&#x20;**&#x74;ab, select the name of the primary source, and optionally, an alternate source / tertiary source.
+
+5. On the **Destination&#x20;**&#x74;ab, select the name of the destination from the **Destination** drop-down.
+
+6. On the **Commit&#x20;**&#x74;ab, configure all necessary settings and enable the service **Add-ons**.
+
+7. Enable the **Kantar Snap Watermarking&#x20;**&#x61;dd-on.
+
+   ![](/images/vos360/9c71b3d30c312c5814c0a3f2.png)
+
+8. Select the available product and audience licenses from the drop-down menus. (Note that the drop-down options only appear when the valid licenses have been uploaded to VOS beforehand.)
+
+9. For each Language or Source Label, specify the Channel Name as provided by *Kantar*.
+
+## Configuring Kantar Watermarking on the Broadcast service
+
+1. Navigate to **VOS360 Apps** > **Configure Broadcast&#x20;**&#x61;pp.
+
+2. Add and configure a Multiplexer for a mux service.
+
+3. Add a transcoding service to the Multiplexer.
+
+4. Add a Transcoding Profile with the Kantar Watermarking configured.\
+   ![](/images/vos360/f7f58f32617254e8bba03e70.png)
+
+5. Enable the **Kantar Watermark&#x20;**&#x61;dd-on.
+
+6. Set the Channel Name depending on the profile, using either the **Match by Language&#x20;**&#x6F;r **Match by Source Label&#x20;**&#x6D;ode.
+
+   * The following is an example with **Match by Language** mode configured:\
+     ![](/images/vos360/5ed8ca5716f17af108cfda07.png)
+
+   * The following is an example with **Match by Source Label** mode configured:\
+     ![](/images/vos360/d7bf2dd6e9dc563b0c89a4cc.png)
+
+## Checking Kantar Watermarking logs
+
+The Kantar SDK provides some event logs, made available in Kabana.
+
+1. Navigate to the **VOS360 Apps** > **DevOps Portal** app > **Kabana&#x20;**&#x61;pp.
+
+2. Select the "rmpcontroller-debuglog-\*" index pattern.
+
+3. Add a filter based on the "originator" field with the value set to "KantarSnap".
+
+4. Select the "service\_id" and "message" fields to view the relevant information.
+
+5. Check the available labels and license validity.
+
+![](/images/vos360/901cc8b043bbe0c34f6cb0a2.png)

@@ -1,0 +1,51 @@
+---
+title: Live and multiview
+description: Create sources, live events, and multiview events in the MK.IO Live interface.
+sidebarTitle: Live and multiview
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use the **Live** interface to build streams from reusable sources and encoding profiles. It starts with reusable sources, then lets you create a live event for one source or a multiview event that presents several sources in one output.
+
+Use this workflow when you want to create a new event in the MK.IO interface, especially when you need multiview. Use the [Live API guides](/api-guides/how-to/live) to automate live events, multiview events, and related configuration.
+
+## Choose an event or channel
+
+| You want to                                | Create                                                                                   |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Stream one source                          | [A live event](/mkio/how-to/live-streaming/live/create-a-live-event)                     |
+| Display more than one source in one output | [A multiview live event](/mkio/how-to/live-streaming/live/create-a-multiview-live-event) |
+| Run a continuous 24×7 stream               | [A channel](/mkio/how-to/live-streaming/live#create-a-channel)                           |
+| Run a continuous multiview output          | [A multiview channel](/mkio/how-to/live-streaming/live#create-a-channel)                 |
+
+Multiview creation is available in the **Live** interface. Select **New live** and then **Create a multiview event** to start that workflow.
+
+## Create a source first
+
+Each event uses the sources you select during creation. Create the required sources and check their connection settings before you create the event. Verify the video after the event starts and the encoder is sending. [Create an SRT source](/mkio/how-to/live-streaming/live/create-a-live-source) shows the external Secure Reliable Transport (SRT) setup, including the address your encoder uses.
+
+## Create a channel
+
+Channels use the same source and encoding concepts for continuous 24×7 streaming. Events suit broadcasts with a defined end. Live channels and multiview channels use monthly billing; starting one incurs the full monthly charge even partway through the month. Review your project rate card before starting a channel. Use an event for a short test.
+
+Before you begin, create the required [sources](/mkio/how-to/live-streaming/live/create-a-live-source) and have an encoding profile and recording storage available in your project.
+
+1. Go to **Live** > **New live**.
+2. Select **Create a channel** for one source, or **Create a multiview channel** to compose several sources.
+3. Enter a **Name**. For multiview, select a **Layout** first.
+4. Select **Add source** to assign the source, or assign a source to each multiview tile.
+5. Select an **Encoding profile**, **Storage**, and **Window length**.
+6. Optionally enable **Schedule start and stop** and enter the start and stop dates and times.
+7. Leave **Start channel immediately after creation** disabled while preparing the configuration. Enable it only when you are ready to start the channel and incur monthly billing.
+8. Select **Create**.
+
+Return to the **Live** list to find the channel by name and check its **Status**. Resource creation alone does not verify media delivery. The API guides for [live channels](/api-guides/how-to/live/manage-live) and [multiview channels](/api-guides/how-to/live/multiview/static-multiview-channel) explain startup, monitoring, and stopping.
+
+## Automate the workflow
+
+The Live interface and the Live API use the same source, event, multiview, and template concepts. Use the API guides when you need to create or manage this workflow through automation:
+
+* [Live event walkthrough](/api-guides/how-to/live/walkthrough) creates a source through the Media API, then creates a single-input Live API event.
+* [Multiview walkthrough](/api-guides/how-to/live/multiview/multiview-walkthrough) creates a multiview event through the Live API.
+* [Manage templates](/api-guides/how-to/templates/manage-templates) explains the configuration templates used for live encoding and multiview composition.

@@ -1,0 +1,172 @@
+---
+title: Webhooks
+description: Configure webhook rules to receive HTTP POST notifications when events occur in MK.IO.
+sidebarTitle: Webhooks
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Webhooks let you receive HTTP POST requests when specific events occur in MK.IO, such as a completed transcode job. You configure rules that define which events to watch and where to send the notifications.
+
+Configure webhook rules through the Management API. The MK.IO portal does not provide webhook-rule configuration.
+
+## Configure a webhook rule
+
+Each webhook rule specifies:
+
+* The target URL for the HTTP POST request.
+* Custom headers (for example, an authentication token).
+* Query parameters to append to the request URL.
+* A list of event types that trigger the rule.
+
+### Example rule
+
+```json
+{
+  "spec": {
+    "enabled": true,
+    "url": "https://api.example.com/webhooks",
+    "authentication": {
+      "headers": {
+        "Authorization": "Bearer mytoken1234"
+      }
+    },
+    "queryParams": {
+      "process": "123456"
+    },
+    "events": [
+      "MediaKind.JobStarted",
+      "MediaKind.JobFinished"
+    ]
+  }
+}
+```
+
+This rule is enabled and fires on `MediaKind.JobStarted` and `MediaKind.JobFinished` events. MK.IO sends a POST request to `https://api.example.com/webhooks?process=123456` with the `Authorization` header included.
+
+Query parameters can be set in `spec.queryParams` or `spec.authentication.queryParams`. HTTP headers can be set in `spec.headers` or `spec.authentication.headers`. Fields under the `authentication` section are write-only. When you read the rule back, those values appear as asterisks to protect your credentials from other users.
+
+## API reference
+
+See the [webhook rules API reference](/api-reference/management-api/webhook-rules/list-webhook-rules) for endpoints to create, edit, and remove rules.
+
+## Delivery behavior
+
+Webhook delivery runs separately from the operation that changes the resource, so a notification may not arrive immediately. MK.IO retries failed deliveries. Build the receiving endpoint to process duplicate deliveries safely and inspect the rule's event history when troubleshooting.
+
+Webhooks report the supported lifecycle events listed below. They do not notify you about every change to a resource.
+
+## Webhook events
+
+All webhook payloads use a standard body based on [CloudEvents](https://cloudevents.io/).
+
+### Standard data format
+
+```json
+{
+  "specversion": "1.0",
+  "id": "{unique_id}",
+  "type": "{webhook_type}",
+  "source": "{object_url}",
+  "time": "{event_time}",
+  "datacontenttype": "application/json",
+  "data": {
+    "projectName": "{project_name}",
+    "previousState": "{value of state before this event}",
+    "state": "{new value of state}",
+    "resource": {
+      # The contents of the object, as if you had done a GET on {object_url}
+    }
+  }
+}
+```
+
+<Info>
+  The `resource` field contains the full object as returned by a GET request on `{object_url}`. The comment above is illustrative and is not valid JSON.
+</Info>
+
+### Jobs
+
+<span id="mediakindjobstarted" className="mk-legacy-anchor" />
+
+#### MediaKind.JobStarted
+
+This event fires when a job is removed from the queue and begins processing.
+
+| Field                 | Value                                                                         |
+| :-------------------- | :---------------------------------------------------------------------------- |
+| `.source`             | `/api/v1/projects/{project_name}/transforms/{transform_name}/jobs/{job_name}` |
+| `.data.previousState` | `Queued`                                                                      |
+| `.data.state`         | `Processing`                                                                  |
+
+<span id="mediakindjobfinished" className="mk-legacy-anchor" />
+
+#### MediaKind.JobFinished
+
+This event fires when a job completes, whether successfully or not.
+
+| Field                 | Value                                                                         |
+| :-------------------- | :---------------------------------------------------------------------------- |
+| `.source`             | `/api/v1/projects/{project_name}/transforms/{transform_name}/jobs/{job_name}` |
+| `.data.previousState` | `Processing`                                                                  |
+| `.data.state`         | `Canceled \| Error \| Finished`                                               |
+
+### Streaming locators
+
+<span id="mediakindstreaminglocatorcreated" className="mk-legacy-anchor" />
+
+#### MediaKind.StreamingLocatorCreated
+
+This event fires once a new streaming locator has been successfully created and is ready to use.
+
+| Field                 | Value                                                                    |
+| :-------------------- | :----------------------------------------------------------------------- |
+| `.source`             | `/api/v1/projects/{project_name}/media/streamingLocators/{locator_name}` |
+| `.data.previousState` | `Creating`                                                               |
+| `.data.state`         | `Created`                                                                |
+
+### Scheduled operations
+
+<Info>
+  Scheduled operations events are only available if this feature is enabled for your organization.
+</Info>
+
+<span id="mediakindscheduledoperationaccepted" className="mk-legacy-anchor" />
+
+#### MediaKind.ScheduledOperationAccepted
+
+This event fires once a new scheduled operation has been accepted by the scheduling engine. Initial checks have passed and the operation will proceed as requested.
+
+| Field                 | Value                                                                                |
+| :-------------------- | :----------------------------------------------------------------------------------- |
+| `.source`             | `/api/v1/projects/{project_name}/.../scheduledOperations/{scheduled_operation_name}` |
+| `.data.previousState` | `Pending`                                                                            |
+| `.data.state`         | `Accepted`                                                                           |
+
+<span id="mediakindscheduledoperationongoing" className="mk-legacy-anchor" />
+
+#### MediaKind.ScheduledOperationOngoing
+
+This event fires once the scheduling engine begins processing a scheduled operation.
+
+| Field                 | Value                                                                                |
+| :-------------------- | :----------------------------------------------------------------------------------- |
+| `.source`             | `/api/v1/projects/{project_name}/.../scheduledOperations/{scheduled_operation_name}` |
+| `.data.previousState` | `Accepted`                                                                           |
+| `.data.state`         | `Ongoing`                                                                            |
+
+<span id="mediakindscheduledoperationcompleted" className="mk-legacy-anchor" />
+
+#### MediaKind.ScheduledOperationCompleted
+
+This event fires once the scheduling engine finishes processing a scheduled operation.
+
+| Field                 | Value                                                                                |
+| :-------------------- | :----------------------------------------------------------------------------------- |
+| `.source`             | `/api/v1/projects/{project_name}/.../scheduledOperations/{scheduled_operation_name}` |
+| `.data.previousState` | `Ongoing`                                                                            |
+| `.data.state`         | `Completed`                                                                          |
+
+## Configure webhooks with the API
+
+Use the [Webhooks API Guide](/api-guides/how-to/management/webhooks) for the rule lifecycle and a complete create, list, and delete workflow.

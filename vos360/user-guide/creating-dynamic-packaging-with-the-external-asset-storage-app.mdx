@@ -1,0 +1,164 @@
+---
+title: Creating dynamic packaging with the External Asset Storage app
+robots: noindex, nofollow
+---
+
+The VOS360 External Asset Storage app provides advanced functionalities for accessing assets stored in Azure Blob storage.
+
+You can connect your external storage with VOS360.
+
+![image-20250327-043419.png](/images/vos360/0cb09ca7216296671cf078a7.png)
+
+The following sections describe key features and configuration steps.
+
+## Key functions and capabilities
+
+The External Asset Storage app serves as a gateway to external Blob storage, providing an interface for managing and accessing assets. Its core functionalities include the following:
+
+* **External storage integration:**
+
+  * Connect with external Blob storage providers.
+
+  * Leverage external storage capabilities for enhanced scalability and accessibility.
+
+When accessing the VOS360 user interface (UI), use the External Asset Storage app to access the external Blob storage accounts and enable dynamic packaging with MP4/ISMV multi-bitrate assets.
+
+## Set Blob storage requirements
+
+To ensure access to assets, you must configure the Blob storage requirements. To do so, do the following:
+
+1. Generate a Shared Access Signature (SAS) token with the connection string for VOS360 to gain access to your Blob storage.
+
+2. Ensure the Blob storage account is in the same region as the VOS360 instance deployment to minimize potential network latency issues.
+
+A connection string with a Shared Access Signature (SAS) token is required for the External Asset Storage app to access the assets stored on the Blob and to implement dynamic packaging for existing VOD assets.
+
+<Note>
+  **Note:&#x20;**&#x54;he Blob storage account should be in the same region as the VOS360 instance deployment to minimize potential issues with network latency.
+</Note>
+
+### Obtain access information to your Blob storage account
+
+You must generate the SAS token with the connection string for VOS360 to gain access to your Blob storage. Do the following:
+
+1. Access the Azure Portal and navigate to **Storage Account**.
+
+2. From the list, select the desired storage account.
+
+3. Navigate to the **Access Keys** page to check whether keys are configured.
+
+4. Navigate to the **Shared Access Signature** page to generate a **Shared access signature** (SAS).
+
+   ![image-20250328-002933.png](/images/vos360/db9f577aa418f8593f355084.png)
+
+5. From **Allowed services**, enable the **Blob** checkbox.
+
+6. From **Allowed resource types**, enable the **Service**, **Container**, and **Object&#x20;**&#x63;heckboxes.
+
+7. From **Start and expiry data/time**,*&#x20;s*et the desired end date to ensure the access signature will be valid.
+
+8. Click **Generate SAS and connection string**.
+
+<Note>
+  **Info:&#x20;**&#x54;he connection string with SAS token is generated, which is required for VOS360 to establish a connection to your Blob storage account.\
+  Here is an example of a connection string with a SAS token: BlobEndpoint=[https://xxxxxx.blob.core.windows.net/;SharedAccessSignature=sv=2022-11-02\&ss=b\&srt=sco\&sp=rlx\&se=2023-10-11T04:48:50Z\&st=2023-10-11T03:48:50Z\&spr=https\&sig=9HFXu2zYsykO2MrhSBtl4U4ywkAs4OZGLMPouyU0gJo%3D](https://acheungams.blob.core.windows.net/;QueueEndpoint=https:/acheungams.queue.core.windows.net/;FileEndpoint=https:/acheungams.file.core.windows.net/;TableEndpoint=https:/acheungams.table.core.windows.net/;SharedAccessSignature=sv=2022-11-02\&ss=b\&srt=sco\&sp=rlx\&se=2023-10-11T04:48:50Z\&st=2023-10-11T03:48:50Z\&spr=https\&sig=9HFXu2zYsykO2MrhSBtl4U4ywkAs4OZGLMPouyU0gJo%3D)\
+  If QueueEndpoint, FileEndpoint, and TableEndpoint strings are shown, remove them and only keep BlobEndpoint.
+</Note>
+
+## Configure Blob storage in the External Asset Storage app
+
+### Create a storage account
+
+1. Navigate to the **External Asset Storage** app > **Storage Accounts&#x20;**&#x74;ab.
+
+   ![image-20250327-061452.png](/images/vos360/f277cf154eda61251f08518d.png)
+
+2. Configure the following parameters:
+
+   ![image-20250327-061536.png](/images/vos360/a11bf63af4879d59eed5f6ab.png)
+
+   * **ACCOUNT ID**: This is required and only allows for certain characters (a-z, A-Z, 0-9, -, \_, :, .).
+
+   * **CONNECTION**: This is a required field.
+
+3. Click **Save**.
+
+### Edit the storage account
+
+1. Navigate to **External Asset Storage** app > **Storage Accounts&#x20;**&#x74;ab.
+
+2. &#x20;Click the ![image-20250327-062026.png](/images/vos360/5cde23fff2c79eb572c7d770.png) button to configure the following parameters:
+
+   ![image-20250327-063018.png](/images/vos360/c4ab785ae17d72d040e3d84e.png)
+
+   * **ACCOUNT ID**: This is view-only in the Edit mode.
+
+   * **CONNECTION**: If an update is required, click on the button to set new correspondent data.
+
+   * **EGRESS URL FORMATS**: Click the button to copy the link to the clipboard. The shield icon marks whether the package is encrypted.
+
+3. Click **Save**.
+
+## Configure the package output settings
+
+Dynamic packaging is available with the following output formats:
+
+* DASH (MPEG-DASH)
+
+* HLS-fMP4 (HLS fragmented MP4)
+
+* HLS-TS
+
+* SS
+
+1. Navigate to the **External Asset Storage** app > **Settings&#x20;**&#x74;ab.
+
+2. Select the **DESTINATION PROFILE**.
+
+   ![image-20250327-064040.png](/images/vos360/6d69711dfb50f08aa1c4f463.png)
+
+<Note>
+  **Note:&#x20;**&#x54;his parameter lists the OTT destinations already created in the **Lab Wizard** app. Thedestination profile needs to have the supported package created for dynamic packaging.
+</Note>
+
+3. (Optional) Enable the **DRM&#x20;**&#x73;etting.
+
+   1. Select the **Destination Profile** with the desired encryption method (Support Common Encryption for DASH, Common Encryption CBCS, and AES-128 for HLS-fmp4).
+
+      ![image-20250327-064940.png](/images/vos360/4a162df2c3669b37387833a4.png)
+
+   2. The **DRM configuration** link directs users to the **Scrambling&#x20;**&#x41;pp to create DRM systems.
+
+   3. After the DRM systems are created, return to the **External Asset Storage** App.
+
+      ![image-20250327-065329.png](/images/vos360/e71c98ca7897b0e33707ac33.png)
+
+   4. Enable **DRM**.
+
+   5. Enable the Encryption for the desired package and select the DRM system and Resource ID for each package.
+
+   6. Update the **Resource ID** parameter depending on whether you want to use a Resource ID per asset or per package.
+
+4. Click **Save**.
+
+## Get the Playback URLs
+
+You can get the playback URLs via the VOS360 API for both CDN and Origin for DASH, HLS, SS, CMAF-DASH, and CMAF-HLS outputs.
+
+**GET /external-asset-potf/v1/storage\_account/\{id}/egress\_url\_format**
+
+**Response body**
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>[<br />{"  \"https://cdn-harmonicinc-01.nebula.video/DynamicPackaging_blob-test/HLS/{asset-id}/{asset-name}/index.m3u8\","}<br />{"  \"https://cdn-harmonicinc-01.nebula.video/DynamicPackaging_blob-test/DASH/{asset-id}/{asset-name}/manifest.mpd\""}<br />]</p></td></tr></tbody>
+  </table>
+</div>
+
+* The **asset-id&#x20;**&#x69;s the "assetId" of the AMS asset. See [https://learn.microsoft.com/en-us/rest/api/media/assets/list?tabs=HTTP](https://learn.microsoft.com/en-us/rest/api/media/assets/list?tabs=HTTP) with field properties.assetId for more information. The **asset-id&#x20;**&#x63;an also be found in the storage account. The AMS storage account has a list of assets as Blob container with name \{**asset-id**}. For example, asset-d7ca16c3-aad3-4761-8df5-c2a080a1aa7e
+
+* The **asset-name&#x20;**&#x69;s the "name" of the AMS asset. It is often the filename of the server manifest with .ism extension. e.g. filename: smooth.ism has asset-name: smooth
+
+URL: [https://cdn-harmonicinc-01.nebula.video](https://origin-poker-itsang-01.nebula.video/DynamicPackaging_blob-test/HLS/%7Basset-id%7D/%7Basset-name%7D/index.m3u8)[/DynamicPackaging\_blob-test/DASH](https://origin-poker-itsang-01.nebula.video/DynamicPackaging_blob-test/DASH/%7Basset-id%7D/%7Basset-name%7D/manifest.mpd)[/](https://cdn-collegesport-01.vos360.video/Content/DynamicPackaging/cmafdash/collegefootballdevstorage/%7BAssetId%7D/master.mpd)**[d7ca16c3-aad3-4761-8df5-c2a080a1aa7e](https://cdn-collegesport-01.vos360.video/Content/DynamicPackaging/cmafdash/collegefootballdevstorage/%7BAssetId%7D/master.mpd)**[/](https://cdn-collegesport-01.vos360.video/Content/DynamicPackaging/cmafdash/collegefootballdevstorage/%7BAssetId%7D/master.mpd)**[smooth](https://cdn-collegesport-01.vos360.video/Content/DynamicPackaging/cmafdash/collegefootballdevstorage/%7BAssetId%7D/master.mpd)**[/manifest.mpd](https://cdn-collegesport-01.vos360.video/Content/DynamicPackaging/cmafdash/collegefootballdevstorage/%7BAssetId%7D/master.mpd)

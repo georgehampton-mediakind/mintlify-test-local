@@ -1,0 +1,98 @@
+---
+title: Monitoring output bitrates of multiplexers with an enhanced statistics view in Configure Broadcast app
+robots: noindex, nofollow
+---
+
+This section describes the enhanced statistics view for multiplexer output bitrate. The new statistics view leverages Prometheus for metrics storage and Grafana for visualization, replacing the previous ELK (Elasticsearch-Logstash-Kibana) based solution. This enhancement provides operators with a more robust, flexible, and insightful monitoring experience for output statistics.
+
+## Accessing the views
+
+Output bitrate statistics are available for all ATSC and MPEG multiplexers. Both the **Configure Broadcast** and **Monitor Channels** apps provide these views.
+
+### Using the Configure Broadcast app
+
+1. Click on the “Statistics” tab.
+
+2. Select “MULTIPLEXER” by its name.
+
+![1.png](/images/vos360/3f27232281ba64c055433471.png)
+
+### Using the Monitor Channels app
+
+1. Click to select the channel matching the multiplexer.
+
+   ![2.png](/images/vos360/9988d351ad1a647df7d88b00.png)
+
+## Program panel
+
+Output program bitrates are displayed for all kind of program (encoded, passthrough, virtual, and local programs).
+
+![3.png](/images/vos360/f64d973a749302af2dacdade.png)
+
+A special label “stuffing packet” allows you to visualize null packets bitrate.
+
+Labels are selectable to display target program bitrate.
+
+![4.png](/images/vos360/627f6e31f0364a74a5186b10.png)
+
+## PID panel
+
+PIDs of the selected multiplexer are exposed in the bitrate graph.
+
+The legend displays the type of component for each PID.
+
+![5.png](/images/vos360/d250b747b5ac1775ade1df98.png)
+
+A special “TS rate” label allows you to view the overall bitrate of the multiplexer.
+
+Labels are selectable to display target PID bitrate.
+
+![6.png](/images/vos360/925b96dc1ee6bedcbe41e98f.png)
+
+## Program filter
+
+Output Program filtering applies on PID panel by keeping PIDs related to selected program(s).
+
+![7.png](/images/vos360/294b20134fb37d4a025b4361.png)
+
+## PID type filter
+
+Output PID filtering applies on PID panel by keeping PIDs of selected type(s).
+
+![8.png](/images/vos360/647ba553fff943d154d0249a.png)
+
+## Data Export
+
+Graphs data can be exported in CSV format via Grafana's inspect option on each panel.
+
+![9.png](/images/vos360/8eac7380bde2624ecee6fdcd.png)![10.png](/images/vos360/e3085b1a0de4c50da0dd1925.png)
+
+## Prometheus access
+
+Output bit rate monitoring in Grafana queries 3 Prometheus metrics in order to display time series.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Metric name</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Labels</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Common labels</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Unit</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>statmux_output_ts_bitrate</p></td><td colSpan="1" rowSpan="1"><p><strong>service_id</strong></p><ul><li><p>The multiplexer VOS Service ID.</p></li><li><p>In REST API <em>{"<vos>/vos-api/dev-api/v1/"}</em></p><ul><li><p>id attribute of object com.harmonicinc.vos.app.configure.model.service.Service</p></li></ul></li></ul><p><strong>mux_service_name</strong></p><ul><li><p>the display name of the Multiplexer service, which provide the id ↔︎ name relation.</p></li><li><p>In REST API <em>{"<vos>/vos-api/dev-api/v1/"}</em></p><ul><li><p><em>name </em>attribute of object com.harmonicinc.vos.app.configure.model.service.Service</p></li></ul></li></ul></td><td colSpan="1" rowSpan="1"><p><strong>endpoint</strong></p><p><strong>instance</strong></p><p><strong>job</strong></p><p><strong>namespace</strong></p><p><strong>pod</strong></p><p><strong>service</strong></p></td><td colSpan="1" rowSpan="1"><p>bit per second</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>statmux_output_program_bitrate</p></td><td colSpan="1" rowSpan="1"><p><strong>service_id</strong></p><p><strong>ts_id</strong></p><ul><li><p>the transport stream id defined in output signalling</p></li></ul><p><strong>program_id</strong></p><ul><li><p>the program number defined in output signalling</p></li></ul><p><strong>program_name</strong></p><ul><li><p>the program name defined in output signalling</p></li></ul></td><td colSpan="1" rowSpan="1"><p><strong>endpoint</strong></p><p><strong>instance</strong></p><p><strong>job</strong></p><p><strong>namespace</strong></p><p><strong>pod</strong></p><p><strong>service</strong></p></td><td colSpan="1" rowSpan="1"><p>bit per second</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>statmux_output_pid_bitrate</p></td><td colSpan="1" rowSpan="1"><p><strong>service_id</strong></p><p><strong>ts_id</strong></p><p><strong>program_id</strong></p><p><strong>pid</strong></p><ul><li><p>the elementary stream PID of the component</p></li></ul><p><strong>pid_type</strong></p><ul><li><p>a type name for the component</p><ul><li><p>video, audio, data</p></li><li><p>PAT, CAT, NIT, SDT, PMT</p></li><li><p>TDT</p><ul><li><p>for TDT/TOT stream</p></li></ul></li><li><p>EIT</p><ul><li><p>for DVB-SI EIT or any ATSC EIT-k streams</p></li></ul></li><li><p>PSIP</p><ul><li><p>for MGT, VCT, STT stream</p></li></ul></li><li><p>ETT</p><ul><li><p>for any ATSC ETT-k streams</p></li></ul></li><li><p>ECM, EMM</p></li><li><p>null, unknown</p></li></ul></li></ul></td><td colSpan="1" rowSpan="1"><p><strong>endpoint</strong></p><p><strong>instance</strong></p><p><strong>job</strong></p><p><strong>namespace</strong></p><p><strong>pod</strong></p><p><strong>service</strong></p></td><td colSpan="1" rowSpan="1"><p>bit per second</p></td></tr></tbody>
+  </table>
+</div>
+
+## Troubleshooting
+
+### Bitrate graphs do not look identical on both panels.
+
+Program metrics are sampled every 5 seconds, as in the previous ELK based implementation, while the new PID metrics are sampled every 120 seconds for performance reasons.
+
+As a result, the graphs show different aspects of variability.
+
+![11.png](/images/vos360/79cf6978719f5f3e34a04065.png)
+
+### Bitrate of passthrough components
+
+For passthrough components, the bitrate depends on the estimate made at the input. Very low bitrate may return 0 bps but presence/absence is nevertheless accurate.
+
+![12.png](/images/vos360/bfa1f7f0b16cef40a340f47e.png)

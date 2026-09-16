@@ -1,0 +1,78 @@
+---
+title: On-board edge devices using MK.IO API
+description: How to connect an edge device to MK.IO and register it to a project with the MK.IO API instead of MK.IO UI.
+sidebarTitle: Onboarding via API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Prepare an edge device and register it to a project through the MK.IO Fleet API instead of the portal. The device must still be connected to the internet.
+
+## Prerequisites
+
+* You can access the device's local web UI or terminal.
+* You have an [API token](/api-guides/getting-started/authentication) with access to the target project.
+
+<span id="add-the-device-to-mkio" className="mk-legacy-anchor" />
+
+## Add the device to MK.IO
+
+The on-boarding process has two parts:
+
+1. Prepare the device and obtain a **short code** or **device ID**.
+2. Use the code to register the device [via the MK.IO API](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/api-onboarding#add-the-device-using-the-mkio-api).
+
+Once registered, the device is available for monitoring and control through MK.IO.
+
+<Info>
+  **Remote on-boarding**
+
+  The two steps above do not need to be completed by the same person. In a remote on-boarding scenario, the engineer installing the device can pass the short code verbally to an MK.IO user with permission to register it.
+</Info>
+
+## Prepare the device
+
+Choose one preparation path:
+
+* **Local web UI**: Follow [Connect the device to MK.IO](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/common-workflow#connect-the-device-to-mkio-from-the-device-ui), then copy the short code or device ID.
+* **Device terminal**: Follow [Obtain the device ID](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/terminal-only#obtain-the-device-id).
+
+<Warning>
+  The short code rotates periodically. Keep the device UI open until registration is complete, or use the longer-lived device ID.
+</Warning>
+
+<Steps>
+  <Step title="Add the device using the MK.IO API">
+    <span id="add-the-device-using-the-mkio-api" className="mk-legacy-anchor" />
+
+    Register the device using the short code in the `spec.shortCode` field. Alternatively, use the longer-lived device ID shown in the device web UI or terminal in the `spec.locationId` field:
+
+    **PUT** `https://app.mk.io/api/v1/projects/project_name/fleet/devices/device1`
+
+    ```json
+    {
+      "metadata": {
+        "displayName": "Device 1"
+      },
+      "spec": {
+        "siteName": "world",
+        "locationId": "a7dafdba-4923-4317-aad1-dc76284b85b5"
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Verify on-boarding">
+    <span id="verify-on-boarding" className="mk-legacy-anchor" />
+
+    Once the device is registered, go back to **Appliance** > **Fleet** in the device's local web UI. The **Registered** field shows **Yes** and displays the device's name.
+
+    You can now [view device information](/mkio/how-to/managing-edge-devices/display-device-information) and [access the remote UI](/mkio/how-to/managing-edge-devices/access-the-remote-device-ui).
+  </Step>
+
+  <Step title="Update device software">
+    <span id="update-device-software" className="mk-legacy-anchor" />
+
+    Once the device is registered, before commissioning, [update the device software to the latest version](/mkio/how-to/managing-edge-devices/update-device-software).
+  </Step>
+</Steps>

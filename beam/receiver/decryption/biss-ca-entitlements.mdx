@@ -1,0 +1,78 @@
+---
+title: Managing BISS-CA entitlements
+sidebarTitle: BISS-CA entitlements
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+To successfully decrypt BISS-CA content, MK.IO Beam Distribution must have the correct entitlements.
+The *Content Provider* requires a public key exported from the receivers [BISS-CA Key Pair table](/beam/receiver/decryption/biss-ca-decryption#managing-biss-ca-keys).
+
+To get the correct entitlements, follow these steps:
+
+<CardGroup cols={1}>
+  <Card title="Obtaining BISS-CA entitlements" icon="lock">
+    1. [Contact content provider](/beam/receiver/decryption/biss-ca-entitlements#step-1---contact-content-provider)
+    2. [Exchange keys](/beam/receiver/decryption/biss-ca-entitlements#step-2---exchange-keys)
+    3. [Check authorization](/beam/receiver/decryption/biss-ca-entitlements#step-3---check-authorization)
+  </Card>
+</CardGroup>
+
+<span id="step-1---contact-content-provider" className="mk-legacy-anchor" />
+
+## Step #1 - Contact content provider
+
+Contact the provider of the scrambled content and determine how they wish to exchange key pairs. They will require one of the following methods:
+
+* **Method 1**: The receiver operator must send a public key to the content provider.
+* **Method 2**: The content provider will send a public/private key pair to the receiver operator.
+
+The keys will need to be exchanged between the content provider and the receiver operator using an out-of-band method chosen by the content provider.
+
+<span id="step-2---exchange-keys" className="mk-legacy-anchor" />
+
+## Step #2 - Exchange keys
+
+<Tabs>
+  <Tab title="Method 1: Send Public Key">
+    If requested by the content provider, the receiver operator must supply a **public key**
+    to enable entitlement by the scrambler using a **self-generated key pair**.
+
+    1. If a self-generated key pair is not already available, [create a self-generated key pair](/beam/receiver/decryption/biss-ca-decryption#create-a-self-generated-key-pair).
+
+    2. [Export the public key](/beam/receiver/decryption/biss-ca-decryption#export-the-public-key).
+
+    3. Send the public key to the content provider who will manage entitlements.
+  </Tab>
+
+  <Tab title="Method 2: Import Public/Private Key">
+    The content provider will supply a public and private key pair to the receiver operator, which must
+    be imported into the receiver. This is done using an **injected key pair**.
+
+    1. [Import injected key pair](/beam/receiver/decryption/biss-ca-decryption#import-injected-key-pair).
+
+    2. The public key should already be registered with the content provider who will manage entitlements.
+  </Tab>
+</Tabs>
+
+<span id="step-3---check-authorization" className="mk-legacy-anchor" />
+
+## Step #3 - Check authorization
+
+1. [Enable BISS-CA decryption for service decode](/beam/receiver/decryption/biss-ca-decryption#enable-biss-ca-decryption-for-service-decode).
+
+2. From the <Icon icon="video-plus" aria-label="video-plus icon" /> **Services** page, click <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> to view the alarms page.
+
+3. Confirm that no alarms are raised.
+
+4. If the raised alarm **Label** reports **BISS CA not decrypting** and the **Info** column states **not authorized** then this is due to one or more of the following conditions:
+
+   * The EKID recovered from the transport stream does not match the EKID of any key pair stored on the receiver.
+   * The content provider has not enabled entitlements.
+   * The content provider has revoked entitlements.
+
+5. Contact the content provider to confirm that the correct public key has been registered and that entitlements have been enabled.
+
+<Info>
+  It may be necessary to refer to the EKID value, see [Managing BISS-CA keys](/beam/receiver/decryption/biss-ca-decryption#managing-biss-ca-keys).
+</Info>

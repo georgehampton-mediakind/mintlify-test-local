@@ -1,0 +1,95 @@
+---
+title: HLS or DASH over CMAF specific output settings
+sidebarTitle: HLS and DASH over CMAF specific output settings
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The CMAF (Common Media Application Format) is a fMP4 based format that is used as a common format for both HLS and DASH content delivery. A single copy of the media segments is needed, which leads to significant gains in terms of storage and bandwidth.
+
+## General
+
+You can configure for both HLS and DASH:
+
+* [General parameters](/beam/packager/parameters/hls-or-dash-over-cmaf)
+* [DASH Manifests](/beam/packager/parameters/hls-or-dash-over-cmaf#dash)
+* [HLS Playlists](/beam/packager/parameters/hls-or-dash-over-cmaf#hls)
+* [Delivery](/beam/packager/parameters/hls-or-dash-over-cmaf#delivery)
+* [Encryption](/beam/packager/parameters/hls-or-dash-over-cmaf#common-encryption-cenc)
+
+## DASH output type configuration
+
+### Manifests
+
+By default, the output manifest is delivered without any specific bitrate filtering. Depending on your delivery needs, you can adjust the bitrate filtering on your manifest and add manifests with variant filtering parameters.
+
+**Stream characteristics** filtering for **DASH over CMAF** outputs can be based on:
+
+* Bitrate in kbps - for Video/Audio/Subtitle streams filters.
+
+  ![MFVP stream char filtering bitrate](/_machine-assets/c74639c0664210ffa258f32bdcd906f6345f3521fdd78447efd30be3d39b8f33.png)
+
+* Codec (H.264 or HEVC) - for the Video streams filter.
+
+  ![MFVP stream char filtering codec](/_machine-assets/69df1ec9748c4938ca43c5a5d7fb6c1480060c6c548418e077da6e3fa6b3eaad.png)
+
+* Language (H.264 or HEVC) - for the audio streams filter.
+
+  ![MFVP stream char filtering language](/_machine-assets/31b8dc987e3751d76e613e911f9e326d31d50594c453dea307fdda79333135f6.png)
+
+* Width (pixels) or Height (pixels) for the Thumbnail streams filter.
+
+  ![MFVP stream char filtering thumbnail](/_machine-assets/3bb5ba148336d9c248dd3aff46c9e08689f0b132ab7e444973bbd56930994dba.png)
+
+## HLS output type configuration
+
+### Playlists
+
+By default, the output manifest is delivered without any specific bitrate filtering. Depending on your delivery needs, you can adjust the bitrate filtering on your manifest and add manifests with variant filtering parameters.
+
+**Stream characteristics** filtering for **HLS** outputs can be based either on:
+
+* Bitrate in kbps - for Video/Audio/Subtitle streams filters.
+
+  ![MFVP stream char filtering bitrate](/_machine-assets/c74639c0664210ffa258f32bdcd906f6345f3521fdd78447efd30be3d39b8f33.png)
+
+* Codec (H.264 or HEVC) - for the Video streams filter.
+
+  ![MFVP stream char filtering codec](/_machine-assets/69df1ec9748c4938ca43c5a5d7fb6c1480060c6c548418e077da6e3fa6b3eaad.png)
+
+* Language (H.264 or HEVC) - for the audio streams filter.
+
+  ![MFVP stream char filtering language](/_machine-assets/31b8dc987e3751d76e613e911f9e326d31d50594c453dea307fdda79333135f6.png)
+
+* Width (pixels) or Height (pixels) for the Thumbnail streams filter.
+
+  ![MFVP stream char filtering thumbnail](/_machine-assets/3bb5ba148336d9c248dd3aff46c9e08689f0b132ab7e444973bbd56930994dba.png)
+
+## Delivery
+
+You can define **Access URL** for playlist, manifests and segments.
+
+For more details, see [Delivery](/beam/packager/parameters/hls-or-dash-over-cmaf#delivery).
+
+## Encryption
+
+By default, the output manifest is published without any specific encryption. To configure output encryption parameters, you can choose between two encryption modes: CENC or CBCS.
+
+You can also disable audio encryption. For more details, see [Key usage rules](/beam/packager/parameters/hls-or-dash-over-cmaf#common-encryption-cenc).
+
+|                                     | CENC | CBCS |
+| :---------------------------------- | :--- | :--- |
+| **Fixed keys**                      |      |      |
+| PlayReady                           | X    | X    |
+| Widevine                            | X    | X    |
+| Fairplay                            | X    | X    |
+| **External keys (compatible CPIX)** |      |      |
+| PlayReady                           | X    | X    |
+| Widevine                            | X    | X    |
+| MediaRoom                           | X    | X    |
+| Fairplay                            | X    | X    |
+| Clearkey                            | X    | X    |
+
+## Content replacement
+
+This feature is not currently used in MK.IO Beam.

@@ -1,0 +1,260 @@
+---
+title: Markdown Reference
+description: Quick markdown and MDX cheat sheet for MK.IO and Beam docs.
+sidebarTitle: Markdown Reference
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A quick reference for the markdown and MDX syntax used across this site. Each section shows the code and the rendered result.
+
+## Headings
+
+```md
+## Major Section (H2)
+### Sub-section (H3)
+#### Detail (H4): use sparingly
+```
+
+Use exactly **one `#` (H1)** per page. Since this page already has one, the examples above start at H2.
+
+## Text Formatting
+
+```md
+**bold** for emphasis and UI labels
+*italic* for introducing key terms
+`backticks` for code, file names, and identifiers
+~~strikethrough~~ for deprecated content
+```
+
+**Rendered:**
+
+**bold** for emphasis and UI labels
+*italic* for introducing key terms
+`backticks` for code, file names, and identifiers
+~~strikethrough~~ for deprecated content
+
+## Links
+
+Internal links use root-relative paths. Do **not** include the `.mdx` extension:
+
+```md
+[Getting Started](/mkio/getting-started)
+[Choose your first workflow](/mkio/getting-started#choose-your-first-workflow)
+```
+
+**Rendered:**
+
+[Getting Started](/mkio/getting-started)
+[Choose your first workflow](/mkio/getting-started#choose-your-first-workflow)
+
+External links:
+
+```md
+[MediaKind](https://www.mediakind.com)
+```
+
+**Rendered:** [MediaKind](https://www.mediakind.com)
+
+## Images
+
+Always include descriptive alt text so the image is accessible to screen readers.
+
+### Where to store images
+
+There are two places you can store image files:
+
+**`/public/` folder (recommended for shared assets)**
+
+Files placed in `/public/` are served at the root URL path. Use this for images shared across multiple pages or product sections.
+
+```
+public/
+  images/
+    beam/
+      beam-architecture-overview.png
+    mkio/
+      mkio-dashboard-screenshot.png
+```
+
+Reference them with an absolute path starting with `/`:
+
+```md
+![Beam architecture overview](/images/beam/beam-architecture-overview.png)
+```
+
+**Next to your `.mdx` file (page-specific assets)**
+
+For images used only by a single page, you can place the file in the same folder as the `.mdx` file and use a relative path:
+
+```
+src/content/docs/beam/quick-start/
+  index.mdx
+  quick-start-ui.png
+```
+
+```md
+![Quick start UI](./quick-start-ui.png)
+```
+
+### Naming conventions
+
+* Use lowercase with hyphens: `beam-encoder-settings.png`, not `BeamEncoderSettings.PNG`
+* Prefix with the section name for shared images: `beam-`, `mkio-`, `api-`
+* Be descriptive: `live-encoder-audio-tab.png`, not `screenshot1.png`
+
+### File size and format
+
+* Prefer **PNG** for UI screenshots and diagrams; **JPEG** for photos
+* Compress images before committing. Keep files under 500 KB where possible
+* For diagrams, SVG is preferred when the source is available
+
+### Rendered example
+
+```md
+![MediaKind logo](/images/mkcirclebadge.png)
+```
+
+**Rendered:**
+
+![MediaKind logo](/images/mkcirclebadge.png)
+
+Keep images to a minimum. Only use screenshots when text alone cannot explain a UI action.
+
+## Lists
+
+**Unordered:**
+
+```md
+- Item one
+- Item two
+  - Nested item
+```
+
+**Rendered:**
+
+* Item one
+* Item two
+  * Nested item
+
+**Ordered (use for sequential steps):**
+
+```md
+1. First step.
+2. Second step.
+3. Third step.
+```
+
+**Rendered:**
+
+1. First step.
+2. Second step.
+3. Third step.
+
+## Tables
+
+```md
+| Field   | Required | Notes                  |
+| :------ | :------- | :--------------------- |
+| region  | Yes      | Use a supported region |
+| profile | No       | Advanced only          |
+```
+
+**Rendered:**
+
+| Field   | Required | Notes                  |
+| :------ | :------- | :--------------------- |
+| region  | Yes      | Use a supported region |
+| profile | No       | Advanced only          |
+
+**With text alignment:**
+
+```md
+| Left aligned | Right aligned | Centered |
+| :----------- | ------------: | :------: |
+| Apple        | 100           | -        |
+| Oranges      | 1,000         | n/a      |
+| Carrots      | 40            | -        |
+```
+
+**Rendered:**
+
+| Left aligned | Right aligned | Centered |
+| :----------- | ------------: | :------: |
+| Apple        |           100 |     -    |
+| Oranges      |         1,000 |    n/a   |
+| Carrots      |            40 |     -    |
+
+## Code Blocks
+
+Always specify a language tag after the opening fence:
+
+````md
+```bash
+pnpm dev
+```
+````
+
+**Rendered:**
+
+```bash
+pnpm dev
+```
+
+````md
+```json
+{
+  "name": "example"
+}
+```
+````
+
+**Rendered:**
+
+```json
+{
+  "name": "example"
+}
+```
+
+Supported languages include: `bash`, `json`, `javascript`, `typescript`, `python`, `yaml`, `http`, `txt`, and more.
+
+Do not prefix terminal commands with `$` or `>`.
+
+## Blockquotes
+
+Use a blockquote only when the content is a quotation. Use a Starlight aside directive for an informational note, caution, or danger.
+
+```md
+> This is a sourced quotation.
+```
+
+**Rendered:**
+
+> This is a sourced quotation.
+
+## Callouts
+
+Use a Starlight aside for information a reader might otherwise miss:
+
+```md
+:::caution[Before you continue]
+Verify the target environment before running the command.
+:::
+```
+
+Use `note`, `tip`, `caution`, or `danger`. Do not use the grandfathered `Callout` component in new content.
+
+## Horizontal Rules
+
+Use `---` on its own line to create a visual separator between sections.
+
+## Common gotchas
+
+* **New pages appear automatically.** Add frontmatter and place the file below a catalog section. Do not create `_meta.json`.
+* **Use `.md` by default.** Rename a page to `.mdx` only for the supported portable components.
+* **Do not include a source extension in an internal link.** Use `/mkio/getting-started`, not `/mkio/getting-started.mdx`.
+* **Use one `#` heading per page.** Multiple level-one headings break the document outline.
+* **Add a language tag to every code block.** Unlabelled fences render without syntax highlighting.
+* **Do not use legacy components for new content.** Use Starlight asides, Starlight `Steps`, cards, and supported inline icons.

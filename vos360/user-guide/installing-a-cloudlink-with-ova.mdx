@@ -1,0 +1,28 @@
+---
+title: Installing a CloudLink with OVA
+robots: noindex, nofollow
+---
+
+CloudLink is provided as an Open Virtual Appliance (OVA) container, which is ready to run on a Type 1 or Type 2 hypervisor.
+
+<Note>
+  **Important:&#x20;**&#x46;or production and large scale lab environments, Harmonic recommends deploying the OVA on a Type 1 hypervisor (ESXi). For assistance with converting a Type 2 hypervisor, please contact Harmonic technical support.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x54;he CloudLink OVF template deploys with ESXi v4.0 by default. As of v1.1.0.0.2 of the CloudLink OVA, the CloudLink host requires support for the AVX instruction set. After you deploy the CloudLink OVF, you must upgrade the host to ESXi version 5.0 or later (Harmonic recommends upgrading the latest ESXi version available). Refer to VMWare documentation for upgrade instructions.
+</Note>
+
+**Before you begin**\
+You need to use the the VOS CloudLink installer (vos-uplink-vm.ova) to install the CloudLink.
+
+<Note>
+  **Important:&#x20;**&#x43;ontact your Harmonic representatives or Harmonic technical support for obtaining the OVA file.
+</Note>
+
+1. From the vSphere Client, click **File > Deploy OVF Template** to install the CloudLink and create a virtual machine.
+
+2. Configure the virtual machine properties.
+
+**What to do next**\
+Upgrade the ESXi version for AVX support.

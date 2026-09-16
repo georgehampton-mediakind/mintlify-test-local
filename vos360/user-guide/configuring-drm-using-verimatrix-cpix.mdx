@@ -1,0 +1,39 @@
+---
+title: Configuring DRM using Verimatrix CPIX
+robots: noindex, nofollow
+---
+
+You can configure a service with the Verimatrix VCAS encryption using the Verimatrix CPIX Interface.
+
+1. Navigate to the **Scrambling** app > **DRM** tab > **System** tab.
+
+2. Click **+System** to create new system.
+
+   ![verimatrix\_cpix.png](/images/vos360/6fb7e412bf0e4c5b98d65c81.png)
+
+3. Configure DRM system settings:
+
+   * **DRM System Name**
+
+   * **Encryption Interface**: Select the "Verimatrix CPIX".
+
+   * **CENC Setting:&#x20;**&#x20;Select “Verimatrix VCAS” as DRM for HLS/DASH packaging type.\
+     **Note**: You can also use the Harmonic CPIX interface to configure “Verimatrix VCAS” as DRM for HSL/DASH packaging type.
+
+   * **Resources**: Click to add resources.
+
+     * **Content ID/Resource ID**: Configure the DRM systems that are used for CENC encryption in HLS or DASH. (The selected DRM systems will be converted into the corresponding 'DRMSystem\@systemId' in the CPIX key requests.)
+
+     * Set up one resource per each service output.
+
+     * Use the destination profile which is correctly set up for encryption.
+
+   * Configure the **KMS URL**. Enter the URL of the CPIX compliant endpoint offered by the Key Management Server for key request. It is recommended to use only HTTPS protocol for production systems.\
+     **Note:&#x20;**&#x54;o use HTTP basic authentication, the credentials must be included in the URL by prepending "*username:password@*" to the hostname (e.g. [*<u>https://username:password@kmsHostname/cpixEndPoint</u>*](https://username:password@kmshostname/cpixEndPoint)).
+
+   * Configure **HTTPS Certificate Validation**. If activated, VOS will validate that the certificate used by the KMS is valid (i.e. it authenticates the remote server) before completing the HTTPS connection establishment.\
+     **Note:&#x20;**&#x42;efore using this feature, the publicly trusted certificate of the KMS must first have been uploaded to VOS using the REST API. It is expected that the KMS server will perform the same validation using the public VOS trusted certificate (you must have uploaded the corresponding private certificate in VOS), so that both parties can trust each other. This is what is usually called HTTPS mutual authentication.
+
+4. Use a destination profile with HLS/DASH Package selected and Encryption Method configured (“AES”, “Sample AES” or “Common Encryption”).
+
+5. Start a service with the DRM add-on enabled and appropriate DRM System and Resource settings configured.

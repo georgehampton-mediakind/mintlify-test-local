@@ -1,0 +1,42 @@
+---
+title: Service Monitoring
+sidebarTitle: Monitoring
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Monitoring service alarms
+
+The user interface allows you to access active and cleared alarms list for each service.
+
+1. From the services page, identify the service that you want to monitor.
+
+2. Click the related <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> icon in the **info** column.
+
+   Depending on the severity of the alarm, the <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> will appear in different colors and will display the most severe color alarm in case of multiple alarms.
+
+   * <img src="/icons/ui/alarm-red.svg" alt="Alarm red" className="mk-ui-icon" width="16" height="16" />: critical alarm
+   * <img src="/icons/ui/alarm-yellow.svg" alt="Alarm yellow" className="mk-ui-icon" width="16" height="16" />: major alarm
+   * <img src="/icons/ui/alarm-green.svg" alt="Alarm green" className="mk-ui-icon" width="16" height="16" />: minor alarm
+
+The following page displays.
+
+![Services liveencoding alarms](/_machine-assets/d2577afb4056612b016d236a6a3808f6547a319d238ec7489728c07601785b9a.png)
+
+From this page, you can access the following information:
+
+* The active alarms table applied on the current server including:
+  * Date and time of the alarm rise
+  * Alarm description (label)
+  * Alarm severity
+  * Detailed information
+* The alarm history table including:
+  * Date and time of the alarm rise
+  * Alarm description (label)
+  * Alarm status
+  * Alarm severity
+  * Server on which the service was applied when the alarm raised.
+
+<Info>
+  The alarm history table displays up to 10 alarms per page. Use the arrows or page number at the bottom of the table to navigate through the complete alarms list.
+</Info>

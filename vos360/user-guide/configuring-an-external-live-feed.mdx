@@ -1,0 +1,68 @@
+---
+title: Configuring an external live feed
+robots: noindex, nofollow
+---
+
+Playout channels support live primary events from both Harmonic and Zixi CloudLink input sources. Configure live inputs in the **Channels** app. Note the following requirements for live input sources:
+
+* The live input source must match the frame rate and resolution defined for the playout source.
+
+* The live input source can have multiple audio streams. The playout channel only uses languages from the input source that match the languages that have been defined for the playout source. The order of languages may be different than the playout source.
+
+* The live input source may contain data streams; however, they are not be used by the playout channel.
+
+<Note>
+  **Note:&#x20;**&#x49;nput source redundancy is not supported by the playout channel.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x56;ideo monitoring is limited to one operator while the input is not being used by a service. Video cannot be monitored when the input is being used by a service, even when the input is not on air.
+</Note>
+
+1. From the **Channels** app, click **+ Channels**.
+
+2. In the **Channel Name** field, enter the name of the new channel.
+
+3. Select your **Input Method**.\
+   If you choose CloudLink, select the correct CloudLink from the menu.
+
+4. Select your **Transcoding Profile**.
+
+5. If you want to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+6. For Zixi CloudLink inputs, configure the following settings:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>IP Address</p></td><td colSpan="1" rowSpan="1"><p>IP address of the live source (filled by VOS).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Port used by the live source (filled by VOS).</p></td></tr></tbody>
+     </table>
+   </div>
+
+7. For Harmonic CloudLink inputs, configure the following settings:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>IP Address</p></td><td colSpan="1" rowSpan="1"><p>IP address of the live source (filled by VOS).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>The start Port number in the port range used by the live source (filled by VOS).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port End</p></td><td colSpan="1" rowSpan="1"><p>The end Port number in the port range used by the live source (filled by VOS).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>SSM</p></td><td colSpan="1" rowSpan="1"><p> Source-specific multicast IP address</p></td></tr></tbody>
+     </table>
+   </div>
+
+8. (Optional) Click the **Input Loss** toggle to configure a loss of input with a desired image file. Leave the toggle set to **Off** if it is not required.
+
+9. Click **Connect**.\
+   &#x20;**Result**: VOS discovers the input source after a few seconds. If it cannot find the input source, the following message appears: No data found. Please check your source.
+
+10. Choose a program from the list and, optionally, click **Play** to view the video source.\
+    &#x20;**Result**: If any issues with the transport stream are detected, a **Grooming needed** alert appears.
+
+    ![](/images/vos360/453e671ac7543d5e6f55e6d4.png)
+
+11. &#x20;If grooming is needed, proceed with grooming the source input.
+
+12. From the **Add channel** pane, click **Create** to add the channel.
+
+**Result**  \
+External live sources are listed in the **Feeds** widget in the Playout Monitor app. Playlist files must set the materialId to the CloudLink **Input Source Name** for scheduled live primary events.

@@ -1,0 +1,57 @@
+---
+title: Bandwidth Policy Group
+sidebarTitle: Bandwidth Policy Group
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Configuring Bandwidth Policing Group
+
+1. Create a new Multiplexing Service and configure the service settings.
+
+2. Configure **Transport Stream** parameters.
+
+   1. Open the **Mux** tab to configure total bitrate.
+
+   2. Open and configure the **Output** tab:
+
+      * Set an **Output Name**.
+      * Set the output **Type**to IP.
+      * Select the **network interface** and define the **stream address**.
+
+   3. Open the **Bandwidth Policing** tab and configure the groups:
+
+      * Click the **Add Group** button to configure a first group defined with a name and a bitrate.
+      * Click the **Add Group** button to configure as many groups as needed defined with specific name and bitrate.
+
+3. Assign the **Bandwidth Policing Group** to an output service to the transport stream.
+
+   1. Click **add** to create a new output service.
+
+      ![view output stream add service ts sp](/_machine-assets/948d0339574884306739c6ef4aac285985fe881bffa44b77f8c28765ce85c222.png)
+
+   2. Set the **Service Passthrough**mode to **On** to display specific parameters.
+
+   3. Select one of the **Bandwidth Policing Group** previously created.
+
+   4. Configure the **Sources**' **Input** parameters with the appropriate **Network Interface**, **Destination IP Address** and **Port**number.
+
+4. Assign the **Bandwidth Policing Group** to a video component of an output service.
+
+   1. Click **add** to create a new component to an existing output service.
+
+      ![view output stream add component to service](/_machine-assets/1c1153790de11f400a99196d0c1f9f766f8e578093dc9abcb7268641557884f6.png)
+
+   2. Configure the **Input** tab parameters.
+
+   3. Open and configure the **Output** tab and select one of the **Bandwidth Policing Group** previously created.
+
+   4. Create and configure any other video component needed with specific **Bandwidth Policing Group**.
+
+5. Click **Save and continue** to save your modifications.
+
+6. Assign a server and start the service.
+
+The service is running and **Bandwidth Policing Group** information (bpgId) are assigned to the service configuration files at both services and component level.
+
+You can also monitor the [**Bandwidth Policing Group** statistics](/beam/multiplexer/monitor#bandwidth-policing) by clicking the <img src="/icons/ui/pie-chart.svg" alt="Pie chart" className="mk-ui-icon" width="16" height="16" /> button on the Services page.

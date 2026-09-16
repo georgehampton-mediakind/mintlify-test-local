@@ -1,0 +1,64 @@
+---
+title: HLS over TS
+sidebarTitle: HLS over TS
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Below are the parameters accessed in the **HLS over TS** output:
+
+## General
+
+| Parameter     | Description                                           |
+| :------------ | :---------------------------------------------------- |
+| Output name   | Output name. The name you want to use for the output. |
+| Naming scheme | Timeline                                              |
+
+## HLS
+
+### Playlist
+
+| Parameter | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Name      | Name of the manifest/playlist generated for the current output. Default value is index (for HLS) or manifest (for DASH). If a filtering has been applied to the manifest/playlist, it is recommended to use a name that clearly identifies the defined filtering. { /* Your comment here Default value is {tooltips.Cat_manifest_name.default}**Recommendation:** {tooltips.Cat_manifest_name.recommendations}*/ }<br />**Important:** The manifest name must be unique and different from any other manifest name. |
+
+<span id="filtering---stream-characteristics" className="mk-legacy-anchor" />
+
+#### Filtering - Stream characteristics
+
+| Parameter                | Description                                                                                                                                                    |
+| :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Audio streams filter     | Build a filter to select the audio streams that will be included in manifest/playlist. Applicable filters: bitrate in kbps and Language                        |
+| Video streams filter     | Build a filter to select the video streams that will be included in manifest/playlist. Applicable filters: bitrate in kbps, codec (H.264 or HEVC) and No video |
+| Subtitle streams filter  | Build a filter to select the subtitle streams that will be included in manifest/playlist. Applicable filters: bitrate in kbps and Language                     |
+| Thumbnail streams filter | Build a filter to select the thumbnail streams that will be included in manifest/playlist. Applicable filters: width and height in pixels                      |
+
+<span id="filtering---bitrate" className="mk-legacy-anchor" />
+
+#### Filtering - Bitrate
+
+| Parameter               | Description                                                                                                                                                    |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Audio streams filter    | Build a filter to select the audio streams that will be included in manifest/playlist. Applicable filters: bitrate in kbps and Language                        |
+| Video streams filter    | Build a filter to select the video streams that will be included in manifest/playlist. Applicable filters: bitrate in kbps, codec (H.264 or HEVC) and No video |
+| Subtitle streams filter | Build a filter to select the subtitle streams that will be included in manifest/playlist. Applicable filters: bitrate in kbps and Language                     |
+
+<span id="filtering---stream-index" className="mk-legacy-anchor" />
+
+#### Filtering - Stream index
+
+| Parameter | Description                                                                                                                   |
+| :-------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| Indexes   | Range or comma separated list of stream indexes, based on the stream position in the input. Index of the first stream is '0'. |
+
+## Delivery
+
+### General parameters
+
+| Parameter  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Access URL | Portion of the complete access URL that defines the service. <br />Prefer URI unreserved characters (alphanumerical characters plus (, ), -, \_, .). Declaring a subpath (a/b) is possible but may impact performance.<br />Example: `https://[Server IP or FQDN]/packaging/[Output Access URL]/[Live Packaging Service Access URL]/[index.m3u8 OR manifest OR manifest.mpd]`{ /* Replace when Recommendation will be ok **Recommendation:** {tooltips["Cat_publishing_access-url"].recommendations}*/ } |
+
+**Related information**\
+[HLS or DASH over CMAF output configuration](/beam/packager/hls-dash-over-cmaf-output)\
+[HLS over TS output configuration](/beam/packager/hls-output)

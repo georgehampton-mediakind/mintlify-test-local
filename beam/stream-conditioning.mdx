@@ -1,0 +1,41 @@
+---
+title: SCTE-35 Rewriting
+description: Understand what stream conditioning does and how MK.IO Beam uses it to manage, rewrite, and distribute SCTE-35 signals in a live broadcast workflow.
+sidebarTitle: SCTE-35 Rewriting
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Stream conditioning is the process of managing, normalizing, and distributing the event signals that control content switching in a live broadcast workflow. These signals most commonly relate to advertising, blackout, and content substitution, and they are standardized as SCTE-35 (in-band triggers) and SCTE-224 (schedule-based policies).
+
+MK.IO Beam's SCTE-35 Rewriting service ingests normalized event data using the SCTE-224 standard, maps media points (made up of policy, viewing policy, audience, and other attributes) to scheduled and signal-based SCTE-35 controls, and distributes that control downstream to encoders and TS processors.
+
+<span id="how-mkio-beam-distributes-control-signals" className="mk-legacy-anchor" />
+
+## How MK.IO Beam distributes control signals
+
+Rather than performing content substitution itself, Stream Conditioning acts as the event management and signal distribution layer. It communicates with downstream devices over industry-standard interfaces:
+
+* **CableLabs ESAM (2013):** Sends signal processing notifications to downstream encoders or TS processors, which act on the instructions to insert, replace, or modify content.
+* **SCTE-104/30:** Carries in-band ad insertion signals from Stream Conditioning to downstream encoders.
+* **SCTE-30/30:** Communicates with ad decision servers using the SCTE-30 protocol.
+
+## Variables and filtering
+
+Stream Conditioning uses a variable and expression system to extract values from SCTE-35 and SCTE-224 messages. Variables are referenced in connection and input configurations to filter which events trigger which actions and to map event data to the appropriate downstream target. MK.IO Beam ships with a pre-configured set of variables, and you can create custom collections for your specific workflow.
+
+See [Manage Variables](/beam/stream-conditioning/variables) for details.
+
+## Stream Conditioning and TS Splicer
+
+In a complete ad insertion or blackout workflow, Stream Conditioning and TS Splicer work together. Stream Conditioning handles the event management layer: receiving schedules, processing SCTE-35 triggers, and sending ESAM or SCTE signals downstream. TS Splicer is the downstream component that performs the actual content substitution in the transport stream.
+
+See [TS Splicing](/beam/ts-splicer) for how that component handles the substitution side of the workflow.
+
+## Common use cases
+
+* Centralizing ad schedule management for multiple downstream encoders or TS processors.
+* Rewriting or filtering SCTE-35 signals before they reach downstream equipment.
+* Implementing blackout control across a distribution chain using SCTE-224 schedules.
+
+To begin configuring Stream Conditioning, see [Manage Connections](/beam/stream-conditioning/connections).

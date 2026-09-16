@@ -1,0 +1,42 @@
+---
+title: Troubleshoot Live playback
+description: Resolve inactive sources and unavailable playback by checking source access, event state, playback settings, and the streaming endpoint.
+sidebarTitle: Troubleshoot playback
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use these checks in order when a live event does not receive its source or the player cannot load playback. Start with the source, then confirm the event state, and finally check the playback configuration.
+
+## The source is inactive
+
+**Inactive** means the source is not in use. Check the event assignment before investigating the encoder connection:
+
+1. Go to **Live** > **Sources** and confirm the source exists.
+2. Open the event and confirm the source on **Overview**.
+3. Check the event's state. If the broadcast should be running, use the [event startup steps](/mkio/how-to/live-streaming/live/create-a-live-event#start-and-verify-the-event).
+
+## The event is not receiving the stream
+
+A source can be **Active** without receiving video or audio. Check the connection independently:
+
+1. Open the event and confirm the selected source on **Overview**.
+2. Compare the source address shown there with the encoder configuration. You can also find **Host and port** in **Live** > **Sources**.
+3. Open the source and compare **Port**, **Encryption type**, and **Passphrase** with the encoder.
+4. For an external SRT listener source, confirm **IP resource** is **External** and **Allowed IPs** includes the encoder's public IP address.
+5. Confirm that the encoder is sending, then check for an updating picture and the expected audio using the playback checks below.
+
+## The player cannot load playback
+
+1. Confirm the event shows **Event is running**.
+2. Select **Playback settings** and confirm that the event has the required streaming locator configuration.
+3. Confirm that the streaming endpoint is running. Playback does not work until the streaming endpoint is running.
+4. Review [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content) for the relationship between streaming locators and streaming endpoints.
+
+## The event needs different source settings
+
+Check which setting needs to change before recreating resources. The Media API supports updates to selected source fields, including SRT passphrases, listener allow lists, caller URLs, and HLS credentials. See [Update source settings](/api-guides/how-to/media/content-and-sources#update-a-source) for the supported fields and transport restrictions. Source configuration and the event's source assignment are separate settings.
+
+## Gather information before contacting support
+
+If the checks do not resolve the problem, collect the source name, input mode, selected IP resource, encoder public IP address, event state, source status, and the playback result. This gives your MK.IO administrator or support team the context needed to investigate the connection.

@@ -1,0 +1,47 @@
+---
+title: Streaming Endpoints
+---
+
+# Streaming Endpoints
+
+Streaming Endpoints are the thing that connects your clients to your content. Streaming Endpoints are
+tied to a subscription and must reside in the same location as everything else in the subscription. 
+They do not have a direct relationship to any other API. Instead, ALL Streaming *Locators* are accessible
+via any Streaming Endpoint in a subscription. When you create a Streaming Endpoint, you get a DNS name
+that you can use to access your content. Combined with the *listPaths* API on the Streaming Locators API,
+you can construct a full URL to your content.
+
+## Key Differences with this API
+
+- Automatic CDN integrations are not yet supported
+- Custom hostnames are not yet supported
+- Autoscaling definitions are not yet supported (our implementation will differ significantly)
+- Usage will be metered for both network egress and Streaming Endpoints. If you are migrating from AMS, network egress was previously accounted separately from AMS charges.
+
+## Streaming Endpoints Skus
+
+Streaming Endpoints have two SKUs: `Standard` and `Premium`. Standard SKUs offer 600Mbit/s of bandwidth 
+on shared infrastructure. Premium Skus offer 200Mbit/s guaranteed bandwidth per instance and can scale 
+far beyond 600Mbit/s.
+
+* [List Streaming Endpoints](/api-reference/media-api/streaming-endpoints/list-streaming-endpoints)
+
+* [Get Streaming Endpoint](/api-reference/media-api/streaming-endpoints/get-streaming-endpoint)
+
+* [Create Streaming Endpoint](/api-reference/media-api/streaming-endpoints/create-streaming-endpoint)
+
+* [Update Streaming Endpoint](/api-reference/media-api/streaming-endpoints/update-streaming-endpoint)
+
+* [Delete Streaming Endpoint](/api-reference/media-api/streaming-endpoints/delete-streaming-endpoint)
+
+* [Restart Streaming Endpoint](/api-reference/media-api/streaming-endpoints/restart-streaming-endpoint)
+
+* [Scale Streaming Endpoint](/api-reference/media-api/streaming-endpoints/scale-streaming-endpoint)
+
+* [List Streaming Endpoint SKUs](/api-reference/media-api/streaming-endpoints/list-streaming-endpoint-skus)
+
+* [Start Streaming Endpoint](/api-reference/media-api/streaming-endpoints/start-streaming-endpoint)
+
+* [Get resource state](/api-reference/media-api/streaming-endpoints/get-resource-state)
+
+* [Stop Streaming Endpoint](/api-reference/media-api/streaming-endpoints/stop-streaming-endpoint)

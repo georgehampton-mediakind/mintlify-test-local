@@ -1,0 +1,74 @@
+---
+title: Configuring the SMPTE 2022-6 source input
+robots: noindex, nofollow
+---
+
+SMTPE 2022-6 sources are supported as baseband input. In addition, input redundancy can be enabled that two input streams (Primary/Backup) can be generated from the same SMPTE 2022-6 source when SMPTE 2022-7 redundancy is activated.
+
+<Note>
+  **Note:&#x20;**&#x45;nsure that the multicast IP and port do not conflict with other network services and that your network is correctly configured (IGMP querier).
+</Note>
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.\
+   ![](/images/vos360/caf3cf0a29f37369ba72e85f.png)
+
+2. In the **Input Source Name** field, enter the name of the new source.
+
+3. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+4. Below **Inputs**, configure the **Signal Loss** input by doing one of the following (refer to [Configuring a signal loss slate for a source input](https://confluence360.harmonicinc.com/display/VOS360DOC/.Configuring+a+signal+loss+slate+for+a+source+input+v1.25) for details):
+
+   * Select the desired **Signal lost image**.
+
+   * Click the **Display a black screen** toggle to display a black screen during signal loss.
+
+   * Click the **Display a video slate&#x20;**&#x74;oggle to select the WebM file you have uploaded.
+
+   * Click **Remove** to delete the input if it is not required.
+
+   Note that signal loss is only supported in workflows that include transcoding.
+
+5. Click the **+Input** icon, and then select **Baseband Type&#x20;**&#x61;s SMPTE 2022-6.
+
+6. Configure the following:
+
+   * Rank: This is used if multiple outputs are configured.
+
+   * Enter the multicast source IP address.\
+     **Result**: The **Network** field appears, allowing you to select the subnet from which you expect to receive the multicast source.
+
+   * Enter the multicast source **Port** number.
+
+   * Optionally, add a source-specific multicast IP address in the **SSM** field.
+
+   * Optionally, turn on **SMPTE 2022-7** to generate two streams with the same data using different routes to the destination (use SMPTE 2022-7 redundancy to add a backup input stream).
+
+     <Note>
+       **Note:&#x20;**&#x53;MPTE 2022-7 (“Seamless Protection Switching”) specifies the reconstruction of the original stream in case packets are lost in any of the paths. Switching from one path to the other occurs without impact on the content of the stream.
+     </Note>
+
+     ![](/images/vos360/6d140823261e3c79e149b457.png)
+
+7. Under **Video Stream**, select the **Frame Rate**, **Resolution** and associated **Active Region Source** (AFD) configurations for the source.
+
+8. If the source contains data, such as SCTE-104, click **Data Grooming** to customize downstream processing.
+
+   * **Input Line Settings**: Declare the data type here which is present in the data stream. The supported data types include SCTE-104, SMPTE 2031, OP 47, OP 42, VITC, VPS, WST, and WSS.
+
+9. Optionally, under **Audio**, click **Create** to define the audio tracks, and then click **Save** to exit the **Audio Grooming** dialog.
+
+   * Codec: Choose the audio codec for the track.
+
+   * Delay: Specify the audio delay in milliseconds in order to synchronize the video stream. The valid range is from -500 to 500 ms.
+
+   * Languages: The language of audio in source.
+
+   * Channels: Each line corresponds to a specific set of audio.
+
+   * Group: Choose according to source definitions.
+
+   * Pair: Choose according to source definitions.
+
+   * Type: Choose the audio type according to source destinations.
+
+10. From the **Add source** pane, click **Create** to save the source.

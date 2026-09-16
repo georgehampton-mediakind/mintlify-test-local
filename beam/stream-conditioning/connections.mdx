@@ -1,0 +1,98 @@
+---
+title: Configure connections
+sidebarTitle: Manage Connections
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO Beam implements industry-standard communication interface, namely:
+
+* [CableLabs ESAM communication (ESAM-SCC)](/beam/stream-conditioning/connections#esam-configuration)
+* [SCTE-104/30](/beam/stream-conditioning/connections#scte-10430-configuration)
+* [SCTE-30/30](/beam/stream-conditioning/connections#scte-3030-configuration)
+
+  Above-mentioned interfaces provide a way for MK.IO Beam to control and enforce previously ingested events by interfacing with third-party components such as encoder/transcoder.
+
+## ESAM configuration
+
+To configure ESAM communication to downstream target devices (such as an encoder, a TS processor for instance), proceed as follows:
+
+1. Click the **Connections** tab
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter            | Description                                                                                 |
+   | :------------------- | :------------------------------------------------------------------------------------------ |
+   | Connection type      | Select **ESAM**.                                                                            |
+   | Version              | Select **2013**.                                                                            |
+   | Expect notifications | When enabled, allows Stream Conditioning to get notifications from ESAM devices processing. |
+
+3. In the **Endpoints** section, click the **Add** button to configure the endpoints.
+
+   | Parameter           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+   | :------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | ID                  | Set to **Auto** by default. You can switch to **Manual** and specify and ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+   | Network name        | This field corresponds to the acquisition Point Identity defined by the ESAM standard. The same field value must be configured at the target device level for appropriate communication. It is used to identify the target device on a specific channel.                                                                                                                                                                                                                                                                                                                                                                    |
+   | Zone identity       | Additional field that can be used to represent the location of the stream/channel.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+   | Signal acquisitions | Possible values:<br />- **URL**: URL to which the Signal Processing System endPoint can reach the Signal Acquisition System endPoint (such as encoder, TS processor).<br /> - **Listening path**: The listening path is used by the SAS endPoint to return status notifications to the SPS endPoint. A typical use of this path is when signals are received from multiple acquisition points. It allows identifying which systems issued the response.<br />Default value: listening path = `/`, *Example*: listening path = `/encoder1`<br />**Note:** You can add an additional URL/path by clicking the **Add** button. |
+   | Attributes          | EndPoint attributes can be used for additional filtering in SCTE-224 input translations. It allows applying the translation actions to specific endPoint(s).<br />*Example*: name = **VIRD**, value= **NY**                                                                                                                                                                                                                                                                                                                                                                                                                 |
+
+   ![EndPoint configuration](/_machine-assets/02158c816a0ad118846d678e28500bc36d2aff5dae692743a9d876d34a055329.png)
+
+<Info>
+  Encoders or TS processors that will submit received SCTE-35 trigger to Stream Conditioning must also configure the ESAM endpoint.
+</Info>
+
+<Info>
+  Assuming that the controller managing Stream Conditioning is located at the following IP/port: `192.168.1.10:8080`, with an endPoint configured named `GAMEHD100`, then the ESAM endpoint to configure will be: `http://192.168.1.10:8080/api/esam/streamConditionings/GAMEHD100`.
+</Info>
+
+<span id="scte-10430-configuration" className="mk-legacy-anchor" />
+
+## SCTE-104/30 configuration
+
+To configure SCTE-104/30 communication to downstream target devices (such as an encoder, a TS processor for instance), proceed as follows:
+
+1. Click the **Connections** tab.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter       | Description                  |
+   | :-------------- | :--------------------------- |
+   | Connection type | Select **SCTE 104/SCTE 30**. |
+
+3. Click **Add** to configure the end points.
+
+4. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter     | Description                                                                                                                                                                                                                                                                                                    |
+   | :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | ID            | Set to **Auto** by default. You can switch to **Manual** and specify and ID.                                                                                                                                                                                                                                   |
+   | DPI PID index | Digital Program Insertion PID index (shall be aligned with the one configured on the encoding/transcoding device for instance).                                                                                                                                                                                |
+   | Channel name  | Identifier for the SCTE-30 communication.                                                                                                                                                                                                                                                                      |
+   | Injectors     | - **Address**: IP address of the device implementing SCTE-104/30.<br />- **SCTE-104 port**: communication port used for SCTE-104 communication.<br />- **SCTE-30 port**: communication port used for SCTE-30 communication.<br />**Note:** You can add an additional URL/ports by clicking the **Add** button. |
+   | Attributes    | EndPoint attributes can be used for additional filtering in SCTE-224 input translations. It allows applying the translation actions to specific endPoint(s).<br />*Example*: name = **VIRD**, value= **NY**                                                                                                    |
+
+<span id="scte-3030-configuration" className="mk-legacy-anchor" />
+
+## SCTE-30/30 configuration
+
+To configure SCTE-30/30 communication to downstream target devices (such as an encoder, a TS processor for instance), proceed as follows:
+
+1. Click the **Connections** tab.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter       | Description                 |
+   | :-------------- | :-------------------------- |
+   | Connection type | Select **SCTE 30/SCTE 30**. |
+
+3. Click **Add** to configure the end points.
+
+4. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter    | Description                                                                                                                                                                                                                  |
+   | :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Channel name | Identifier for the SCTE 30 communication.                                                                                                                                                                                    |
+   | Injectors    | - **Address**: IP address of the device implementing SCTE-30.<br />- **SCTE-30 port**: communication port used for SCTE-30 communication.<br />**Note:** You can add an additional URL/ports by clicking the **Add** button. |
+   | Attributes   | EndPoint attributes can be used for additional filtering in SCTE-224 input translations. It allows to apply the translation actions to specific endPoint(s).<br />*Example*: name = **VIRD**, value= **NY**                  |

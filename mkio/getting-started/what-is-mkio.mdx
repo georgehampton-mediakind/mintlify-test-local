@@ -1,67 +1,61 @@
 ---
-title: "What Is MK.IO? Platform Architecture and Workflows"
-sidebarTitle: "What Is MK.IO?"
-description: "Learn how MK.IO's resource model connects live events, VOD transforms, assets, streaming locators, and endpoints into end-to-end video workflows."
+title: What is MK.IO?
+description: Understand how MK.IO processes and delivers live and on-demand video before you start your first workflow.
+sidebarTitle: What is MK.IO?
 ---
 
-MK.IO is a cloud-native media platform that handles every stage of a video workflow — ingest, processing, packaging, DRM protection, and delivery — through a unified SaaS environment. You interact with the platform through the web portal at [app.mk.io](https://app.mk.io) or through the REST API, depending on whether you prefer guided setup or automation.
+<span id="_top" className="mk-legacy-anchor" />
 
-## How MK.IO is organized
+MK.IO is a cloud-native Software as a Service (SaaS) platform for processing, protecting, and delivering live and on-demand video. You can work through guided workflows in the MK.IO portal or automate its resources through the MK.IO APIs.
 
-Your account belongs to an **organization**. An organization contains one or more **projects**, and each project holds all the resources for a single product, environment, or team. Storage accounts, assets, live events, transforms, jobs, streaming locators, and endpoints all live within a project.
+## Choose live or on-demand video
 
-Most teams create at least two projects — one for production and one for staging — so they can test changes without touching live infrastructure.
-
-## The media resource model
-
-MK.IO workflows combine a small set of resource types. The resources you use depend on whether your content is file-based (VOD) or a continuous live stream.
-
-| Resource | What it does |
-| --- | --- |
-| **Storage account** | A connected Amazon S3, Azure Blob, or Google Cloud Storage container that holds media files |
-| **Asset** | A logical reference to a folder of files in connected storage |
-| **Transform** | A reusable processing recipe that defines encoding, thumbnail, or AI outputs |
-| **Job** | A single run of a transform against an input asset, producing an output asset |
-| **Live event** | An ingest endpoint that receives an RTMP or SRT stream and processes it in real time |
-| **Live output** | Writes a live event's stream to an asset and maintains the archive window |
-| **Streaming locator** | Associates an asset with a streaming policy and generates playback URL paths |
-| **Streaming endpoint** | The delivery server that packages content as HLS or DASH and serves viewer requests |
-| **Content key policy** | Defines how MK.IO issues content keys and authorizes DRM-protected playback |
-
-## Live vs VOD workflows
-
-<Tabs>
-  <Tab title="Live streaming">
-    A **live event** receives your encoder's RTMP or SRT stream. When you start the event, MK.IO generates an ingest URL. Your encoder (OBS, FFmpeg, GStreamer, or a hardware encoder) pushes video to that URL.
-
-    A **live output** writes the incoming stream to an asset in your connected storage and maintains a rolling archive window. While the event is running, viewers can watch the live feed. After you stop the event, the full recording is available in the output asset for VOD playback.
-
-    To make the stream watchable, you need a **streaming locator** attached to the output asset and a running **streaming endpoint**. The endpoint generates HLS and DASH playback URLs.
-  </Tab>
-  <Tab title="VOD processing">
-    A VOD workflow starts with an **asset** — either a file you upload or one already present in connected storage. You apply a **transform** to that asset by creating a **job**. The job processes the input and writes the result to a new output asset.
-
-    Once the job finishes, you attach a **streaming locator** to the output asset and pair it with a running **streaming endpoint** to generate playback URLs. Viewers can then stream the content as HLS or DASH.
-  </Tab>
-</Tabs>
-
-## Portal vs API
-
-The MK.IO portal provides a guided interface for every workflow. Use it to create your first live event, explore transforms, or configure content protection settings. It is the fastest way to get results without writing code.
-
-The MK.IO REST API exposes the same resources programmatically. Use it when you need to automate workflows — for example, creating a job for every file that lands in your storage bucket, or starting and stopping live events from your own application. All API requests use bearer token authentication at `https://app.mk.io`.
+MK.IO supports two main media workflows. The right starting point depends on whether your video is arriving continuously or already exists as a file.
 
 <CardGroup cols={2}>
-  <Card title="Set Up Your Account" icon="user-plus" href="/mkio/getting-started/account-setup">
-    Create your organization, project, and API token.
+  <Card title="Live video" href="/mkio/getting-started/live-stream-in-five-minutes" icon="tower-broadcast">
+    Send a continuous stream from an encoder to MK.IO, process or pass through the signal, and publish it for playback.
   </Card>
-  <Card title="Connect Cloud Storage" icon="database" href="/mkio/getting-started/connect-cloud-storage">
-    Connect Amazon S3 or Azure Blob Storage before adding assets.
-  </Card>
-  <Card title="Live Quickstart" icon="broadcast-tower" href="/mkio/getting-started/live-stream-quickstart">
-    Start your first live stream in five minutes.
-  </Card>
-  <Card title="VOD Quickstart" icon="film" href="/mkio/getting-started/vod-quickstart">
-    Upload, transcode, and publish your first video.
+
+  <Card title="Video on Demand" href="/mkio/getting-started/video-on-demand-vod-workflows" icon="film">
+    Add an existing video file, process it when needed, and publish it so viewers can play it on demand.
   </Card>
 </CardGroup>
+
+**Video on Demand (VOD)** describes video that viewers can start when they choose, rather than a stream tied to a live source. Live recordings can also become VOD assets after an event ends.
+
+**Live workflows** include scheduled events, interviews, continuous channels, and prerecorded content sent as a live source. When MK.IO creates **adaptive bitrate (ABR)** output, it produces several quality levels so a compatible player can select the rendition that suits the viewer's connection and device.
+
+## Understand the resource model
+
+MK.IO combines a small set of resources into complete media workflows:
+
+| Resource               | Role in a workflow                                                                                                                          |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Project**            | Contains the storage, media, processing, and delivery resources for a workload.                                                             |
+| **Storage account**    | Connects MK.IO to the cloud storage that holds source files, outputs, and live recordings.                                                  |
+| **Asset**              | References a set of files in connected cloud storage.                                                                                       |
+| **Transform**          | Defines a reusable processing task for file-based content.                                                                                  |
+| **Job**                | Applies a transform to an input and writes the result to an output asset.                                                                   |
+| **Live event**         | Receives a continuous input for passthrough or encoding.                                                                                    |
+| **Streaming locator**  | Associates an asset with a streaming policy and provides the path used for playback.                                                        |
+| **Streaming endpoint** | Packages and delivers content through playback protocols such as HTTP Live Streaming (HLS) and Dynamic Adaptive Streaming over HTTP (DASH). |
+| **Content key policy** | Defines how MK.IO issues content keys and authorizes protected playback.                                                                    |
+
+You do not need every resource for every task. For example, a live workflow uses a live event instead of a transform and job while the stream is running. The [media resource model](/mkio/understanding/core-concepts) explains these relationships in more detail.
+
+## Deliver video to viewers
+
+A streaming endpoint acts as the origin service for your content. A streaming locator links an asset to that endpoint and generates its playback paths.
+
+For wider delivery, a **Content Delivery Network (CDN)** uses a distributed network of servers to cache content closer to viewers. MK.IO supports integrated CDN endpoints and external CDN configurations. [Streaming endpoints and playback](/mkio/how-to/content-delivery-publishing) explains the available publishing workflows.
+
+You can also protect playback with encryption and Digital Rights Management (DRM). [Content protection](/mkio/understanding/core-concepts/content-protection) explains streaming policies, content key policies, and DRM options.
+
+## Choose where to begin
+
+* [Live stream in five minutes](/mkio/getting-started/live-stream-in-five-minutes) for a first live workflow with a prepared source.
+* [Publish your first VOD asset](/mkio/getting-started/video-on-demand-vod-workflows) for a file-based workflow.
+* [Set up your account](/mkio/getting-started/account-setup-and-first-steps) if you do not yet have a project.
+* [Navigate the MK.IO portal](/mkio/getting-started/platform-navigation-and-key-features) to find product areas and organization settings.
+* [Choose an MK.IO API](/api-guides/getting-started/which-api) when you are ready to automate a workflow.

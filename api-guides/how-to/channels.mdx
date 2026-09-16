@@ -1,0 +1,75 @@
+---
+title: Build with the Channels API
+description: Use the Channels API to create, control, and monitor channels directly on an MK.IO Beam device running version 1.12.0 or higher.
+sidebarTitle: Channels API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Channels API is the local API of an MK.IO Beam device. It presents everything the device is doing as a number of *channels*, where one channel can cover the input, the processing, and the output of a single service. It is the API behind the Beam Essentials UI, and it runs on the device itself rather than in the MK.IO cloud.
+
+<Warning>
+  The Channels API requires an MK.IO Beam device running version `1.12.0` or higher. It is delivered as part of the Beam Essentials UI release, so devices on earlier versions do not serve these endpoints.
+</Warning>
+
+## API overview
+
+| Detail    | Value                                                 |
+| :-------- | :---------------------------------------------------- |
+| Base path | `<DEVICE_ADDRESS>/api/`                               |
+| Scope     | A single Beam device                                  |
+| Access    | Network access to the device                          |
+| Reference | [Channels API reference](/api-reference/channels-api) |
+
+The base URL is the device itself, not `api.mk.io`, and requests go to it over HTTP. The other MK.IO APIs are project-scoped and bearer authenticated against the cloud, so if you already integrate with the Media or Fleets API, treat this as a separate integration. See [Connect to a Beam device](/api-guides/how-to/channels/connect-to-a-device) for how to build the address.
+
+## How the main resources connect
+
+The API exposes a handful of resource types, and channels are the centre of all of them:
+
+1. A **channel** holds a `spec` (the configuration you send) and a `status` (what the device reports back).
+2. **Interfaces** are the physical and network ports available on the device. You read them to fill in the `interface` and `url` fields of a channel.
+3. **Channel alarms** are the active faults raised against a named channel.
+4. **Metrics** and **system** information describe the device rather than any one channel.
+
+A typical integration reads the interfaces once, creates channels against them, then polls channel status and alarms to drive a dashboard or an alerting rule.
+
+## Common workflow patterns
+
+<CardGroup cols={1}>
+  <Card title="Automate a Beam device" icon="server">
+    1. [Connect and confirm the version](/api-guides/how-to/channels/connect-to-a-device)
+    2. [Read the available interfaces](/api-guides/how-to/channels/manage-channels)
+    3. [Create and start a channel](/api-guides/how-to/channels/manage-channels)
+    4. [Poll status, health, and alarms](/api-guides/how-to/channels/monitor-channels)
+  </Card>
+</CardGroup>
+
+## Guides
+
+<CardGroup cols={2}>
+  <Card title="How Beam channels work" href="/api-guides/how-to/channels/how-channels-work" icon="lightbulb">
+    Channel types, the split between spec and status, and how configuration is applied asynchronously.
+  </Card>
+
+  <Card title="Connect to a Beam device" href="/api-guides/how-to/channels/connect-to-a-device" icon="plug">
+    Build the base URL, use the Swagger page served by the device, and understand the current authentication model.
+  </Card>
+
+  <Card title="Create and manage channels" href="/api-guides/how-to/channels/manage-channels" icon="sliders">
+    A complete worked request, the input and output types each channel type accepts, and how to start, rename, and delete.
+  </Card>
+
+  <Card title="Monitor channels and devices" href="/api-guides/how-to/channels/monitor-channels" icon="chart-line">
+    Filter the channel list, read health and alarms, fetch thumbnails, and query device metrics.
+  </Card>
+
+  <Card title="Import and export channels" href="/api-guides/how-to/channels/import-and-export" icon="box-archive">
+    Move a channel configuration between devices, or restore one after a rebuild.
+  </Card>
+</CardGroup>
+
+## Where to go deeper
+
+* [Beam Essentials UI](/beam/essentials) covers the same channels through the device interface, including the creation wizard.
+* [Channels API reference](/api-reference/channels-api) is the complete field-level truth for every schema referenced in these guides.

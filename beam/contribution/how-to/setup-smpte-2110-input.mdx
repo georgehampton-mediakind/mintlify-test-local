@@ -1,0 +1,143 @@
+---
+title: Configure SMPTE ST 2110 input
+sidebarTitle: SMPT2110 Input
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Limitations and Considerations for ST2110 and PTP
+
+The following limitations apply to the current version:
+
+* ST 2110 streams are carried over RTP. RTP header extension is not supported and should be turned off on the source, as described here: [https://datatracker.ietf.org/doc/html/rfc3550#section-5.3.1](https://datatracker.ietf.org/doc/html/rfc3550#section-5.3.1).
+
+* PTP domain of value 0 is the only domain supported. A workaround is to manually set the value in a file.
+
+* ST 2110 support is limited to HD resolutions.
+
+* **SMPTE ST 2110**
+  * SMPTE ST 2110-20 uncompressed video up to UHD resolution
+  * SMPTE ST 2110-30/31: uncompressed audio
+  * SMPTE ST 2110-40: data (VITC/Time code, AFD/BAR, Closed captioning, OP-47 Teletext, SMPTE 2031 Teletext)
+  * All SMPTE ST 2110 essences can be input as ST 2022-7
+  * NMOS IS-04 and NMOS IS-05 support
+
+<span id="configure-sdp-files-on-mkio-beam" className="mk-legacy-anchor" />
+
+## Configure SDP files on MK.IO Beam
+
+ST 2110 can be configured using SDP files on the **Input** tab of the Live Encoder component (see [Configure an SMPTE ST 2110 input](/beam/contribution/configure-feed-components/live-encoder#smpte-st-2110-input)).
+
+The SDP files can be entered either as:
+
+* A URL where the SDP files can be retrieved from.
+* A path to the location of the file stored on the server:
+  * On the host, the SDP file(s) need to be in the `/var/appliance/assets` directory.
+  * When configuring the Encode service, use this directory to specify the SDP file location.
+
+SDP files can be transferred to the server either by SSH or by uploading via the UI.
+
+If the Asset Management feature is enabled, follow these steps:
+
+1. Navigate to the **Asset Management** > **Assets** page.
+
+2. Click **Add** to add a new asset.
+
+3. Select the SDP file, then check the **Protect the Asset when it is uploaded** checkbox.
+
+4. Click **Start Upload** to upload it.
+
+If the Asset Management feature is not enabled, follow these steps:
+
+1. Copy the files to the server via SCP. For example, using Mobaxterm:
+
+   ```shell copy
+   scp /cygdrive/c/sdp-2110-20.sdp mfeng@192.168.1.1:/tmp
+   ```
+
+2. Connect to the unit via SSH and copy the files to `/var/appliance/assets`:
+
+   ```shell copy
+   sudo mv /tmp/sdp-2110-20.sdp /var/appliance/assets
+   ```
+
+After copying over the SDP file, configure it on the Live Encoding service user interface using the following path: `/var/appliance/assets/sdp-2110-20.sdp`
+
+## Configure PTP for ST 2110
+
+<Info>
+  PTP is required for ST 2110 operation.
+</Info>
+
+### Set the PTP interface and domain
+
+PTP interface configuration is under the **System Settings** page.
+
+* Navigate to the **Servers** view.
+* Click the **Details** <img src="/icons/ui/view.svg" alt="View" className="mk-ui-icon" width="16" height="16" /> button to display the server information.
+* Go to the **System Settings** tab.
+* Under **Time sources**, select the **PTP** tab.
+* Set **Interface** to the network interface which will connect to the PTP Grand Master.
+* Set **Domain number** to the required PTP domain.
+
+If the system time source is not set to PTP, click the **Make active** button to set this.
+
+Confirm all changes by clicking on **Confirm,** then click the **Save** button at the bottom of the page to save the changes.
+
+## Checking PTP operation
+
+### How to check that PTP services are running
+
+To check the p4p4l service:
+
+```shell copy
+systemctl status ptp4l.service
+```
+
+The output from this command should show that the service is loaded and active, for example:
+
+```shell
+ptp4l.service - Precision Time Protocol (PTP) service
+Loaded: loaded (/usr/lib/systemd/system/ptp4l.service; enabled; 
+vendor preset: disabled)
+Active: active (running) since
+```
+
+To check the phc2sys service:
+
+```shell copy
+systemctl status phc2sys.service
+```
+
+The output from this command should show that the service is loaded and active, for example:
+
+```shell
+phc2sys.service - Synchronize system clock or PTP hardware clock (PHC) 
+Loaded: loaded (/usr/lib/systemd/system/phc2sys.service; enabled; 
+vendor preset: disabled) 
+Active: active (running) since
+```
+
+### How to check the PTP Grand Master
+
+Run the pmc tool to check the status of the PTP grand master.
+In the example below, PTP domain 0 is used (`-d 0`).
+Modify the “`-d`” option to specify a different PTP domain.
+
+```shell copy
+sudo pmc -u -b 0 -d 0 'GET TIME\_STATUS\_NP'
+```
+
+The text `gmPresent true` confirms that the grand master is detected, for example:
+
+```shell
+    sending: GET TIME_STATUS_NP
+      043f72.fffe.ff60cb-0 seq 0 RESPONSE MANAGEMENT TIME_STATUS_NP
+             master_offset 13 
+             ingress_time 1620380188201784144 
+             cumulativeScaledRateOffset +0.000000000 
+             scaledLastGmPhaseChange 0 
+             gmTimeBaseIndicator 0 lastGmPhaseChange 0x0000'0000000000000000.0000 
+    gmPresent true 
+             gmIdentity b8599f.fffe.60ffc8
+```

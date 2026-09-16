@@ -1,0 +1,65 @@
+---
+title: SCTE-104/IP out-of-band metadata
+sidebarTitle: Configure SCTE-104/IP out-of-band metadata
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+{ /* TODO: update links (especially ./parameters/) once MD files are created */}
+
+Live Encoder supports out-of-band conditioning via SCTE-104/IP, on the same principle as ESAM.
+
+* Live Encoder can receive conditioning triggers from an external server, using SCTE-104 over IP messages.
+* Once received, SCTE-104 messages are decoded, sent to the targeted channel (based on DPI PID index) and converted in SCTE-35 in order to enable stream conditioning actions.
+
+![EL SCTE104 adsmart](/_machine-assets/8ce6190febd26b16683b7cbc115ab4115a705ab67b7a2b4a97ff488c27b6f4a3.png)
+*SCTE-104 out-of-band IP conditioning*
+
+<span id="configure-scte-104ip-out-of-band-metadata" className="mk-legacy-anchor" />
+
+## Configure SCTE-104/IP out-of-band metadata
+
+Before you start, ensure that [you have added and configured the SCTE-104/IP out-of-band metadata in the input stream](/beam/live-encoder/configure/input/outofband-metadata#configure-scte-104ip-out-of-band-metadata-input-stream).
+
+Configuring SCTE-104/IP out-of-band metadata requires multiple steps:
+
+<Steps>
+  <Step title="Configure the metadata encoding">
+    <span id="configure-the-metadata-encoding" className="mk-legacy-anchor" />
+
+    1. From the **Encoding** tab, go to the **Metadata encoding** section.
+
+    2. For each SCTE-104/IP metadata, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> in the **Actions** column then set the **Codec** to **Conditioning**.
+
+       ![EL encoding metadata cfig conditioning](/_machine-assets/e23521814e3bfbb8a15fd0c1a568c2ac7652dffd824ecfd1dd7f1a8a73aef89f.png)
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Configure the video encoding">
+    <span id="configure-the-video-encoding" className="mk-legacy-anchor" />
+
+    1. Go to the **Video encoding** section.
+
+    2. For each video stream, select the associated [**Stream Conditioning**](/beam/live-encoder/configure/encoding).
+
+       ![EL encoding video adsmart](/_machine-assets/c6e6dd2be7ebc47d445164a90df711c2707853a1d72340e41421088d16cc58e5.png)
+       *Example of video configuration*
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Add the SCTE-35 conditioned stream related to the SCTE-104/IP to the output">
+    <span id="add-the-scte-35-conditioned-stream-related-to-the-scte-104ip-to-the-output" className="mk-legacy-anchor" />
+
+    1. Go to the **Output** tab.
+
+    2. Go to the **Output streams** section, then click either the **Add** button (if no stream has been selected) or <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> in the **Actions** column.
+
+    3. For each video stream, tick the associated [**Stream Conditioning**](/beam/live-encoder/configure/encoding).
+
+       ![EL output metadata conditioning](/_machine-assets/2b8dd29db65b2d29df727e7963ff9d9e209c4d0300bc8d76e921252ae2960a67.png)
+
+    4. Click **Ok** to validate. You should see the selected streams in the list of output streams.
+  </Step>
+</Steps>

@@ -1,0 +1,148 @@
+---
+title: Monitor with operational metrics
+description: Enable operational metrics and scrape MK.IO service data with a Prometheus-compatible monitoring system.
+sidebarTitle: Operational metrics
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Enable operational metrics when you need to monitor live events, streaming endpoints, and completed on-demand encoding jobs.
+
+The metrics you can scrape from your MK.IO can be used to monitor workflow services, including:
+
+* Live events (input & output bitrate monitoring)
+* Streaming endpoints (error rate, bitrate & latency)
+* On-demand encode jobs (count of successful & unsuccessful completed jobs)
+
+Metrics are enabled per subscription. Once enabled, you will have access to metrics for all services within your subscription.
+
+<Note>
+  Metrics publishing is a chargeable service and is not enabled by default. Check [MK.IO pricing](https://mediakind.com/mkio/pricing/) for current rates.
+</Note>
+
+<span id="enable-metrics-on-your-mkio-subscription" className="mk-legacy-anchor" />
+
+## Enable metrics on your MK.IO subscription
+
+To enable metrics on your MK.IO subscription:
+
+1. Log in to [MK.IO](https://app.mk.io) and select a subscription.
+
+2. From the left-hand side menu, navigate to **Usage and Metrics**.
+
+3. Enable the metrics using the switch at the top right of the page.
+
+Once metrics are activated, MK.IO will provide you with a **URL**, a **Username** and a **Password**. This information can be used by your monitoring infrastructure to scrape the metrics from MK.IO.
+
+<Note>
+  You can also enable metrics through the [Management API](/api-reference/management-api).
+</Note>
+
+## Scrape metrics into Grafana Cloud
+
+Once metrics are enabled in MK.IO, you can obtain a real-time stream of metrics by scraping the “federate” endpoint returned in the enable API call. Metrics are updated every 30s.
+
+To scrape metrics into your Grafana Cloud account:
+
+1. Log in to Grafana Cloud. Create an account if you do not already have one.
+2. From the left-hand menu, go to **Connections** and click **Add new connection**.
+3. In the search bar, type **Metrics Endpoint**, then open the **Metrics Endpoint** integration.
+4. Click **Add new scrape job**.
+
+### Configure the scrape job
+
+Get the details below from the MK.IO portal and enter them into Grafana.
+
+1. **Name**: Enter a name for your scrape job.
+2. **Scrape Job URL**: Use the URL provided by MK.IO (the federate endpoint), for example `https://<URL provided by MK.IO>`.
+3. **Basic authentication**: Enter the **Username** and **Password** provided by MK.IO.
+4. **Scrape interval**: Set the interval to **30s or 1 minute**. Use 30s if you need tighter real-time visibility; use 1 minute to reduce cost and data volume.
+5. **Test Connection** to verify the endpoint is reachable.
+6. Click **Save Scrape Job**.
+
+### View metrics
+
+1. Import the [MK.IO dashboard](https://grafana.com/grafana/dashboards/21657-mk-io-metrics-monitor/) into your Grafana Cloud account, or
+2. Open **Explore** and search for metrics starting with `mk\_`.
+
+For a full list of MK.IO services and supported metrics, see the **Metrics and labels** section below.
+
+## Metrics and labels
+
+Each service in MK.IO provides different sets of metrics and labels.
+
+The "Labels" column shows labels specific to each metric. Additionally, there are labels that are common to all customer metrics:  **region**, **project\_name**, **project\_id**.
+
+<br />
+
+<Tabs>
+  <Tab title="Subscription">
+    Services exposing: Subscription, Subscription quotas.
+
+    | metric                                        | Description                                                 | Type  | Labels |
+    | :-------------------------------------------- | :---------------------------------------------------------- | :---- | :----- |
+    | mk\_up                                        | Always present and equal to 1 when metrics are enabled      | Gauge |        |
+    | mkio\_api\_assetfilters\_total                | Total number of Asset Filters in the subscription           | Gauge |        |
+    | mkio\_api\_assets\_total                      | Total number of Assets in the subscription                  | Gauge |        |
+    | mkio\_api\_contentkeypolicies\_total          | Total number of Content Key Policies in the subscription    | Gauge |        |
+    | mkio\_api\_devices\_total                     | Total number of Devices in the subscription                 | Gauge |        |
+    | mkio\_api\_filters\_total                     | Total number of Filters in the subscription                 | Gauge |        |
+    | mkio\_api\_jobs\_total                        | Total number of Jobs in the subscription                    | Gauge |        |
+    | mkio\_api\_jobs\_running\_total               | Total number of Jobs currently running                      | Gauge |        |
+    | mkio\_api\_liveeventoutputs\_total            | Total number of Live Event Outputs in the subscription      | Gauge |        |
+    | mkio\_api\_liveevents\_total                  | Total number of Live Events in the subscription             | Gauge |        |
+    | mkio\_api\_liveevents\_running\_total         | Total number of Live Events currently running               | Gauge |        |
+    | mkio\_api\_liveevents\_stopped\_total         | Total number of Live Events currently stopped               | Gauge |        |
+    | mkio\_api\_remoteconnections\_total           | Total number of Remote Connections in the subscription      | Gauge |        |
+    | mkio\_api\_storageaccounts\_total             | Total number of Storage Accounts linked to the subscription | Gauge |        |
+    | mkio\_api\_streamingendpoints\_total          | Total number of Streaming Endpoints in the subscription     | Gauge |        |
+    | mkio\_api\_streamingendpoints\_running\_total | Total number of Streaming Endpoints currently running       | Gauge |        |
+    | mkio\_api\_streamingendpoints\_stopped\_total | Total number of Streaming Endpoints currently stopped       | Gauge |        |
+    | mkio\_api\_streamingendpoints\_unit\_total    | Total number of Streaming Endpoint Units allocated          | Gauge |        |
+    | mkio\_api\_streaminglocators\_total           | Total number of Streaming Locators in the subscription      | Gauge |        |
+    | mkio\_api\_streamingpolicies\_total           | Total number of Streaming Policies in the subscription      | Gauge |        |
+    | mkio\_api\_transforms\_total                  | Total number of Transforms in the subscription              | Gauge |        |
+    | mkio\_api\_tunnels\_total                     | Total number of Tunnels in the subscription                 | Gauge |        |
+  </Tab>
+
+  <Tab title="Streaming endpoint">
+    Services exposing: StreamingEndpoint.
+
+    | metric                          | Description                                                           | Type           | Labels                                                                                           |
+    | :------------------------------ | :-------------------------------------------------------------------- | :------------- | :----------------------------------------------------------------------------------------------- |
+    | mk\_jitp\_up                    | Equal to 1 if a streaming endpoint is started                         | Gauge          | resource\_name, endpoint\_type, cdn\_enabled                                                     |
+    | mk\_jitp\_bitrate               | Current bitrate (bits/s). Also usable to calculate total bytes egress | Gauge          | sc\_status, content\_type, resource\_name, (live only: streaming\_locator\_id, availability)     |
+    | mk\_jitp\_request\_rate         | Current request rate (reqs/s)                                         | Gauge          | sc\_status, content\_type, resource\_name, (live only: streaming\_locator\_id, availability)     |
+    | mk\_jitp\_latency\_bucket\_rate | Histogram providing response times for requests                       | Histogram rate | sc\_status, content\_type, resource\_name, le, (live only: streaming\_locator\_id, availability) |
+    | mk\_cdn\_bytes\_total           | Bytes emitted from CDN                                                | Counter        | resource\_name                                                                                   |
+  </Tab>
+
+  <Tab title="Live events">
+    Services exposing: LiveEventPassThru, LiveEventEncode.
+
+    | metric                                            | Description                                                                | Type    | Labels                                                  |
+    | :------------------------------------------------ | :------------------------------------------------------------------------- | :------ | :------------------------------------------------------ |
+    | mk\_live\_up                                      | Equal to 1 if a live event is running                                      | Gauge   | resource\_name                                          |
+    | mk\_live\_input\_bitrate\_bps                     | Bitrate arriving via RTMP or SRT                                           | Gauge   | resource\_name, type, stream, mode                      |
+    | mk\_live\_output\_storage\_bitrate\_bps           | Bitrate written to storage; includes storage write response code           | Gauge   | resource\_name, sc\_status                              |
+    | mk\_live\_input\_etr290\_bitrate\_bps             | Input MPEG-2 TS bitrate (informational)                                    | Gauge   | resource\_id, resource\_name                            |
+    | mk\_live\_input\_etr290\_ts\_sync\_loss\_total    | Total TS sync loss events detected (ETR-290 Priority 1)                    | Counter | resource\_id, resource\_name                            |
+    | mk\_live\_input\_etr290\_sync\_byte\_error\_total | Total sync byte errors detected (ETR-290 Priority 1)                       | Counter | resource\_id, resource\_name                            |
+    | mk\_live\_input\_etr290\_pat\_error\_total        | Total PAT errors detected (ETR-290 Priority 1)                             | Counter | resource\_id, resource\_name                            |
+    | mk\_live\_input\_etr290\_cc\_error\_total         | Total continuity counter (CC) errors detected per PID (ETR-290 Priority 2) | Counter | resource\_id, resource\_name, stream\_type, stream\_pid |
+    | mk\_live\_input\_etr290\_pmt\_error\_total        | Total PMT errors detected (ETR-290 Priority 2)                             | Counter | resource\_id, resource\_name                            |
+    | mk\_live\_input\_etr290\_pid\_error\_total        | Total invalid/missing PID errors detected per PID (ETR-290 Priority 2)     | Counter | resource\_id, resource\_name, stream\_type, stream\_pid |
+    | mk\_live\_input\_etr290\_transport\_error\_total  | Total MPEG-2 TS transport errors detected (ETR-290 Priority 2)             | Counter | resource\_id, resource\_name                            |
+    | mk\_live\_input\_max\_pcr\_jitter\_ppm            | Maximum PCR jitter (ppm) observed on MPEG-2 TS input (informational)       | Gauge   | resource\_id, resource\_name                            |
+  </Tab>
+
+  <Tab title="Jobs">
+    Services exposing: Jobs (VideoProcessing, etc.).
+
+    | metric                     | Description                                                                                            | Type    | Labels               |
+    | :------------------------- | :----------------------------------------------------------------------------------------------------- | :------ | :------------------- |
+    | mk\_jobs\_completed\_total | Number of completed jobs, includes error code if success == false; for VideoProcessing “type=encoding” | Counter | success, type, error |
+  </Tab>
+</Tabs>
+
+<br />

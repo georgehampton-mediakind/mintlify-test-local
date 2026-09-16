@@ -1,0 +1,159 @@
+---
+title: Attaching audio sidecar files to VOD assets
+robots: noindex, nofollow
+---
+
+You can attach audio sidecar files to video assets using REST API, which allows subtitles to be available in a VOD OTT output.
+
+The following types of audio sidecar files are supported:
+
+* MP4a
+
+* TS
+
+* FLAC
+
+* WAV
+
+* MP3
+
+<Note>
+  **Note:** The duration of the audio sidecar must be the same as the asset.
+</Note>
+
+## Attach a local subtitle sidecar file using REST API
+
+![vos\_sidecar\_api.png](/images/vos360/bc4fb5586293d823debfa8ae.png)
+
+The REST API allows you to configure the following:
+
+* **sidecarAudio:** Use this to locate and load the audio file.\
+  **Note:** The file size is limited to 40 MB.
+
+* **id:** This is the ID of the asset to associate with the sidecar file.
+
+* **audioLanguage:** Use this to set the language.\
+  **Note:** The language indicated must be a language defined in the configuration settings.\
+  **Note:** The profiles used to transcode the asset must be defined in a transcoding configuration for this language.
+
+* **audioType:** Use this to set the type of audio. Choose from the following:
+
+  * Undefined
+
+  * Clean effects
+
+  * Hearing impaired
+
+  * Visual impaired commentary
+
+* **streamName:** Use this to determine the stream name that will be signaled in the HLS or DASH manifests.
+
+* **audioTrim:** Use this to trim the value in ms and remove priming examples from the sidecar file.
+
+## Attach a remote audio sidecar file using REST API
+
+![vos\_remote\_sidecar\_api.png](/images/vos360/40f09218f5849465c67f7eca.png)
+
+The REST API allows you to configure the following:
+
+* **fileServerAudio:** Use this to enter the path of the audio file.
+
+* **id:** This is the ID of the asset to associate with the sidecar file.
+
+* **audioType:** Use this to set the type of audio. Choose from the following:
+
+  * Undefined
+
+  * Clean effects
+
+  * Hearing impaired
+
+  * Visual impaired commentary
+
+## Removing a subtitle
+
+Do the following to remove a subtitle:
+
+1. Use the following call to get the audio sidecar ID:
+
+   ```text
+   GET/asset-acquisition/v1/asset/{id}/audio
+   ```
+
+   Example:
+
+   ```text
+   [
+     {
+       "audioType": "UNDEFINED",
+       "filePath": "test.wav",
+       "id": "9724a490-14e6-413f-a5d8-774ce510e99e",
+       "lang": "spa",
+       "offsetMs": 0,
+       "originalFileName": "test.wav",
+       "streamName": "audio1"
+     }
+   ```
+
+2. Use the following call to delete it:
+
+   ```text
+   DELETE/asset-acquisition/v1/asset/{id}
+   ```
+
+   ![vos\_sidecar\_delete\_api.png](/images/vos360/04a4dd41adae0aa9dee280a0.png)
+
+## OTT output (POTF only)
+
+Audio sidecar files attached to an asset are only included in the OTT output after re-indexing (if the asset is already in the library) using the following REST API:
+
+```text
+/asset-acquisition/v1/asset/{id}/action
+```
+
+<Note>
+  **Notes:**
+
+  * All the existing outputs for this asset and the list of audio sidecar files associated to the asset are updated.
+
+  * On re-indexing, the headers eTag and “Last modified” in responses to a request for playlist and segments are updated.
+</Note>
+
+### HLS
+
+Audio sidecar files can be delivered on the HLS output. The destination profile must be configured with “Late binding audio” enabled.
+
+Audio streams are signaled like other audios embedded in the asset.
+
+```text
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio1",NAME="SPA",DEFAULT=NO,AUTOSELECT=YES,LANGUAGE="SPA",CHARACTERISTICS="public.accessibility.enhances-speech-intelligibility",URI="Stream(09)/index.m3u8"
+```
+
+### DASH
+
+Audio sidecar files can be delivered on the DASH output.
+
+Audio streams are signaled like other audios embedded in the asset.
+
+```text
+<AdaptationSet mimeType="audio/mp4" startWithSAP="1" lang="spa" segmentAlignment="true">
+    <Accessibility schemeIdUri="urn:tva:metadata:cs:AudioPurposeCS:2007" value="2" />
+    <SegmentTemplate timescale="10000000" presentationTimeOffset="1280000" media="$RepresentationID$/Segment-$Time$.m4a" initialization="$RepresentationID$/init.m4i">
+...
+            </SegmentTemplate>
+            <Representation audioSamplingRate="48000" codecs="mp4a.40.5" id="stream_8" bandwidth="224000" />
+```
+
+### Limitations
+
+* Only one audio track per sidecar file is supported.
+
+* FPEV2 is required.
+
+* About re-indexing:
+
+  * If UOE cache is enabled, any re-indexing action is unclear. Requests to OTT output continue to return the same playlists as it was before re-indexing until expiration of the cache.
+
+  * The URLs for the audio segments are not updated after re-indexing. You need to clear the cache after re-indexing
+
+* No new VOD outputs transcoding supported after sidecar audio been added and indexed

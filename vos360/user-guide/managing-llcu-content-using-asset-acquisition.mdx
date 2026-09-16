@@ -1,0 +1,28 @@
+---
+title: Managing LLCU content using Asset Acquisition
+robots: noindex, nofollow
+---
+
+You can create, update, list and delete long lasting catch-up (LLCU) assets (i.e. nPVR / Live2VOD assets) using the "Asset Acquisition" API workflow. The LLCU created will be displayed in the Asset Acquisition library UI.
+
+Note the following definitions:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Long-lasting catch-up content (LLCU)</p></td><td colSpan="1" rowSpan="1"><p>LLCU allows you to extract content from a live rolling buffer, creating a permanent VOD asset that can be played back at any time.</p><p>LLCU assets were previously managed using the "OriginEngine AssetManagement" XML or JSON APIs, and they can now be managed using the Asset Acquisition app (API and UI).</p><p>Like all VOD assets, LLCU assets can have their own packaging profiles and encryption settings totally distinct from the channels they were recorded on.</p></td></tr></tbody>
+  </table>
+</div>
+
+1. Navigate to the **Public API** app.
+
+2. From **Asset Acquisition**, you can use the following API requests for LLCU assets:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>Create LLCU</p></td><td colSpan="1" rowSpan="1"><p>Click <em><strong>POST /asset-acquisition/v1/asset/llcu </strong></em></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Update LLCU </p></td><td colSpan="1" rowSpan="1"><p>Click <em><strong>PUT /asset-acquisition/v1/asset</strong></em></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>List LLCU</p></td><td colSpan="1" rowSpan="1"><ul><li><p><span>Click </span><strong><span>{"GET /asset-acquisition/v1/asset/{id}"}</span></strong><span> - to find LLCU asset by ID</span></p></li><li><p><span>Click </span><strong><span>GET /asset-acquisition/v1/assets</span></strong><span> (with labels filtering "LLCU") - to get all LLCU assets in Asset Acquisition</span></p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Delete LLCU</p></td><td colSpan="1" rowSpan="1"><p>Click <strong>{"DELETE /asset-acquisition/v1/asset/{id}"}</strong></p></td></tr></tbody>
+     </table>
+   </div>

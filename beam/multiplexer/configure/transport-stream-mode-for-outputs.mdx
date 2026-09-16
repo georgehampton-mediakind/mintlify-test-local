@@ -1,0 +1,123 @@
+---
+title: Transport Stream Mode For Outputs
+sidebarTitle: Transport Stream Mode For Outputs
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The transport stream (TS) mode selects whether the output is constant bitrate (CBR) or variable bitrate (VBR).  It is
+controlled using advanced settings described below.
+
+<Info>
+  An advanced settings property will be placed in the **Properties** panel when set to a non-default value, and placed
+  in the **Advanced Settings** drop-down panel when set to its default value.  The settings are described in the
+  [Stream Processing tab](/beam/multiplexer/parameters/stream-processing) of the Multiplexer Parameters.
+</Info>
+
+## Transport stream mode for ASI outputs
+
+The TS mode for ASI outputs is always CBR and cannot be changed.
+
+## Configuring the transport stream mode for IP outputs
+
+<Info>
+  {/* Beam version 1.12 uses Multiplexer version 23.1. */}
+
+  The TS mode for IP outputs and the number of packets per frame are configurable from Beam version 1.12.
+  Prior to that version, the TS mode for IP outputs is always CBR, and there are always 7 packets per frame.
+</Info>
+
+The TS mode for IP outputs may be CBR or VBR.  It is a single setting that applies to all IP outputs.  The default is
+CBR.  The supported VBR mode is SMPTE ST 2022-3, and hence the TS will only be valid if it contains no more than one
+referenced PCR PID.
+
+When the TS mode for IP outputs is set to CBR, null and non-null packets populate each IP frame.  IP frames will be
+output regularly at a frame rate determined by the total bitrate of the multiplexer and the number of packets per frame.
+
+When the TS mode for IP outputs is set to VBR, non-null packets populate each IP frame.  All null packets are discarded,
+providing maximum latency requirements are met (see [Controlling latency for VBR TS IP
+outputs](/beam/multiplexer/configure/transport-stream-mode-for-outputs#controlling-latency-for-vbr-ts-ip-outputs)).  IP frames will be output at a frame rate that is no greater than
+the equivalent CBR frame rate.  The total bitrate of the multiplexer determines the maximum bitrate of the VBR TS
+payload of each IP output.
+
+### To configure CBR TS mode for all IP outputs:
+
+1. Click on the transport stream in the **Output Stream** panel.
+
+2. Find the **TS mode for all IP outputs** property, either in the **Mux** tab of the **Properties** panel or in the
+   **Advanced Settings** drop-down panel.
+
+3. Select **CBR** from the **TS mode for all IP outputs** property.
+
+### To configure VBR TS mode for all IP outputs:
+
+1. Click on the transport stream in the **Output Stream** panel.
+
+2. Find the **TS mode for all IP outputs** property, either in the **Mux** tab of the **Properties** panel or in the
+   **Advanced Settings** drop-down panel.
+
+3. Select **VBR - SMPTE ST 2022-3 (Single referenced PCR PID only)** from the **TS mode for all IP outputs** property.
+
+<Info>
+  Ensure the output TS contains no more than a single referenced PCR PID.  If the output TS contains multiple
+  referenced PCR PIDs, the output TS will not be compliant with ISO/IEC 13818-1.
+</Info>
+
+## Controlling latency for VBR TS IP outputs
+
+The TS packet period for a CBR TS is constant.  When encapsulated in IP frames, there is a latency of between 0 and 6 TS
+packets.  This latency is usually small - for example, a 10 Mbps TS encapsulated in a 7-packet IP frame would incur a
+latency of less than 1 ms.
+
+The TS packet period for a VBR TS is not constant.  For a low VBR TS bitrate, the TS packet period will be high.  After
+IP encapsulation, the IP latency could be much higher than that of the equivalent CBR TS.  The maximum VBR frame period
+guards against excessive latencies.
+
+The maximum VBR frame period is a single setting that applies to all IP outputs.  The default is 100 ms.  It defines the
+maximum time between consecutive VBR frames.  Null packets are inserted in IP frames if necessary to meet the maximum
+VBR frame period.
+
+This setting is necessary for the following reasons:
+
+* Certain protocols such as RTP, FEC and RIST must buffer data, and equipment using those protocols expect a minimum
+  frame rate to ensure a reasonable latency through their buffers.
+
+* Downstream equipment is likely to declare a loss of input if a frame does not arrive within a certain period after
+  the previous frame arrived.
+
+* The latency through the buffers, both in downstream equipment and the multiplexer output buffer, can be controlled
+  directly via the maximum VBR frame period.
+
+Note that the latency for IP outputs is increased by the maximum VBR frame period.  The default is sufficient for most
+applications, and it is only necessary to change the maximum VBR frame period to reduce the latency for IP outputs
+and/or reduce the maximum latency through downstream equipment input buffers.
+
+For low-latency applications, there is a trade-off between latency, packets-per-frame and the minimum TS bitrate before
+nulls are allowed into a VBR IP output.  For example:
+
+* Using the default of 7 packets per frame, the default maximum VBR frame period of 100 ms results in a minimum TS
+  bitrate of approximately 105 Kbps.  The maximum latency through a downstream RTP buffer of 20 frames is 2 seconds.
+
+* Reducing the maximum VBR frame period to 10 ms increases the minimum TS bitrate to approximately 1 Mbps.  The maximum
+  latency through the same downstream RTP buffer is 200 ms.
+
+* With the maximum VBR frame period still at 10 ms, reducing frame occupancy to 1 packet per frame reduces the minimum
+  TS bitrate to approximately 150 Kbps.
+
+### To configure the maximum VBR frame period for all IP outputs:
+
+1. Click on the transport stream in the **Output Stream** panel.
+
+2. Find the **Maximum VBR frame period for all IP outputs** property, either in the **Mux** tab of the **Properties**
+   panel or in the **Advanced Settings** drop-down panel.
+
+3. Set the **Maximum VBR frame period for all IP outputs** property to the desired value in milliseconds.
+
+### To configure the number of TS packets per IP frame:
+
+1. Click on the transport stream in the **Output Stream** panel.
+
+2. Find the **Number of TS packets per IP frame** property, either in the **Mux** tab of the **Properties** panel or in
+   the **Advanced Settings** drop-down panel.
+
+3. Set the **Number of TS packets per IP frame** property to the desired value.

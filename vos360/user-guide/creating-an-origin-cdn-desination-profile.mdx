@@ -1,0 +1,74 @@
+---
+title: Creating an Origin/CDN desination profile
+robots: noindex, nofollow
+---
+
+You must modify a Harmonic destination profile to create a profile that supports push and/or pull packaging for Origin/CDN delivery. This workflow uses the Destination Multiscreen profile from the Lab Wizard app.
+
+1. Navigate to the **Lab Wizard** app > **Profiles** tab and click **Destination** to display only destination profiles.
+
+2. Click the Destination Multiscreen profile panel to open the **Profile Editor**.
+
+3. Below **Packages**, add or remove packaging output as desired. You may add multiple packages of the same package type to the destination profile. Each destination profile supports up to 10 package outputs.
+
+4. To edit the specifications for each package output, click a package output and then modify the settings in the **Complete Specs** pane as needed.\
+   The maximum length of the **Package Name** is 10 characters. Only one package output per package type is allowed to not have a package name (i.e. **Package Name**=none); in this case, the type of package (DASH, HLS, CMAF, RTMP) is used as the default name.\
+   For each package output created, if encryption is not needed, ensure that you set **Encryption Method** to **Clear**.
+
+   Note the following recommendations:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Packaging type</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Specifications</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>DASH</p></td><td colSpan="1" rowSpan="1"><p>Set <strong>Video Segment Length</strong> and <strong>Audio Segment Length</strong> to 2 seconds.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>HLS</p></td><td colSpan="1" rowSpan="1"><p>Set <strong>Segment Length</strong> to 6 seconds (as recommended by Apple).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>MSS</p></td><td colSpan="1" rowSpan="1"><p>Set <strong>Video Segment Length</strong> and <strong>Audio Segment Length</strong> to 2 seconds.</p></td></tr></tbody>
+  </table>
+</div>
+
+5. To enable **Pull Packaging**, toggle the selector to the **On** position and then set the duration of the from-live buffer:
+
+   * To perform live packaging only (no time-shifting, catch-up, or nPVR), then leave the **Recording/Buffer Time&#x20;**(aka **Rolling Buffer Duration in LabWizard v2**) time set to **0**.
+
+   * To use time-shifting, catch-up, or nPVR, set the desired **Recording/Buffer** **Time&#x20;**(aka **Rolling Buffer Duration in LabWizard** **v2**) on the slider. The **specify duration in minutes** option allows you to set a custom duration.
+
+     * The **Nielsen RTVOD Flag** drop-down menu will be enabled. You can configure the RTVOD flag, which will be inserted into existing Nielsen watermarks of the stream as an additional measurement point. The options are None, Auto, C3 or C7, and the default value is None.
+
+6. To enable **Push Packaging**, toggle the selector to the **On** position.
+
+7. To enable **OTT Watermarking**, toggle the selector to the **On** position.
+
+   * For DASH and HLS destination profiles, the **Alt Watermarking Output Prefix** field will appear for configuration if this OTT Watermarking is enabled. (Refer to [<u>Streaming and Broadcast Destination profile parameters</u>](/vos360/user-guide/streaming-and-broadcast-destination-profile-parameters) for details.)
+
+   * To configure an OTT Watermarking packaging service, navigate to the **Sources** tab in the Configure Channels app to add the watermark. (Refer to [<u>Configuring an IP source input</u>](/vos360/user-guide/configuring-an-ip-source-input) for details.)
+
+8. Configure the **Packager Clock**:
+
+   * **System Wall-Clock**: If selected, the package output will be based on the system wall-clock times.
+
+   * **Source Timecodes**: If selected, the package output will be based on the timecodes from the source (included in the "picture timing SEI" messages of the video elementary stream). This setting applies to all the package outputs of the same destination profile.\
+     **Note:&#x20;**&#x46;or an HLS package output, this setting is used to configure what time reference is used for the timestamps associated with the "X-PROGRAM-DATE-TIME" tag (based on the system wall-clock or source timecodes). This is also supported with geo-redundancy.\
+     For a DASH package output, this setting is used to configure what time reference is used for the Producer Reference Time (PRFT) timestamps, when PRFT insertion is enabled. (Refer to "Insert ProducerReferenceTime to Manifest" in [<u>Streaming and Broadcast Destination profile parameters</u>](/vos360/user-guide/streaming-and-broadcast-destination-profile-parameters)<u> </u>for details.) This is also supported with geo-redundancy.
+
+   * **Timecode Max Frame Count**: The Timecode Max Frame Count defines the expected maximum frame ticks per second for incoming timecodes (i.e., “ff” in “hh:mm:ss:ff”). This is the setting of the timecode processing in order to match the UTC/VITC conversion algorithm of the incoming content.
+
+     * 25/30 (SMPTE ST 12-1)
+
+       * Select if the input frame rate is lower than or equal to 30 fps.
+
+       * Select if the input frame rate is greater than 30 fps, but the timecode max frame count is lower than 30 fps, as specified in SMPTE ST 12-1. For example, according to the standard SMPTE ST 12-1, timecodes for a 50 fps stream should be incremented only every two frames, so the timecode max frame count is 25.
+
+     * 50/60/100/120
+
+       * Select if the input frame rate is greater than 30 fps and the frame count is incremented on each frame.
+
+9. To enable **Mute Output On Signal Loss**, toggle the selector to the **On** position.
+
+10. Enter a brief description of the profile changes, and then click **Save as Version**. \
+    After a profile has been updated, you cannot revert your changes.
+
+    **Result**: On the **Profile panel**, the **Customer Version Number** increments by 1.
+
+**What to do next**\
+You must validate the new profile before you can apply it to a service.

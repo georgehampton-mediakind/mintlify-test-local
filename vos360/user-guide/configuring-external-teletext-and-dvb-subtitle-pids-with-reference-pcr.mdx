@@ -1,0 +1,57 @@
+---
+title: Configuring external Teletext and DVB Subtitle PIDs with reference PCR
+robots: noindex, nofollow
+---
+
+External PIDs such as Teletext and DVB Subtitles can be remuxed into a transcoding service or a passthrough programs in a mux.
+
+For these PIDs, the PTS must be restamped. Since there is a reference PCR for this external PID, the system relies on it to update the PTS. When the PID originates from another input or program, you can set a PTS offset adjustment of ±5000 ms.
+
+## Remux an external PID (Teletext and DVB Subtitles) in a transcoding service
+
+1. Add a transcoding service to the mux with Teletext and DVB-Subtitle PIDs.
+
+   ![image-20260629-042011.png](/images/vos360/cd1b1d617be74234d197755e.png)
+
+   For example:
+
+   * DVB-Subtitles: PID 5504
+
+   * Teletext: PID 5503
+
+2. Add a DVB-subtitle component from another source (e.g., ZDF) to the transcode by dragging and dropping it.
+
+   ![image-20260616-135316.png](/images/vos360/5bf89f96bc10240ab37093b9.png)
+
+3. Configure the “Delay” parameter when the DVB-subtitle component (from another source and or program) is added to the transcoding service. \
+   **Note**: “Delay” is in ms and range is \[-5000, 5000].
+
+   ![image-20260629-042229.png](/images/vos360/e44d2c82c348c3b09c02f5c7.png)
+
+   ![image-20260616-135604.png](/images/vos360/7e1242952559ae0ae021e2e2.png)
+
+4. Once added, the delay of such component can be modified.
+
+## Remux an external PID (Teletext and DVB Subtitles) in a passthrough service
+
+1. Add a passthrough program to the mux with Teletext and DVB-Subtitle PIDs.
+
+   ![image-20260616-140242.png](/images/vos360/2dffd3f57c959a2958d4172e.png)
+
+   For example:
+
+   * DVB-Subtitles: PID 231
+
+   * Teletext: PID 230
+
+2. Add a Teletext component from another program (e.g., KIKA/ZDF) to the passthrough program by dragging/dropping it.
+
+   ![image-20260616-140802.png](/images/vos360/f575536e8ee4b7078860e48c.png)
+
+3. Configure the “Delay” parameter when the Teletext component (from another source and or program) is added to the passthrough.
+
+   **Note**: “Delay” is in ms and range is \[-5000, 5000].
+
+   ![image-20260629-042447.png](/images/vos360/45b981feb8f90a6b4101cb90.png)
+
+4. Once added, the delay of such component can be modified.

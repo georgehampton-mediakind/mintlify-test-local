@@ -1,0 +1,96 @@
+---
+title: Integrate Amazon CloudFront
+description: Add an Amazon CloudFront CDN distribution in front of your MK.IO streaming endpoint to scale delivery on AWS projects.
+sidebarTitle: Integrate Amazon CloudFront
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+For production workloads that require global reach, consistent low latency, or more than a few hundred concurrent viewers, you can place Amazon CloudFront in front of your streaming endpoint.
+
+CloudFront acts as the CDN layer: viewer requests hit CloudFront edge nodes globally, which cache content and forward cache misses to your MK.IO streaming endpoint as the origin. This reduces load on the endpoint and lowers latency for viewers worldwide.
+
+## How it fits together
+
+```text
+Viewer → CloudFront Edge → MK.IO Streaming Endpoint → Your Cloud Storage
+```
+
+Your playback URLs change from pointing directly at the MK.IO endpoint to pointing at your CloudFront distribution domain. The assets, locators, and streaming policies in your MK.IO workflow stay the same.
+
+## Prerequisites
+
+* An AWS account with permissions to create CloudFront distributions
+* An MK.IO project on AWS with at least one streaming endpoint created and started. See [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content).
+
+## Create a CloudFront distribution
+
+<Steps>
+  <Step title="Open CloudFront in the AWS Console">
+    <span id="open-cloudfront-in-the-aws-console" className="mk-legacy-anchor" />
+
+    Sign in to the [AWS Console](https://console.aws.amazon.com) and navigate to **CloudFront**. Click **Create distribution**.
+  </Step>
+
+  <Step title="Set the origin">
+    <span id="set-the-origin" className="mk-legacy-anchor" />
+
+    The origin is your MK.IO streaming endpoint hostname.
+
+    * **Origin domain**: Enter the hostname of your MK.IO streaming endpoint (for example, `<endpoint-name>.<region>.streaming.mediakind.com`). Find this in MK.IO under **Streaming Endpoints**.
+    * **Protocol**: Select **HTTPS only**. MK.IO endpoints require HTTPS.
+    * **Origin shield**: Optional. Enable and choose the AWS region closest to your MK.IO deployment region to reduce origin load.
+  </Step>
+
+  <Step title="Configure the default cache behaviour">
+    <span id="configure-the-default-cache-behaviour" className="mk-legacy-anchor" />
+
+    * **Viewer protocol policy**: Select **Redirect HTTP to HTTPS** or **HTTPS only**.
+    * **Allowed HTTP methods**: Select **GET, HEAD**. Streaming manifests and segments are read-only.
+    * **Cache policy**: Use **CachingOptimized** for most streaming content. If your streams use query-string token authentication or DRM signed URLs, use **CachingDisabled** or a custom policy that forwards the required query strings to the origin.
+    * **Origin request policy**: If your streaming policies use query strings (for example, DRM tokens or signed URLs), attach an origin request policy that forwards those query strings to the MK.IO origin.
+  </Step>
+
+  <Step title="Configure distribution settings">
+    <span id="configure-distribution-settings" className="mk-legacy-anchor" />
+
+    * **Price class**: Select the regions where CloudFront should serve content. Selecting all regions gives the widest global coverage.
+    * **Web Application Firewall**: Optional. Attach an AWS WAF Web ACL if you want to filter requests at the edge.
+    * **Standard logging**: Set **Log delivery** to **Off** unless you need CloudFront access logs. Enabling logs, especially with CloudWatch, can generate high data volumes and unexpected costs.
+    * **Default root object**: Leave empty. MK.IO streaming manifests are accessed by path, not by a default file.
+  </Step>
+
+  <Step title="Create the distribution">
+    <span id="create-the-distribution" className="mk-legacy-anchor" />
+
+    Click **Create distribution**. CloudFront assigns a distribution domain in the format `<id>.cloudfront.net`. Wait for the **Last modified** field to update before testing the distribution.
+  </Step>
+</Steps>
+
+## Update your playback URLs
+
+Once the distribution is active, replace the MK.IO streaming endpoint hostname in your playback URLs with the CloudFront domain:
+
+**Before (direct to MK.IO endpoint):**
+
+```text
+https://<endpoint-name>.<region>.streaming.mediakind.com/<locator-id>/...
+```
+
+**After (via CloudFront):**
+
+```text
+https://<id>.cloudfront.net/<locator-id>/...
+```
+
+If you configure a custom domain in CloudFront, use that domain instead.
+
+## Custom domain (optional)
+
+To use your own domain (for example, `cdn.example.com`) instead of the `.cloudfront.net` domain:
+
+1. Request a certificate for your domain in **AWS Certificate Manager (ACM)** in the `us-east-1` region. CloudFront requires certificates in this region regardless of where your content is hosted.
+2. In your CloudFront distribution, add your domain under **Alternate domain names (CNAMEs)** and attach the ACM certificate.
+3. In your DNS provider, create a CNAME record pointing your domain to the `.cloudfront.net` distribution domain.
+
+For detailed steps, see the [AWS CloudFront custom domains documentation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html).

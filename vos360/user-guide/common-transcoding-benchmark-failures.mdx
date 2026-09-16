@@ -1,0 +1,68 @@
+---
+title: Common transcoding benchmark failures
+robots: noindex, nofollow
+---
+
+An invalid change to the transcoding profile on your VOS360 instance can prevent the benchmark system from running and cause errors and alert messages. Review the following content to avoid some common mistakes.
+
+## Video level errors in OTT (multiscreen) benchmarks
+
+In an OTT transcoding profile, one common problem is that the video level is incorrectly configured.
+
+For VOS benchmarking purposes, it is permissible to set a higher video encoding level than required for production deployment. If the transcoding profile fails due to the wrong video encoding level, try using the following recommended values:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <thead><tr><th colSpan="1" rowSpan="1"><p /></th><th colSpan="1" rowSpan="1"><p><strong>Codec</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Resolution</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Use Video Level</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Multiscreen AVC HD/SD</p></td><td colSpan="1" rowSpan="1"><p>AVC</p></td><td colSpan="1" rowSpan="1"><p>{"<= 1920x1080"}</p></td><td colSpan="1" rowSpan="1"><p>AVC Level 4.2 or AUTO</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Multiscreen HEVC HD/SD</p></td><td colSpan="1" rowSpan="1"><p>HEVC</p></td><td colSpan="1" rowSpan="1"><p>{"<= 1920x1080"}</p></td><td colSpan="1" rowSpan="1"><p>HEVC Level 4.1 or AUTO</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Multiscreen HEVC UHD</p></td><td colSpan="1" rowSpan="1"><p>HEVC</p></td><td colSpan="1" rowSpan="1"><p>{"> 1920x1080"}</p><p>{"<= 3840x2160"}</p></td><td colSpan="1" rowSpan="1"><p>HEVC Level 5.1 or AUTO</p></td></tr></tbody>
+  </table>
+</div>
+
+**Example**
+
+In this benchmark example, the result indicates a failure. The failure is due to a failed input video level. The resolution, bitrate, and frame rate are indicated in the error message. By expanding the transcoding profile, the multiscreen ladder shows that the resolution 704x480 is set to AVC Level 3. The VOS server rejected the configuration. **Solution**: Update the video level to AVC level 4.2.
+
+**Tip**: You may set all resolutions in this ladder to AVC level 4.2 in case there are other incorrect level settings.
+
+![](/images/vos360/b33630e87e3291d007938b80.png)
+
+## GOP structure errors in IPTV transcoding
+
+In IPTV (Broadcast) Transcoding, an incorrect GOP structure setting can prevent the transcoding benchmark to run.
+
+A typical use case is when the **Mini Gop Length M** is set too large for MPEG-2, as illustrated in the screenshot below. The error messages indicate that MPEG-2 allows no more than two B frames between reference pictures.
+
+Valid values for **Mini Gop Length M**, or <u>gopLenM</u> in the .json file are the following:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Broadcast Codec (Encoder)</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Gop Length M</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>MPEG-2</p></td><td colSpan="1" rowSpan="1"><ul><li><p>IP (M=1)</p></li><li><p>IBP (M=2)</p></li><li><p>IBBP (M=3)</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>AVC</p></td><td colSpan="1" rowSpan="1"><ul><li><p>IP (M=1)</p></li><li><p>IBP (M=2)</p></li><li><p>IBBP (M=3)</p></li><li><p>IBBBP (M=4)</p></li><li><p>IBBBBBBBP (M=8) - for 720p and 1080p encoding only</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>HEVC</p></td><td colSpan="1" rowSpan="1"><ul><li><p>IP (M=1)</p></li><li><p>IBP (M=2)</p></li><li><p>IBBBP (M=4)</p></li><li><p>IBBBBBBBP (M=8) - for 720p and 1080p encoding only</p></li></ul></td></tr></tbody>
+  </table>
+</div>
+
+![](/images/vos360/947b13127a4cc2e661fdab46.png)
+
+## GOP structure errors in Multiscreen transcoding
+
+In Multiscreen (OTT) Ttranscoding, an incorrect GOP structure setting can prevent the transcoding benchmark to run.
+
+A typical example is the **Mini Gop Length M** configured for a given output in the ladder is incorrect. In the example below, the 3three outputs for the AVC codec baseline profile must have the **Mini Gop Length M** set to "IP" (M=1).
+
+Valid values for **Mini Gop Length M**, or <u>gopLenM</u> in the .json file are the following:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Multiscreen Codec (Encoder)</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Gop Length M</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>AVC</p></td><td colSpan="1" rowSpan="1"><ul><li><p>IP (M=1)</p><blockquote><p><strong>Note: </strong><span>You must use this value for the baseline profile.</span></p></blockquote></li><li><p>IBP (M=2)</p></li><li><p>IBBP (M=3)</p></li><li><p>IBBBP (M=4)</p></li><li><p>IBBBBBBBP (M=8) - for 720p and 1080p encoding only</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>HEVC</p></td><td colSpan="1" rowSpan="1"><ul><li><p>IP (M=1)</p></li><li><p>IBP (M=2)</p></li><li><p>IBBBP (M=4)</p></li><li><p>IBBBBBBBP (M=8) - for 720p and 1080p encoding only</p></li></ul></td></tr></tbody>
+  </table>
+</div>
+
+![](/images/vos360/5b2c26df260cf139e5100520.png)

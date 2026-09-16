@@ -1,0 +1,382 @@
+---
+title: Multi-language VOD Dubbing Guide
+description: Dub English-language VOD content into Spanish, German, and French using MK.IO's AI dubbing pipeline, then insert the dubbed tracks into your source asset for multi-language playback.
+sidebarTitle: Multi-language VOD dubbing
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This guide shows how to use the MK.IO AI dubbing pipeline to generate Spanish, German, and French audio tracks from English-language video content. The completed source asset streams with the original English track and three dubbed tracks that viewers can select.
+
+For a full list of supported languages and more detailed information about the available transforms, visit the [transcription and translation reference page](/mkio/reference/encoding-transform-presets/transcription-and-translation-transforms).
+
+<Warning>
+  **Format requirement:** VOD dubbing requires assets in the **MP4v4** format, which produces a `.mpd` DASH manifest. Assets from older encoding pipelines, including Azure Media Services (AMS) or any source that generates a `.ismc` manifest, are not supported directly. If your asset is in the legacy HSS format, convert it first using the [Convert assets to MP4v4](/mkio/how-to/ai-features/convert-hss-for-vod-dubbing) guide, then return here. For supported languages and specifications, see the [AI workflows documentation](/mkio/understanding/core-concepts/vod-processing/ai-workflows).
+</Warning>
+
+## Prerequisites
+
+* Active MK.IO project access
+* API token: available in **Organisation Settings** → **API Tokens**
+* English-language MP4 video (2 to 10 minutes recommended for testing)
+* Azure Storage account connected to MK.IO
+
+**Starting point:** If you already have an MP4v4 asset with a `.mpd` manifest, skip to [Step 2](/mkio/how-to/ai-features/multi-language-vod-dubbing#step-2-create-multi-language-dubs). If your asset is in the legacy HSS format (it has a `.ismc` manifest), see [Convert HSS assets for VOD dubbing](/mkio/how-to/ai-features/convert-hss-for-vod-dubbing) before continuing.
+
+## Step 1: Upload and encode source video
+
+<span id="11-create-an-asset" className="mk-legacy-anchor" />
+
+### 1.1 Create an asset
+
+1. In the MK.IO dashboard, navigate to **Assets** → **+ Add Asset**.
+2. Select your storage location.
+3. Enter the asset details:
+   * **Asset name:** `english-source-video`
+   * **Container:** `videos`
+   * **Storage account:** select your Azure Storage account
+4. Upload your MP4 file. This guide uses a file named `english-video-demo.mp4`.
+5. Select **Upload** and wait for it to complete.
+
+<span id="12-create-an-encoding-transform-and-job" className="mk-legacy-anchor" />
+
+### 1.2 Create an encoding transform and job
+
+1. Navigate to **Video Processing** → **Transforms** → **+ Create Transform**.
+2. Configure the transform:
+   * **Name:** `encode-streaming`
+   * **Type:** Encoding
+   * **Preset:** H.264 Multiple Bitrate 1080p
+3. Select **Create**.
+4. Navigate to **Video Processing** → **Jobs** → **+ Create Job**.
+5. Configure the job:
+   * **Name:** `encode-english-source`
+   * **Transform:** `encode-streaming`
+   * **Input asset name:** `english-source-video`. Select `english-video-demo.mp4`.
+   * **Output asset name:** `english-encoded`
+6. Select **Create** and monitor the job status.
+
+<img src="/images/mkio-dubbing-encoding-jobs.png" alt="Encoding job status view in MK.IO dashboard" />
+
+7. Wait for the job status to show **Finished**.
+
+<Info>
+  **Why encode first?** Encoding generates the `.mpd` manifest file that track insertion operations require.
+</Info>
+
+## Step 2: Create multi-language dubs
+
+<span id="21-create-a-dubbing-transform" className="mk-legacy-anchor" />
+
+### 2.1 Create a dubbing transform
+
+A dubbing transform defines the source language and the target languages for the AI dubbing pipeline.
+
+| Parameter         | Description                                                             |
+| :---------------- | :---------------------------------------------------------------------- |
+| `@odata.type`     | Must be set to `#MediaKind.AIPipelinePreset`                            |
+| `pipeline name`   | `Predefined_ACSVodSpeechToSpeech`                                       |
+| `language`        | Source language code (for example, `en-US`)                             |
+| `targetLanguages` | Array of target language codes                                          |
+| `speakerCount`    | Number of speakers in the source audio (`auto` for automatic detection) |
+| `personalVoice`   | `true` to preserve the original speaker's voice characteristics         |
+
+<Tabs>
+  <Tab title="UI">
+    1. Navigate to **Video Processing** → **Transforms** → **+ Create Transform**.
+    2. Enter a **Transform name**, for example `dubbing-transform`.
+    3. Select **AI workflow** as the transform type.
+    4. Select **Predefined\_ACSVodSpeechToSpeech** from the **AI pipeline** dropdown.
+    5. Configure the pipeline settings:
+       * **Language:** `en-US`
+       * **Translate to:** select `es-ES`, `de-DE`, and `fr-FR`
+       * **Speaker count:** `auto`
+       * **Personal voice:** leave unchecked to use synthetic voices
+    6. Select **Create**.
+  </Tab>
+
+  <Tab title="API">
+    **PUT** `https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/transforms/<TRANSFORM_NAME>`
+
+    **Path parameters**
+
+    * `<PROJECT_NAME>`: Your unique project identifier
+    * `<TRANSFORM_NAME>`: Transform name (for example, dubbing-transform)
+
+    **Request body**
+
+    ```json
+    {
+      "properties": {
+        "description": "AI dub: English to Spanish, German, French",
+        "outputs": [
+          {
+            "preset": {
+              "@odata.type": "#MediaKind.AIPipelinePreset",
+              "pipeline": {
+                "name": "Predefined_ACSVodSpeechToSpeech",
+                "arguments": {
+                  "VodSpeechToSpeechTranslation": [
+                    {
+                      "name": "language",
+                      "value": "en-US"
+                    },
+                    {
+                      "name": "targetLanguages",
+                      "value": [
+                        "es-ES",
+                        "de-DE",
+                        "fr-FR"
+                      ]
+                    },
+                    {
+                      "name": "speakerCount",
+                      "value": "auto"
+                    },
+                    {
+                      "name": "personalVoice",
+                      "value": false
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+**Notes on the configuration:**
+
+* **Target languages:** A single dubbing job generates all three language dubs simultaneously.
+* **Personal voice:** Setting `personalVoice` to `false` uses a synthetic voice. Set to `true` to attempt to preserve each speaker's voice characteristics across languages.
+
+<span id="22-create-a-dubbing-job" className="mk-legacy-anchor" />
+
+### 2.2 Create a dubbing job
+
+<Tabs>
+  <Tab title="UI">
+    1. Navigate to **Video Processing** → **Jobs** → **+ Create Job**.
+    2. Enter a **Job name**, for example `dub-english-source`.
+    3. Under **Select a transform**, choose `dubbing-transform`.
+    4. Under **Select input**, set:
+       * **Input asset name:** `english-encoded`
+       * **Filename:** `english-video-demo_320x180_400k.mp4`
+    5. Under **Configure output**, set:
+       * **Asset storage account:** select your Azure Storage account
+       * **Output asset name:** enter a new name, for example `dubbed-audio`. MK.IO creates this asset automatically.
+    6. Select **Create**.
+  </Tab>
+
+  <Tab title="API">
+    **PUT** `https://app.mk.io/api/v1/projects/<YOUR_PROJECT_NAME>/media/transforms/<TRANSFORM_NAME>/jobs/<JOB_NAME>`
+
+    **Path parameters**
+
+    * `<YOUR_PROJECT_NAME>`: Your unique project identifier
+    * `<TRANSFORM_NAME>`: The dubbing transform (for example, dubbing-transform)
+    * `<JOB_NAME>`: Unique identifier for this dubbing job
+
+    **Request body**
+
+    ```json
+    {
+      "properties": {
+        "description": "Generate Spanish, German, French dubs",
+        "priority": "Normal",
+        "input": {
+          "files": [
+            "english-video-demo_320x180_400k.mp4"
+          ],
+          "@odata.type": "#Microsoft.Media.JobInputAsset",
+          "assetName": "english-encoded"
+        },
+        "outputs": [
+          {
+            "@odata.type": "#Microsoft.Media.JobOutputAsset",
+            "assetName": "dubbed-audio"
+          }
+        ]
+      }
+    }
+    ```
+
+    <Info>
+      If you are creating the output asset via the API rather than through the job form, create it first using a PUT request to `/projects/<PROJECT_NAME>/media/assets/dubbed-audio` before submitting the job.
+    </Info>
+  </Tab>
+</Tabs>
+
+**Input file:** Specify any single encoded bitrate variant from the source asset (for example, `english-video-demo_320x180_400k.mp4`). All variants contain the audio track required for dubbing, so you can use the lowest bitrate file.
+
+**Monitor progress:** Navigate to **Video Processing** → **Jobs** and wait for the job status to show **Finished**.
+
+**Output files:** When the job completes, the `dubbed-audio` asset contains three files:
+
+* `english-video-demo_320x180_400k.mp4_es-ES.mp4`: Spanish
+* `english-video-demo_320x180_400k.mp4_de-DE.mp4`: German
+* `english-video-demo_320x180_400k.mp4_fr-FR.mp4`: French
+
+## Step 3: Insert audio tracks
+
+This step adds the dubbed audio tracks to the encoded video asset, making all languages available to viewers.
+
+<span id="31-create-track-insertion-transforms" className="mk-legacy-anchor" />
+
+### 3.1 Create track insertion transforms
+
+<Info>
+  Track insertion transforms must be created through the API. Track insertion jobs can be created using either the UI or API. See step 3.2.
+</Info>
+
+Create three transforms: one per language. Each transform defines the track name, display name, and language code for the inserted audio.
+
+**Spanish insert transform:**
+
+**PUT** `https://app.mk.io/api/v1/projects/<YOUR_PROJECT_NAME>/media/transforms/<TRANSFORM_NAME>`
+
+**Path parameters**
+
+* `<YOUR_PROJECT_NAME>`: Your unique project identifier
+* `<TRANSFORM_NAME>`: Transform name (for example, spanish-insert)
+
+**Request body**
+
+```json
+{
+  "properties": {
+    "description": "Insert Spanish audio",
+    "outputs": [
+      {
+        "preset": {
+          "tracks": [
+            {
+              "@odata.type": "#MediaKind.AudioTrack",
+              "trackName": "audio-spanish",
+              "displayName": "Español (AI Dubbed)",
+              "languageCode": "es-ES"
+            }
+          ],
+          "@odata.type": "#MediaKind.TrackInserterPreset"
+        },
+        "relativePriority": "Normal"
+      }
+    ]
+  }
+}
+```
+
+**Repeat for German and French:**
+
+* **German transform:** set `trackName` to `audio-german`, `displayName` to `Deutsch (AI Dubbed)`, and `languageCode` to `de-DE`
+* **French transform:** set `trackName` to `audio-french`, `displayName` to `Français (AI Dubbed)`, and `languageCode` to `fr-FR`
+
+<span id="32-create-track-insertion-jobs" className="mk-legacy-anchor" />
+
+### 3.2 Create track insertion jobs
+
+Create one job per language. Each job inserts the corresponding dubbed audio file into the `english-encoded` asset.
+
+<Tabs>
+  <Tab title="UI">
+    Repeat the following for each language (Spanish, German, French):
+
+    1. Navigate to **Video Processing** → **Jobs** → **+ Create Job**.
+    2. Enter a **Job name**, for example `job-insert-spanish`.
+    3. Under **Select a transform**, choose the corresponding insertion transform (for example, `spanish-insert`).
+    4. Under **Select input**, set:
+       * **Input asset name:** `dubbed-audio`
+       * **Filename:** the dubbed file for this language (for example, `english-video-demo_320x180_400k.mp4_es-ES.mp4`)
+    5. Under **Configure output**, set:
+       * **Output asset name:** `english-encoded`
+    6. Select **Create**.
+
+    | Language | Transform        | Input filename  | Output asset      |
+    | :------- | :--------------- | :-------------- | :---------------- |
+    | Spanish  | `spanish-insert` | `..._es-ES.mp4` | `english-encoded` |
+    | German   | `german-insert`  | `..._de-DE.mp4` | `english-encoded` |
+    | French   | `french-insert`  | `..._fr-FR.mp4` | `english-encoded` |
+  </Tab>
+
+  <Tab title="API">
+    **Spanish insertion job:**
+
+    **PUT** `https://app.mk.io/api/v1/projects/<YOUR_PROJECT_NAME>/media/transforms/<TRANSFORM_NAME>/jobs/<JOB_NAME>`
+
+    **Path parameters**
+
+    * `<YOUR_PROJECT_NAME>`: Your unique project identifier
+    * `<TRANSFORM_NAME>`: The track insertion transform (for example, spanish-insert)
+    * `<JOB_NAME>`: Unique job identifier (for example, job-insert-spanish)
+
+    **Request body**
+
+    ```json
+    {
+      "properties": {
+        "input": {
+          "files": [
+            "english-video-demo_320x180_400k.mp4_es-ES.mp4"
+          ],
+          "@odata.type": "#Microsoft.Media.JobInputAsset",
+          "assetName": "dubbed-audio"
+        },
+        "outputs": [
+          {
+            "@odata.type": "#Microsoft.Media.JobOutputAsset",
+            "assetName": "english-encoded"
+          }
+        ],
+        "priority": "Normal"
+      }
+    }
+    ```
+
+    **Repeat for German and French:**
+
+    * **German:** input file `english-video-demo_320x180_400k.mp4_de-DE.mp4`, job name `job-insert-german`
+    * **French:** input file `english-video-demo_320x180_400k.mp4_fr-FR.mp4`, job name `job-insert-french`
+  </Tab>
+</Tabs>
+
+**Monitor progress:** Wait for all three jobs to show **Finished**.
+
+**Verify:** Navigate to **Assets** → `english-encoded` and open the **Tracks** section. You should see three audio tracks for Spanish, German, and French.
+
+<img src="/images/mkio-vod-dubbing-panel.png" alt="Asset tracks view showing Spanish, German, and French dubbed audio tracks" />
+
+## Step 4: Configure streaming
+
+<span id="41-create-a-streaming-endpoint" className="mk-legacy-anchor" />
+
+### 4.1 Create a streaming endpoint
+
+1. Navigate to **Streaming Endpoints** → **+ Create Streaming Endpoint**.
+2. Configure the endpoint:
+   * **Name:** `production`
+   * **Base URL:** `content`
+   * **Type:** Dedicated
+3. Select **Create**, then **Start**.
+
+<span id="42-create-a-streaming-locator" className="mk-legacy-anchor" />
+
+### 4.2 Create a streaming locator
+
+1. Navigate to **Assets** and select `english-encoded`.
+2. Select the `production` endpoint created in step 4.1.
+3. Add a streaming locator:
+   * **Name:** `live`
+   * **Policy:** `Predefined_DownloadAndClearStreaming`
+4. Copy the playback URLs provided.
+
+<span id="43-test-multi-language-playback" className="mk-legacy-anchor" />
+
+### 4.3 Test multi-language playback
+
+1. Select the embedded player in the asset details.
+2. Use the audio track selector to switch between languages.
+3. Confirm that Spanish, German, and French audio tracks are selectable alongside the original English track.

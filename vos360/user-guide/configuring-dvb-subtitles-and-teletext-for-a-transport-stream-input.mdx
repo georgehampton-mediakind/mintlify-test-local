@@ -1,0 +1,55 @@
+---
+title: Configuring DVB subtitles and Teletext for a transport stream input
+robots: noindex, nofollow
+---
+
+## Configure the playout source
+
+<Note>
+  **Notes**
+
+  * Duplication of teletext pages is not supported.
+
+  * Grooming by language and page type is not supported. Only grooming by language is supported.
+
+  * Only use 1 page per DVB subtitle component. Multiple pages in the same component (PID) at both input and output is not supported. If you need several pages, you must create as many components as necessary.
+
+  * Only use 1 teletext component. Multiple teletext components at both input and output is not supported. If you need several pages, you must include them all in the same component (PID).
+</Note>
+
+1. Use the **Configure Channels** app to create a playout source as described in [Configuring a playout service](/vos360/user-guide/configuring-a-playout-service).
+
+2. From your playout source, add the subtitle components in the **Data Streams** area.
+
+   ![vos\_dvb\_subtitle\_ts.png](/images/vos360/726d8b01fd8da94be8362432.png)
+
+3. Check the **Enable Conversion** box. The subtitle page ID remapping only occurs when this box is checked.
+
+## Configure the grooming file
+
+1. Navigate to the **Asset Acquisition** app.
+
+2. Select the **Settings** tab.
+
+3. Select the **Grooming profiles** tab.
+
+4. Click the **Create** button, and choose **TS** to create a grooming profile.
+
+5. Enter a **Profile name** and choose from the following:
+
+   1. **Update missing fields only**: Pages defined in the playout source are located in the TS file. If found, the fields are added to the output. If they are not found, the grooming profile is used. If a page defined in the playout source is not found in the TS source file and is not defined in the grooming, it is not present in the output.
+
+   2. **Override all fields**: If a page defined in the playout source is not defined in the grooming, it is not present in the output.
+
+6. Select the **Subtitles** tab and click the + button.
+
+7. &#x20;Add the subtitle PIDs located in your TS file. These files are added to the output of your playout service.
+
+8. Click **Save**.\
+   **Note:** The PID, Type, and Page must be defined according to the actual content of the TS file. The Language can be changed if necessary.
+
+9. Make sure to associate your grooming file with your TS file. Edit your event and define the grooming file at the bottom.
+
+   ![vos\_edit\_primary\_event.png](/images/vos360/5e4fc75c4970fd94b833f9fa.png)
+
+10. Click **Save**.

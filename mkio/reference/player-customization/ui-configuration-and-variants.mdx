@@ -1,0 +1,147 @@
+---
+title: UI configuration and variants
+description: Configure global MKCustomUI behavior and choose custom or responsive playback UI variants.
+sidebarTitle: UI configuration and variants
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+`uiConfig` controls global playback UI behavior and can be shared across custom and responsive UI variants.
+
+## uiConfig example
+
+```js
+const uiConfig = {
+  disableAutoHideWhenHovered: false,
+  container: HTMLElement,
+  disableStorageApi: false,
+  autoUiVariantResolve: false,
+  playbackSpeedSelectionEnabled: true,
+  metadata: {
+    markers: [
+      { time: 24, title: "Marker1" },
+      { time: 69, title: "Marker2" },
+    ],
+  },
+};
+```
+
+Key fields from the source guide:
+
+* `disableAutoHideWhenHovered`: keeps the control bar visible while the cursor is over the player.
+* `playbackSpeedSelectionEnabled`: enables playback speed controls in settings.
+* `metadata.markers`: adds visual seekbar markers at specific timestamps.
+
+## Build a custom browser UI with `customUi`
+
+<div style={{"maxWidth":"500px","width":"100%","margin":"40px auto"}}>
+  ![customUi with basic controls](/_machine-assets/58c875f9d65417af304bc8b7f21bd858fadf35cff07442bd5b18e083c5cc23b3.png)
+</div>
+
+```js
+const simpleUI = new mkplayercustomuiPlugin.MKCustomizeUI.UIContainer({
+  components: [
+    new mkplayercustomuiPlugin.MKCustomizeUI.SubtitleOverlay(),
+    settingsPanel, // Contains selection controls on the settings panel
+    new mkplayercustomuiPlugin.MKCustomizeUI.BufferingOverlay(),
+    new mkplayercustomuiPlugin.MKCustomizeUI.ReplayButton(),
+    new mkplayercustomuiPlugin.MKCustomizeUI.PlaybackToggleButton(),
+    new mkplayercustomuiPlugin.MKCustomizeUI.QuickSeekButton({ seekSeconds: -10 }),
+    new mkplayercustomuiPlugin.MKCustomizeUI.QuickSeekButton({ seekSeconds: 10 }),
+    new mkplayercustomuiPlugin.MKCustomizeUI.VolumeToggleButton(),
+  ],
+});
+
+uiManager = mkCustomizeUI.customUi(simpleUI, uiConfig);
+```
+
+This pattern creates a custom UI container and attaches it through `customUi`.
+
+The source guide's browser custom UI example includes:
+
+* Subtitles and overlays (subtitle display, buffering indicator, play/pause overlay, error messages)
+* Settings panel options for video quality, audio quality, audio track, playback speed, and subtitles
+* Control bar items such as replay, play/pause, skip `-10s/+10s`, volume, PiP, fullscreen, and settings
+* Title bar metadata display
+
+## Build responsive UIs with `customUiVariant`
+
+<div style={{"maxWidth":"500px","width":"100%","margin":"40px auto"}}>
+  ![responsive UI](/_machine-assets/f740681f312ce53d1241556cbe3cdee4691d1e11927a59e2f66f1a09da248fa4.png)
+</div>
+
+```js
+const isSmallScreen = (context) => {
+  return context.documentWidth < 800;
+};
+
+function createMobileUIContainer() {
+  return mkCustomizeUI.modernSmallScreenUI();
+}
+
+const simpleUI = createBrowserUIContainer();
+
+uiManager = mkCustomizeUI.customUiVariant(
+  [
+    {
+      ui: createMobileUIContainer(),
+      condition: isSmallScreen,
+    },
+    {
+      ui: simpleUI,
+    },
+  ],
+  uiConfig
+);
+```
+
+Behavior:
+
+* Mobile variant is selected when `isSmallScreen` returns `true`.
+* Desktop/browser UI is used as fallback when no condition matches.
+* A shared `uiConfig` applies across all variants.
+
+## Lifecycle events
+
+Use lifecycle hooks to observe when variants resolve and become active:
+
+```js
+uiManager.onActiveUiChanged.subscribe(() => {
+  console.log("[customUi] UI is ready, attaching onUiVariantResolve");
+});
+
+uiManager.onUiVariantResolve.subscribe((context) => {
+  console.log("[customUi] onUiVariantResolve fired:", context);
+});
+```
+
+* `onActiveUiChanged`: triggered when the active UI is fully attached.
+* `onUiVariantResolve`: triggered when the variant-selection logic runs.
+
+## UI factory variant shortcuts
+
+The guide also includes built-in factory-based options:
+
+```js
+uiManager = mkCustomizeUI.buildDefaultUI(uiConfig);
+uiManager = mkCustomizeUI.buildDefaultSmallScreenUI(uiConfig);
+uiManager = mkCustomizeUI.buildModernTvUI(uiConfig);
+```
+
+* `buildDefaultUI`: default responsive UI that adapts between browser and mobile dimensions:
+
+<div style={{"maxWidth":"500px","width":"100%","margin":"40px auto"}}>
+  ![default UI](/_machine-assets/bb1ceafbdc0825f75bd8b781b0911de25eea200ab54017d19c4f910231bb2452.png)
+</div>
+
+* `buildDefaultSmallScreenUI`: default small-screen style UI layout:
+
+<div style={{"maxWidth":"500px","width":"100%","margin":"40px auto"}}>
+  ![default small screen UI](/_machine-assets/8e26b540982c8bc44c2f5cd0d9a9972ded4ca9a6a428004643cfb5a219f4600a.png)
+</div>
+
+* `buildModernTvUI`: modern TV playback UI layout:
+
+<div style={{"maxWidth":"500px","width":"100%","margin":"40px auto"}}>
+  ![default TV UI](/_machine-assets/1f483dfe00c710f579dd12b26ebc56a89965b692ea130fe7299137c27dba9804.png)
+</div>

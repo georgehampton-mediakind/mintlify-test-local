@@ -1,0 +1,146 @@
+---
+title: Configure the Live Encoder service
+sidebarTitle: Live Encoder
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The following sections explain the basic configuration for the Live Encoder component. For advanced configuration, see the following sections of Live Encoder:
+
+* [Input parameters](/beam/live-encoder/configure/input)
+* [Encoding parameters](/beam/live-encoder/configure/encoding)
+* [Output parameters](/beam/live-encoder/configure/output/configure-output)
+
+To configure the Live Encoder, follow these steps:
+
+1. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> next to the **Live Encoder** component within the feed. The Live Encoder settings open.
+
+   ![ce1 channel edit encode cursor](/ce1-img/ce1_channel_edit_encode_cursor.png)
+
+2. When you get to the **General** tab, the name is already pre-defined. It will be incremented at each new feed instance so you don't need to change it.
+
+## Configure the input
+
+To configure the video, audio and data components, follow these steps:
+
+1. Go to the **Input** tab.
+
+2. In the **General parameters** section, select the input type:
+
+   * [**SDI**](/beam/contribution/configure-feed-components/live-encoder#sdi-input)
+   * or [**SMPTE ST 2110**](/beam/contribution/configure-feed-components/live-encoder#smpte-st-2110-input)
+
+### SDI input
+
+Before you start: ensure you already [set up the SDI card for HD or UHD operation](/beam/system-admin/maintenance/setup-sdi-asi-card).
+
+To configure an SDI input, follow these steps:
+
+1. From the **General parameters** section:
+
+   * Set the input **Type** to **SDI**.
+   * Select a Connector from the drop-down list.
+   * You can keep the SDI card number, by default **1** or change it.
+
+2. Go to the **Input streams selection** section: the input video is already configured but you can add an input audio:
+
+   * Go to the **Audio ID** section.
+   * Click **Add**. You can either keep the default parameters or modify them as needed.
+   * Click **Ok** to validate.
+
+3. Click **Save and continue** to save your changes.
+
+### SMPTE ST 2110 input
+
+Before you start: ensure you already [set up the SMPTE ST 2110 input operation](/beam/contribution/how-to/setup-smpte-2110-input).
+
+To configure an SMPTE ST 2110 input, follow these steps:
+
+1. In the **Input** > **General parameters** section, set the input **Type** to **SMPTE ST 2110**.
+
+2. Configure the input video stream:
+   * In the **Input streams selection** section, go to the **Video ID** section.
+   * Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> then enter the **SDP file location**.
+   * Click **Ok** to validate.
+
+3. Add and configure the input audio stream:
+   * In the **Input streams selection** section, go to the **Audio ID** section.
+   * Click **Add** then enter the **SDP file location**.
+   * Click **Ok** to validate.
+
+4. Click **Save and continue** to save your changes.
+
+**See also**\
+[Limitations and Considerations for ST2110 and PTP](/beam/contribution/how-to/setup-smpte-2110-input#limitations-and-considerations-for-st2110-and-ptp)\
+[Configure SDP files on MK.IO Beam](/beam/contribution/how-to/setup-smpte-2110-input#configure-sdp-files-on-mkio-beam)\
+[Setup the PTP for ST 2110](/beam/contribution/how-to/setup-smpte-2110-input#configure-ptp-for-st-2110)
+
+## Configure video, audio and data components
+
+<Steps>
+  <Step title="Configure the video component">
+    <span id="configure-the-video-component" className="mk-legacy-anchor" />
+
+    To configure the video component go to the **Video encoding** section.
+
+    1. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to check and configure the video parameters.
+
+    2. Select the appropriate parameters for the video encoding.
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Configure the audio component">
+    <span id="configure-the-audio-component" className="mk-legacy-anchor" />
+
+    To configure the audio component go to the **Audio encoding** section.
+
+    1. Click **Add**. A new window is displayed. By default audio codec is set to **Pass-through** but you can change it.
+
+    2. Select the appropriate parameters for the audio encoding.
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Save">
+    <span id="save" className="mk-legacy-anchor" />
+
+    Click **Save and continue** to save your changes.
+  </Step>
+</Steps>
+
+## Configure the output
+
+1. Go to the **Output** tab. A default output has already been created.
+
+2. In the top right corner, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" />.
+
+3. Scroll to the **Common MPEG-2 TS parameters** section. You may change some parameters, especially **Standard**, **PCR PID**, **Program number**, **Service name**, **Service provider**.
+
+4. Scroll to the **Output streams** section, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> then tick the audio stream.
+
+5. You can change the PIDs if needed.
+
+6. Click **Ok** to validate.
+
+7. Click **Save and continue** to save your changes.
+
+## Configure advanced parameters
+
+### CBR
+
+To ensure that the video is output as a CBR elementary stream, you need to add an advanced parameter:
+
+1. Go to the **Advanced parameters** tab.
+
+2. Click **Add** then set **Mpeg2ts.NullPacketStuffing** to **False**.
+
+   ![ce1 encode adv param](/ce1-img/ce1_encode_adv_param.png)
+
+3. Click **Save and exit** to save and finalize your service configuration.
+
+4. Select the **Home** menu from the left menu bar to go back to the Home page.
+
+### SCTE-35 pass-through
+
+If passing through SCTE35 messages with a default configuration, a high proportion of null splice messages will be output in comparison to splice messages which contain actual splices. This can be adjusted using the **capDmif.maxScte35Bitrate** advanced parameter. Setting this to a value of **7520** will reduce the number of null splice messages in the output.

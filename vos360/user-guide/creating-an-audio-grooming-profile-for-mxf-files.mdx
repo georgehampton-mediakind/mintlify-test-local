@@ -1,0 +1,53 @@
+---
+title: Creating an audio grooming profile for MXF files
+robots: noindex, nofollow
+---
+
+MXF audio grooming profiles can be applied to transcoded VOD assets. The source audio can have up to 16 mono channels, or 8 stereo pairs.
+
+For playout channels, you can also apply an audio grooming profile to primary events that use MXF assets. To do so, specify the profile name in the playlist file or when creating or editing a primary event in the Playout Monitor app.
+
+**Before you begin**\
+Ensure that you have configured system languages in **Channels > Settings**.
+
+1. From Asset Acquisition, select the **Settings** tab, and then click **Profiles**.
+
+2. Click **Create**, and select the MXF option from the pull-down menu.
+
+3. Enter a **Profile Name**.
+
+4. On the **Audio** tab, configure the following settings for each audio track:
+
+   * **Track ID:** Enter the track identification to be used in the output.
+
+   * **Codec**: Select the codec and configuration to be used in the output.
+
+   * **Channels**: Configure the channels to be used in the output. Each stereo pair must be configured to use the same language.
+
+   * **Languages**: Configure the languages to be used.
+
+     <Note>
+       **Note:&#x20;**&#x46;or playout assets, the languages you define for each audio and subtitle track must match the languages defined in the playout source.
+     </Note>
+
+   * **Type**: Select from the following:
+
+     * **Not defined**
+
+     * **Clean effects**
+
+     * **Hearing impaired**
+
+     * **Visual impaired commentary**
+
+5. On the **Subtitles** tab, click **Add**, and then configure the following settings:
+
+   * **ID**
+
+   * **Type:&#x20;**&#x43;hoose from Closed Caption, Teletext, or DVB.
+
+   * **Page**
+
+   * **Language**
+
+6. Click **Save**.

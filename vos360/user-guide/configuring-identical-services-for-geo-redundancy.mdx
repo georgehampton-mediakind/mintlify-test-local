@@ -1,0 +1,50 @@
+---
+title: Configuring identical services for geo-redundancy
+robots: noindex, nofollow
+---
+
+To ensure that the source, destination, and service configurations are identical, Harmonic recommends configuring each on one VOS instance and then copying the JSON configuration to the second instance using the Developer API.
+
+1+1 geo-redundancy is supported for OTT pull-packaging only. The supported formats are HLS, DASH, and MSS.
+
+1. Configure a packaging-only service with redundant MBTS input sources and SS output on one of the paired instances. Follow the instructions in [Configuring a packaging-only service.](/vos360/user-guide/configuring-a-packaging-only-service-destination)
+
+2. From the Developer API app, copy the configuration JSON and paste in a text editor such as Notepad++:
+
+   * Execute the GET /configure/v1/sources call, and then copy the contents of the **Response Body**.
+
+   * Execute the GET /configure/v1/destinations call, and then copy the contents of the **Response Body**.\
+     Note the following:
+
+     * **destinationProfileId**: This ID varies according to whether the VOS Media Software is connected to the Harmonic Hub. You may either update this parameter to match that which is stored in the Hub before copying the JSON to the second cluster, or you may copy the local destination profile configuration JSON to the second cluster for continuity.
+
+     * **publishName** (in the internal packaging section): If a publish name is configured, it will be used to generate the egress URL. Otherwise, the service ID will be used to generate the egress URL.
+
+   * Execute the GET /configure/v1/services call, and then copy the contents of the **Response Body**.
+
+3. Log into the second paired VOS Media Software.
+
+4. Using the Developer API, add the source, destination, and service configuration JSON as follows:
+
+   * Paste the response from GET /configure/v1/sources on the first paired instance to POST /configure/v1/sources on this instance.\
+     **Note:** You must update ipNetworkAddress to that of the current VOS host. Ensure that the primary and backup input sources have the same ranking on both VOS instances.
+
+5. Paste the response from GET /configure/v1/destinations on the first paired instance to POST /configure/v1/destinations on this instance, and then click **Try it out!**.
+
+6. Paste the response from GET /configure/v1/services on the first paired instance to POST /configure/v1/services on this instance, and then click **Try it out!**.\
+   Note the following:
+
+   * Ensure the service name (name) is identical on both VOS instances.
+
+   * Ensure that either the **publishName** (if used) or the service ID is identical on both VOS instances.
+
+7. Set each service to online.
+
+8. Verify service output in the Monitor Channels app. The egress URLs from both paired instances (except for the IP/domain name) should be the same.
+
+**What to do next** \
+For further verification, you may also do the following:
+
+1. Perform a playback test on individual services in each VOS Media Software.
+
+2. Compare the SS manifest from both clusters to see how consistent they are. Timestamps of segments/fragments should be the same, although the last one can differ by one or two fragments.

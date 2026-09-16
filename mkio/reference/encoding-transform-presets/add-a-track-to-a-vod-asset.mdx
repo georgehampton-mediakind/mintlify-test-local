@@ -1,0 +1,273 @@
+---
+title: Track insertion transform
+description: Create a track insertion transform that adds subtitle or audio tracks to an existing VOD asset.
+sidebarTitle: Track insertion transform
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A **track insertion transform** adds a subtitle or audio track to an existing Video on Demand (VOD) asset. It also updates the asset's client and server manifests with the new track.
+
+Create track insertion transforms through the [Media API](/api-reference/media-api). The MK.IO portal does not create this transform type.
+
+<Note>
+  Track side-loading is only available for MP4 content.
+</Note>
+
+Set the preset's `@odata.type` to `#MediaKind.TrackInserterPreset`. Each transform output can insert one text or audio track.
+
+<Note>
+  If clients requested the manifest shortly before insertion, caching can delay the updated manifest by a couple of minutes.
+</Note>
+
+## Configuration parameters
+
+The following parameters configure the inserted track:
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Parameter
+      </th>
+
+      <th>
+        Description
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        @odata.type
+      </td>
+
+      <td>
+        Use `#MediaKind.TextTrack` for a subtitle track or `#MediaKind.AudioTrack` for an audio track.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        trackName
+      </td>
+
+      <td>
+        The name of the track as it will appear in the manifest.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        hlsSettings
+      </td>
+
+      <td>
+        The HLS specific setting for the track.
+        The attributes for this object are described in a separate table.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        dashSettings
+      </td>
+
+      <td>
+        The DASH settings for the track. Only available for audio tracks.
+        The attributes for this object are described in a separate table.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        languageCode
+      </td>
+
+      <td>
+        The language code for the track. The value is an RFC5646 language code.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        displayName
+      </td>
+
+      <td>
+        The display name of the track on a video player.
+        In HLS, this maps to the NAME attribute of EXT-X-MEDIA.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        playerVisibility
+      </td>
+
+      <td>
+        Set `playerVisibility` to `Visible` to include a text track in the DASH manifest or HLS playlist. Set it to `Hidden` to exclude the track. The default is `Visible`.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### HLS specific settings
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Parameter
+      </th>
+
+      <th>
+        Description
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        characteristics
+      </td>
+
+      <td>
+        The characteristics of the track as they appear in the HLS playlist.
+        For subtitles, provide a comma-separated string containing `public.accessibility.transcribes-spoken-dialog`, `public.accessibility.describes-music-and-sound`, `public.easy-to-read`, or `public.machine-generated`.
+        For audio, provide a comma-separated string containing `public.accessibility.describes-video` or `public.machine-generated`.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        default
+      </td>
+
+      <td>
+        Indicates whether the HLS playlist marks this track as the default. A value of `1` adds the `DEFAULT=YES` attribute.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        forced
+      </td>
+
+      <td>
+        Indicates whether the HLS playlist marks this track as essential for playback. A value of `1` adds the `FORCED=YES` attribute.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### DASH settings for audio tracks
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Parameter
+      </th>
+
+      <th>
+        Description
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        role
+      </td>
+
+      <td>
+        The role of the audio track in the DASH manifest. Provide a comma-separated string containing `main`, `alternate`, `supplementary`, `commentary`, `dub`, or `emergency`.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Transform example
+
+The following transform shows how to use these parameters.
+
+Once the transform is in place, it can be used to [create a job on a given VOD asset](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs).
+
+## Add a subtitle track to a VOD asset
+
+The following transform adds an English VTT subtitle track for viewers who are deaf or hard of hearing.
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+  "properties": {
+    "outputs": [
+      {
+        "preset": {
+          "@odata.type": "#MediaKind.TrackInserterPreset",
+          "tracks": [ 
+            {
+                "@odata.type": "#MediaKind.TextTrack",
+                "trackName": "subtitle_en_US",
+                "displayName": "eng (hearing-impaired)",
+                "hlsSettings": {
+                    "characteristics": "public.accessibility.describes-music-and-sound"
+                },
+                "languageCode": "en-US"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+'
+```
+
+## Add an audio track to a VOD asset
+
+The following transform adds a secondary audio track to VOD content.
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/transforms/transform_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer bearer-token' \
+     --data '
+{
+  "properties": {
+    "outputs": [
+      {
+        "preset": {
+          "@odata.type": "#MediaKind.TrackInserterPreset",
+          "tracks": [ 
+            {
+                "@odata.type": "#MediaKind.AudioTrack",
+                "trackName": "ai-generated-fr-audio",
+                "displayName": "fra",
+                "languageCode": "fr-FR",
+                "hlsSettings": {
+                    "characteristics": "public.machine-generated"
+                },
+                "dashSettings": {
+										"role": "dub"	
+								}
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+'
+```

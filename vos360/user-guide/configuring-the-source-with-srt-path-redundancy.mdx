@@ -1,0 +1,56 @@
+---
+title: Configuring the source with SRT path redundancy
+robots: noindex, nofollow
+---
+
+The SRT Path Redundancy feature is used for increasing total stream robustness. It supports multiple connections between peers with the same stream transferring simultaneously but via different network paths.
+
+The following image displays the workflow for SRT path redundancy:
+
+![](/images/vos360/82ccc54a0c041613f9519369.png)
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.
+
+2. Click the **Add Input** icon and then select **SRT**.
+
+3. Configure the following settings:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>IP Address</p></td><td colSpan="1" rowSpan="1"><p>IP address of the live source (filled by VOS360).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Port used by the live source (filled by VOS360).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Latency</p></td><td colSpan="1" rowSpan="1"><p><span>The value must be an integer in milliseconds between 20 and 8000 ms (i.e. min. 20 ms, max. 8000 ms), the default value is 1000 ms.</span></p><p><span>The latency parameter is applied to SRT Caller (Pull) and Listener (Push) inputs.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Decryption Type</p></td><td colSpan="1" rowSpan="1"><p><span>Specify the Decrytion Type and Descyption Key for the input if needed.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Connection Mode</p></td><td colSpan="1" rowSpan="1"><p><span>Use the </span><strong><span>Caller (Pull) </span></strong><span>mode to enable SRT failover/path redundancy - SRT Path Redundancy for a transition between inputs in case of input loss.</span></p></td></tr></tbody>
+     </table>
+   </div>
+
+4. Click the **Create** button without **Connect**.
+
+   <Note>
+     **Note:&#x20;**&#x59;ou need to configure the connection SRT settings via REST API first and discover the source later.
+   </Note>
+
+5. Navigate to the **Public API** app.
+
+6. From the **Configure Source**, navigate to **GET/configure/v1/source**,
+
+7. Under **Parameters**, specify the Source Name you just created in the field **Filter By Name&#x20;**&#x74;o find out the ID number of the Source you wish to update and click **Try it out!**.
+
+8. From the **Configure Source**, navigate to **PUT/configure/v1/sources/\{id}**.
+
+9. Under **Parameters**, update the source as follows:\
+   ![](/images/vos360/e0aa246c1a178debfb56edb9.png)\
+   Add to **srtSettings** of SRT Input **srtConnectionSettings** list of pairs addresses and ports, where:
+
+   * **ipAddress** - the address of one of physical interfaces on the Streamer side (can be unresolved ip address).
+
+   * **port&#x20;**- the corresponding port on which Streamer is expected to obtain connection.
+
+     <Note>
+       **Note:&#x20;**&#x46;or enabling the SRT Path Redundancy feature, you must have at least two pairs of ipAddress/port in the srtConnectionSettings list.
+     </Note>
+
+10. Specify the **id** of the source and click **Try it out!**.
+
+11. Navigate back to **Configure Source&#x20;**&#x61;pp.
+
+12. Choose the corresponding source and click **Connect** to check and discover the source with SRT path redundancy enabled.

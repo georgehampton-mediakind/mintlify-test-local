@@ -1,0 +1,27 @@
+---
+title: Live packaging parameters
+sidebarTitle: Live Packaging
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Below are the parameters accessed in the **Live Packaging** service settings:
+
+## DVR
+
+| Parameter   | Description                                                                                                                 |
+| :---------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| Name        | Live Packaging service name                                                                                                 |
+| Ingest type | Dash-IF Injest is only supported value                                                                                      |
+| Base URL    |                                                                                                                             |
+| Duration    | Rolling buffer size (DVR window). In initial version of Beam this also controls manifest/playlist duration for live service |
+
+## Asset
+
+| Parameter  | Description                                                                                                                                                                                                                                                                                                                                                            |
+| :--------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catalog    | Catalog that will host this content. Content will be available for delivery using all outputs from the given catalog.                                                                                                                                                                                                                                                  |
+| Access URL | Portion of the complete access URL that defines the service.<br />Prefer URI unreserved characters (alphanumerical characters plus (, ), -, \_, .). Declaring a subpath (a/b) is possible but may impact performances.{ /* TODO: remove comment with recommendations will be imported) **Recommendation:** {tooltips["Cat_publishing_access-url"].Recommendations}*/ } |
+
+**Related information**\
+[Live Packaging configuration](/beam/packager/live-packaging-service)

@@ -1,0 +1,58 @@
+---
+title: Build with the Infrastructure API
+description: Use the Infrastructure API to create networks and sites that define the topology for Beam device operations.
+sidebarTitle: Infrastructure API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Infrastructure API defines where Beam devices live and which networks they can reach. Use it to create networks first, then create sites with routes that reference those networks, and finally register devices against those sites through the Fleets API.
+
+## API overview
+
+| Detail    | Value                                                             |
+| --------- | ----------------------------------------------------------------- |
+| Base path | `/api/v1/projects/{project_name}/infra/`                          |
+| Scope     | Project                                                           |
+| Reference | [Infrastructure API reference](/api-reference/infrastructure-api) |
+
+## The two core resources
+
+### Networks
+
+Networks represent logical network segments. Their status includes:
+
+* `status.owner`
+* `status.scope`
+
+These are valid sort and filter fields for the network list endpoint.
+
+### Sites
+
+Sites represent locations where devices operate. A site can include routes that reference one or more networks, which is why site creation usually comes after network creation.
+
+## Typical sequence
+
+1. List existing networks and sites.
+2. Create the networks you need.
+3. Create sites with routes that reference those networks.
+4. Register Beam devices to those sites through the Fleets API.
+5. Remove dependent references before deleting sites or networks.
+
+## Common workflow patterns
+
+<CardGroup cols={1}>
+  <Card title="Set up infrastructure for Beam devices" icon="network-wired">
+    1. [Create networks](/api-guides/how-to/infrastructure/networks-and-sites)
+    2. [Create sites with routes referencing those networks](/api-guides/how-to/infrastructure/networks-and-sites)
+    3. [Register Beam devices to sites](/api-guides/how-to/fleets/device-management)
+  </Card>
+</CardGroup>
+
+## Guide
+
+<CardGroup cols={1}>
+  <Card title="Set up networks and sites" href="/api-guides/how-to/infrastructure/networks-and-sites">
+    Follow the recommended order for creating and maintaining infrastructure resources.
+  </Card>
+</CardGroup>

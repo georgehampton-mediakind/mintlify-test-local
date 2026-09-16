@@ -1,0 +1,16 @@
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "ECMAScript named capture syntax for Mintlify rendering",
+    "version": "1.0.0"
+  },
+  "extends": "./mkio/media-api.json",
+  "actions": [
+    {
+      "target": "$[\"components\"][\"schemas\"][\"AbsoluteClipTime\"][\"properties\"][\"time\"]",
+      "update": {
+        "pattern": "^P(?:(?<years>\\d+)Y)?(?:(?<months>\\d+)M)?(?:(?<weeks>\\d+)W)?(?:(?<days>\\d+)D)?T(?:(?<hours>\\d+)H)?(?:(?<minutes>\\d+)M)?(?:(?<seconds_fract>(?:\\d*.)?\\d+)S)?$"
+      }
+    }
+  ]
+}

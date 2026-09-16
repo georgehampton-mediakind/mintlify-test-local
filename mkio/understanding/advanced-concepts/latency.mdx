@@ -1,0 +1,61 @@
+---
+title: Latency
+description: Understand the sources of delay in live video workflows and how MK.IO reports latency.
+sidebarTitle: What is Latency
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+**Latency** is the term used to define the amount of delay for the processing and transmission of data from one point to another.
+
+**End-to-end latency** in live streaming refers to the time it takes for a live video signal to be captured by a camera, transmitted over a network, and displayed on a viewer's screen.
+
+The term **"glass to glass"** refers to this production workflow from the camera lens to the moment it is displayed on a screen. End-to-end latency includes the time it takes to encode the video signal, transmit it over the network, and decode it on the viewer's device.
+
+<div className="flex flex-col items-center my-8">
+  <img src="/images/latency1.png" alt="End-to-end latency in a live video workflow" />
+
+  <p className="text-sm text-slate-500 mt-2 italic">End-to-end latency in a live video workflow</p>
+</div>
+
+Latency is introduced throughout the entire broadcast chain. The delay can vary depending on many factors, including the technology being used, the software implementation, and how the production and transmission equipment is configured. Reducing latency is critical for live events to minimize the gap between the action and the viewer's experience.
+
+## Latency introduced in video streaming
+
+Before the introduction of low-latency formats and optimized software architectures, a typical OTT streaming platform would introduce 40+ seconds of delay from source to playback.
+
+With the latest improvements in **MK.IO**, the delay from encoding to playback has been **reduced to 25 seconds.** Additional enhancements are in development, utilizing standardized low-latency streaming to further reduce this delay.
+
+A [live event](/mkio/understanding/core-concepts/live-event) can also be created with the `LowLatency` stream option instead of the default, for workflows where reducing glass-to-glass delay matters most.
+
+### Delay in the encoder
+
+The delay in the Live Encoder is the sum of the delay necessary for decoding, encoding, and output.
+
+<div className="flex flex-col items-center my-8">
+  <img src="/images/latency2.png" alt="Latency overview in the encoder" />
+
+  <p className="text-sm text-slate-500 mt-2 italic">Latency overview in the encoder</p>
+</div>
+
+At the input of the live encoder, an IP input buffer compensates for network jitter and out-of-order packets. The input is then decoded, with the duration varying based on the format.
+
+### Delay in the packager
+
+<div className="flex flex-col items-center my-8">
+  <img src="/images/latency3.png" alt="Latency overview in the packager" />
+
+  <p className="text-sm text-slate-500 mt-2 italic">Latency overview in the packager</p>
+</div>
+
+Content is first written to the DVR before being packaged and played out. CMAF chunks are issued as soon as they are completed by the Just-In-Time Packager (JITP). The packaged output cannot be delivered until the Manifest is generated and delivered to the player.
+
+### Delay introduced at player level
+
+<div className="flex flex-col items-center my-8">
+  <img src="/images/latency4.png" alt="Latency overview in the player" />
+
+  <p className="text-sm text-slate-500 mt-2 italic">Latency overview in the player</p>
+</div>
+
+The player fetches video segments over the network (each several seconds long). To ensure a smooth experience, the player typically waits until it has multiple segments before beginning playback to prevent interruptions from network fluctuations. Finally, the player decodes and renders the video frames and audio samples.

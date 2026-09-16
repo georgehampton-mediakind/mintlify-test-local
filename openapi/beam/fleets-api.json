@@ -1,0 +1,3504 @@
+{
+  "components": {
+    "schemas": {
+      "AssignedFlowGetSchema": {
+        "properties": {
+          "name": {
+            "description": "The name of a <<glossary:flow>> assigned to the device.",
+            "example": "channel-1",
+            "pattern": "^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "AssignedFlowGetSchema",
+        "type": "object"
+      },
+      "AvailableNetworkFragment": {
+        "properties": {
+          "interfaceName": {
+            "description": "The name of the <<glossary:device interface>> that will be connected to the network.",
+            "example": "eth0",
+            "pattern": "[^\\s\\/]{1,16}",
+            "type": "string"
+          },
+          "networkName": {
+            "description": "The name of the <<glossary:network>> that will be made available to this device.",
+            "example": "internet",
+            "pattern": "^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "networkName",
+          "interfaceName"
+        ],
+        "title": "AvailableNetworkFragment",
+        "type": "object"
+      },
+      "BeamHASchema": {
+        "properties": {
+          "activeControllerDeviceName": {
+            "description": "The name of the active controller device in the beamHA.",
+            "example": "controller-01",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "roles": {
+            "description": "The roles of the device in the beamHA (high availability) group.",
+            "example": [
+              "Controller",
+              "Worker",
+              "Arbiter"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 3,
+            "minItems": 0,
+            "type": "array"
+          },
+          "status": {
+            "description": "The status of the beamHA group. Only returned for the active controller device.",
+            "example": "OK",
+            "type": "string"
+          },
+          "unregisteredDevices": {
+            "description": "List of location IDs of devices that are part of the beamHA but not registered. Only returned for the active controller device.",
+            "example": [
+              "e188ca13-604f-4940-9afb-c3cb952baf01"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "roles"
+        ],
+        "title": "BeamHASchema",
+        "type": "object"
+      },
+      "DefaultMetadata": {
+        "properties": {
+          "displayName": {
+            "description": "A human-readable name for the resource.",
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A dictionary of labels associated with the resource.\n                     Maximum number of labels: 32.\n                     Maximum length of a label or value: 256 characters.\n                     Label: alphanumeric, hyphens and underscores.\n                     Value: alphanumeric, hyphens, underscores and spaces.",
+            "maxProperties": 32,
+            "type": "object"
+          }
+        },
+        "required": [
+          "displayName"
+        ],
+        "title": "DefaultMetadata",
+        "type": "object"
+      },
+      "DefaultPatchMetadata": {
+        "properties": {
+          "displayName": {
+            "description": "A human-readable name for the resource.",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A dictionary of labels associated with the resource.\n                     Maximum number of labels: 32.\n                     Maximum length of a label or value: 256 characters.\n                     Label: alphanumeric, hyphens and underscores.\n                     Value: alphanumeric, hyphens, underscores and spaces.",
+            "maxProperties": 32,
+            "type": "object"
+          }
+        },
+        "title": "DefaultPatchMetadata",
+        "type": "object"
+      },
+      "DeviceBackupBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/DeviceBackupBodySpec",
+            "description": "Device backup specification"
+          }
+        },
+        "required": [
+          "metadata",
+          "spec"
+        ],
+        "title": "DeviceBackupBody",
+        "type": "object"
+      },
+      "DeviceBackupBodySpec": {
+        "properties": {
+          "backupAssetFile": {
+            "default": false,
+            "description": "If the asset file should be backed up or not",
+            "type": "boolean"
+          },
+          "backupName": {
+            "description": "The name of the backup. The backup name can be passed to the /restore endpoint to apply the backup to the device in future. Choose a name that will help to recall the purpose of the backup, for example: an event. It is recommended that you include the date to differentiate backup versions.",
+            "example": "summer-event-20260116-144630",
+            "maxLength": 255,
+            "type": "string"
+          }
+        },
+        "title": "DeviceBackupBodySpec",
+        "type": "object"
+      },
+      "DeviceBackupGetResponseSchema": {
+        "properties": {
+          "assetFileIncluded": {
+            "description": "Whether the asset file is included in the backup.",
+            "type": "boolean"
+          },
+          "blobStorageUrl": {
+            "description": "The URL to the backup blob in storage.",
+            "type": "string"
+          },
+          "customer": {
+            "description": "The customer ID.",
+            "type": "string"
+          },
+          "device": {
+            "description": "The device ID.",
+            "type": "string"
+          },
+          "id": {
+            "description": "The unique identifier for the backup.",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the backup file.",
+            "type": "string"
+          },
+          "project": {
+            "description": "The project ID.",
+            "type": "string"
+          },
+          "services": {
+            "additionalProperties": {},
+            "description": "Services information.",
+            "type": "object"
+          },
+          "signature": {
+            "description": "Signature for the backup file.",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "Timestamp of the backup creation.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "customer",
+          "project",
+          "device",
+          "timestamp",
+          "blobStorageUrl",
+          "signature",
+          "assetFileIncluded",
+          "services"
+        ],
+        "title": "DeviceBackupGetResponseSchema",
+        "type": "object"
+      },
+      "DeviceBackupListItemSchema": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DeviceBackupMetadataSchema",
+            "description": "Metadata about the backup."
+          }
+        },
+        "required": [
+          "metadata"
+        ],
+        "title": "DeviceBackupListItemSchema",
+        "type": "object"
+      },
+      "DeviceBackupListResponseSchema": {
+        "properties": {
+          "@odata.nextLink": {
+            "description": "@odata.nextLink URL if the page length and number of items match.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "supplemental": {
+            "$ref": "#/components/schemas/ListResponseSupplementalSchema",
+            "description": "Supplemental info",
+            "readOnly": true
+          },
+          "value": {
+            "description": "A list of device backups.",
+            "items": {
+              "$ref": "#/components/schemas/DeviceBackupListItemSchema"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "supplemental",
+          "value"
+        ],
+        "title": "DeviceBackupListResponseSchema",
+        "type": "object"
+      },
+      "DeviceBackupMetadataSchema": {
+        "properties": {
+          "created": {
+            "description": "The creation timestamp of the backup.",
+            "type": "string"
+          },
+          "device": {
+            "description": "The device ID this backup is for.",
+            "type": "string"
+          },
+          "id": {
+            "description": "The unique identifier for the backup.",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the backup file.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "created",
+          "device"
+        ],
+        "title": "DeviceBackupMetadataSchema",
+        "type": "object"
+      },
+      "DeviceBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/DeviceBodySpec",
+            "description": "Device specification."
+          }
+        },
+        "required": [
+          "metadata",
+          "spec"
+        ],
+        "title": "DeviceBody",
+        "type": "object"
+      },
+      "DeviceBodySpec": {
+        "properties": {
+          "autoPreloadLatestSoftware": {
+            "default": false,
+            "description": "Whether the device should automatically preload the latest available software version.",
+            "example": true,
+            "type": "boolean"
+          },
+          "availableNetworks": {
+            "description": "The list of <<glossary:network>>s available to the device and, optionally, the interfaces they are connected to. Leave the available networks list empty to give the device access to all of the networks with routes to the device's <<glossary:site>>. Read [Available networks](ref:fleet-api#available-networks) to learn more.",
+            "items": {
+              "$ref": "#/components/schemas/AvailableNetworkFragment"
+            },
+            "type": "array"
+          },
+          "desiredSoftwareVersion": {
+            "description": "The desired version of software that should be running on the device.",
+            "example": "1.0.0.0",
+            "maxLength": 255,
+            "type": "string"
+          },
+          "geolocation": {
+            "$ref": "#/components/schemas/GeolocationFragment",
+            "description": "Optional geolocation data for the device."
+          },
+          "locationId": {
+            "description": "The location id is the identity of the actual device that will be associated with this record. This can be used instead of the `shortCode` field when registering an on-prem device. The location id does not change so this can be a simpler approach for large scale system administration.",
+            "example": "e188ca13-604f-4940-9afb-c3cb952baf01",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "preloadSoftwareVersion": {
+            "description": "A version of the software that should be preloaded on the device.",
+            "example": "1.0.0.1",
+            "maxLength": 255,
+            "type": "string"
+          },
+          "shortCode": {
+            "description": "The short code from a device's web user interface, used to on-board the device. The short code expires quickly, so it should be used immediately after it is generated. Read [On-board fleet devices](doc:on-board-fleet-devices) to learn more about on-boarding devices.",
+            "example": "XU7U23WD",
+            "maxLength": 8,
+            "minLength": 8,
+            "type": "string"
+          },
+          "siteName": {
+            "description": "The name of the <<glossary:site>> where the device is located.",
+            "example": "world",
+            "pattern": "^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "availableNetworks"
+        ],
+        "title": "DeviceBodySpec",
+        "type": "object"
+      },
+      "DeviceCapabilitiesSchema": {
+        "properties": {
+          "configurationBackup": {
+            "description": "Whether the device supports configuration backup. Returns false for devices with beam software version older than 1.6.",
+            "example": true,
+            "type": "boolean"
+          }
+        },
+        "title": "DeviceCapabilitiesSchema",
+        "type": "object"
+      },
+      "DeviceGetSchema": {
+        "properties": {
+          "kind": {
+            "description": "The kind of record.",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataSchema",
+            "description": "Device metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/DeviceBodySpec",
+            "description": "Device specification."
+          },
+          "status": {
+            "$ref": "#/components/schemas/DeviceStatusGetSchema",
+            "description": "Device status."
+          }
+        },
+        "required": [
+          "kind",
+          "spec",
+          "metadata",
+          "status"
+        ],
+        "title": "DeviceGetSchema",
+        "type": "object"
+      },
+      "DeviceInterfaceSchema": {
+        "properties": {
+          "ipAddresses": {
+            "description": "The IP address associated with this interface, if applicable.",
+            "example": [
+              "10.10.10.1"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "name": {
+            "description": "The name of the interface on the device.",
+            "example": "eth0",
+            "pattern": "^([^\\s\\/]{1,16}|[a-zA-Z][a-zA-Z0-9_]{1,255})$",
+            "type": "string"
+          },
+          "state": {
+            "description": "Whether the interface is currently present on the device. If an interface is referenced directly by a source or a destination, it may be continue to be present in the list even if the device no longer reports it.",
+            "enum": [
+              "NotPresent",
+              "Present"
+            ],
+            "example": "Present",
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of the physical or virtual interface on the device (IP, SDI/ASI or RF).",
+            "enum": [
+              "IP",
+              "SDIASI",
+              "RF"
+            ],
+            "example": "IP",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "state"
+        ],
+        "title": "DeviceInterfaceSchema",
+        "type": "object"
+      },
+      "DeviceListResponseSchema": {
+        "properties": {
+          "@odata.nextLink": {
+            "description": "@odata.nextLink URL if the page length and number of items match.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "supplemental": {
+            "$ref": "#/components/schemas/ListResponseSupplementalSchema",
+            "description": "Supplemental info",
+            "readOnly": true
+          },
+          "value": {
+            "description": "A list of devices.",
+            "items": {
+              "$ref": "#/components/schemas/DeviceGetSchema"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "supplemental",
+          "value"
+        ],
+        "title": "DeviceListResponseSchema",
+        "type": "object"
+      },
+      "DevicePatchBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultPatchMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/DevicePatchBodySpec",
+            "description": "Device specification."
+          }
+        },
+        "title": "DevicePatchBody",
+        "type": "object"
+      },
+      "DevicePatchBodySpec": {
+        "properties": {
+          "autoPreloadLatestSoftware": {
+            "default": false,
+            "description": "Whether the device should automatically preload the latest available software version.",
+            "example": true,
+            "type": "boolean"
+          },
+          "availableNetworks": {
+            "description": "The list of <<glossary:network>>s available to the device and, optionally, the interfaces they are connected to. Leave the available networks list empty to give the device access to all of the networks with routes to the device's <<glossary:site>>. Read [Available networks](ref:fleet-api#available-networks) to learn more.",
+            "items": {
+              "$ref": "#/components/schemas/AvailableNetworkFragment"
+            },
+            "type": "array"
+          },
+          "desiredSoftwareVersion": {
+            "description": "The desired version of software that should be running on the device.",
+            "example": "1.0.0.2",
+            "maxLength": 255,
+            "type": "string"
+          },
+          "geolocation": {
+            "$ref": "#/components/schemas/GeolocationFragment",
+            "description": "Optional geolocation data for the device."
+          },
+          "locationId": {
+            "description": "The location id is the identity of the actual device that will be associated with this record. This can be used instead of the `shortCode` field when registering an on-prem device. The location id does not change so this can be a simpler approach for large scale system administration.",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "preloadSoftwareVersion": {
+            "description": "A version string.",
+            "example": "1.0.0.0",
+            "maxLength": 255,
+            "type": "string"
+          },
+          "shortCode": {
+            "description": "The short code from a device's web user interface, used to on-board the device. The short code expires quickly, so it should be used immediately after it is generated. Read [On-board fleet devices](doc:on-board-fleet-devices) to learn more about on-boarding devices.",
+            "example": "XU7U23WD",
+            "maxLength": 8,
+            "minLength": 8,
+            "type": "string"
+          },
+          "siteName": {
+            "description": "The name of the <<glossary:site>> where the device is located.",
+            "example": "world",
+            "pattern": "^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$",
+            "type": "string"
+          }
+        },
+        "title": "DevicePatchBodySpec",
+        "type": "object"
+      },
+      "DeviceRemoveServicesBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/DeviceRemoveServicesBodySpec",
+            "description": "Device services remove specification"
+          }
+        },
+        "required": [
+          "metadata",
+          "spec"
+        ],
+        "title": "DeviceRemoveServicesBody",
+        "type": "object"
+      },
+      "DeviceRemoveServicesBodySpec": {
+        "properties": {
+          "description": {
+            "description": "The description to use in the MKC file.",
+            "maxLength": 2048,
+            "type": "string"
+          },
+          "selector": {
+            "$ref": "#/components/schemas/DeviceRemoveServicesSelectorBody",
+            "description": "The selector used to pick which services to remove"
+          }
+        },
+        "required": [
+          "description"
+        ],
+        "title": "DeviceRemoveServicesBodySpec",
+        "type": "object"
+      },
+      "DeviceRemoveServicesSelectorBody": {
+        "properties": {
+          "tags": {
+            "$ref": "#/components/schemas/DeviceRemoveServicesSelectorTagsBody",
+            "description": "The tags the selector used to pick which services to remove"
+          }
+        },
+        "title": "DeviceRemoveServicesSelectorBody",
+        "type": "object"
+      },
+      "DeviceRemoveServicesSelectorTagsBody": {
+        "properties": {
+          "exclude": {
+            "description": "The exclude tags the selector used to pick which services to remove",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "include": {
+            "description": "The include tags the selector used to pick which services to remove",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "title": "DeviceRemoveServicesSelectorTagsBody",
+        "type": "object"
+      },
+      "DeviceRestoreBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/DeviceRestoreBodySpec",
+            "description": "Device restore specification"
+          }
+        },
+        "required": [
+          "metadata",
+          "spec"
+        ],
+        "title": "DeviceRestoreBody",
+        "type": "object"
+      },
+      "DeviceRestoreBodySpec": {
+        "properties": {
+          "restoreAssetFile": {
+            "default": false,
+            "description": "If the asset file should be restored or not, assuming the backup contains the asset file",
+            "type": "boolean"
+          },
+          "restoreFilePath": {
+            "description": "The relative path to the backup file to restore to the device.",
+            "example": "<device_name>/<backup_id>/<backup_name>.tar.gz",
+            "maxLength": 255,
+            "type": "string"
+          }
+        },
+        "required": [
+          "restoreFilePath"
+        ],
+        "title": "DeviceRestoreBodySpec",
+        "type": "object"
+      },
+      "DeviceSoftwareGetBody": {
+        "properties": {
+          "kind": {
+            "description": "Software",
+            "readOnly": true,
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Software metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/SoftwareGetSpec",
+            "description": "Software specification."
+          },
+          "status": {
+            "$ref": "#/components/schemas/DeviceSoftwareStatusSpec",
+            "description": "Device-context status for this software release."
+          }
+        },
+        "required": [
+          "metadata",
+          "spec",
+          "status"
+        ],
+        "title": "DeviceSoftwareGetBody",
+        "type": "object"
+      },
+      "DeviceSoftwareListBody": {
+        "properties": {
+          "@odata.nextLink": {
+            "description": "@odata.nextLink URL if the page length and number of items match.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "supplemental": {
+            "$ref": "#/components/schemas/ListResponseSupplementalSchema",
+            "description": "Supplemental info",
+            "readOnly": true
+          },
+          "value": {
+            "description": "A list of software versions available for this device.",
+            "items": {
+              "$ref": "#/components/schemas/DeviceSoftwareGetBody"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "supplemental",
+          "value"
+        ],
+        "title": "DeviceSoftwareListBody",
+        "type": "object"
+      },
+      "DeviceSoftwareStatusSpec": {
+        "properties": {
+          "downgradeCompatible": {
+            "description": "Whether switching to this release is safe from an underlying component perspective. False if this release has a lower minimum version requirement than the currently installed release (or nearest known release for dev builds). True when no suitable reference release can be found (fail open).",
+            "type": "boolean"
+          },
+          "upgradeCompatible": {
+            "description": "Whether the device's current software version meets the applicable minimum version requirement for upgrading to this release. Uses the HA minimum for HA nodes and the standalone minimum for standalone devices.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "upgradeCompatible",
+          "downgradeCompatible"
+        ],
+        "title": "DeviceSoftwareStatusSpec",
+        "type": "object"
+      },
+      "DeviceStatusGetSchema": {
+        "properties": {
+          "alarmSeverity": {
+            "description": "The most severe alarm level last reported by the device.\n\n- 0 - Clear\n- 1 - Info\n- 2 - Warning\n- 3 - Error\n- 4 - Critical",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "type": "integer"
+          },
+          "assignedFlows": {
+            "description": "The a list of the <<glossary:flow>> names assigned to the device.",
+            "items": {
+              "$ref": "#/components/schemas/AssignedFlowGetSchema"
+            },
+            "type": "array"
+          },
+          "beamHA": {
+            "$ref": "#/components/schemas/BeamHASchema",
+            "description": "Information about the beamHA the device is connected to."
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/DeviceCapabilitiesSchema",
+            "description": "Device capabilities based on software version and hardware."
+          },
+          "currentSoftwareVersion": {
+            "description": "The current software version running on the device, as reported by the device.",
+            "example": "1.0.0.2",
+            "maxLength": 255,
+            "nullable": true,
+            "type": "string"
+          },
+          "geolocation": {
+            "$ref": "#/components/schemas/GeolocationFragment",
+            "description": "Optional geolocation data for the device."
+          },
+          "interfaces": {
+            "description": "A list of the physical and virtual interfaces reported by the device. If an interface is referenced directly by a source or a destination, it may be continue to be present in the list even if the device no longer reports it. The `state` field indicates if the interface is currently present on the device.",
+            "items": {
+              "$ref": "#/components/schemas/DeviceInterfaceSchema"
+            },
+            "type": "array"
+          },
+          "lastContact": {
+            "description": "The last time the device contacted the system.",
+            "nullable": true,
+            "type": "string"
+          },
+          "locationId": {
+            "description": "The location id is the identity of the actual device that will be associated with this record. This can be used instead of the `shortCode` field when registering an on-prem device. The location id does not change so this can be a simpler approach for large scale system administration.",
+            "example": "e188ca13-604f-4940-9afb-c3cb952baf01",
+            "nullable": true,
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "preloadedSoftware": {
+            "description": "The preloaded software present on the device.",
+            "items": {
+              "$ref": "#/components/schemas/PreloadSoftwareInfo"
+            },
+            "nullable": true,
+            "type": "array"
+          },
+          "rollbackSoftwareVersion": {
+            "description": "The rollback software version, as reported by the device.",
+            "example": "1.0.0.1",
+            "maxLength": 255,
+            "nullable": true,
+            "type": "string"
+          },
+          "secondsSinceLastContact": {
+            "description": "The number of seconds since the last time the device contacted the system.",
+            "nullable": true,
+            "type": "integer"
+          },
+          "serialNumber": {
+            "description": "The serial number of the device, as reported by the device.",
+            "maxLength": 255,
+            "minLength": 1,
+            "nullable": true,
+            "type": "string"
+          },
+          "softwareName": {
+            "description": "The name of the software installed on the device.",
+            "example": "beam",
+            "maxLength": 255,
+            "minLength": 0,
+            "nullable": true,
+            "type": "string"
+          },
+          "softwareUpgradeState": {
+            "description": "Indicates if a software upgrade is in progress or has failed.",
+            "enum": [
+              "Idle",
+              "Switching",
+              "SwitchFailed"
+            ],
+            "example": "Idle",
+            "type": "string"
+          },
+          "url": {
+            "description": "The URL to access the device's web interface remotely.",
+            "maxLength": 2048,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "title": "DeviceStatusGetSchema",
+        "type": "object"
+      },
+      "Error": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail",
+            "description": "Pertinent information about the error"
+          },
+          "ref": {
+            "description": "A reference to the request that caused the error.",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP status code",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "error",
+          "status",
+          "ref"
+        ],
+        "title": "Error",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "description": "The error code.",
+            "type": "string"
+          },
+          "detail": {
+            "description": "The error message.",
+            "type": "string"
+          },
+          "extraDetail": {
+            "additionalProperties": {},
+            "description": "Extra information regarding this error.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "detail"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "GeolocationFragment": {
+        "properties": {
+          "coordinates": {
+            "description": "Co-ordinates that describe the geolocation (ISO 6709), an array of two floating point numbers [latitude(North - South), longitude(East - West)]. Set an empty array to clear the geolocation.",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 2,
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "coordinates"
+        ],
+        "title": "GeolocationFragment",
+        "type": "object"
+      },
+      "ListResponseSupplementalSchema": {
+        "properties": {
+          "count": {
+            "description": "Number of items returned",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "kind": {
+            "description": "Type of items in the list",
+            "readOnly": true,
+            "type": "string"
+          },
+          "operation": {
+            "description": "Operation type. Should always say 'list'",
+            "readOnly": true,
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfoSchema",
+            "description": "Pagination info",
+            "readOnly": true
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/ProjectInfoSchema",
+            "description": "Project info",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "kind",
+          "count",
+          "operation",
+          "pagination"
+        ],
+        "title": "ListResponseSupplementalSchema",
+        "type": "object"
+      },
+      "MetadataSchema": {
+        "properties": {
+          "created": {
+            "description": "The time when the resource was created",
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdBy": {
+            "description": "ID of the user who created the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "createdByEmail": {
+            "description": "Email of the user who created the resource",
+            "type": "string"
+          },
+          "displayName": {
+            "description": "The display name of the resource",
+            "type": "string"
+          },
+          "id": {
+            "description": "The ID of the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A dictionary of labels associated with the resource",
+            "example": {
+              "label1": "value1",
+              "label2": "value2"
+            },
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the resource",
+            "type": "string"
+          },
+          "updated": {
+            "description": "The time when the resource was last updated",
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedBy": {
+            "description": "ID of the user who last updated the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "updatedByEmail": {
+            "description": "Email of the user who last updated the resource",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "MetadataSchema",
+        "type": "object"
+      },
+      "PaginationInfoSchema": {
+        "properties": {
+          "end": {
+            "description": "Position of the last item in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "records": {
+            "description": "Total number of items returned in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "start": {
+            "description": "Position of the first item in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total number of items in the project",
+            "readOnly": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "records",
+          "total"
+        ],
+        "title": "PaginationInfoSchema",
+        "type": "object"
+      },
+      "PreloadSoftwareInfo": {
+        "properties": {
+          "downgradeCompatible": {
+            "description": "Whether switching to this release is safe from an underlying component perspective. False if this release has a lower minimum version requirement than the currently installed release. True when no suitable reference release can be found (fail open).",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The name of the preloaded software present on the device.",
+            "example": "beam",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "precentProgress": {
+            "description": "Indication of coarse progress for states with a significant duration.",
+            "example": 25,
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "progressDetails": {
+            "default": "",
+            "description": "Additional information about states with a significant duration.",
+            "example": "1.2GiB of 4.9GiB",
+            "maxLength": 255,
+            "type": "string"
+          },
+          "state": {
+            "description": "The current state of the preloaded software.",
+            "enum": [
+              "Requested",
+              "Downloading",
+              "Downloaded",
+              "Importing",
+              "PreloadFailed",
+              "PreloadCancelled",
+              "Removing",
+              "Removed"
+            ],
+            "example": "Downloading",
+            "type": "string"
+          },
+          "upgradeCompatible": {
+            "description": "Whether the device's current software version meets the minimum version requirement for upgrading to this release. Mirrors the field on the device software list endpoint.",
+            "type": "boolean"
+          },
+          "version": {
+            "description": "The version of the preloaded software.",
+            "example": "1.0.0.0",
+            "maxLength": 255,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "state"
+        ],
+        "title": "PreloadSoftwareInfo",
+        "type": "object"
+      },
+      "ProjectInfoSchema": {
+        "properties": {
+          "id": {
+            "description": "Project ID",
+            "readOnly": true,
+            "type": "string"
+          },
+          "name": {
+            "description": "Project name",
+            "readOnly": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ProjectInfoSchema",
+        "type": "object"
+      },
+      "SoftwareGetSpec": {
+        "properties": {
+          "deprecatedOn": {
+            "default": "",
+            "description": "The date the software was deprecated.",
+            "example": "2025-03-25",
+            "type": "string"
+          },
+          "displayName": {
+            "default": "",
+            "description": "An optional display name of the software.",
+            "example": "beam",
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "minimumVersion": {
+            "default": "",
+            "description": "Minimum software version required on a standalone device before upgrading to this release.",
+            "example": "1.5",
+            "type": "string"
+          },
+          "minimumVersionHA": {
+            "default": "",
+            "description": "Minimum software version required on an HA node before upgrading to this release.",
+            "example": "1.7",
+            "type": "string"
+          },
+          "released": {
+            "description": "The date the software was released.",
+            "example": "2025-03-24",
+            "type": "string"
+          },
+          "version": {
+            "description": "A version string.",
+            "example": "1.0.0.0",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "released"
+        ],
+        "title": "SoftwareGetSpec",
+        "type": "object"
+      },
+      "SupportPackageBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/SupportPackageBodySpec",
+            "description": "Support package specification"
+          }
+        },
+        "required": [
+          "metadata",
+          "spec"
+        ],
+        "title": "SupportPackageBody",
+        "type": "object"
+      },
+      "SupportPackageBodySpec": {
+        "properties": {
+          "collectors": {
+            "description": "Optional list of collector components to include in the support package. If omitted, all available collectors on the device will be included.",
+            "example": [
+              "Kube",
+              "Host",
+              "Logs",
+              "RabbitMQ"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "description": {
+            "description": "A description explaining the reason for generating the support package.",
+            "example": "PCR timing drift observed on output stream.",
+            "maxLength": 2048,
+            "type": "string"
+          },
+          "name": {
+            "description": "A user-friendly name for the support package. Choose a name that describes the issue, e.g. 'pcr-timing-issue-2026-02-23'. If omitted, a name is auto-generated from the request timestamp.",
+            "example": "pcr-timing-issue-2026-02-23",
+            "maxLength": 255,
+            "type": "string"
+          }
+        },
+        "required": [
+          "description"
+        ],
+        "title": "SupportPackageBodySpec",
+        "type": "object"
+      },
+      "SupportPackageListItemSchema": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/SupportPackageMetadataSchema",
+            "description": "Support package metadata."
+          }
+        },
+        "required": [
+          "metadata"
+        ],
+        "title": "SupportPackageListItemSchema",
+        "type": "object"
+      },
+      "SupportPackageListResponseSchema": {
+        "properties": {
+          "@odata.nextLink": {
+            "description": "@odata.nextLink URL if the page length and number of items match.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "supplemental": {
+            "$ref": "#/components/schemas/ListResponseSupplementalSchema",
+            "description": "Supplemental info",
+            "readOnly": true
+          },
+          "value": {
+            "description": "List of support packages.",
+            "items": {
+              "$ref": "#/components/schemas/SupportPackageListItemSchema"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "supplemental",
+          "value"
+        ],
+        "title": "SupportPackageListResponseSchema",
+        "type": "object"
+      },
+      "SupportPackageMetadataSchema": {
+        "properties": {
+          "created": {
+            "description": "ISO 8601 creation timestamp of the support package.",
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "description": "A description of the support package content.",
+            "type": "string"
+          },
+          "device": {
+            "description": "The device name this package belongs to.",
+            "type": "string"
+          },
+          "friendlyName": {
+            "description": "The human-friendly name of the support package.",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the support package.",
+            "type": "string"
+          },
+          "size": {
+            "description": "The size of the support package in bytes.",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "SupportPackageMetadataSchema",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "## Overview\nThe MK.IO Fleet API is the project-level REST API for MK.IO Beam device fleet operations. It supports device administration use cases, including inventory management, backup lifecycle operations, restore actions, service updates, and software tracking.\n\n## Authentication\nAll endpoints require a bearer token in the `Authorization` header:\n`Authorization: Bearer <your_token>`\n\nYou can create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. Follow the [API tokens guide](https://docs.mediakind.com/mkio/how-to/managing-your-organization/api-tokens) for more information.\n\n## Usage\nBase URL: `https://app.mk.io`\n\nTypical usage pattern:\n- List devices and fleet state.\n- Create, upload, or retrieve backups.\n- Run restore and software operations.\n",
+    "title": "MK.IO Fleet API",
+    "version": "1.2.7"
+  },
+  "openapi": "3.0.2",
+  "paths": {
+    "/api/v1/projects/{project_name}/fleet/backups": {
+      "get": {
+        "description": "Lists all backups for a project from blob storage. Use $filter to filter by device.\n\nRBAC Capability Required: `fleet.device.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/backups",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceBackupListResponseSchema"
+                }
+              }
+            },
+            "description": "List of device backups."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get all backups for a project",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/backups/{backup_id}": {
+      "delete": {
+        "description": "Delete a specific device backup by id.\n\nRBAC Capability Required: `fleet.device.delete`",
+        "operationId": "[delete]_/api/v1/projects/{project_name}/fleet/backups/{backup_id}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "backup_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Backup_Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete device backup",
+        "tags": [
+          "Devices"
+        ]
+      },
+      "get": {
+        "description": "Get details for a single backup by reading metadata.json from blob storage.\n\nRBAC Capability Required: `fleet.device.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/backups/{backup_id}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "backup_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Backup_Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceBackupGetResponseSchema"
+                }
+              }
+            },
+            "description": "Device backup details."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get backup details",
+        "tags": [
+          "Devices"
+        ]
+      },
+      "patch": {
+        "description": "Rename an existing device backup by id. 'device' and 'storage_url' cannot be updated.\n\nRBAC Capability Required: `fleet.device.update`",
+        "operationId": "[patch]_/api/v1/projects/{project_name}/fleet/backups/{backup_id}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "backup_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Backup_Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The device backup entry was successfully updated."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Rename device backup",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/backups/{backup_id}/config": {
+      "get": {
+        "description": "Retrieve a specific backup config by id.\n\nRBAC Capability Required: `fleet.device.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/backups/{backup_id}/config",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "backup_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Backup_Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The device backup entry."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get device backup",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices": {
+      "get": {
+        "description": "List devices on the specified project. To learn more about devices, read [Device Concept](ref:fleet-api#device-concept).\n\n## Listing, Sorting and Filtering Devices\n\nThis endpoint returns the list of devices in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `createdBy`, `displayName`, `id`, `labels`, `metadata/created`, `metadata/displayName`, `metadata/name`, `name`, `status/alarmSeverity`, `status/beamHA/activeControllerDeviceName`, `status/beamHA/roles`, `status/currentSoftwareVersion`, `status/lastContact`, `status/model`, `status/rollbackSoftwareVersion`, `status/serialNumber`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned devices from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for devices to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `displayName`, `id`, `labels`, `metadata/created`, `metadata/displayName`, `metadata/name`, `name`, `spec/siteName`, `status/alarmSeverity`, `status/beamHA/activeControllerDeviceName`, `status/beamHA/roles`, `status/currentSoftwareVersion`, `status/lastContact`, `status/model`, `status/rollbackSoftwareVersion`, `status/serialNumber`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying devices based on their labels. Labels are a set of key-value pairs that can be used to identify devices with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of devices.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 devices from the list.\n\n`?$orderby=name desc` - Sorts devices by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns devices that match the provided name.\n\n\n`?$orderby=created desc` - Sorts devices by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns devices created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns devices with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns devices with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns devices with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `fleet.device.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/devices",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceListResponseSchema"
+                }
+              }
+            },
+            "description": "A list of devices"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List Devices",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices/{name}": {
+      "delete": {
+        "description": "Delete a device. If the device does not exist, this API will return a 204. To learn more about devices, read [Device Concept](ref:fleet-api#device-concept).\n\nRBAC Capability Required: `fleet.device.delete`",
+        "operationId": "[delete]_/api/v1/projects/{project_name}/fleet/devices/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Force the delete of this device",
+            "in": "query",
+            "name": "$force",
+            "required": false,
+            "schema": {
+              "title": "$Force",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Must be set to one of Failed|Maintenance|Storage|Other - if 'Other', the additional 'notes' query parameter is required with a brief description of the reason",
+            "in": "query",
+            "name": "$reason",
+            "required": false,
+            "schema": {
+              "title": "$Reason",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Other reason description - minimum 5 characters, maximum 255 characters",
+            "in": "query",
+            "name": "$notes",
+            "required": false,
+            "schema": {
+              "title": "$Notes",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device deleted."
+          },
+          "204": {
+            "description": "Nothing to delete."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "This could be due to one of: -\n\n- The device is not connected. The device should be reconnected (recommended) or a force delete used (not recommended).\n- Interface(s) on this device are referenced by one or more sources or destinations and those references must be removed before deletion."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete Device",
+        "tags": [
+          "Devices"
+        ]
+      },
+      "get": {
+        "description": "Get a device by name. To learn more about devices, read [Device Concept](ref:fleet-api#device-concept).\n\nRBAC Capability Required: `fleet.device.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/devices/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceGetSchema"
+                }
+              }
+            },
+            "description": "A single device"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get Device",
+        "tags": [
+          "Devices"
+        ]
+      },
+      "patch": {
+        "description": "Update a device. To learn more about devices, read [Device Concept](ref:fleet-api#device-concept).\n\nRBAC Capability Required: `fleet.device.update`",
+        "operationId": "[patch]_/api/v1/projects/{project_name}/fleet/devices/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevicePatchBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceGetSchema"
+                }
+              }
+            },
+            "description": "The updated device"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Update Device",
+        "tags": [
+          "Devices"
+        ]
+      },
+      "put": {
+        "description": "Create a device. To learn more about devices, read [Device Concept](ref:fleet-api#device-concept).\n\nRBAC Capability Required: `fleet.device.create`",
+        "operationId": "[put]_/api/v1/projects/{project_name}/fleet/devices/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceGetSchema"
+                }
+              }
+            },
+            "description": "The created device"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Create Device",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices/{name}/backup": {
+      "post": {
+        "description": "Creates a backup for specific device. This backup can be restored to a device later.\n\nRBAC Capability Required: `fleet.device.update`",
+        "operationId": "[post]_/api/v1/projects/{project_name}/fleet/devices/{name}/backup",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceBackupBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "The device backup was successfully created."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Create device backup",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices/{name}/removeServices": {
+      "post": {
+        "description": "Removes selected services from a specific device. This clears all selected configurations from the device. Please ensure that any important configurations on the device are backed up first.\n\nRBAC Capability Required: `fleet.device.update`",
+        "operationId": "[post]_/api/v1/projects/{project_name}/fleet/devices/{name}/removeServices",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceRemoveServicesBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "The non-flow services were successfully removed."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Remove selected services from device",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices/{name}/restore": {
+      "post": {
+        "description": "Restores a backup to a specific device.\n\nRBAC Capability Required: `fleet.device.update`",
+        "operationId": "[post]_/api/v1/projects/{project_name}/fleet/devices/{name}/restore",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceRestoreBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "The device backup was successfully restored."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Restore device backup",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices/{name}/software": {
+      "get": {
+        "description": "List software available to preload on the specified device.\n\nRBAC Capability Required: `fleet.devicesoftware.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/devices/{name}/software",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceSoftwareListBody"
+                }
+              }
+            },
+            "description": "A list of software"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List Devices",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages": {
+      "get": {
+        "description": "Returns up to 5 support packages currently retained in blob storage for the specified device, newest first. The device's current support package operation status is also included.\n\nRBAC Capability Required: `fleet.device.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportPackageListResponseSchema"
+                }
+              }
+            },
+            "description": "List of support packages."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List support packages for a device",
+        "tags": [
+          "Devices"
+        ]
+      },
+      "post": {
+        "description": "Requests the device to generate a support package and upload it to cloud storage. Returns 202 with a timestamp and upload URL (SAS token stripped). Only one support package operation can be in progress at a time per device.\n\nRBAC Capability Required: `fleet.device.update`",
+        "operationId": "[post]_/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportPackageBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Support package creation triggered."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Trigger support package creation on a device",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages/{package_name}": {
+      "delete": {
+        "description": "Permanently deletes the specified support package from blob storage.\n\nRBAC Capability Required: `fleet.device.delete`",
+        "operationId": "[delete]_/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages/{package_name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "package_name",
+            "required": true,
+            "schema": {
+              "title": "Package_Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Support package deleted."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete a support package",
+        "tags": [
+          "Devices"
+        ]
+      },
+      "get": {
+        "description": "Returns a JSON object containing the blob storage URL for the specified support package. The URL includes a time-limited SAS token for secure download.\n\nRBAC Capability Required: `fleet.device.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/fleet/devices/{name}/supportPackages/{package_name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "package_name",
+            "required": true,
+            "schema": {
+              "title": "Package_Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download URL returned successfully."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Download a support package",
+        "tags": [
+          "Devices"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/fleet/uploadBackup": {
+      "post": {
+        "description": "Upload/override a tar.gz file to blob storage and generate a metadata.json file containing the blob URL. The location is determined by the URL parameters.\n\nRBAC Capability Required: `fleet.device.create`",
+        "operationId": "[post]_/api/v1/projects/{project_name}/fleet/uploadBackup",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The backup tar.gz file was uploaded and metadata generated."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Upload/override a backup tar.gz and generate metadata",
+        "tags": [
+          "Devices"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "servers": [
+    {
+      "description": "MK.IO API Server",
+      "url": "https://app.mk.io/"
+    }
+  ],
+  "tags": [
+    {
+      "description": "",
+      "name": "Devices"
+    }
+  ]
+}

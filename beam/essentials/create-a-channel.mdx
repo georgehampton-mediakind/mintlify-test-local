@@ -1,0 +1,97 @@
+---
+title: Create a channel
+description: Configure and start a new channel using the Essentials channel creation wizard.
+sidebarTitle: Create a Channel
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The channel creation wizard configures a new channel and its underlying input, video, audio, and output settings from the Essentials dashboard.
+
+The wizard walks through the same pattern at every step: a step list on the left tracks your progress, and the form for the current step is on the right. The steps after **Input** depend on the workflow you choose.
+
+<Steps>
+  <Step title="Start the wizard">
+    <span id="start-the-wizard" className="mk-legacy-anchor" />
+
+    Select **New channel** from the dashboard. You can also start a new channel from within an existing channel's detail view.
+
+    Choose **Create a channel** to configure a channel from scratch, or **Duplicate an existing channel** to base it on one that already exists. Enter a name for the channel and select **Next**.
+
+    ![Create a new channel: the wizard's Name step](/_machine-assets/dfbe5d3057a4ed2d7d7cffcb58afc943115aa9f54d99109f13c5a4a15731ac69.png)
+  </Step>
+
+  <Step title="Choose the workflow">
+    <span id="choose-the-workflow" className="mk-legacy-anchor" />
+
+    Select the workflow type for the channel, then select **Next**. On the device below, **Encoding (Streaming)**, **Encoding (Distribution)**, **Encoding (Contribution)**, and **Reception (Decoding)** can be selected. **Reception (Gateway)** appears greyed out, because it is not yet available.
+
+    Availability depends on the device and its software version: the three encoding workflows need Beam `1.12.0` or higher, and **Reception (Decoding)** needs `1.13` or higher. A workflow the device cannot run appears greyed out. See [Contribution](/beam/contribution), [Reception](/beam/reception), and [Headends](/beam/headends) for the workflows behind each type.
+
+    The workflow you choose determines the steps that follow, so the wizard is not the same length for every channel. A **Reception (Decoding)** channel decodes rather than encodes, so it replaces the encoding steps below with **Decrypt**, **Decoding**, and **Decoded Output**: see [Create a reception channel](/beam/essentials/create-a-reception-channel).
+
+    ![Create a new channel: the Workflow step, with Reception (Gateway) greyed out and the other four workflows selectable](/_machine-assets/053320f65078f7a45f1541157d015f8a9c2fc6fe1d9d3210978da49a34849ff6.png)
+  </Step>
+
+  <Step title="Select the input">
+    <span id="select-the-input" className="mk-legacy-anchor" />
+
+    Choose the input type, for example **SDI**. If the input has multiple physical connections, choose the **Slot/Port** from the dropdown list, then select **Next**.
+
+    ![Create a new channel: the Input step with SDI selected and a slot and port chosen](/_machine-assets/2d1cdabe6ed9cf6990362362eb24f077f4635a6e7137d7f778e8a46fe1d9a4d6.png)
+  </Step>
+
+  <Step title="Configure video or encoding">
+    <span id="configure-video-or-encoding" className="mk-legacy-anchor" />
+
+    For an **Encoding (Streaming)** workflow, this next step is to configure our **Video** settings:
+
+    Set the **Video Codec**, **Resolution**, **Frame rate**, and **Bitrate** for the rendition, then select **+ Add** to add further renditions.
+
+    ![Create a new channel: the Video step for a streaming workflow, with codec, resolution, frame rate, and bitrate](/_machine-assets/089920702b122619f2af9ad194764780c9e3461998a816c7bdd0071871c6d608.png)
+
+    <Info>
+      The channel creation wizard shows different options depending on the selected workflow. For example For **Encoding (Contribution)** and **Encoding (Distribution)** workflows, this step is called **Encoding** and configures a single set of video parameters rather than a ladder.
+    </Info>
+
+    Select **Next** once the video parameters are set.
+  </Step>
+
+  <Step title="Configure audio">
+    <span id="configure-audio" className="mk-legacy-anchor" />
+
+    Set the audio parameters: **Audio codec**, **Audio Group**, **Mode**, and **Bitrate**. Select the trash icon to remove a track, or **+ Add** to configure an additional one. In a video ladder, the audio you define here is automatically assigned to every rendition.
+
+    ![Create a new channel: the Audio step with codec, group, mode, and bitrate](/_machine-assets/d2850fcfec5d028019d1ed1107468bf37fd29ca8f51c174993d44b9028bf022b.png)
+
+    Select **Next**.
+  </Step>
+
+  <Step title="Configure the output">
+    <span id="configure-the-output" className="mk-legacy-anchor" />
+
+    For an **Encoding (Streaming)** workflow, the output step is informational: it produces HLS-TS, HLS-fMP4, and DASH segmentation types, each with its own URL available after you create the channel. There are no fields to fill in here.
+
+    ![Create a new channel: the Output step for HTTP streaming, producing HLS and DASH outputs](/_machine-assets/879377f59e637187d980acbcf2cad4b1003b8c77e916d8a3bd1492e364e4b179.png)
+
+    For **Encoding (Contribution)** and **Encoding (Distribution)** workflows, choose an output type such as **SRT**, **RF**, **IP**, or **ASI**, and enter its connection details. For the full set of Reliable Transport configuration options available outside the wizard, see [Reliable Transport](/beam/reliable-transport).
+
+    Select **Next**.
+  </Step>
+
+  <Step title="Review and create the channel">
+    <span id="review-and-create-the-channel" className="mk-legacy-anchor" />
+
+    Review the channel summary. It covers the channel name, workflow, and input, one entry per video rendition (or a single encoding entry outside the streaming workflow), the audio configuration, and the output. Select **Modify** next to a section to change those settings.
+
+    ![Review your channel settings: channel name, workflow, input, video renditions, audio, and output](/_machine-assets/0fb7ee723deff486a6a22f87555342c774a587a7837a8ef99d4485a805ed32d1.png)
+
+    Select **Create channel**.
+  </Step>
+
+  <Step title="Start the channel">
+    <span id="start-the-channel" className="mk-legacy-anchor" />
+
+    The new channel opens in its detail view. Select **Start** to take it on air, then return to the dashboard to see it in the channel card grid.
+  </Step>
+</Steps>

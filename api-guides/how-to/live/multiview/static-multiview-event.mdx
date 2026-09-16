@@ -1,0 +1,231 @@
+---
+title: Static Multiview Event
+description: Create a StaticMultiviewEvent resource that composes multiple live inputs into a multiview output, billed per minute.
+sidebarTitle: Static Multiview Event
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A `staticMultiviewEvents` resource composes multiple live inputs into a single encoded multiview output. It is billed per minute and suits time-bounded broadcasts such as sports events, live shows, and scheduled productions.
+
+For permanent 24/7 multiview infrastructure, see [Static Multiview Channel](/api-guides/how-to/live/multiview/static-multiview-channel).
+
+For a complete setup guide that covers sources, templates, and the multiview resource together, see [Multiview setup walkthrough](/api-guides/how-to/live/multiview/multiview-walkthrough).
+
+## Prerequisites
+
+* One source or content resource per input (Media API). See [Content, sources, and destinations](/api-guides/how-to/media/content-and-sources).
+* An `encodingLive` customer config with input pins configured for multiview (Templates API). Discover presets at runtime, create a config from one, then retrieve the created config's pins. See [Manage templates](/api-guides/how-to/templates/manage-templates).
+* Optionally, a `multiviewComposing` template if you are separating composition from encoding.
+* An MK.IO asset to write output into.
+
+## Step 1: Check template input pins
+
+Before creating the resource, read your `encodingLive` template and note the pin names in `status.inputPins[].name`. These are the values you will use for `transformInput` when defining each input.
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/templating/configs/encodingLive/my-multiview-template" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Look for the `status.inputPins` array in the response. Each object has a `name` field. Copy these values exactly.
+
+If you are using a `multiviewComposing` template (Mode 2), read its pins using the same request with `multiviewComposing` as the config type. In Mode 2, the `transformInput` values must match pins from the `multiviewComposing` template, not the `encodingLive` template.
+
+## Step 2: Create the resource
+
+Create the resource with `spec.state` set to `Stopped`. This provisions the resource without starting processing. You can verify the configuration and start it when you are ready.
+
+Choose Mode 1 or Mode 2 depending on how your templates are structured. If you are not sure which to use, see [How composition works](/api-guides/how-to/live/multiview#how-composition-works).
+
+### Mode 1: Layout inside the encodingLive template
+
+Use this when a single `encodingLive` template handles both the visual composition and the encoding. Each input maps to a pin in that template.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/multiview-event-01" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": {
+      "displayName": "Multiview Event 01"
+    },
+    "spec": {
+      "state": "Stopped",
+      "inputs": [
+        {
+          "sourceName": "camera-source-1",
+          "transformInput": "<INPUT_1_PIN>"
+        },
+        {
+          "sourceName": "camera-source-2",
+          "transformInput": "<INPUT_2_PIN>"
+        },
+        {
+          "sourceName": "camera-source-3",
+          "transformInput": "<INPUT_3_PIN>"
+        },
+        {
+          "sourceName": "camera-source-4",
+          "transformInput": "<INPUT_4_PIN>"
+        }
+      ],
+      "outputs": [],
+      "transform": {
+        "type": "StaticMultiviewEvent",
+        "assetName": "multiview-event-01-archive",
+        "archiveWindowLength": "PT4H",
+        "encodingLive": {
+          "configRef": {
+            "name": "my-multiview-template",
+            "version": "latest"
+          }
+        }
+      }
+    }
+  }'
+```
+
+Each input can specify either `sourceName` or `contentName`. The example uses `sourceName`. `contentName` lets the platform resolve among candidates that can supply the content, but it does not guarantee seamless media failover.
+
+The `transformInput` values must exactly match the pin names returned by `status.inputPins[].name` in your template. The example values (`<INPUT_1_PIN>` etc.) are illustrative only.
+
+The `archiveWindowLength` sets how much content is retained in the asset. `PT4H` is 4 hours. The maximum is 30 days. Set this to match the expected length of your event plus some buffer.
+
+### Mode 2: Separate multiviewComposing template
+
+Use this when you want to control the visual layout independently from encoding. The `multiviewComposing` template defines how the feeds are arranged on screen. The `encodingLive` template defines how the composed output is encoded. You set both in the resource spec, and the `transformInput` pin names come from the `multiviewComposing` template.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/multiview-event-02" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metadata": {
+      "displayName": "Multiview Event 02"
+    },
+    "spec": {
+      "state": "Stopped",
+      "inputs": [
+        {
+          "sourceName": "camera-source-1",
+          "transformInput": "composing/input_1"
+        },
+        {
+          "sourceName": "camera-source-2",
+          "transformInput": "composing/input_2"
+        }
+      ],
+      "outputs": [],
+      "transform": {
+        "type": "StaticMultiviewEvent",
+        "assetName": "multiview-event-02-archive",
+        "archiveWindowLength": "PT2H",
+        "encodingLive": {
+          "configRef": {
+            "name": "my-encoding-template",
+            "version": "latest"
+          }
+        },
+        "multiviewComposing": {
+          "configRef": {
+            "name": "my-composing-template",
+            "version": "latest"
+          }
+        }
+      }
+    }
+  }'
+```
+
+When `multiviewComposing` is present in the spec, pin names in `transformInput` must match pins from that template. Do not use pin names from the `encodingLive` template for Mode 2 resources.
+
+## Apply per-instance configuration overrides
+
+If you need to change one or two settings in a template for this specific resource only, use `configOverrides` instead of creating a separate template version. `configOverrides` applies JSON Patch operations on top of the referenced template at resource creation time, leaving the shared template unchanged.
+
+This is useful when the same template is used across many events but one event needs a different bitrate or resolution.
+
+```json
+"encodingLive": {
+  "configRef": {
+    "name": "my-multiview-template",
+    "version": "latest"
+  },
+  "configOverrides": {
+    "type": "application/json-patch+json",
+    "operations": [
+      {
+        "op": "replace",
+        "path": "<CONFIG_JSON_POINTER>",
+        "value": "<OVERRIDE_VALUE>"
+      }
+    ]
+  }
+}
+```
+
+Replace `<CONFIG_JSON_POINTER>` with an existing JSON pointer in the retrieved config and `<OVERRIDE_VALUE>` with the replacement value using that field's JSON type.
+
+The path and value depend on the structure of your specific template.
+
+## Step 3: Check dependencies
+
+Immediately before startup, retrieve each source or content resource, the asset, and every referenced config. Confirm that the references still point to the resources you intend to use.
+
+## Step 4: Start the resource
+
+Once you have confirmed its dependencies, start the resource by patching `spec.state` to `Running`. Starting the resource incurs event billing.
+
+```bash
+curl -X PATCH "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/multiview-event-01" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": {
+      "state": "Running"
+    }
+  }'
+```
+
+After requesting startup, begin sending from every SRT encoder using its source's returned URL. Poll the state endpoint until `status.state` is `Running`:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/multiview-event-01/state" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## Step 5: Monitor the resource
+
+Once running, use the full GET to see input resolution, output status, and metrics. The `status.inputs` array shows which content each input resolved to. The `status.metrics` field contains metrics reported by the resource.
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/multiview-event-01?\$detailedStatus=true" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Input resolution and event-level stages do not prove that every source is delivering media. Check each encoder's contribution and verify that every expected tile updates in the composed picture. For status fields and monitoring URLs, see [Monitor live resources](/api-guides/how-to/live/monitor-live).
+
+## Step 6: Stop and clean up
+
+When the event ends, request `Stopped` and poll until `status.state` confirms that processing has stopped.
+
+```bash
+curl -X PATCH "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/multiview-event-01" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{ "spec": { "state": "Stopped" } }'
+```
+
+When you no longer need the resource, delete it. Review the recording and your retention requirements before removing any related assets or storage.
+
+```bash
+curl -X DELETE "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/live/staticMultiviewEvents/multiview-event-01" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## Automate start and stop
+
+To pre-schedule when the resource starts and stops, create a scheduled operation on the resource. This removes the need to send PATCH requests manually at broadcast time.
+
+See [Scheduled operations](/api-guides/how-to/live/scheduled-operations) for the full guide.

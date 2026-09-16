@@ -1,0 +1,25 @@
+---
+title: Adding labels for transcoding report usage breakdown for VOD assets
+robots: noindex, nofollow
+---
+
+You can attach labels to the asset for billing purposes through the Asset Acquisition app. Harmonic Hub provides users the ability to download detailed usage report that breaks down usage per label. The detailed report is available with grouping costs per label 'usageGroup'.
+
+<Note>
+  **Note:&#x20;**&#x4F;nly the completed jobs on assets having the labels are eligible for this type of reporting.
+</Note>
+
+1. From the **Library** tab from the **Asset Acquisition&#x20;**&#x74;ab, select the asset you wish to edit.
+
+2. Click the **Title** tab, and then navigate to the **Labels** section to add labels as desired.\
+   ![](/images/vos360/440aa96b3cacedf3f8226942.png)
+
+   <Note>
+     **Info:&#x20;**&#x42;y default, the amount of labels allowed to add is 30. The value can be increased up to 50 through REST API by changing the *usageGroupLabelsAmount&#x20;*&#x70;arameter.
+
+     The usageGroup labels are case-insensitive. For example, if the user saves labels such as *usageGroup:UPPER* and *usagegroup:upper*, they won't be treated as two unique labels. Asset Acquisition considers it the same label.
+   </Note>
+
+3. Navigate to the **Incoming&#x20;**&#x74;ab > **Decision Queue** tab and add labels as desired.
+
+   ![](/images/vos360/03f6bbe74cc9a848c64046f0.png)

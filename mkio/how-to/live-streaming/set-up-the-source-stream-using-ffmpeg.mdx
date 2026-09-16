@@ -1,0 +1,77 @@
+---
+title: Set up the source stream using FFmpeg
+description: Configure FFmpeg to send a source stream to an MK.IO live event.
+sidebarTitle: Set up the source stream using ffmpeg
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use FFmpeg to generate a test source and send it to an MK.IO live event. For SRT input, use an FFmpeg binary compiled with `libsrt`.
+
+## RTMP basic example
+
+This command generates a 1080p test pattern and a 150 Hz tone. It encodes the video with H.264, encodes the audio with AAC, and sends the constant-bitrate output to an RTMP input URL.
+
+```shell
+ffmpeg -threads 0 \
+-re \
+-f lavfi \
+-i testsrc=rate=30:size=1920x1080,format=yuv420p \
+-f lavfi \ -i "sine=frequency=150:sample_rate=48000:beep_factor=2" \
+-c:a aac \
+-ab 48k \
+-ac 2 \
+-ar 48000 \
+-c:v libx264 \
+-preset:v fast \
+-b:v 500k \
+-minrate 500k -maxrate 500k -bufsize 500k \
+-r 30 \
+-g 60 -keyint_min 60 \
+-sc_threshold 0 \
+-f flv \
+rtmp://in-7334a7c7-a376-4edf-aeb9-d6bfd7fab995.japaneast.streaming.mediakind.com:1935/de04ea37-ace5-46e1-9a54-6cb045c424df/stream
+```
+
+### Command breakdown
+
+The table describes each part of the command:
+
+| Command                                                            | Description                                                                                                                                                                                                                                                                                  |
+| :----------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-threads 0`                                                       | Sets the number of threads for processing. 0 lets FFmpeg decide the number of threads based on the available CPU cores.                                                                                                                                                                      |
+| `-re`                                                              | Makes FFmpeg read input in real time rather than as fast as possible. This makes the generated input match playback speed.                                                                                                                                                                   |
+| `-f lavfi`                                                         | Specifies the `lavfi` input format so FFmpeg generates input with a filter instead of reading an external file or stream.                                                                                                                                                                    |
+| `-i testsrc=rate=30:size=1920x1080,format=yuv420p`                 | Generates a test pattern at 30 frames per second with a resolution of 1920x1080 and a YUV 4:2:0 pixel format.                                                                                                                                                                                |
+| `-f lavfi -i "sine=frequency=150:sample_rate=48000:beep_factor=2"` | Generates a 150 Hz audio tone at a 48 kHz sample rate. `beep_factor=2` adds breaks instead of producing a continuous tone.                                                                                                                                                                   |
+| `-c:a aac`                                                         | Sets the audio codec to AAC, a widely used audio compression format.                                                                                                                                                                                                                         |
+| `-ab 48k`                                                          | Sets the audio bitrate to 48 kbps.                                                                                                                                                                                                                                                           |
+| `-ac 2`                                                            | Sets the number of audio channels to 2 (stereo).                                                                                                                                                                                                                                             |
+| `-ar 48000`                                                        | Sets the audio sample rate to 48 kHz.                                                                                                                                                                                                                                                        |
+| `-c:v libx264`                                                     | Sets the video codec to H.264 using libx264, which is efficient and compatible with most streaming platforms.                                                                                                                                                                                |
+| `-preset:v fast`                                                   | Uses the `fast` libx264 encoding preset.                                                                                                                                                                                                                                                     |
+| `-b:v 500k`                                                        | Sets the target video bitrate to 500 kbps.                                                                                                                                                                                                                                                   |
+| `-minrate 500k -maxrate 500k -bufsize 500k`                        | Sets the minimum rate, maximum rate, and buffer size to 500 kbps for constant-bitrate output.                                                                                                                                                                                                |
+| `-r 30`                                                            | Sets the output frame rate to 30 fps, matching the input video frame rate.                                                                                                                                                                                                                   |
+| `-g 60 -keyint_min 60`                                             | Sets the group of pictures (GOP) length and minimum keyframe interval to 60 frames. This produces a keyframe every two seconds at 30 fps. Match this value to the **Input key frame interval** in [MK.IO](/mkio/how-to/live-streaming/set-up-a-live-streaming-event#configure-a-live-event). |
+| `-sc_threshold 0`                                                  | Sets the scene change threshold to 0 so FFmpeg does not add keyframes for scene changes. This keeps the GOP structure stable.                                                                                                                                                                |
+| `-f flv`                                                           | Specifies the output format as flv, which is commonly used for streaming to RTMP servers.                                                                                                                                                                                                    |
+| `rtmp://...`                                                       | Specifies the RTMP server URL. Paste the **Input URL** provided after you [start the live event](/mkio/how-to/live-streaming/set-up-a-live-streaming-event#start-streaming).                                                                                                                 |
+
+## RTMP example with multiple bitrates
+
+This example sends three video qualities to an MK.IO passthrough event. Use a unique stream name for each quality and align keyframes across all qualities.
+
+```shell
+ffmpeg.exe -threads 0 -re /
+-stream_loop -1 -i "C:\Videos\sample.mp4" /
+-c:a aac -ab 128k -ac 2 -ar 48000 -c:v libx264 -s svga -b:v 500k -minrate 500k -maxrate 500k -bufsize 500k -r 30 -g 48 -keyint_min 48 -sc_threshold 0 -f flv rtmp://in-7334a7c7-a376-4edf-aeb9-d6bfd7fab995.japaneast.streaming.mediakind.com:1935/de04ea37-ace5-46e1-9a54-6cb045c424df/stream_500 /
+-c:a aac -ab 128k -ac 2 -ar 48000 -c:v libx264 -s vga -b:v 300k -minrate 300k -maxrate 300k -bufsize 300k -r 30 -g 48 -keyint_min 48 -sc_threshold 0 -f flv rtmp://in-7334a7c7-a376-4edf-aeb9-d6bfd7fab995.japaneast.streaming.mediakind.com:1935/de04ea37-ace5-46e1-9a54-6cb045c424df/stream_300 /
+-c:a aac -ab 128k -ac 2 -ar 48000 -c:v libx264 -s qvga -b:v 150k -minrate 150k -maxrate 150k -bufsize 150k  -r 30 -g 48 -keyint_min 48 -sc_threshold 0 -f flv rtmp://in-7334a7c7-a376-4edf-aeb9-d6bfd7fab995.japaneast.streaming.mediakind.com:1935/de04ea37-ace5-46e1-9a54-6cb045c424df/stream_150
+```
+
+<br />
+
+<Info>
+  Adjust the encoding settings for the available CPU capacity, network bandwidth, and required output quality.
+</Info>

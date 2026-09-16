@@ -1,0 +1,70 @@
+---
+title: Statmux Pool
+sidebarTitle: Statmux pools switching
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Statmux pools switching
+
+Statistical bitrate allocation is a feature that involves a multiplexing service (statmux master) and multiple encoding live services (slaves). When two mux servers are configured for redundancy, which means that two servers are assigned to the same service (which includes one or more statmux pools definition), you can allocate different pools to different servers.
+
+1. Create and configure the Multiplexing service.
+
+2. From the service configuration main page, select the **Statistical Multiplexing** tab.
+
+3. Check the **Enable Statistical Bitrate allocation** box.
+
+4. To add two or more pools as required, click the **Add pool** button.
+
+5. For each pool, specify the parameters:
+
+   * **Name**: It is a unique identifier used when configuring Live Encoder services to be added to the pool.
+   * **Bitrate**: It is the overall bitrate allocated to the pool.
+   * **Interface**: It is the control interface on which messages are exchanged between the statmux master and the slaves.
+   * The **Video Only** flag. Possible values are **On** or **Off**.
+
+6. Save the configuration and exit.
+
+7. Assign the service to two servers.
+
+8. Start the service.
+
+9. Open the **Statistics** page.
+
+10. Go to the **Statistical Bitrate allocation** tab.
+
+11. Scroll to the lower part of the page to check where each pool is running.
+
+    ![statmux pools running](/_machine-assets/c26e3e7dee85d5f548ab836c2160416f3b063fc215c1c3093e1c6832701634c7.jpg)
+
+    In this example, two pools called smxpool1 and smxpool2 have been defined. They have both been assigned to two servers, spark-statmux-1 and spark-statmux-2. They are both running on spark-statmux-1: both show “active” on that server.
+
+12. To switch all the pools to the other server, select the button at the right of the server name.
+
+    ![statmux pools tick button location](/_machine-assets/04cce387372c0d051544b726c23b0927208b18ac58cbe3b451a045fb35326637.jpg)
+
+    Both pools appear “active” on the second server.
+
+    ![statmux pools active](/_machine-assets/122b0ae647a189110b93e657316305c5a391b14d451b4bfe95976613b4f74515.jpg)
+
+13. To switch a single pool to the other server, select the button at the right of the pool name.
+
+    ![statmux pools single pool](/_machine-assets/8fd8b0ba362bcc5f546756cf89833980d6abad934740c2625a4361f4620b5476.jpg)
+
+The pool appears “active” on the first server.
+
+![statmux pools active2](/_machine-assets/afd7cc7aa7e84a433aed7a41025dfedc3370c1825d0dc475ede24e3efbc18450.jpg)
+
+### Important note about redundancy configuration
+
+The address associated to the multicast announcers on a specific server is dynamically allocated at the installation time, either via default values or configuration options (see Installation guides for further details).
+
+It can be retrieved by logging on the server and addressing the content of the configmap for each microservice (see paragraph “Interaction with the deployment on a specific server”).
+
+To configure two servers as a redundancy pair, the announcers for all microservices need to be set the same value on both servers. To do that:
+
+1. Edit the configmap.
+2. Restart the mux, statmux, biss-ca and simulcrypt microservices.
+
+In case of statmux, the statmux multicast address must also be specified on the encoding-live services configuration as an advanced parameter (statmux.announce.addr).

@@ -1,0 +1,76 @@
+---
+title: Configuring a channel using CloudLink input
+robots: noindex, nofollow
+---
+
+You can use CloudLink as a source input to create a new channel.
+
+1. From the **Channels** app, click **+ Channels**.
+
+   ![](/images/vos360/c173accff9ce027e7a9b3a0c.png)
+
+2. Enter the **Channel Name**.
+
+3. Toggle the **Event Channel**  to eithe&#x72;**&#x20;On** or **Off**.
+
+4. Select the desired **Transcoding Profile** for the channel through the drop-down menu.
+
+5. Set the **Time Shift Window** by dragging the button to the desired time-shift duration.\
+   Note that the configured time-shift duration cannot be changed after the channel is created.
+
+6. Configure the toggles as desired.
+
+   * **DRM**: If the channel needs to be encrypted, enable the **DRM&#x20;**&#x74;oggle and configure the following:
+
+     * Internal ID: Specify the DRM System.
+
+     * DASH ID: Specify the Content ID or Resource ID for the DASH package.
+
+     * HLS ID: Specify the Content ID or Resource ID for the HLS package.
+
+   * **Logo:&#x20;**&#x49;f the channel supports logo insertion, enable the **Logo** toggle and follow the instructions [here](/vos360/user-guide/adding-a-logo-to-a-channel).
+
+   * **Graphics**: If the channel supports graphic templates, enable the **Graphics** toggle and configure the following:
+
+     * Template: Select a graphics template file from the VOS file system.
+
+     * RSS URL: You can configure VOS to fetch text field data from an RSS feed.
+
+   * **Geo-Blocking**: If a channel needs to be blocked in specific geographical locations, enable the **Geo-Blocking** toggle and configure the following:
+
+     * Allow/Block: Select the geographical location to be allowed or blocked.
+
+     * Whitelisted IP Address: If a geographical location is selected as "Block", you can specify IP addresses to be whitelisted.
+
+   * **Blackout Slate**: If the channel supports SCTE-35 blackout slate, enable the **Blackout Slate** toggle and configure the following:
+
+     * Image: Configure the desired slate image for blackout purposes.
+
+   * **Geo-Redundancy**: The geo-redundancy feature is only available when the Active Redundancy settings are enabled for the VOS360 instances for redundancy purposes. Contact Harmonic Support to have this feature activated.
+
+7. If you wish to filter by the user-defined labels, enter a label in the **Labels** field.\
+   For more information, see [Adding labels to a service for generating usage breakdown details in the Harmonic Hub](/vos360/user-guide/adding-labels-to-a-service-for-generating-usage-breakdown-details-in-the-harmonic-hub).
+
+8. Configure **Inputs**.
+
+   * **CloudLink**: You can use the drop-down menu to select your Cloud Link.
+
+   * **IP**: You can also specify the IP details for the source CloudLink input.
+
+     * **IP Address**: Enter the source **IP Address**.
+
+     * **Port**: Enter the source **Port** number.
+
+     * **Port End**: If you are using a range of contiguous ports, such as \[10001:10006], enter the **Port End&#x20;**&#x6E;umber.
+
+     * **SSM**: (Optional) Source-specific multicast IP address in the **SSM** field.
+
+   * **Input Loss:&#x20;**&#x59;ou can specify an image for the circumstance of input signal loss.
+
+9. Click **Connect** to groom the source input.
+
+10. Select your **Streaming Protocol** from the lower menu.
+
+11. (Optional). Click the **Online**/**Offline** buttons to set the channel online/offline after it is created.
+
+12. Click **Create Channel**.

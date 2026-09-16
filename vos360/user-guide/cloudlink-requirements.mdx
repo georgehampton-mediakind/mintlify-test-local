@@ -1,0 +1,91 @@
+---
+title: CloudLink requirements
+robots: noindex, nofollow
+---
+
+CloudLink installation must conform to specific hardware and network requirements.
+
+## Hardware requirements
+
+* 4 CPU or more.
+
+* RAM memory: 32 GB RAM or more (Max. 200 GB RAM for OVA).
+
+* Storage: 200 GB hard disk free or more.
+
+<Note>
+  **Note:&#x20;**&#x57;hen installing CloudLink via RPM (Baremetal):
+
+  * CentOS 7.4 (1708) minimal install
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x54;he CloudLink host requires AVX support. To determine if your CloudLink host CPU supports the AVX flag, or for assistance with upgrading the virtual hardware version, please contact Harmonic technical support.
+</Note>
+
+## Network requirements
+
+![](/images/vos360/1158eed70b5d5e67321afce5.png)
+
+**Connections to the Internet - Protocols and ports**
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <thead><tr><th colSpan="1" rowSpan="1"><p>Protocol</p></th><th colSpan="1" rowSpan="1"><p>Port/s</p></th><th colSpan="1" rowSpan="1"><p>Direction</p></th><th colSpan="1" rowSpan="1"><p>Usage</p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>TCP</p></td><td colSpan="1" rowSpan="1"><p>53</p></td><td colSpan="1" rowSpan="1"><p>Outbound</p></td><td colSpan="1" rowSpan="1"><p>If an external DNS server is used</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>TCP</p></td><td colSpan="1" rowSpan="1"><p>443</p></td><td colSpan="1" rowSpan="1"><p>Outbound</p></td><td colSpan="1" rowSpan="1"><p>Connect to VOS and package download</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>UDP</p></td><td colSpan="1" rowSpan="1"><p>53</p></td><td colSpan="1" rowSpan="1"><p>Outbound, Connection-oriented</p></td><td colSpan="1" rowSpan="1"><p>If an external DNS server is used</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>UDP</p></td><td colSpan="1" rowSpan="1"><p>123</p></td><td colSpan="1" rowSpan="1"><p>Outbound, Connection-oriented</p></td><td colSpan="1" rowSpan="1"><p>NTP to Centos Pool, local NTP server preferred</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>UDP</p></td><td colSpan="1" rowSpan="1"><p>30000-32767,<br />44440-45439</p></td><td colSpan="1" rowSpan="1"><p>Outbound, Connection-oriented</p></td><td colSpan="1" rowSpan="1"><p>MPEG traffic to VOS</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>UDP</p></td><td colSpan="1" rowSpan="1"><p>30100-30105</p></td><td colSpan="1" rowSpan="1"><p>Outbound</p></td><td colSpan="1" rowSpan="1"><p>Lifttool</p></td></tr></tbody>
+  </table>
+</div>
+
+The UDP connection to VOS uses packet recovery techniques so the server will send back packets to the CloudLink on the same UDP "connection." The firewall must be configured to allow this traffic.
+
+### Default DNS server (can use your own):
+
+8.8.8.8\
+8.8.4.4
+
+### Default NTP servers (can use your own):
+
+[https://0.centos.pool.ntp.org](https://0.centos.pool.ntp.org)\
+[https://1.centos.pool.ntp.org](https://1.centos.pool.ntp.org)\
+[https://2.centos.pool.ntp.org](https://2.centos.pool.ntp.org)\
+[https://3.centos.pool.ntp.org](https://3.centos.pool.ntp.org)
+
+### HTTPS servers
+
+[https://harmonicinc.okta.com](https://harmonicinc.okta.com)\
+[http://harmonicinc.bomgarcloud.com](http://harmonicinc.bomgarcloud.com)\
+[https://harmonicinc.bintray.com](https://harmonicinc.bintray.com)\
+[https://harmonic.app.box.com](https://harmonic.app.box.com)\
+[https://public.boxcloud.com/](https://public.boxcloud.com/)\
+[https://harmonicinc.box.com/shared/static/sq05flvb5mpzz2ybhln5jwz4lkbvxz1x](https://harmonicinc.box.com/shared/static/sq05flvb5mpzz2ybhln5jwz4lkbvxz1x) (used for CSD internal tool and maintenance)\
+[https://api.bintray.com](https://api.bintray.com)\
+[https://harmonicinc-docker-registry-v2.bintray.io](https://harmonicinc-docker-registry-v2.bintray.io)\
+[https://harmonic.my.salesforce.com/](https://harmonic.my.salesforce.com/)\
+[https://vos-ms.herokuapp.com](https://vos-ms.herokuapp.com)\
+[https://api.hub.harmonicinc.com](https://api.hub.harmonicinc.com/)\
+xxx.vos360.video (where "xxx" is the name of the VOS360)\
+[https://salesforce.com](https://salesforce.com) (CloudLink version 1.4.4 and later)\
+[https://bintray.com](https://bintray.com) \
+[https://bintray.io](https://bintray.io) \
+[https://grafana.net](https://grafana.net) \
+[https://registry-1.docker.io](https://registry-1.docker.io)\
+[https://checkip.amazonaws.com](https://checkip.amazonaws.com)\
+[https://\*.cloudfront.net](https://checkip.amazonaws.com)\
+[https://\*.s3.amazonaws.com](https://checkip.amazonaws.com)\
+[https://hlitreleases.blob.core.windows.net](https://hlitreleases.blob.core.windows.net)\
+[https://hlitreleases.azurecr.io](https://hlitreleases.azurecr.io)\
+[https://hlitreleases.francecentral.data.azurecr.io](https://hlitreleases.francecentral.data.azurecr.io)\
+[https://hlitreleases.eastasia.data.azurecr.io](https://hlitreleases.eastasia.data.azurecr.io)\
+[https://hlitreleases.westus2.data.azurecr.io](https://hlitreleases.westus2.data.azurecr.io)
+
+<Note>
+  **Note:&#x20;**&#x4D;irror sites for OS updates are listed here:\
+  [https://www.centos.org/download/mirrors](https://www.centos.org/download/mirrors)
+</Note>
+
+<Warning>
+  **Warning!**
+
+  VOS360 endpoints are not static IPs and may periodically change ensure DNS names are used on the Firewall rules.
+</Warning>

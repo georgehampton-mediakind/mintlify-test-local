@@ -1,0 +1,124 @@
+---
+title: Creating and playing a sequence
+robots: noindex, nofollow
+---
+
+A sequence of clips is a list of events that can be started and stopped from triggers, or added manually.
+
+* Outline sequence: This type is created outside of the linear playlist. These events are added to the linear playlist on the start trigger.
+
+* Inline sequence: This type is created with the linear playlist. These events can be stopped early with a stop trigger.
+
+* Importing an OPC playlist: This type is defined in the OPC file by using the Alternate tag. Several sequences can be defined. The alternate tag contains the following:
+
+  * Name attribute (required): This defines the sequence name.
+
+    * The name must be unique in the OPC schedule. It is used as an identifier on schedule reload.
+
+  * Enable(optional). By default, the sequence is enabled.
+
+  * StartTrigger attribute (optional). This references a start trigger name.
+
+  * StopTrigger attribute (optional). This references a stop trigger name.
+
+  * List of primaries and secondaries of this sequence.
+
+## Creating a sequence
+
+1. From the **Playout Monitor** app, select the **Sequences** tab.
+
+2. Click the **+** button to add a new sequence.
+
+   ![vos\_playout\_sequences\_create.png](/images/vos360/6d08d53d4c01390f9209dc37.png)
+
+3. Enter a **Sequence name** and click **Create**.
+
+4. You can drag and drop assets and graphics from the **Assets&#x20;**&#x74;ab or **Graphics&#x20;**&#x74;ab into your sequence.
+
+   ![vos\_playout\_sequences\_enabled.png](/images/vos360/171ace13f1c441a6ad744ff7.png)
+
+5. Use the pulldown menu to select a **Start trigger**. When the indicated trigger occurs, the sequence is added to the playlist.
+
+6. Use the down-down menu to select a **Stop trigger**. When the indicated trigger occurs, the sequence is stopped and removed from the playlist.
+
+7. Use the Status toggle to turn the sequence **On** (enabled) or **Off** (disabled).
+
+<Note>
+  **Note:&#x20;**&#x41;ny event error messages are displayed in the Events table.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x54;he Start and Stop trigger drop-down menus contain the defined GPI and SCTE-35 triggers.
+</Note>
+
+8. You can also configure a sequence for the default live input, which can be activated in the following situation:
+
+   1. If there is no event in the playlist or if there is an issue with the live source stream, playout switches to the default live input.
+
+   2. If there is no default live input, playout switches to the default sequence.
+
+   3. Do the following to configure the sequence to use:
+
+      1. Create a sequence as described.
+
+      2. Click the pin icon to select a sequence as the default. The pin turns blue when selected.\
+         **Note:** Only sequences with white pins can be selected as the default sequence. \
+         **Note:** Only assets are allowed for this type of sequence. No live events or graphics are supported.
+
+   4. Once selected, the **Play&#x20;**&#x62;utton, **Status** toggle, and **Trigger** options for that sequence are disabled, and you cannot drag and drop any secondaries and feeds from the material list for the sequence.
+
+9. Click **Delete sequence** to delete the sequence if needed.
+
+## Playing a sequence
+
+You can play a sequence manually or once a trigger occurs.
+
+1. To play a sequence manually, press the Play button.
+
+   ![vos\_playout\_sequence\_play.png](/images/vos360/afdf520bb2f096f635afe8aa.png)
+
+2. If a GPI trigger is enabled, the sequence is inserted and starts 1 second after the trigger occurs.
+
+3. In the playlist, a colored ribbon indicates the events from the sequence.
+
+   ![vos\_playout\_sequence\_ribbon.png](/images/vos360/3f2830bceea844edf5d6d782.png)
+
+<Note>
+  **Notes:&#x20;**&#x54;he sequence will not be inserted if any of the following occur:
+
+  * The sequence is enabled for less than 30 seconds
+
+  * A sequence is already inserted in the playlist
+
+  * The same sequence had been played less than 30 seconds ago
+
+  Once a sequence is inserted into the playlist, the following occur:
+
+  * The current event is stopped or preempted
+
+  * Any following events are played at the end of the sequence
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x49;f several sequences are configured with the same start trigger, the sequences are inserted in the playlist in a rotation. For example if Sequence 1 and Sequence 2 use the same trigger, only Sequence 1 will be inserted on the first occurrence of the trigger. On the next occurrence of the trigger, Sequence 2 is inserted. This process restarts with each trigger.
+</Note>
+
+## Memory consumption
+
+Every sequence enabled increases the memory used by the playout service. It uses 1GB per 2 minutes of asset by sequence.
+
+The maximum number of sequences that can be enabled must be configured in the playout source. Memory is allocated on the configuration of this parameter, even without a sequence created.
+
+![vos\_playout\_max\_sequences.png](/images/vos360/3ceba38821822cd1d0521a9e.png)
+
+An alarm is raised when the number of sequences enabled is greater than this maximum configured value. Using this sequence could lead to black output for the playout service.
+
+![vos\_playout\_max\_sequences\_alarm.png](/images/vos360/c90d2ce44093d5b484691410.png)
+
+## Limitations
+
+* The maximum number of primary events in a sequence is 50.
+
+* You cannot manually define the start mode and end mode of primary events in a sequence. The default values are Follow (start mode) and Duration (end mode).
+
+* When secondary events are added to the first primary event in a sequence, their start times can be delayed.

@@ -1,0 +1,45 @@
+---
+title: Configuring a Zixi source input
+robots: noindex, nofollow
+---
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.\
+   ![](/images/vos360/42e1331ef9cf0123a67d3aad.png)
+
+2. In the **Input Source Name** field, enter the name of the new source.
+
+3. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+4. Below **Inputs**, configure the **Signal Loss** input by doing one of the following (refer to [Configuring a signal loss slate for a source input](https://confluence360.harmonicinc.com/display/VOS360DOC/.Configuring+a+signal+loss+slate+for+a+source+input+v1.25) for details):
+
+   * Select the desired **Signal lost image**.
+
+   * Click the **Display a black screen** toggle to display a black screen during signal loss.
+
+   * Click the **Display a video slate&#x20;**&#x74;oggle to select the WebM file you have uploaded.
+
+   * Click **Remove** to delete the input if it is not required.
+
+   Note that signal loss is only supported in workflows that include transcoding.
+
+5. Click the **Add Input** icon and then select **Zixi**.
+
+6. Configure the following settings:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>IP Address</p></td><td colSpan="1" rowSpan="1"><p>IP address of the live source (filled by VOS360).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Port used by the live source (filled by VOS360).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Decryption Type</p></td><td colSpan="1" rowSpan="1"><p>Set to <strong>None</strong>.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Zixi Input Mode</p></td><td colSpan="1" rowSpan="1"><p><strong>Push</strong>: No configurations required.</p><p><strong>Pull</strong>: For the <em>Channel Name</em>, <em>Session ID</em>, <em>Password </em>fields<em>,</em> fill in the respective configurations from the Zixi encoder.</p></td></tr></tbody>
+     </table>
+   </div>
+
+7. Click **Connect**.\
+   **Result**: VOS discovers the input source after a few seconds. If it cannot find the input source, the following message will appear: No data found. Please check your source.
+
+8. Choose a program from the list and, optionally, click **Play** to view the video source.\
+   **Result**: If any issues with the transport stream are detected, then a **Grooming needed** alert appears.
+
+9. &#x20;If grooming is needed, proceed with grooming the source input.
+
+10. From the **Add source** pane, click **Create** to add the source.

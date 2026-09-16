@@ -1,0 +1,88 @@
+---
+title: Customizing global settings
+robots: noindex, nofollow
+---
+
+From the **Configure Broadcast&#x20;**&#x61;pp, users can customize settings for EAS, PSIP generators, and logs/troubleshooting information.
+
+To do so, navigate to the **Configure Broadcast** > ***Settings*** to configure the global settings:
+
+## **EAS setting**
+
+![](/images/vos360/93ba0a6f2d79a36e133aacc3.png)
+
+* Configure the **EAS Mode**:
+
+  * **SCTE\_18**: Configure EAS grouping for monthly testing.
+
+    * SCTE-18 Source: Choose the incoming source for the SCTE-18 message. Note: Do not use the input source with the Signal Loss slate configured through the Configure Channels app for this SCTE-18 test message. Using this source will trigger errors. If your selected "SCTE-18 Source" is enabled with slate insertion, VOS disables or ignores slate insertion for the SCTE-18 source to avoid any possible configuration errors.
+
+    * Alert Priority Threshold: Set the Priority Threshold.
+
+    * Process Test Messages: Set the toggle to enable the test messages processing.
+
+    * Active Group for Test Message: Select the Active Group ID that is used for the test message. For example, select a group of Muxes 1-10 in order to perform monthly testing for Emergency Alert System. Each time is performed for 10% of the Muxes. Note: When the Active Group ID and the Group ID of the output program are configured but the two IDs do not match, the SCTE-18 "test message" is ignored.
+
+  * **EAS\_Net**: Connect to the EAS using the EAS-Net protocol.
+
+    * Network: Configure the network port to establish a connection to the EAS Receiver.
+
+  * **EAS\_Net (S3 based)**: Connect to the EAS using the EAS-Net (S3 based) protocol. VOS360 can monitor an AWS S3 Bucket source to enable EAS alarms. (Refer to [Configuring S3-based EAS-NET alerts](/vos360/user-guide/configuring-s3-based-eas-net-alerts) for details)
+
+<Note>
+  **Info:** After **EAS\_NET** or **EAS\_NET (S3-based)** is configured, you can apply the EAS\_NET setting to one of the following workflows:
+
+  * **Configure Broadcast&#x20;**&#x61;pp: Enable the EAS-NET add-on on a specific transcoding service via the Multiplexer created. Through the service add-on, enter the Station ID to monitor (e.g., STAT1, STAT2), and (optional) configure Active Group for testing group feature.
+
+  * **Configure Channels** app: Configure the EAS add-on on an IPTV service. This is not applicable for services with a profile type other than IPTV. Through the service add-on, enter the Station ID to monitor (e.g., STAT1, STAT2), and (optional) configure Active Group for testing group feature.
+</Note>
+
+## **PSIP**
+
+![](/images/vos360/66a2186c87cd7b1199b75069.png)
+
+Two modes are supported:
+
+* Connection to external PSIP generators compatible with Triveni Guide Builder protocol
+
+* Click ***+Generator*** to add a new one.
+
+* Select 'Type' = PSIP INJECTOR
+
+  ![](/images/vos360/25b3d993ed4177abec5bd82f.png)
+
+* Set the parameters that allow VOS to receive signalization from the PSIP generator.
+
+* Click on **Create**.
+
+  ![](/images/vos360/e57cf8955c7f18a0670a54f9.png)
+
+* Locally generated EIT tables for EPG data fetch from FTP Site.
+
+  * Click ***+Generator*** to add a new one.
+
+  * Select 'Type' = PMCP over FTP
+
+    ![](/images/vos360/ee3ca0d3ddc36e05d4eb0237.png)
+
+  * Select the 'Protocol' with either FTP (File Transfer Protocol) or FTPS (File Transfer Protocol Secure).
+
+  * Set the login parameters that allow VOS to connect to the remote FTP site.
+
+  * Click on **Create**.
+
+    ![](/images/vos360/aeda8b892781c10dc5052135.png)
+
+## **<u>Advanced</u>**
+
+You can customize advanced settings to download DPI logs and display troubleshooting information in the Configure Broadcast app.
+
+![](/images/vos360/2d4f752ec15a3bd35ccdceb3.png)
+
+* Enable DPI Logs Download
+
+  * Set the toggle to ***ON*** that allows downloading DPI logs of a service using the icon ![](/images/vos360/dedf6e58d705a8b472cf96da.png) in the Configuration tab. From the Configuration tab, on the service row, click the download button to retrieve the DPI logs.
+
+* Display Troubleshooting Information
+
+  * Set the toggle to ***ON*** that allows debugging, using the icon ![](/images/vos360/994be1ae865320e261754df2.png) in the Configuration tab. Shortcut ON/OFF Debugging mode Alt+Ctrl+S is available.

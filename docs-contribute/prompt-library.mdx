@@ -1,0 +1,355 @@
+---
+title: Prompt Library
+description: Ready-to-use AI prompts for writing, updating, and reviewing MediaKind documentation.
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+These prompts are designed for use with AI tools (Claude, Copilot, Cursor, Gemini, etc.) when working on MediaKind documentation. Each prompt loads the context the AI needs and tells it exactly what to produce.
+
+**Before using any prompt:** make sure the `AGENTS.md` file is loaded into your AI tool's context. If your tool does not auto-discover it from the repo root, add this line to the start of your prompt:
+
+<Note>
+  Read the `AGENTS.md` file at the repository root before doing anything. Follow it as your style and formatting guide.
+</Note>
+
+## Write a new page
+
+Use these prompts when you have raw technical content and need a finished docs page.
+
+<Tabs>
+  <Tab title="How-to">
+    Use for task-based pages: anything the reader needs to accomplish step by step.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, write a how-to page at the path below.
+
+    File path: src/content/docs/<product>/<section>/<page-name>.mdx
+    Topic: [What task does this page help the reader complete?]
+    Product: [MK.IO or MK.IO Beam]
+    Audience: [Developers / Video engineers / Administrators]
+    Why this matters: [What is the reader trying to achieve? What breaks if they skip this?]
+
+    Source material:
+    [Paste your raw notes, bullet points, or draft here]
+
+    Requirements:
+    - Valid frontmatter with title (7 words max) and description (one search-snippet sentence)
+    - H1 matching the title, blank line, then a 1–3 sentence intro for a reader arriving from search
+    - Prerequisites section if anything must be done first
+    - Numbered steps. Use Starlight <Steps> if any step contains a code block, screenshot, or sub-instructions. Use a plain numbered list for simple sequences.
+    - Prose before every code block (what it does) and after (field explanations, constraints, optional params)
+    - A "Related documentation" heading with an ordinary Markdown link list only when there is a direct next step
+    - List any orienting context you added under "Editorial additions"
+    - Flag any gaps or missing information at the end
+    ```
+  </Tab>
+
+  <Tab title="Concept">
+    Use for explanatory pages: what something is, how it works, when to use it.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, write a concept page at the path below.
+
+    File path: src/content/docs/<product>/<section>/<page-name>.md
+    Topic: [What concept does this page explain?]
+    Product: [MK.IO or MK.IO Beam]
+    Audience: [Developers / Video engineers / Administrators]
+    What should the reader understand after reading this: [Describe the key insight or mental model]
+
+    Source material:
+    [Paste your raw notes or draft here]
+
+    Requirements:
+    - Valid frontmatter with title (noun phrase, 7 words max) and description
+    - H1 matching the title, blank line, then intro: what this is and why the reader needs to know it
+    - Prose explanation — not a step list. Concepts are not tasks.
+    - Tables or diagrams only where the source material supports them
+    - A "Related documentation" heading with an ordinary Markdown link list to directly relevant how-to pages
+    - List any orienting context you added under "Editorial additions"
+    - Flag any gaps at the end
+    ```
+  </Tab>
+
+  <Tab title="Reference">
+    Use for lookup pages: API fields, config options, parameter tables, presets.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, write a reference page at the path below.
+
+    File path: src/content/docs/<product>/<section>/<page-name>.md
+    Topic: [What does this reference cover? API object, config file, CLI flags, etc.]
+    Product: [MK.IO or MK.IO Beam]
+
+    Source material:
+    [Paste the spec excerpt, field list, or raw notes here]
+
+    Requirements:
+    - Valid frontmatter with title (noun phrase, 7 words max) and description
+    - H1 matching the title, blank line, then 1–2 sentence intro stating what this covers
+    - Tables with columns: Field / Type / Required / Description
+    - Code examples for common usage patterns, with prose before and after each block
+    - Do not invent field types, defaults, or behaviours not in the source material. Mark missing values as [NEEDS INPUT] and flag them at the end.
+    - List any orienting context you added under "Editorial additions"
+    ```
+  </Tab>
+
+  <Tab title="Troubleshooting">
+    Use for known error or failure state pages.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, write a troubleshooting page at the path below.
+
+    File path: src/content/docs/<product>/<section>/<page-name>.md
+    Topic: [What category of issues does this page cover?]
+    Product: [MK.IO or MK.IO Beam]
+    Audience: [Developers / Video engineers / Administrators]
+
+    Source material (for each issue, provide: the symptom, the cause if known, and the resolution):
+    [Paste your notes here]
+
+    Requirements:
+    - Valid frontmatter with title (7 words max) and description
+    - H1 matching the title, blank line, then 1–2 sentence intro
+    - One H2 per issue, named after the symptom the reader would search for
+    - Under each H2: brief prose stating the cause, then resolution as numbered steps
+    - A Starlight :::danger aside only for destructive resolution steps
+    - Do not invent causes or resolutions. Flag any gaps.
+    - List any orienting context you added under "Editorial additions"
+    ```
+  </Tab>
+</Tabs>
+
+## Update an existing page
+
+Use these prompts when a page already exists but needs changes.
+
+<Tabs>
+  <Tab title="Full restyle">
+    Use when a page is technically accurate but does not meet the style guide. Applies the full editorial treatment without changing the technical content.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, apply a full editorial pass to the page below.
+
+    Do not change any technical content. Improve only how it is written and structured.
+
+    What to fix:
+    - Restructure for logical flow: prerequisites before steps, steps before verification
+    - Rewrite sentences for clarity, active voice, and 10–20 word target length
+    - Convert action paragraphs to numbered lists or Starlight <Steps> blocks
+    - Add the correct page opening (H1, blank line, intro) if missing
+    - Add prose before and after code blocks if missing
+    - Fix formatting: heading levels, bold, backticks, code block language tags
+    - Replace em dashes with hyphens, colons, or separate sentences
+    - Remove contractions and filler words
+    - Prefer Markdown, Starlight asides, Starlight Steps, cards, and supported inline icons. Do not introduce legacy Callout, LegacySteps, Tabs, or arbitrary components. RelatedTopics has been removed; use an ordinary Markdown link list.
+
+    Page content:
+    [Paste the full page here]
+
+    At the end, list:
+    1. Structural changes you made and why
+    2. Any orienting context you added ("Editorial additions")
+    3. Any technical gaps or concerns for the contributor
+    ```
+  </Tab>
+
+  <Tab title="Apply a correction">
+    Use when something specific is wrong or outdated and needs a targeted fix.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, apply the correction below to the page.
+
+    Only change what is needed to apply the correction. If the correction makes other parts of the page inconsistent, flag those — do not silently fix them.
+
+    Correction: [Describe exactly what is wrong and what it should be]
+
+    Page content:
+    [Paste the full page here]
+    ```
+  </Tab>
+
+  <Tab title="Improve a specific section">
+    Use when a specific part of a page needs work while leaving the rest alone.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, improve the section described below.
+
+    Leave the rest of the page untouched.
+
+    Section to improve: [Name the heading or describe the section]
+    What is wrong with it: [e.g. "It is a wall of text that should be numbered steps", "The code block has no explanation", "The callout is decorative and should be removed"]
+
+    Page content:
+    [Paste the full page here]
+    ```
+  </Tab>
+
+  <Tab title="Add content from a spec">
+    Use when adding new content from an API spec, release notes, or another authoritative source.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, add the following content to the page below.
+
+    Use only the source material I provide. Do not extrapolate or invent additional behaviour.
+
+    What to add: [Describe the new content — new field, new step, new endpoint, etc.]
+
+    Source material:
+    [Paste the spec excerpt, release note, or raw notes here]
+
+    Existing page:
+    [Paste the full page here]
+
+    Flag any inconsistencies between the new content and the existing page rather than silently resolving them.
+    ```
+  </Tab>
+</Tabs>
+
+## Review and quality checks
+
+Use these prompts to catch problems before merging a PR.
+
+<Tabs>
+  <Tab title="Style and formatting review">
+    Use to check a page against the style guide before approving a PR.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, review the page below for style and formatting issues only. Do not suggest technical changes.
+
+    Report:
+    - Any em dashes (should be hyphens or colons)
+    - Any contractions (should be expanded: "don't" → "do not")
+    - Any filler words ("simply", "just", "easily", "please", "obviously")
+    - Any passive voice that should be active
+    - Any code blocks missing a language tag
+    - Any code blocks missing prose before or after
+    - Any code blocks prefixed with $ or >
+    - Any heading levels that skip a level
+    - Any numbered lists used where bullets should be (non-sequential items)
+    - Any bullet lists used where steps should be numbered (sequential actions)
+    - Any callouts that are decorative or restate something already in the prose
+    - Any components missing blank lines before or after
+    - Any internal links that include .mdx in the path
+    - Any missing or weak alt text on images
+
+    Page content:
+    [Paste the page here]
+    ```
+  </Tab>
+
+  <Tab title="Technical accuracy check">
+    Use when you want to verify that a page's technical claims are internally consistent before merging.
+
+    ```
+    Read the page below carefully and report any of the following:
+
+    - Steps that reference a UI label or field name that is not mentioned elsewhere on the page
+    - Steps that assume the reader has done something that is not listed in the prerequisites
+    - Code examples that reference a variable or value not defined on the page
+    - Conflicting instructions (the page says to do X in one place and Y in another)
+    - Missing expected outcomes (a procedure that ends without telling the reader what success looks like)
+
+    Do not rewrite anything. Report findings only.
+
+    Page content:
+    [Paste the page here]
+    ```
+  </Tab>
+
+  <Tab title="Find thin content">
+    Use to identify pages that are technically accurate but too sparse to be useful.
+
+    ```
+    Read the page below and identify any of the following:
+
+    - Procedures that list steps without explaining why they matter or what success looks like
+    - API fields or config options listed without descriptions of when or why to use them
+    - Concepts named but not defined
+    - Code examples that appear without context explaining what they do
+    - Sections that would leave a first-time reader unable to complete the task without additional help
+
+    For each gap, describe specifically what is missing and why a reader would need it. Do not fill the gaps — flag them for the contributor.
+
+    Page content:
+    [Paste the page here]
+    ```
+  </Tab>
+</Tabs>
+
+## Maintenance tasks
+
+Use these prompts for larger structural work across the docs.
+
+<Tabs>
+  <Tab title="Split a long page">
+    Use when a page has grown too long and covers multiple distinct tasks.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, review the page below and recommend how to split it.
+
+    For each proposed split, specify:
+    - Which H2 sections would move to a new page
+    - The file path for the new page (following the existing folder structure)
+    - Why the split helps the reader
+
+    Do not actually split the page yet — provide the recommendation only. The contributor must approve before you make structural changes that affect URLs and the sidebar.
+
+    Page content:
+    [Paste the full page here]
+    ```
+  </Tab>
+
+  <Tab title="Write an overview index page">
+    Use when a section needs a landing page that orientates the reader and links to child pages.
+
+    ```
+    Using AGENTS.md as your style and formatting guide, write an overview index page for the section below.
+
+    File path: src/content/docs/<product>/<section>/index.mdx
+    Section name: [e.g. "Content management", "Streaming endpoints"]
+    Product: [MK.IO or MK.IO Beam]
+    Child pages in this section:
+    [List the page titles and paths]
+
+    Requirements:
+    - Valid frontmatter
+    - H1, blank line, intro: 2–4 sentences explaining what this section covers and who it is for
+    - <Cards> linking to the child pages when cards improve navigation; otherwise use an ordinary Markdown link list
+    - No step-by-step procedures on an overview page
+    - No content duplicated from child pages
+    ```
+  </Tab>
+
+  <Tab title="Audit a section">
+    Use to assess the overall quality of a section before a release or a site review.
+
+    ```
+    Review all the pages listed below. For each page, report:
+
+    1. Missing or weak frontmatter (title too long, description too vague)
+    2. Pages without a proper intro (jump straight into steps or lists)
+    3. Pages with orphaned code blocks (no prose before or after)
+    4. Pages that should probably be split (multiple unrelated H2 sections)
+    5. Pages that cover the same topic and may need consolidating
+    6. Any broken internal links (links containing .mdx or linking to a path that looks wrong)
+
+    Report findings only. Do not rewrite anything.
+
+    Pages to review:
+    [Paste the page contents, or list the file paths if using a tool with repo access]
+    ```
+  </Tab>
+</Tabs>
+
+## Tips for better results
+
+| Tip                                      | Why it matters                                                                                                                         |
+| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| Give the AI all the raw technical detail | The AI cannot look things up. The more information you provide, the better and more accurate the output.                               |
+| Specify the file path                    | The AI uses the path to pick the correct product terminology (MK.IO vs Beam) and folder conventions.                                   |
+| State the content type                   | "This is a how-to" or "this is a reference page" tells the AI which structure to apply.                                                |
+| Review the intro                         | The AI writes an intro based on your source material. Check it accurately describes what the page covers.                              |
+| Iterate on sections                      | Ask the AI to refine specific parts: "shorten the intro", "convert section 3 to a table", "add a warning callout for the delete step". |
+| Check technical accuracy                 | The AI preserves your content but can misinterpret ambiguous phrasing. Always verify steps, parameter names, and code examples.        |

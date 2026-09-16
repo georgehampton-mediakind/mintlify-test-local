@@ -1,0 +1,85 @@
+---
+title: How to configure the system clock
+sidebarTitle: Configure System Clock
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The system clock is used by all the applications on the unit as both a time reference for different functional operations such as application of Over Air Commands, but also for recording log entries and events.
+
+To confirm events and logs are synchronized across a system it is often desirable for customers to synchronize the system clocks of all units within the system to a known reference clock.
+
+Where all the units are co-located or where all units have access to a reliable ethernet connection the synchronization is often performed using an NTP source.
+
+Where units are remote, or a network connection is not reliable, it is possible to synchronize the system using the TDT within the transport stream.
+
+## Operating modes
+
+The following **Time Source** operating modes can be configured from the **System Settings** page on the web UI.
+
+* Free running
+* NTP
+* PTP
+* TDT
+
+<Info>
+  All services and functions running on the server use a single system clock and will be affected by the system clock setting.
+</Info>
+
+### Free running
+
+The time is set on the unit when the server is manufactured. The system clock will continue to increment based on the clock accuracy of the motherboard clock within the unit.
+
+### NTP
+
+When set to NTP and a valid IP address of an NTP server has been configured, the server will attempt to adjust the system clock to be aligned to the time provided by the NTP messages.
+
+If no valid NTP messages are received or if the messages stop after a period of time, the unit will free run from its current time. If the unit was previously adjusting, this adjustment will be stopped until valid NTP messages are resumed.
+
+### PTP
+
+When set to PTP, the device will synchronize its system clock with a PTP Grand Master.
+
+### TDT
+
+When set to TDT and a service has been selected containing a valid TDT component, the unit will attempt to adjust the system clock to be aligned to the time provided in the TDT.
+
+Operation of locking the system clock to the incoming TDT is the same as for NTP. See Select the TDT source.
+
+## Initial status and set up
+
+![clock initial status](/rx1-img/clock-initial-status.png)
+
+## Select the TDT source
+
+* Go to the **Time sources** section on the **System Settings** page.
+* Select the **TDT** tab.
+* Select the **Service name** from the drop-down menu.
+* To set TDT as the time source, click on the  **Make active** button, then click the **Save** button at the bottom of the page to save the change.
+
+## Configure NTP servers
+
+* Go to the **Time sources** section on the **System Settings** page.
+* Select the **NTP** tab.
+* To add a new NTP server, click **+ Add NTP server** then enter the NTP server's IP address in the **Address** field then click **Confirm.**
+* To update the IP address of an existing NTP server, click the **Edit** <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> button next to that server, then update the IP address in the **Address** field.
+* Confirm the changes by clicking on **Confirm,** then to save the changes, click the **Save** button at the bottom of the page.
+* To set NTP as the time source, click on the  **Make active** button, then click the **Save** button at the bottom of the page to save the change.
+
+## Configure PTP synchronization
+
+* Go to [Configure PTP for ST-2110](/beam/contribution/how-to/setup-smpte-2110-input#configure-ptp-for-st-2110)
+
+## Set up the system to operate in Free Running Mode
+
+* Go to the **Time sources** section on the **System Settings** page.
+* Select the **Free Running** tab.
+* Click the **Disable time synchronization** button, then click the **Save** button at the bottom of the page to save the change.
+
+## Clock Detection
+
+![clock detection](/rx1-img/clock-detection.png)
+
+## Clock Synchronization
+
+![clock synchronization](/rx1-img/clock-synchronization.png)

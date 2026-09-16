@@ -1,0 +1,37 @@
+---
+title: Configuring an HSP source input
+robots: noindex, nofollow
+---
+
+You can use HSP (Harmonic Stream Protocol) as a live source input to create a new channel that can be used with playout.
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.\
+   ![](/images/vos360/42e1331ef9cf0123a67d3aad.png)
+
+2. In the **Input Source Name** field, enter the name of the new source.
+
+3. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+4. Below **Inputs**, configure the **Signal Loss** input by doing one of the following (refer to [Configuring a signal loss slate for a source input](https://confluence360.harmonicinc.com/display/VOS360DOC/.Configuring+a+signal+loss+slate+for+a+source+input+v1.25) for details):
+
+   * Select the desired **Signal lost image**.
+
+   * Click the **Display a black screen** toggle to display a black screen during signal loss.
+
+   * Click the **Display a video slate&#x20;**&#x74;oggle to select the WebM file you have uploaded.
+
+   * Click **Remove** to delete the input if it is not required.
+
+   Note that signal loss is only supported in workflows that include transcoding.
+
+5. Click the **+ Input&#x20;**&#x69;con, and then select **HSP**.
+
+6. Configure the HSP Input Mode:
+
+   * **Push**: No configuration is required. The endpoint URL is generated automatically for push packaging.
+
+   * **Pull**: Specify the endpoint URL to pull the source content from.
+
+7. (Optional) Add the **Watermark** from the drop-down menu by clicking the **"+Input**" button. The Watermark inputs are also displayed in the HSP input.
+
+8. Click **Connect&#x20;**&#x74;o groom the source input.

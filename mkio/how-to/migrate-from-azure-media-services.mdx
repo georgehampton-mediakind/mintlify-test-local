@@ -1,0 +1,29 @@
+---
+title: Migrate from Azure Media Services
+description: Choose the MK.IO guides for importing Azure Media Services assets, converting legacy formats, and restoring playback.
+sidebarTitle: Migrate from Azure Media Services
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Move existing Azure Media Services (AMS) assets into MK.IO without treating migration as a separate product area. Choose the import path for your library, then convert or publish the imported assets as required.
+
+## Choose an import path
+
+<CardGroup cols={2}>
+  <Card title="Import selected AMS assets" href="/mkio/how-to/content-management/add-an-asset-in-mkio/import-your-ams-assets" icon="cloud-arrow-down">
+    Import existing AMS assets from connected Azure storage.
+  </Card>
+
+  <Card title="Bulk import an AMS library" href="/mkio/how-to/content-management/add-an-asset-in-mkio/bulk-asset-migration-from-ams-storage" icon="database">
+    Import multiple AMS assets from a storage account.
+  </Card>
+</CardGroup>
+
+## Prepare imported assets
+
+* [Verify the imported files and tracks](/mkio/how-to/content-management/verify-your-assets-in-mkio).
+* [Convert legacy assets](/mkio/reference/encoding-transform-presets/asset-conversion-transform) when the target workflow requires the current MP4 format.
+* [Publish migrated assets](/mkio/how-to/content-management/playback-your-migrated-assets) with an MK.IO streaming endpoint and locator.
+
+Use the [Assets and storage guides](/mkio/how-to/content-management) for ongoing asset management after migration.

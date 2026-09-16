@@ -1,0 +1,17 @@
+---
+title: Configure the feed components
+sidebarTitle: Configure Feed Components
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+After a feed has been created, each service within the feed must be individually configured to create the entire MK.IO Beam configuration. Thus, you will configure:
+
+* [the Receiver service](/beam/receiver)
+* optionally [the Multiplexer service](/beam/multiplexer)
+* optionally [the Live Encoder service](/beam/live-encoder/configure)
+
+The Reliable Transport service is not included in all of the MK.IO Beam feed templates.
+It can be added separately via the **Services** page. See [Reliable Transport Configuration](/beam/reception/configure-feed-components/reliable-transport)
+
+When editing service parameters, do not modify any interfaces which have been configured to use the “tap0” or “lo” interfaces as those are used internally to pass data between the services.

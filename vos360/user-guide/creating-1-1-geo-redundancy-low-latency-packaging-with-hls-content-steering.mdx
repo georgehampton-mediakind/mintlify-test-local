@@ -1,0 +1,36 @@
+---
+title: Creating 1+1 geo-redundancy low-latency packaging with HLS content steering
+robots: noindex, nofollow
+---
+
+The geo-redundancy capabilities can be utilized on the HLS low-latency packaging outputs. A redundant low-latency HLS streaming system needs to be set up that utilizes primary and backup VOS clusters to generate synchronized chunks.
+
+1. Enable 1+1 output redundancy for both clusters.
+
+2. Enable the **Low-Latency Live Mode** settings for HLS in the Destination profile using the Lab Wizard app.
+
+<Note>
+  **Note:&#x20;**&#x54;his implementation must adhere to the Low-Latency HLS Server Configuration Profile, which includes the use of EXT-X-PROGRAM-DATE-TIME tags, EXT-X-PART tags for partial segments, and EXT-X-PRELOAD-HINT tags to facilitate this process.
+
+  It is crucial to monitor the encoders to ensure that their outputs remain synchronized through aligned media timestamps and discontinuity sequence numbers. This monitoring supports seamless failover between the redundant VOS, maintaining the integrity of low-latency delivery.
+</Note>
+
+3. Set the **Enable Content Steering Master Playlist** to “**True”** and configure the **Content Steering Master Playlist Filename** in the Destination profile using the Lab Wizard app. In this example we will generate a master playlist with content steering information named index-steering.m3u8
+
+   ![vos\_1\_1\_redundancy\_image\_1.png](/images/vos360/7a73750d13010edea7fa3591.png)
+
+4. Through **Configure Channels** > **Destinations**, set the **Type** as "Origin/CDN" type and the **Profile** that you have enabled the content steering master playlist in the Destination profile.
+
+   ![vos\_1\_1\_redundancy\_image\_2.png](/images/vos360/b2181116b2277bab8b744e73.jpg)
+
+5. Configure the Content Steering Server file paths as follows:
+
+   1. **Alternative Cluster Absolute Base URL in Master Playlist**\
+      Set the alternative cluster base URL (e.g. [https://cdn-backup-01.nebula.video/Content/HLS/Live/channel(50742e18-c3bc-6d46-cb24-caa11c8ac49e)/](https://cdn-backup-01.nebula.video/Content/HLS/Live/channel\(50742e18-c3bc-6d46-cb24-caa11c8ac49e\)/) the slash at the end is optional).
+
+   2. **Content Steering Server URL In Master Playlist**\
+      The URL of the content steering server (Note this server is not managed by VOS)
+
+   3. **Local Pathway Name for Content Steering Server** & **Alternative Pathway Name for Content Steering Server**\
+      For Cluster A, set "local pathway name" to CDN1 and "alternative pathway name" to CDN2\
+      For Cluster B, set "local pathway name" to CDN2 and "alternative pathway name" to CDN1

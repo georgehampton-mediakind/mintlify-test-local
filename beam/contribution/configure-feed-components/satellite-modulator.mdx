@@ -1,0 +1,52 @@
+---
+title: Configure the Satellite Modulator output
+sidebarTitle: Satellite Modulator
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Satellite Modulator option card is only supported on MK.IO Beam running on C-series servers.
+The Satellite Modulator option card is only supported with the Live Encoder + Multiplexer + Satellite Modulator use case.
+
+<Info>
+  On first usage, the Satellite Modulator settings will be read-only. To edit modulation parameters, you must log in to the Satellite Modulator card as an administrator. The administrator user will be logged out after a period of inactivity. If that happens, you will need to log in as an administrator again to be able to edit settings.
+</Info>
+
+To configure the Satellite modulator option card, follow these steps:
+
+1. Create a new feed based on the **Live Encoder + Multiplexer + Satellite Modulator** template.
+
+2. Once created, go to the feed card then edit the Satellite Modulator options by clicking <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> next to the **Satellite Modulator** component within the feed.
+
+3. Log in to the satellite modulator option card as an administrator:
+
+   1. Navigate to the **System** menu, then go to the **Admin** sub-menu.
+
+   2. Log in with the following credentials:<br />
+      Username: `admin`<br />
+      Password: `root`
+
+   3. Click the green tick in the top right corner:
+
+   ![ce1 satellite modulator login](/ce1-img/ce1-satellite-modulator-login.png)
+
+## Configure modulation settings
+
+To configure modulation settings, go to **Settings** then **Modulation**:
+
+![ce1 modulation settings](/ce1-img/ce1-modulation-settings.png)
+
+## Configure RF output parameters
+
+To configure RF output parameters, go to **Settings** then **Outputs**:
+
+![ce1 rf output settings](/ce1-img/ce1-rf-output-settings.png)
+
+Enabling or disabling the RF output must be done on the **Outputs** menu.
+
+* To disable the RF output, set the **RF Output** setting to **OFF**, then click on the green tick in the top right corner.
+* To enable the RF output, set the **RF Output** setting to **ON**, then click on the green tick in the top right corner.
+
+<Info>
+  Starting and stopping the feed on the MK.IO Beam home page does not change any modulation parameters or enable or disable modulation.
+</Info>

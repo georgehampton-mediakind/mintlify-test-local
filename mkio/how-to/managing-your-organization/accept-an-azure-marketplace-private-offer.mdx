@@ -1,0 +1,77 @@
+---
+title: Accept an Azure Marketplace private offer
+description: Redeem a MediaKind private offer in Azure Marketplace and activate the resulting MK.IO subscription.
+sidebarTitle: Accept a private offer
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A private offer is a custom Azure Marketplace plan that MediaKind prepares for a specific customer, typically in exchange for a committed spend. Use this guide to redeem a private offer for MK.IO through Azure Marketplace and activate the resulting subscription.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+* A private offer for MK.IO that MediaKind has issued to your organization in Azure Marketplace.
+* Permission to create resources in the Azure subscription and resource group where the Software as a Service (SaaS) subscription will live.
+* An MK.IO account that belongs to the organization the offer was issued to. This applies even if you are a partner or contractor completing the redemption on the organization's behalf. If you are not yet a member, ask an administrator of that organization to [invite you](/mkio/how-to/managing-your-organization/invite-users-to-organization).
+
+<Info>
+  **Expect delays between steps**
+
+  Azure can take up to an hour to move from one step to the next. If a status does not update immediately, wait before retrying.
+</Info>
+
+## Redeem the offer
+
+<Steps>
+  <Step title="Review and accept the offer">
+    <span id="review-and-accept-the-offer" className="mk-legacy-anchor" />
+
+    Open the offer on the private offer management page in Azure Marketplace. Once you accept the offer, its status changes to **Accepted**, and the associated product shows a status of **Ready for purchase**.
+
+    ![The private offer management page in Azure Marketplace showing an accepted offer with the product ready for purchase.](/_machine-assets/784617872177c3db134230711eef29623b4fb0e36a295d4db06cd32356641ffd.png)
+  </Step>
+
+  <Step title="Purchase the offer">
+    <span id="purchase-the-offer" className="mk-legacy-anchor" />
+
+    Select **Purchase** next to the product to start the subscription wizard.
+
+    On the **Basics** tab:
+
+    * Choose your Azure subscription and resource group, or select **Create new** to create a resource group.
+    * Enter a name for your MK.IO subscription under **SaaS details**.
+
+    ![The Basics tab of the Azure subscription wizard showing the subscription, resource group, and SaaS name fields.](/_machine-assets/77ecbadcac77bbc7753a5d68c586e58019c74e7159028fe43f9bd3a8b6a538b1.png)
+
+    The **Plan** field shows the plan MediaKind prepared for your organization.
+
+    Continue to the **Tags** tab, then select **Review + subscribe**. Review the terms of use, confirm your contact details (name, email, and phone number), and select **Subscribe**.
+
+    Azure creates the SaaS subscription. This can take several minutes.
+  </Step>
+
+  <Step title="Configure your MK.IO account">
+    <span id="configure-your-mkio-account" className="mk-legacy-anchor" />
+
+    Once the subscription is created, Azure shows a confirmation page stating that the purchase is not yet complete, and emails you instructions for setting up your SaaS account. Select **Configure account now** to continue.
+
+    ![The Azure subscription progress page showing the Configure account now button and the 30-day completion warning.](/_machine-assets/e811201aea93f96f9b726bee7008d78e97fcf2e4df764cd1d2485cfb786d3a73.png)
+
+    <Warning>
+      **Complete this step within 30 days**
+
+      Billing does not start until you configure your account. If you take no action within 30 days, Azure automatically deletes the SaaS subscription.
+    </Warning>
+
+    **Configure account now** redirects you to MK.IO. Sign in with the MK.IO account associated with your organization, then accept the MK.IO terms and conditions to activate the subscription.
+
+    MK.IO creates a payment method for the offer. You can now create a new project and assign it to the payment method. To use the offer for existing projects, [move the projects to the new payment method](/mkio/how-to/managing-your-organization/billing#move-a-project-between-payment-methods).
+  </Step>
+</Steps>
+
+## Next steps
+
+* [Create your first project](/mkio/getting-started/account-setup-and-first-steps#create-a-project)
+* [How payment methods work](/mkio/understanding/fundamentals/orgsandteams)

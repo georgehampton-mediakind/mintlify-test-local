@@ -1,0 +1,37 @@
+---
+title: Loading a playlist from the Playout Monitor app
+robots: noindex, nofollow
+---
+
+When you load a playlist from the Playout Monitor app, the channelId in the playlist file is ignored and the current Playout channel is used instead. You also have the option to change the schedule start time.
+
+1. Click **Settings > Import Playlist**, and select the playlist file you want to load.
+
+2. In the **Import playlist** dialog, confirm the **Schedule start time** and click **OK** (checkmark icon).
+
+   <Note>
+     **Note:&#x20;**&#x42;y default, the scheduled start time is set to now. To modify the start time, do the following:
+
+     * Click **Settings**.
+
+     * Choose **Display**.
+
+     * Set the **Playlist import: set to now by default** option toggle to **No**.
+
+     * Click the checkmark icon.
+
+     * Add the playlist using the instructions described above.
+   </Note>
+
+   <Note>
+     **Note:&#x20;**&#x4F;nce a schedule has started playing, you cannot load a schedule with an earlier scheduled start time. If you attempt to load a schedule with an earlier scheduled start time, an error message will be displayed in the UI for a few seconds indicating the practicable Schedule Start Time.
+
+     For example, if the Tuesday schedule has started, you cannot load a schedule for Monday (yesterday). You can load a schedule for Thursday, and can edit and modify the playlist to start the first event of the Thursday schedule. If you try to load a schedule for Wednesday, an error occurs.
+   </Note>
+
+   <Note>
+     **Info:&#x20;**&#x54;he Schedule start time for the playlist OPC XML file is based on UTC. The Playout Monitor Schedule start time is based on the time zone you defined in **Settings > Display**. Make sure that the correct time zone is indicated on the playlist. An error occurs if the Schedule start time is improperly set.\
+     It is recommended that the playlist (OPC XML file) should be created and uploaded using the time format (milliseconds), as: 2019-10-18T17:00:05.000Z.
+   </Note>
+
+**Result:** The playlist loads. If you changed the **Schedule start time**, all events are updated accordingly.

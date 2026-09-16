@@ -1,0 +1,69 @@
+---
+title: Upload files from your device
+description: Upload media files directly from your computer into MK.IO cloud storage as a new asset.
+sidebarTitle: Upload from device
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use this method when you have media files on your local machine that you want to bring into MK.IO. The upload creates a new asset and copies the files directly into your connected cloud storage (Azure or S3).
+
+<Info>
+  You need at least one storage account connected to your MK.IO project before uploading. See [Connect cloud storage](/mkio/getting-started/connect-cloud-storage).
+</Info>
+
+## Supported file types
+
+You can upload any of the following:
+
+* **Video**: MP4, MOV, MXF, MKV, AVI, TS
+* **Audio**: MP3, AAC, WAV
+* **Subtitles / captions**: VTT, SRT, TTML
+* **Images**: JPG, PNG (for thumbnails)
+
+For production streaming, MP4 (H.264/AAC) is the most reliable source format for encoding jobs.
+
+## Upload steps
+
+<Steps>
+  <Step title="Go to Assets">
+    <span id="go-to-assets" className="mk-legacy-anchor" />
+
+    Navigate to **Assets** in the left sidebar and click **+ Create Asset**.
+  </Step>
+
+  <Step title="Select &#x22;From local files&#x22;">
+    <span id="select-from-local-files" className="mk-legacy-anchor" />
+
+    Choose the **From local files** option. A file picker and upload form appear.
+  </Step>
+
+  <Step title="Select your files">
+    <span id="select-your-files" className="mk-legacy-anchor" />
+
+    Click to browse for files or drag and drop them into the upload area. You can select multiple files at once: they will all be added to the same asset.
+  </Step>
+
+  <Step title="Configure the asset">
+    <span id="configure-the-asset" className="mk-legacy-anchor" />
+
+    * **Storage account**: Select the connected storage account where the files will be uploaded. Both Azure and S3 accounts appear here if connected.
+    * **Storage container**: The name of the container or folder that will be created in your cloud storage to hold these files. Use lowercase letters, numbers, and hyphens.
+    * **Asset name**: A display name for this asset in MK.IO (for example, `interview-raw-2024`). This is what you will see in the Assets list.
+    * **Description** (optional): Notes about this content.
+  </Step>
+
+  <Step title="Upload">
+    <span id="upload" className="mk-legacy-anchor" />
+
+    Click **Upload**. MK.IO transfers the files to your cloud storage and creates the asset. Upload time depends on file size and your connection speed.
+  </Step>
+</Steps>
+
+Once the upload completes, the asset appears in your **Assets** list. Open it to verify your files are listed under **Files on storage**.
+
+## What to do next
+
+* **Verify the upload**: See [Verify your assets](/mkio/how-to/content-management/verify-your-assets-in-mkio).
+* **Encode for streaming**: Raw files need to be encoded into adaptive bitrate format before they can be published. See [Configure VOD transforms](/mkio/how-to/video-processing-encoding/configure-transformations).
+* **Publish**: After encoding, add a streaming locator. See [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content).

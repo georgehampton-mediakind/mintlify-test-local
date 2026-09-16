@@ -1,0 +1,76 @@
+---
+title: Remux
+sidebarTitle: Remux
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Configuring Remux ECMs
+
+1. Display the services.
+
+2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the services and display the parameters. The transport stream parameters display.
+
+3. Select the service or component.
+
+4. You can either add a Remux ECM if none exists or select an existing Remux ECM to display.
+
+   <Info>
+     You can change the order of the Remux ECMs within the service or component by selecting that item and selecting a direction.
+   </Info>
+
+   ![move remux ecms](/_machine-assets/2839c228655beb4a5ccf9f06048d5e22a750f94f0d8d4811720d624b20c8017e.jpg)
+
+   ![remux ecm properties](/_machine-assets/4d421a2e8867871678174ce148f4cee91f3c533ce7b2366bdf8e1077fb550fff.jpg)
+
+5. Enter a user-friendly **Name**.
+
+6. Select the **Mode**.
+
+   * **Remux By CAS ID**: Enter the incoming **CAS ID** of the ECM to remux.
+
+     ![remux by cas](/_machine-assets/8261118373d9e8886f6c3adef96f4b5cedbb48a741486b40bbcc401e87e3fc00.jpg)
+
+   * **Remux By PID**: Enter the incoming **Input PID** of the ECM to remux.
+
+     ![remux by pid](/_machine-assets/95d7def8ef5841f36b91eb04506f8440d5643f3bc8881dabedf45ba7c315b1b7.jpg)
+
+   * **Remux By Position**: Enter the **CA Descriptor position** of the incoming ECM to remux.<br />
+     Position index is based only on the CA Descriptors and is zero based. Depending on the number of CA Descriptors available, possible position could be 0 or 1 (for 2 CA Descriptors), 0, 1 or 2 (for 3 CA Descriptors), etc.
+
+     ![remux by position](/_machine-assets/9180864660b869e66a242ddb33ee47c8a4fc6a27391d1816e2b46e8c0f55636a.jpg)
+
+7. Enter the **Input Program** number that contains the ECM to remux.
+
+8. Enter the **Output PID** value that will be applied to the outgoing Remuxed ECM.
+
+9. Enter the **Output CAS ID** value of the Remuxed ECM that will be signaled in the CA Descriptor.
+
+10. Select the **Private Data Source** mode:
+
+    * **Extract from input PMT**: Tracks the incoming changes in private data on the incoming ECM.
+    * **User specified private data**: Overrides the private data on the remuxed ECM.
+
+      ![remux ecm private data](/_machine-assets/66eabb2fac23f410e511d8a4b3803f0f5546c42a166046ae9175476b671969c4.jpg)
+
+11. Select the **ECM reference** in the output PMT mode:
+
+    * **Always include in PMT**: The Remux ECM will always be signaled in the output PMT table.
+    * **Follow source**: The output PMT table will only signal the Remux ECM if the incoming PMT contains the ECM that is to be remuxed.
+    * **Do not include in PMT**: The Remux ECM is not signaled in the output PMT table.
+
+12. To enable an alarm to be raised when the required incoming ECM is missing:
+
+    1. Check the “Alarm if input component is missing” box.
+
+    2. Specify a **Raise Alarm After** time in milliseconds.
+
+    3. Provide any **User Alarm Text** to be displayed with the alarm.
+
+13. For the Remux ECM to contribute to the input health monitoring, check the “Component Contributes For Input Health Monitoring” box.
+
+    ![remux ecm alarm settings](/_machine-assets/8b373a643a52dad0c1cd947d99168bc7c2404b1bbcf0f61b859270f7796fe5c0.jpg)
+
+14. Select the incoming source that contains the ECM to be remuxed.
+
+    ![remux ecm source input](/_machine-assets/2d31f219fd3b5761fa55354d8903f36d92beb6e2ab6fbaed6e74be040dcafb1a.jpg)

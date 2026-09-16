@@ -1,0 +1,57 @@
+---
+title: Configuring a Loop Record service
+robots: noindex, nofollow
+---
+
+A Loop Record service is a passthrough service that records a complete transport stream (TS), including both SPTS and MPTS.
+
+It can be used across various workflows, such as Asset:
+
+* Recordings for usage in VOS Playout
+
+* Delay Line services
+
+## **Configure the source for the Loop Record service**
+
+1. Navigate to the **Configure Channels** app > **Sources&#x20;**&#x74;ab.
+
+   ![](/images/vos360/04655e20b633fff38745c581.png)
+
+2. Configure a source for the Loop Record service to receive a live stream that will be recorded.
+
+3. Click **Connect** and, optionally, click **Play** to view the video source.
+
+4. Click **Groom** to check the properties of the source and customize how it will be processed downstream.
+
+## **Configure the destination for the Loop Record service**
+
+<Note>
+  **Info:&#x20;**&#x54;he destination will be a raw TS.
+</Note>
+
+* The profile to use for the destination is: “Loop Record Destination”
+
+* Recording / Buffer time\
+  Set by default to 6 hours but may be adjusted based on the use case (see [Configuring a Delay Line service](/vos360/user-guide/configuring-a-delay-line-service) for more information)
+
+* Segment duration\
+  The default segment duration is set to 10 minutes. Please coordinate with Harmonic representatives if you must reset the segment duration.
+
+* Frame accuracy\
+  To have a frame-accurate record, the destination profile of the Loop Record service needs to have the parameter « **Packager clock&#x20;**» set with the value « source timecode ».
+
+## **Create the Loop Record service**
+
+To complete the creation of the Loop Record service, use one of the following:
+
+* A Loop Record profile without the “Preview” functionality, such as “Loop Record” (IPTV Passthrough Profile) JSON file.
+
+<Note>
+  **Note:&#x20;**&#x54;his is the recommended profile for creating a Delay Line service.
+</Note>
+
+* A Loop Record profile with the “Preview” functionality, such as “Loop Record with Preview”, which is used for transcoding the source as an SD resolution to enable Clip Editor trimming.
+
+**Related Information**
+
+[Configuring a Delay Line service](/vos360/user-guide/configuring-a-delay-line-service)

@@ -1,0 +1,35 @@
+---
+title: Reliable Transport
+description: Understand what reliable transport protocols do and how MK.IO Beam uses SRT, RIST, and Zixi to deliver media streams over unpredictable IP networks.
+sidebarTitle: Reliable Transport
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Reliable transport refers to a class of protocols designed to deliver media streams over IP networks that are unpredictable or lossy, such as the public internet. Standard UDP streaming is fast but offers no recovery if packets are lost. Reliable transport protocols add error correction and retransmission on top of UDP, so brief network disruptions do not result in visible artefacts in the stream.
+
+MK.IO Beam's Reliable Transport takes UDP packets and forwards them over SRT, Zixi, or RIST. It can also take SRT, Zixi, or RIST input and output as UDP or any other supported protocol. The UDP content is processed as a pipe without modification, and is typically used to carry transport streams encapsulated in UDP or RTP.
+
+## Supported protocols
+
+* **SRT (Secure Reliable Transport):** An open-source protocol for low-latency video contribution over unpredictable networks. SRT supports both Caller and Listener connection modes and includes built-in AES encryption (128-bit, 192-bit, and 256-bit).
+* **RIST (Reliable Internet Stream Transport):** An open standards-based protocol for reliable video transport, also supporting Caller and Listener modes.
+* **Zixi:** A managed transport protocol with Feeder and Receiver roles, designed for reliable delivery over the internet.
+* **RTMP:** Available from v3.0.0 as a beta feature. Supports RTMP passthrough (RTMP input to RTMP output) and decode mode (RTMP input to UDP output). Not all features available for other protocols are present in the RTMP beta.
+
+## Connection modes
+
+Each protocol operates in one of two roles, depending on which end of the connection initiates it:
+
+* **Caller (or Feeder):** The service initiates the connection to a remote listener.
+* **Listener (or Receiver):** The service waits for an incoming connection.
+
+Each Reliable Transport service is configured with an independent input mode and output mode. This flexibility means MK.IO Beam can sit at either end of a transport link, or act as a protocol bridge between two different connection types.
+
+## Common use cases
+
+* Sending a live encoder output from a venue to a production facility over the public internet.
+* Receiving a contribution feed from a remote location for local decoding or processing.
+* Distributing a transport stream to multiple destinations with protocol conversion.
+
+To create and configure a Reliable Transport service, see [Service configuration and management](/beam/reliable-transport/service-management).

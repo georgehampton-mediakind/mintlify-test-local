@@ -1,0 +1,69 @@
+---
+title: Creating and activating a mux service (optional)
+robots: noindex, nofollow
+---
+
+Select the MPTS profile, source, and destination to be used for the mux service and configure any service add-ons. Activate the service when it is ready for multiplexing.
+
+<Note>
+  **Important!**
+
+  If you create and configure the mux service using the Configure Broadcast app, the mux destination is automatically created in the Configure Channel app. Refer to [Adding and configuring a multiplexer](/vos360/user-guide/adding-and-configuring-a-multiplexer) for more details.
+</Note>
+
+**Before you begin**\
+[Configuring a source input](https://confluence360.harmonicinc.com/display/VOS360DOC/.Configuring+a+source+input+v1.23)\
+[Configuring the mux destination (optional)](/vos360/user-guide/configuring-the-mux-destination-optional)
+
+Mux services typically use a MPTS profile with a mux destination.
+
+1. From the **Configure Channels** app, navigate to the **Services** page, click **+ Service**.\
+   **Result**: The **Create Service** wizard opens.
+
+   ![](/images/vos360/f0fe498facea61f6a479e3b4.png)
+
+2. On the **Profile** tab, select the MPTS profile from **TS Multiplexer** the service will use, and then click **Next**.
+
+3. On the **Source** tab, select the name of the primary source, and optionally, an alternate source / tertiary source, and then click **Next**.
+
+   <Note>
+     **Note:&#x20;**&#x54;he input streams of the paired CloudLink instances must be identical.
+   </Note>
+
+4. On the **Destination** tab, select the name of the destination from the **Destination** drop-down list and then click **Next**.
+
+5. On the **Commit** tab, enter the name of the new service in the **Service Name** field.
+
+6. Optionally, select the **Priority&#x20;**&#x64;rop-down menu for the service. Options are **Low**, **Normal**, or **High**. The default setting is Normal.
+
+   <Note>
+     **Note:&#x20;**&#x59;ou can use this Priority tag to quickly view the status and configuration of the high-priority services (and other priorities as well) in case any service is down and requires manual attention.
+   </Note>
+
+7. Optionally, turn the **Redundancy** setting to **On** to activate service-level redundancy.
+
+   <Note>
+     **Info:&#x20;**&#x49;n Redundancy Mode, two services are created for the same channel (active-standby), using the same configuration. In the event that the active service fails, stream processing or packaging tasks fail over to the standby service.
+   </Note>
+
+8. Optionally, select the **Geo Redundancy** setting for the service. Options are **Auto**, **On**, or **Off**. The default setting is Auto.
+
+   <Note>
+     **Note:&#x20;**&#x57;hen geo-redundancy is enabled on the VOS cluster, all services are supposed to be paired up between two VOS instances. This option allows pairing up some services only instead of all services for the geo-redundancy enablement.
+   </Note>
+
+9. Select **Active&#x20;**&#x69;f you want the service to go online when you commit the new service.
+
+10. [Configure service add-ons](/vos360/user-guide/configuring-service-add-ons) as required by the channel.
+
+11. Optionally, turn the **Mute Notifications** setting to **On** to prevent the notifications from being noticed.
+
+    <Note>
+      **Note:&#x20;**&#x47;eo-redundancy notifications cannot be muted as they are related to global setting instead of service-specific setting.
+    </Note>
+
+12. When you have finalized the service settings, click **Commit**.
+
+<Note>
+  **Note:&#x20;**&#x4F;nce the service is activated, you can monitor ingest, transcode, and output bitrates in the Monitor Channels app.
+</Note>

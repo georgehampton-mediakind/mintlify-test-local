@@ -1,0 +1,28 @@
+---
+title: Single sign-on via identity provider (IdP) federation
+robots: noindex, nofollow
+---
+
+Logging in to VOS360 is achieved via the Harmonic's identity provider (Okta). The same login credentials already apply to access other Harmonic-provided systems as part of our SaaS solution (for example Harmonic Hub, Slack, etc.).
+
+In addition it is possible to federate Harmonic's identity provider and a customer's identity provider, in order to achieve the following:
+
+* Single sign-on authentication (using your organization's credentials).
+
+* Employee life-cycle management (for example, there is no need to deactivate the employee's Harmonic ID in the Harmonic Hub after termination).
+
+Federation can be achieved via SAML 2.0 protocol:
+
+* Okta has been verified to function and Harmonic can provide configuration steps to establish the trust and authorize the Hub and VOS.
+
+* Other cloud-native environments SAML 2.0 capable IdPs can be integrated (contact Harmonic technical support for details).
+
+* On-premise Microsoft ADFS is not supported directly, instead the on-premise ADFS should be integrated with a customer-provided Okta (or Microsoft Azure Active Directory or similar). The latter can be be federated with Harmonic's Okta IdP.
+
+<Note>
+  **Note:&#x20;**&#x55;sers are added in the IdP interface and then imported into VOS360. By default, new users are assigned the role of Operator.
+</Note>
+
+Harmonic can provide instructions for integration of a customer-provided Okta Identity Provider (IdP) and Harmonic's Okta IdP.
+
+If you are using a different identity provider, contact Harmonic technical support for more details and assistance.

@@ -1,0 +1,85 @@
+---
+title: Organizations and invites
+description: Invite users to an organization, and accept, decline, or leave organizations with the Management API.
+sidebarTitle: Organizations and invites
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Organization membership has two sides. An admin invites people to an organization and can cancel a pending invite. A user accepts or declines invitations, lists the organizations they can reach, and leaves an organization. The two use different endpoint groups: `/organization/invites` for the admin side, and `/user/organizations` for the user side.
+
+## Invite a user (admin)
+
+Create a pending invitation by email. A `comment` explains why, and `teams` adds the user to those teams when they accept.
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/organization/invites" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": {
+      "email": "jane.smith@example.com",
+      "comment": "Video encoding specialist for the Delphi project",
+      "teams": ["encoding-team"]
+    }
+  }'
+```
+
+The invited user receives an email with an invitation link. Two things are worth knowing: an invitation **expires after 14 days**, and an accepted user **automatically joins the Everyone team** in addition to any teams you name.
+
+List pending invites, and cancel one that is no longer needed:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/organization/invites" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+
+curl -X DELETE "https://app.mk.io/api/v1/organization/invites/<INVITE_ID>" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## List the organizations a user can reach
+
+From the user side, list every organization the current user belongs to, plus any they have a pending invite to:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/user/organizations" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+If an organization record carries an `invite` object, the user has not joined it yet. The `invite` includes who sent it, a comment, and a `state`.
+
+## Accept an invitation
+
+Accepting is a `PATCH` on the user's organization record. The invite `state` is the only field you can change; set it to `accepted` to join.
+
+```bash
+curl -X PATCH "https://app.mk.io/api/v1/user/organizations/<ORGANIZATION_ID>" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "spec": {
+      "invite": { "state": "accepted" }
+    }
+  }'
+```
+
+## Decline an invite or leave an organization
+
+`DELETE` on the same resource handles both, depending on the current relationship: it declines a pending invite, or removes a current member from the organization.
+
+```bash
+curl -X DELETE "https://app.mk.io/api/v1/user/organizations/<ORGANIZATION_ID>" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Leaving is only reversible by accepting a fresh invitation, so confirm before you call it.
+
+## What goes wrong
+
+* **An invite that is never accepted in time.** Invitations expire after 14 days. Re-send if the window passes.
+* **Using the wrong endpoint group.** Use `/organization/invites` when an admin manages invitations for others, and `/user/organizations` when the current user accepts, declines, or leaves. They are not interchangeable.
+
+## What comes next
+
+* [Users and teams](/api-guides/how-to/management/users-and-teams): the team, role, and scope model new members are granted access through.
+* [Provision org and users](/api-guides/how-to/management/org-provisioning): the full setup sequence from organization to access.

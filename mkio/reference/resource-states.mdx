@@ -1,0 +1,31 @@
+---
+title: Resource states
+description: Reference the provisioning states reported by MK.IO resources and their operations.
+sidebarTitle: Resource States
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use resource states to determine whether an MK.IO operation is still in progress or has reached a stable result.
+
+## Common resource states
+
+* `Deleting`: deleted by the user and and waiting for the deletion to be processed by the system.
+
+* `Deleted`: deleted by the user and deletion processed by the system.
+  This value will not show up because the resource being deleted means the endpoint will return 404.
+
+## Transitional and terminal states
+
+|                                   | `Initial`  | `Created` |    | `Starting` | `Started` | `Stopping` | `Stopped` |                                      |
+| --------------------------------- | ---------- | --------- | -- | ---------- | --------- | ---------- | --------- | ------------------------------------ |
+| Asset                             | Pending    | Ready     | \| | -          | -         | -          | -         |                                      |
+| ContentKeyPolicy                  | Creating   | Created   | \| | -          | -         | -          | -         |                                      |
+| LiveEvent                         | Allocating | StandBy   | \| | Starting   | Running   | Stopping   | Stopped   |                                      |
+| LiveOutput                        | Creating   | Running   | \| | -          | -         | -          | -         |                                      |
+| StreamingLocator                  | Creating   | Created   | \| | -          | -         | -          | -         |                                      |
+| StreamingEndpoint                 | Creating   | Created   | \| | Starting   | Running   | Stopping   | Stopped   |                                      |
+| Aquila Source (with IP set)       | Created    | -         | \| | -          | Running   | -          | Created   | Running: in use by a started Channel |
+| Aquila Source (with IP allocated) | Pending    | Created   | \| | -          | Running   | -          | Created   | Running: in use by a started Channel |
+| Aquila Channel                    | Stopped    | -         | \| | Starting   | Running   | Stopping   | Stopped   |                                      |
+| Flow                              | ""         | -         | \| | Starting   | Running   | Stopping   | Stopped   |                                      |

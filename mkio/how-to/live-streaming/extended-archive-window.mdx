@@ -1,0 +1,91 @@
+---
+title: Extended archive window
+description: How to configure and use live event archive windows longer than 25 hours, including how to control manifest size and access older content.
+sidebarTitle: Extended archive window
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+When you run a live event in MK.IO, the **archive window** controls how far back viewers can rewind or seek into the recorded stream. MK.IO supports archive windows of up to 7 days, which is useful for multi-day events, nPVR, or catch-up TV scenarios where viewers need access to content long after it aired.
+
+When the archive window is longer than 25 hours, the manifest behaves differently. You need to use filters or manifest URL parameters to control what portion of the archive is returned to the player.
+
+## How the manifest works
+
+A **manifest** is the file a video player fetches to know which segments of video and audio are available. It acts as a table of contents for the stream. The size of the manifest determines how much content the player can see and seek through at any given time.
+
+You set the archive window length when [creating a live event](/mkio/how-to/live-streaming/set-up-a-live-streaming-event). It accepts any value from 1 minute up to 7 days.
+
+Once the live event starts, the manifest grows as new content is recorded. It continues growing until it reaches a maximum size of **25 hours**. After that, the manifest becomes a rolling window: it always contains the most recent 25 hours of content, and older segments drop off the front as new ones are added.
+
+The archive window itself still retains content beyond 25 hours (up to 7 days). The 25-hour limit applies only to the manifest returned in a default request. To reach content older than 25 hours, you specify start and end times in the manifest URL. See [Accessing content older than 25 hours](/mkio/how-to/live-streaming/extended-archive-window#accessing-content-older-than-25-hours) below.
+
+## Controlling manifest size
+
+If your player does not need the entire window in every request, you can narrow it down using filters or manifest URL parameters.
+
+### Asset or account filters
+
+**Filters** let you define a specific time range or track subset that the manifest presents to viewers. For example, you can create a filter that limits the manifest to a 2-hour window, or one that excludes certain audio tracks.
+
+* **Asset filters** apply to a single asset and last for the lifetime of that asset.
+* **Account filters** apply to any asset in your account and last for the lifetime of the account.
+
+See [Create an asset filter or an account filter](/mkio/how-to/content-management/create-an-asset-filter) for instructions.
+
+### Manifest URL parameters
+
+You can include `start` and `end` parameters directly in the manifest URL to control which portion of the archive the player receives. Both values use ISO 8601 datetime format (UTC).
+
+To return a manifest starting at a specific time up to the live edge:
+
+```http
+https://<hostname>/<asset>/index.qfm/manifest(format=m3u8-cmaf,start=<ISO8601>)
+```
+
+To return a manifest ending at a specific time:
+
+```http
+https://<hostname>/<asset>/index.qfm/manifest(format=m3u8-cmaf,end=<ISO8601>)
+```
+
+To return a manifest for a specific time range:
+
+```http
+https://<hostname>/<asset>/index.qfm/manifest(format=m3u8-cmaf,start=<ISO8601>,end=<ISO8601>)
+```
+
+Replace `<ISO8601>` with a UTC datetime string such as `2024-06-01T13:15:00.000Z`. Replace `m3u8-cmaf` with the output format your player requires, such as `mpd-time-cmaf` for DASH.
+
+## Accessing content older than 25 hours
+
+Content older than 25 hours is still in the archive, but it is not included in the default manifest. To reach it, specify both `start` and `end` times in the manifest URL. Both values must refer to points in the past that fall within your configured archive window.
+
+For example, to retrieve a one-hour segment that started at 13:15 UTC on 1 June 2024:
+
+```http
+https://<hostname>/<asset>/index.qfm/manifest(format=m3u8-cmaf,start=2024-06-01T13:15:00.000Z,end=2024-06-01T14:15:00.000Z)
+```
+
+When both the start and end are in the past, MK.IO returns a closed playlist covering exactly that time range. The player treats it like a VOD asset: it has a fixed duration and a seek bar, rather than a live edge.
+
+If the requested range falls outside your archive window, MK.IO returns a 404 response.
+
+## Manifest types
+
+Depending on the parameters you provide, the returned manifest behaves in one of three ways:
+
+| Type        | Description                                                                                                                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Growing** | The start is fixed and the end moves forward with the live edge. The manifest gets longer over time. Use case: start-over, where a viewer joins a program from the beginning while it is still airing. |
+| **Sliding** | Both the start and end move with the live edge. The window duration stays constant. Use case: standard live playback with a fixed rewind buffer.                                                       |
+| **Fixed**   | Both the start and end are in the past. The manifest does not change. Use case: catch-up or nPVR playback of a completed program.                                                                      |
+
+## Parameter reference
+
+These parameters are placed inside the manifest URL parentheses, not as query string parameters.
+
+| Parameter | Format            | Description                                                       |
+| --------- | ----------------- | ----------------------------------------------------------------- |
+| `start`   | ISO 8601 datetime | Start of the manifest window. Example: `2024-06-01T13:15:00.000Z` |
+| `end`     | ISO 8601 datetime | End of the manifest window. Example: `2024-06-01T14:15:00.000Z`   |

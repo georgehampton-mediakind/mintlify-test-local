@@ -1,0 +1,68 @@
+---
+title: Explicit Content Keys
+description: Define your own encryption keys and key IDs instead of using MK.IO auto-generated keys.
+sidebarTitle: Explicit Content Keys
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+By default, MK.IO generates and propagates encryption keys for use with the key server and license server. You can override this behavior by defining your own key and key ID for any encryption type in a streaming locator.
+
+## Create a streaming locator with explicit keys
+
+Use the MK.IO API to create a streaming locator that specifies `contentKeys` for CENC, CBCS, and ClearKey encryption:
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/streamingLocators/locator_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer <YOUR_MKIO_JWT>' \
+     --data '
+{
+    "properties": {
+        "assetName": "ASSET_NAME",
+        "streamingPolicyName": "SP_NAME",
+        "contentKeys": [
+            {
+                "id": "d1e755c0-14cd-491e-aafb-83277872dd3a",
+                "type": "CommonEncryptionCenc",
+                "labelReferenceInStreamingPolicy": "ContentKey_CENC",
+                "value": "4UqLohAfWsEGkULYxHjYZg==",
+                "policyName": "KP_NAME"
+            },
+            {
+                "id": "deaea8ec-5509-4c38-80a3-ab0767cd9bab",
+                "type": "CommonEncryptionCbcs",
+                "labelReferenceInStreamingPolicy": "ContentKey_CBCS",
+                "value": "5UqLohAfWsEGkULYxHjYZg==",
+                "policyName": "KP_NAME"
+            },
+            {
+                "id": "b1c4dcac-30cc-41f9-b09b-bf4d16226c91",
+                "type": "EnvelopeEncryption",
+                "labelReferenceInStreamingPolicy": "ContentKey_AES",
+                "value": "6UqLohAfWsEGkULYxHjYZg==",
+                "policyName": "KP_NAME"
+            }
+        ]
+    }
+}
+'
+```
+
+Each content key object requires:
+
+| Field                             | Description                                                                                   |
+| --------------------------------- | --------------------------------------------------------------------------------------------- |
+| `id`                              | A unique GUID for the key.                                                                    |
+| `type`                            | The encryption type: `CommonEncryptionCenc`, `CommonEncryptionCbcs`, or `EnvelopeEncryption`. |
+| `labelReferenceInStreamingPolicy` | The label that maps this key to the corresponding encryption in the streaming policy.         |
+| `value`                           | The Base64-encoded encryption key.                                                            |
+| `policyName`                      | The name of the content key policy to associate with this key.                                |
+
+When you define keys in the streaming locator, MK.IO propagates them to the key server and license server. MK.IO removes the keys when the streaming locator is deleted.
+
+## Combine with external PlayReady
+
+For PlayReady, you can combine explicit content keys with an [external PlayReady license URL](/mkio/how-to/drm-content-protection/external-playready-license-url) to manage the entire DRM workflow outside of MK.IO.

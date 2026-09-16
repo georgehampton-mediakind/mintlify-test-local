@@ -1,0 +1,81 @@
+---
+title: Reception
+description: Guides for MK.IO Beam reception workflows including ingest, decryption, decoding, and output configuration.
+sidebarTitle: Reception
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+<Note>
+  **Check which interface you are using**
+
+  The guides linked from this page configure MK.IO Beam through the **Advanced** interface, where a workflow is a **feed** made up of individual services. If your device runs the **Essentials** interface, build the workflow as a **channel** instead: see [Create a channel](/beam/essentials/create-a-channel). Both interfaces control the same settings underneath, so these pages stay useful as reference for the detail behind a channel.
+</Note>
+
+**MK.IO Beam for reception** is engineered to meet the evolving demands of processing at the edge of your network, delivering high-quality video and audio decode with maximum efficiency. Its flexible architecture allows for seamless integration into existing workflows, providing a future-proof solution for content turnaround and distribution.
+
+## Common Workflows:
+
+<span id="receive--decrypt" className="mk-legacy-anchor" />
+
+### Receive & Decrypt
+
+Configure the input interfaces and handle decryption.
+
+<CardGroup cols={2}>
+  <Card title="Satellite/ASI Input" href="/beam/receiver/input" icon="satellite-dish">
+    Setup tuners, LNB frequencies, and ASI ports.
+  </Card>
+
+  <Card title="Reliable Transport Input" href="/beam/reliable-transport/service-management" icon="globe">
+    Ingest SRT, Zixi, or RIST streams.
+  </Card>
+
+  <Card title="BISS-CA Decryption" href="/beam/receiver/decryption/biss-ca-decryption" icon="key">
+    Configure BISS-CA entitlements and keys.
+  </Card>
+
+  <Card title="Common Interface (DVB-CI)" href="/beam/receiver/decryption/common-interface-module" icon="sim-card">
+    Manage physical Conditional Access Modules (CAM) for decryption
+  </Card>
+</CardGroup>
+
+<span id="decoding--process" className="mk-legacy-anchor" />
+
+### Decoding & Process
+
+Convert the transport stream into baseband video and audio.
+
+<CardGroup cols={3}>
+  <Card title="Video Decoding" href="/beam/receiver/decoding" icon="film">
+    Manage codecs and resolutions.
+  </Card>
+
+  <Card title="Delay Modes" href="/beam/reception/delay-modes" icon="stopwatch">
+    Adjust buffer settings for Standard, Low or Super Low latency.
+  </Card>
+
+  <Card title="HDR to SDR" href="/beam/receiver/output/hdr-sdr" icon="sun">
+    Down-convert HDR signals for standard displays.
+  </Card>
+</CardGroup>
+
+### Output
+
+Route the decoded signal to local infrastructure.
+
+<CardGroup cols={3}>
+  <Card title="SDI Output" href="/beam/receiver/output/sdi" icon="plug">
+    Map services to physical SDI ports.
+  </Card>
+
+  <Card title="SMPTE ST 2022-6 Output" href="/beam/receiver/output/smpte-st-2022-6" icon="network-wired">
+    Output SDI over IP.
+  </Card>
+
+  <Card title="SMPTE ST 2110 Output" href="/beam/receiver/output/smpte-st-2110" icon="network-wired">
+    Output uncompressed IP video.
+  </Card>
+</CardGroup>
+
+<br />

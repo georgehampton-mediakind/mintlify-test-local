@@ -1,0 +1,20 @@
+---
+title: Filtering packaged profiles per packaging output
+robots: noindex, nofollow
+---
+
+You can filter the profiles per packaging output for for VOD, LLCU, Live, Start-over, and Catch-up, and control which profiles are presented and which profiles are downloadable.
+
+The purpose of this feature is to make available only part of the source video profiles and audio tracks for each of the packaging outputs defined in the packaging profile.
+
+For each packaging output, the corresponding HLS master playlists or DASH manifest includes only the selected audio tracks, and you cannot pull segments corresponding to audio tracks that are excluded from this packaging output.
+
+To enable this feature, contact Harmonic Technical Support via Slack.
+
+<Note>
+  **Note:&#x20;**&#x54;his feature is a per-package configuration. When the **streamSelectionProfileId** is missing or set to null, no filtering occurs and all the source streams are packaged.
+
+  Streams that do not fulfill the MMP profile are not downloadable.
+
+  This feature only supports HLS, DASH, SS and CMAF packaging.
+</Note>

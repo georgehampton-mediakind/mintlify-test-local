@@ -1,0 +1,352 @@
+---
+title: Configure blackout
+sidebarTitle: Configure blackout
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+{ /* TODO: update links (especially ./parameters/) once MD files are created */}
+
+## Configure an automated blackout
+
+Live Encoder can blackout a program on SCTE-35 trigger and replace the video with a still image.<br />
+SCTE-35 metadata can be:
+
+* either [in-band](/beam/live-encoder/configure/input/inband-metadata)
+* or [out-of-band](/beam/live-encoder/configure/input/outofband-metadata)
+
+Before you start: ensure you have configured the SCTE-35 metadata in the input stream.
+
+To create a scheduled blackout, follow these steps:
+
+<Steps>
+  <Step title="Configure the metadata encoding">
+    <span id="configure-the-metadata-encoding" className="mk-legacy-anchor" />
+
+    1. From the **Encoding** tab, go to the **Metadata encoding** section.
+
+    2. For each SCTE-35 metadata, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> in the **Actions** column then set the **Codec** to **Conditioning**.
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Configure the blackout encoding">
+    <span id="configure-the-blackout-encoding" className="mk-legacy-anchor" />
+
+    1. Go to the **Blackout configuration** section.
+
+    2. Click **Add** then configure a blackout configuration by selecting and setting the adequate [blackout parameters](/beam/live-encoder/parameters/encoding/blackout).
+
+       ![](/_machine-assets/87186aaf188f1557cd94a27a3dbdb60a2aec231158829aa20973403b933c260f.png "Example of blackout configuration with
+       SplieOutSpliceIn")
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Configure the video encoding">
+    <span id="configure-the-video-encoding" className="mk-legacy-anchor" />
+
+    1. Go to the **Video encoding** section.
+
+    2. For each video stream, select the associated [**Stream Conditioning** and **Blackout**](/beam/live-encoder/parameters/encoding/video#general-parameters) configuration.
+
+       ![EL encoding video blackout](/_machine-assets/c737019e0316129d4e2426eab5c36c913e4d47686810ad5fbc7ba9c0cef9c792.png)
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Configure the audio encoding">
+    <span id="configure-the-audio-encoding" className="mk-legacy-anchor" />
+
+    1. Go to the **Audio encoding** section.
+
+    2. For each audio stream, select the associated [**Blackout**](/beam/live-encoder/parameters/encoding/audio#mpeg-1-layer-ii-dolby-digital-dolby-digital-plus-aac-he-aac-he-aac-v2-parameters) configuration.
+
+       ![EL encoding audio blackout](/_machine-assets/22205bbb0d62b170103af8aba5394722e0823a222c4a1b32207bd93343037a51.png)
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Configure the subtitle encoding">
+    <span id="configure-the-subtitle-encoding" className="mk-legacy-anchor" />
+
+    1. Go to the **Subtitle encoding** section.
+
+    2. For each subtitle stream, select the associated [**Blackout**](/beam/live-encoder/parameters/encoding/subtitle#general-parameters) configuration.
+
+       ![EL encoding subtitle blackout](/_machine-assets/1f2788af5d9db0cb443812aaae75daaf700903efeb4e26973e7d775c9000181d.png)
+
+    3. Click **Ok** to validate.
+  </Step>
+
+  <Step title="Check that blackout is present in the output">
+    <span id="check-that-blackout-is-present-in-the-output" className="mk-legacy-anchor" />
+
+    Open the **Output** tab to ensure that blackout is present in the output.
+
+    ![EL output blackout](/_machine-assets/e1fb509de5c212ffa9031531028e811b4341d26a7aaa910112f76970214e609f.png)
+    *Example of output with blackout configured*
+  </Step>
+
+  <Step title="Activate blackout.">
+    <span id="activate-blackout" className="mk-legacy-anchor" />
+
+    You can [Manually activate or deactivate a blackout](/beam/live-encoder/configure/encoding/blackout-encoding#manually-activate-or-deactivate-a-blackout).
+  </Step>
+</Steps>
+
+## Configure a manual blackout
+
+To configure a manual blackout, follow these steps:
+
+<Steps>
+  <Step title="Activate ESAM">
+    <span id="activate-esam" className="mk-legacy-anchor" />
+
+    From the **General** tab, set the **ESAM server network interface** to activate ESAM.
+  </Step>
+
+  <Step title="Create an SCTE-35 out-of-band input stream">
+    <span id="create-an-scte-35-out-of-band-input-stream" className="mk-legacy-anchor" />
+
+    Go to the **Input** > **Sources** > **Out-of-band streams** section to create an SCTE-35 out-of-band input stream.
+
+    ![EL encoding metadata cfig](/_machine-assets/98b3e810dc66b6c0bc7b79a16b6c0dd71c3a8683437b0113bed5ebae7b2b2613.png)
+  </Step>
+
+  <Step title="Configure the metadata encoding">
+    <span id="configure-the-metadata-encoding-1" className="mk-legacy-anchor" />
+
+    1. From the **Encoding** tab, go to the **Metadata encoding** section.
+
+    2. Next to your SCTE-35 metadata, click the edit button, <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> in the **Actions** column then set the **Codec** to **Conditioning**.
+
+       ![EL encoding metadata cfig conditioning](/_machine-assets/e23521814e3bfbb8a15fd0c1a568c2ac7652dffd824ecfd1dd7f1a8a73aef89f.png)
+
+    3. Click **OK** to validate.
+  </Step>
+
+  <Step title="Configure the blackout encoding">
+    <span id="configure-the-blackout-encoding-1" className="mk-legacy-anchor" />
+
+    1. Go to the **Blackout configuration** section.
+
+    2. Click **Add** then configure a blackout configuration by selecting and setting the adequate **[blackout parameters](/beam/live-encoder/parameters/encoding/blackout).**
+
+       ![](/_machine-assets/87186aaf188f1557cd94a27a3dbdb60a2aec231158829aa20973403b933c260f.png "Example of blackout configuration with
+       SplieOutSpliceIn")
+
+    3. Click **OK** to validate.
+  </Step>
+
+  <Step title="Configure the video encoding">
+    <span id="configure-the-video-encoding-1" className="mk-legacy-anchor" />
+
+    1. Go to the **Video encoding** section.
+
+    2. For each video stream, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to select the associated [**Stream Conditioning** and **Blackout**](/beam/live-encoder/parameters/encoding/video#general-parameters) settings.
+
+       ![EL encoding video blackout](/_machine-assets/c737019e0316129d4e2426eab5c36c913e4d47686810ad5fbc7ba9c0cef9c792.png)
+       *Example of configuration for Stream Conditioning and Blackout parameters*
+
+    3. Click **OK** to validate.
+  </Step>
+
+  <Step title="Check that blackout is present in the output">
+    <span id="check-that-blackout-is-present-in-the-output-1" className="mk-legacy-anchor" />
+
+    Open the **Output** tab to ensure that blackout is present in the output.
+
+    ![EL output blackout](/_machine-assets/e1fb509de5c212ffa9031531028e811b4341d26a7aaa910112f76970214e609f.png)
+    *Example of output with blackout configured*
+  </Step>
+
+  <Step title="Save">
+    <span id="save" className="mk-legacy-anchor" />
+
+    Return to the list of services, or edit any parameters then save.
+  </Step>
+
+  <Step title="Check statistics">
+    <span id="check-statistics" className="mk-legacy-anchor" />
+
+    1. From the list of services, click <img src="/icons/ui/chart.svg" alt="Chart" className="mk-ui-icon" width="16" height="16" /> to view statistics.
+
+    2. Ensure that blackout configurations display as expected in the **Monitoring** section of the **Statistics** page.
+
+       ![screen stats blackout mfvp el](/_machine-assets/4e98b02ff31f9044b77c625211c792ed8af8557943a06c7862d8746644de5715.png)
+  </Step>
+
+  <Step title="Activate blackout">
+    <span id="activate-blackout-1" className="mk-legacy-anchor" />
+
+    You can [Manually activate or deactivate a blackout](/beam/live-encoder/configure/encoding/blackout-encoding#manually-activate-or-deactivate-a-blackout).
+  </Step>
+</Steps>
+
+## Configure a scheduled blackout
+
+Creating a scheduled blackout is a 4-step process:
+
+1. [Create a scheduled blackout configuration](/beam/live-encoder/configure/encoding/blackout-encoding#create-a-scheduled-blackout-configuration).
+2. [Apply a blackout configuration to video encodings](/beam/live-encoder/configure/encoding/blackout-encoding#apply-a-blackout-configuration-to-video-encodings).
+3. [Apply a blackout configuration to audio encodings](/beam/live-encoder/configure/encoding/blackout-encoding#apply-a-blackout-configuration-to-audio-encodings).
+4. [Check blackout configurations](/beam/live-encoder/configure/encoding/blackout-encoding#check-blackout-configurations).
+
+<Steps>
+  <Step title="Create a scheduled blackout configuration">
+    <span id="create-a-scheduled-blackout-configuration" className="mk-legacy-anchor" />
+
+    Live Encoder can blackout a program and replace the video with a still image. <br />
+    You must first create the blackout configuration, then configure to apply to video encodings.
+
+    Before you start, ensure that:
+
+    * A **Metadata input stream** must exist.
+    * Metadata processing is set to **Conditioning** in **Metadata encoding** parameters.
+
+    <Info>
+      Audio plays during blackout, unless you configure the blackout to mute audio.
+    </Info>
+
+    1. Display services.
+
+    2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service.
+
+    3. Click the **Encoding** tab to display encoding options.
+
+    4. Scroll to **Blackout configuration** and click **+Add** to display parameters. The **Blackout configuration** options display.
+
+       <Info>
+         You can create multiple blackout configurations for a single service.
+       </Info>
+
+    5. Configure the parameters, then click **Ok** to save. Blackout configurations display in the list (see image below).
+
+       ![screen encoding blackout configuration mfvp el](/_machine-assets/9c40ec6bdb9ac3494e7537de92a3bc2fe7bc4f52999cf7d4c8d10e0f3db514eb.png)
+
+    <Info>
+      If no **SCTE-35 Input** options display in the list, then [reconfigure inputs](/beam/live-encoder/configure/encoding/metadata-encoding).
+    </Info>
+
+    ![screen blackout configuration list mfvp el](/_machine-assets/7bcca72b44e46b5bc22c6eb5d5691c0bd8f8314fe874528b57d089cff1aa5337.png)
+
+    6. Use the save options to save configurations.
+
+    7. Apply the blackout configuration to a [video](/beam/live-encoder/configure/encoding/blackout-encoding#apply-a-blackout-configuration-to-video-encodings) and/or [audio](/beam/live-encoder/configure/encoding/blackout-encoding#apply-a-blackout-configuration-to-audio-encodings) encoding.
+  </Step>
+
+  <Step title="Apply a blackout configuration to video encodings">
+    <span id="apply-a-blackout-configuration-to-video-encodings" className="mk-legacy-anchor" />
+
+    You can apply a blackout configuration per video encoding.
+
+    Before you start: ensure that you created at least one blackout configuration.
+
+    <Info>
+      Blackout is **not supported in Pass-through**.
+    </Info>
+
+    1. Display services.
+
+    2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service.
+
+    3. Open the **Encoding** tab, then click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the video stream.
+
+    4. Select the blackout option. All previously created blackout configurations display.
+
+    5. Check that the applied Blackout option displays for video encodings.
+
+       ![screen video encoding table blackout mfvp el](/_machine-assets/463b2f26f56b684ddf6532f709b142a650fa1510342f0f766aba7725060f47a6.png)
+
+    6. [Apply the blackout configuration to audio](/beam/live-encoder/configure/encoding/blackout-encoding#apply-a-blackout-configuration-to-audio-encodings) streams.
+
+    7. [Add encodings to output](/beam/live-encoder/configure/output/configure-output#define-the-output-stream-composition).
+
+    8. Use the save options to save configurations.
+
+    9. Ensure that [Blackout configurations are configured and applied](/beam/live-encoder/configure/encoding/blackout-encoding#check-blackout-configurations) as expected.
+  </Step>
+
+  <Step title="Apply a blackout configuration to audio encodings">
+    <span id="apply-a-blackout-configuration-to-audio-encodings" className="mk-legacy-anchor" />
+
+    You can apply a blackout configuration per audio encoding.
+
+    before you start, ensure that you have  created at least one blackout configuration.
+
+    <Info>
+      Blackout is **not supported in Pass-through**.
+    </Info>
+
+    1. Display services.
+
+    2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service.
+
+    3. Open the **Encoding** tab, then click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the audio stream, or **Add** a stream.
+
+    4. Click **Blackout** to display the list of previously created blackout configurations, then select a blackout configuration to apply.
+
+       ![screen blackout configuration parameter audio selection mfvp el](/_machine-assets/2dda7e83e380c2560225df8bacd2d63c9c28cd6efc2de3f63b5d50dbe6313271.png)
+
+    5. Click **OK** to save.
+
+    6. Check that audio encodings display in the list with the blackout tag displayed.
+
+       ![screen audio encoding table blackout mfvp el](/_machine-assets/c1050b1512ef35ef373fa339bd296f64563823b49a4dda878fbdc36dece32ec1.png)
+
+    7. [Add encodings to output](/beam/live-encoder/configure/output/configure-output#define-the-output-stream-composition).
+  </Step>
+
+  <Step title="Check blackout configurations">
+    <span id="check-blackout-configurations" className="mk-legacy-anchor" />
+
+    Blackout configurations are first created, then applied to video and/or audio encodings. The encodings are then configured in an output stream. Check the overviews to ensure that blackouts are configured and applied.
+
+    1. Display services.
+
+    2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service.
+
+    3. Open the **Encoding** tab and ensure that any expected blackout configurations display in the list.
+
+       ![screen blackout configuration list mfvp el](/_machine-assets/7bcca72b44e46b5bc22c6eb5d5691c0bd8f8314fe874528b57d089cff1aa5337.png)
+
+    4. Check video and audio encodings to ensure that blackout configurations are applied as expected.
+
+    5. Open the **Output** tab to ensure expected video and audio encodings display in the list.
+
+       ![screen output stream list blackout mfvp el](/_machine-assets/91a2dceaef0f86e004e29f9e50af7a1aad39769eb4f6305ba2f92339f09b13a6.png)
+
+    6. Return to the list of services, or edit any parameters and then save.
+
+    7. From the list of services, click <img src="/icons/ui/chart.svg" alt="Chart" className="mk-ui-icon" width="16" height="16" /> to view statistics.
+
+    8. Ensure that blackout configurations display as expected in the **Statistics** page.
+
+       ![screen stats blackout mfvp el](/_machine-assets/4e98b02ff31f9044b77c625211c792ed8af8557943a06c7862d8746644de5715.png)
+  </Step>
+
+  <Step title="Activate blackout">
+    <span id="activate-blackout-2" className="mk-legacy-anchor" />
+
+    You can [Manually activate or deactivate a blackout](/beam/live-encoder/configure/encoding/blackout-encoding#manually-activate-or-deactivate-a-blackout).
+  </Step>
+</Steps>
+
+## Manually activate or deactivate a blackout
+
+Once you have configured a [manual](/beam/live-encoder/configure/encoding/blackout-encoding#configure-a-manual-blackout) or an [automated blackout](/beam/live-encoder/configure/encoding/blackout-encoding#configure-an-automated-blackout) and started a service, you can manually activate or deactivate it.
+
+<Info>
+  Manual blackout activation/deactivation is only available if **Trigger** parameter is set to **spliceOutSpliceIn**.
+</Info>
+
+![EL encoding metadata cfig blackout splice cut](/_machine-assets/bafe96e6e3484361ab5e3d3c0fdb0a9b0bc599d9c8a7cb08f22a0288b5fc3c92.png)
+
+1. Display statistics on [**Outputs**](/beam/live-encoder/monitor-statistics).
+
+![EL stats outputs blackout](/_machine-assets/449f1f0728ac9452171d44947098614bc2f37b73d11cf824b94ce438a045ab97.png)
+
+2. Click the **Activate Blackout** button. A message informs you that the command has been sent.
+
+3. Click **OK**. The current video is blacked out until the specified **Timeout** (if configured); or by clicking the **Deactivate Blackout** button.

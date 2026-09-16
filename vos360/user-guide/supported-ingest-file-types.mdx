@@ -1,0 +1,82 @@
+---
+title: Supported ingest file types
+robots: noindex, nofollow
+---
+
+Asset Acquisition supports the following file types for video and audio assets:
+
+## Transcoding workflow
+
+General requirements:
+
+* Sources must not contain continuity or truncation errors
+
+* Sources should be at minimum longer than two IDR durations + 1 frame (minimum file is \~4 sec with default parameters)
+
+* Sources should not have audio/video alignment issues
+
+Asset Acquisition supports the following container types for video assets, but not limited to:
+
+* .ts
+
+* .mxf
+
+* .mp4
+
+* .mov
+
+  <Note>
+    **Note:&#x20;**&#x41;sset files with MOV wrapper using XDCAMHD, DV25, DVCPRO50/100 are supported for Playout. For SD files, the playout application supports the MXF IMX30/40/50 (D10) format clips.
+  </Note>
+
+* .mpg
+
+Asset Acquisition supports the following container types for audio assets, but not limited to:
+
+* .mp3
+
+* .m4a
+
+* .flc
+
+* .wav
+
+* .ts (audio only)
+
+For detailed specs, please reach out to your Harmonic account representative.
+
+## Passthrough workflow (pre-transcoded ABR)
+
+<Note>
+  **Note:&#x20;**&#x50;assthrough without transcoding is supported only for MBTS and MBMP4 transcoded by WFS.
+</Note>
+
+## Logos and Graphics
+
+Asset Acquisition supports the following file types for logos and graphic templates:
+
+* .png (logo)
+
+* .jpg (logo)
+
+* .jpeg (logo)
+
+* .bmp (logo)
+
+* .tga (logo)
+
+* .tif (logo)
+
+* .swf (graphic template)
+
+* .flv (graphic template)
+
+* .webm (graphic template)
+
+* .zip (html5)
+
+Some file types can be supported only on Playout, for detailed specs, please reach out to your Harmonic account representative.
+
+<Note>
+  **Note:&#x20;**&#x54;he support of SWF and FLV graphics for Playout will be fully replaced by HTML5 in the coming releases.
+</Note>

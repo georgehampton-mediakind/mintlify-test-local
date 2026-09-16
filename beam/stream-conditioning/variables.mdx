@@ -1,0 +1,89 @@
+---
+title: Manage variables
+sidebarTitle: Manage Variables
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO Beam comes with a pre-configured set of variables that you can use to manage SCTE-35/SCTE-224 filtering, creation and rewriting.
+
+## Display variables
+
+To see the list of variables, follow these steps:
+
+1. From the left menu, select **Settings** > **Stream Conditioning variables** tab.
+
+   Predefined collections of variables are displayed:
+
+   ![Stream Conditioning variables](/_machine-assets/b7022f36eedef09a953ff2b200bc8e68ba46ba87a2e73143c2868e18c403a4c8.png)
+
+2. You can create a custom variable.
+
+## Create a new collection of variables
+
+To extract a well-defined value (such as the segmentation duration of the segmentation descriptor which type ID = program start), you need to create a variable.
+
+To create a new collection of variables, proceed as follows:
+
+1. Click the **Create** button located at the bottom left of the variables table.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter       | Description                                                                                                                                        |
+   | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Collection name | Define the collection name, must be unique                                                                                                         |
+   | Type            | The type of the collection which will be used to the variables. Select one of the three available values: **scte35**, **scte224** and **context**. |
+   | Description     | Provide information about the collection.                                                                                                          |
+
+   ![Prisma sc settings variables collection add](/_machine-assets/87a2e3eadadc0f5e5300959c03d04c3fac8ba95a968e7f0c964008b4e4c14a92.png)
+
+3. Click **Add** to add a variable to your collection.
+
+4. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter   | Description                                                                                                                           |
+   | :---------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+   | Name        | The name of the variable is the reference which can be used in the configs, must be unique in the collection, and cannot be modified. |
+   | Label       | The label of the variable is more natural way to display the variable in the UI.                                                      |
+   | Description | Short description of the variable. We recommend configuring an explicit variable name.                                                |
+   | Type        | Select the variable type.                                                                                                             |
+   | Method      | The method which is applied to the data retrieved to the Xpath. Only available for the following types: Boolean, Number and String.   |
+   | Path        | Define the Xpath of the variable which will be used to retrieved data                                                                 |
+   | Group       | The group of the variable allow to group this variable in dropdown list                                                               |
+   | Tags        | The tags are used in the UI do display the variables in expected input fields                                                         |
+
+   ![Prisma sc settings variables add](/_machine-assets/f69f1d5cfede9410969de1fc141c9a12565d3afe8aec0ecef61c27b663cac58c.png)
+
+5. Click **Ok** to save then **Save** to validate.
+
+   The new collection is added to the list of predefined collections and can. You can now assign this new collection of variables to a service and use it to create replacement operations or filters.
+
+## Associate a collection of variables to a service
+
+Once you have created a new collection of variables you can assign it to a service.
+
+1. From a **Stream Conditioning** service, click the **Variables** tab. The list of predefined collections is displayed.
+
+2. Click the **Select variable collection** button then select the collection you want to add. The new collection is added to the list of predefined collections. You can use it to create replacement operations or filters.
+
+3. Click **Save and continue** or **Save and exit** to save your changes.
+
+## Context variables on SCTE-35 signal-based operations
+
+The goal of context variables is to maintain any state, so that any operation triggered could be managed according to information from the past.
+
+* Stream Conditioning can now keep track of any event modification to condition downstream processing and signaling.
+* When operation like SCTE-35 rewrite or insertion are triggered, the operation on information can be conditioned by previously triggered operation.
+
+Context variables can only be defined from a Stream Conditioning service on which collection of variables have been created or imported. It consists in configuring the Post Processing for a signal-based operation in order to change current value for one or several context variables when the operation is starting.
+
+The configuration of context variables can be done either from:
+
+* The Stream Conditioning configuration page (**Input** > **+ Add rule** > **+ Add Operations** > **Post-processing**).
+* The Stream Conditioning scheduling & control timeline page (**Resident SCTE-35 signal-based operations** > **+ Add** > **Post-processing**).
+
+![Prisma sc context variables](/_machine-assets/fe07754773b4524cc0a25a11804b58ab6645eff81460e4f37f19baf0390fdf8c.png)
+
+Click the **Add** button to select the predefined variable and enter the new value associated to this variable.
+
+The context variable value car be updated either with a new value defined and set in the configuration or with a value retrieved from an information coming from the SCTE-35 signal that triggered the operation. The values of the context variables are reset to the default value after a service is stopped.

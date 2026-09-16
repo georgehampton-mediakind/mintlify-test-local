@@ -1,0 +1,161 @@
+---
+title: Multi-DRM Encryption
+description: Configure Widevine, PlayReady, and FairPlay DRM encryption for MK.IO streams.
+sidebarTitle: Multi-DRM Encryption
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Multi-DRM encryption protects your streams with industry-standard DRM systems so that content plays securely across all major browsers and devices. MK.IO supports two multi-DRM configurations: full multi-DRM (Widevine + PlayReady + FairPlay) and CENC-only (Widevine + PlayReady).
+
+## Prerequisites
+
+* A running streaming endpoint.
+* An asset verified to play without encryption using `Predefined_ClearStreamingOnly`.
+* For FairPlay: an Apple FairPlay Streaming certificate, password, and application secret key.
+
+## Choose your configuration
+
+| Configuration  | Streaming policy                   | Required schemes                | Use when                                                                            |
+| -------------- | ---------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------- |
+| Full multi-DRM | `Predefined_MultiDrmStreaming`     | Widevine + PlayReady + FairPlay | You need to support all platforms, including Safari and Apple devices.              |
+| CENC multi-DRM | `Predefined_MultiDrmCencStreaming` | Widevine + PlayReady            | You do not need FairPlay support. Covers Chrome, Edge, Android, and most smart TVs. |
+
+<Info>
+  The streaming policy enforces which DRM schemes must be present in the content key policy. A `Predefined_MultiDrmStreaming` locator fails if the policy does not include all three schemes. A `Predefined_MultiDrmCencStreaming` locator fails if it does not include both Widevine and PlayReady.
+</Info>
+
+## Full multi-DRM with JWT tokens
+
+This example creates a content key policy with Widevine, PlayReady, and FairPlay, all protected by JWT token authentication.
+
+<Steps>
+  <Step title="Create the content key policy">
+    <span id="create-the-content-key-policy" className="mk-legacy-anchor" />
+
+    1. Navigate to **Content Key Policies** and select **Create Content Key Policy**.
+    2. Enter a **name** (for example, `multidrm-jwt`) and optional **description**.
+    3. Select **Add** in the **Digital Rights Management** section.
+  </Step>
+
+  <Step title="Add Widevine">
+    <span id="add-widevine" className="mk-legacy-anchor" />
+
+    1. Select **Add Widevine**.
+    2. Enter a **policy option name**.
+    3. Under **Use token restriction**, select **Yes**.
+    4. Configure the token fields:
+       * **Token type**: `JWT`
+       * **Issuer**: your chosen issuer string.
+       * **Audience**: your chosen audience string.
+       * **Primary verification key**: your Base64-encoded key.
+    5. Leave **Widevine template** as `{}` unless you need a custom template.
+    6. Select **Add**.
+  </Step>
+
+  <Step title="Add PlayReady">
+    <span id="add-playready" className="mk-legacy-anchor" />
+
+    1. Select **Add PlayReady**.
+    2. Enter a **policy option name**.
+    3. Under **Use token restriction**, select **Yes**.
+    4. Enter the same **issuer**, **audience**, and **primary verification key** as Widevine.
+    5. Leave the PlayReady-specific options at their defaults unless you need custom settings.
+    6. Select **Add**.
+  </Step>
+
+  <Step title="Add FairPlay">
+    <span id="add-fairplay" className="mk-legacy-anchor" />
+
+    1. Select **Add FairPlay**.
+    2. Enter a **policy option name**.
+    3. Under **Use token restriction**, select **Yes**.
+    4. Enter the same **issuer**, **audience**, and **primary verification key** as the other schemes.
+    5. Provide your Apple FairPlay **certificate**, **password**, and **application secret key**.
+    6. Select **Add**.
+  </Step>
+
+  <Step title="Create the policy">
+    <span id="create-the-policy" className="mk-legacy-anchor" />
+
+    Select **Create**. The policy now includes all three DRM schemes with JWT protection.
+  </Step>
+
+  <Step title="Generate a JWT token">
+    <span id="generate-a-jwt-token" className="mk-legacy-anchor" />
+
+    Follow the [JWT token authentication guide](/mkio/how-to/drm-content-protection/jwt-token-authentication) to generate a token using the issuer, audience, and primary verification key you configured.
+  </Step>
+
+  <Step title="Create a streaming locator">
+    <span id="create-a-streaming-locator" className="mk-legacy-anchor" />
+
+    1. Navigate to your asset and select **Add streaming locator**.
+    2. Enter a **name**.
+    3. Set **Streaming policy** to `Predefined_MultiDrmStreaming`.
+    4. Set **Content key policy** to the multi-DRM policy you created.
+    5. Select **Add**, then select the locator and select **Apply**.
+
+    MK.IO generates playback URLs and license acquisition URLs for each DRM system.
+  </Step>
+
+  <Step title="Test playback">
+    <span id="test-playback" className="mk-legacy-anchor" />
+
+    See [Test DRM playback](/mkio/how-to/drm-content-protection/test-drm-playback) for instructions on testing with MKPlayer.
+  </Step>
+</Steps>
+
+## CENC multi-DRM without tokens
+
+This example creates a content key policy with Widevine and PlayReady only, with no token restriction. Use this for scenarios where token-based authentication is handled elsewhere or is not required.
+
+<Steps>
+  <Step title="Create the content key policy">
+    <span id="create-the-content-key-policy-1" className="mk-legacy-anchor" />
+
+    1. Navigate to **Content Key Policies** and select **Create Content Key Policy**.
+    2. Enter a **name** (for example, `multidrm-cenc-open`) and optional **description**.
+    3. Select **Add** in the **Digital Rights Management** section.
+  </Step>
+
+  <Step title="Add Widevine">
+    <span id="add-widevine-1" className="mk-legacy-anchor" />
+
+    1. Select **Add Widevine**.
+    2. Enter a **policy option name**.
+    3. Under **Use token restriction**, select **No**.
+    4. Leave **Widevine template** as `{}`.
+    5. Select **Add**.
+  </Step>
+
+  <Step title="Add PlayReady">
+    <span id="add-playready-1" className="mk-legacy-anchor" />
+
+    1. Select **Add PlayReady**.
+    2. Enter a **policy option name**.
+    3. Under **Use token restriction**, select **No**.
+    4. Leave PlayReady options at defaults.
+    5. Select **Add**.
+  </Step>
+
+  <Step title="Create the policy and streaming locator">
+    <span id="create-the-policy-and-streaming-locator" className="mk-legacy-anchor" />
+
+    1. Select **Create** to save the policy.
+    2. Navigate to your asset and select **Add streaming locator**.
+    3. Set **Streaming policy** to `Predefined_MultiDrmCencStreaming`.
+    4. Set **Content key policy** to the CENC policy you created.
+    5. Select **Add**, then select the locator and select **Apply**.
+  </Step>
+
+  <Step title="Test playback">
+    <span id="test-playback-1" className="mk-legacy-anchor" />
+
+    1. Navigate to the **MKPlayer** page.
+    2. Select **DASH** as the protocol and **Widevine** as the DRM.
+    3. Paste the DASH playback URL in **Source URL**.
+    4. Paste the Widevine license acquisition URL in **License URL**.
+    5. Select **Play**.
+  </Step>
+</Steps>

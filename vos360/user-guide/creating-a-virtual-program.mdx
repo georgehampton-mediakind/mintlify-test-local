@@ -1,0 +1,58 @@
+---
+title: Creating a virtual program
+robots: noindex, nofollow
+---
+
+The multiplexing service allows for the duplication of any component from the input. Creating a virtual program enables the creation of an output service that consists of a virtual program duplicated from another output program.
+
+1. Navigate to **Configure Broadcast**.
+
+2. Go to the program of which you want to create a virtual version in the mux.
+
+3. Click and drag the program onto itself.
+
+4. When using the **DVB&#x20;**&#x6D;ultiplexer, insert a new Program Name, Program Number, and PMT PID.
+
+5. When using the **ATSC** multiplexer, fill in the data according to your mode.
+
+   * With the *Static PSIP, Fetch ((PMCP over FTP), or Remux* (PSIP EIT/ETT Remultiplexing) modes, fill in the mandatory data required to add PSIP to the virtual program:
+
+     <div className="vos-table-scroll">
+       <table className="vos-source-table">
+         <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+         <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Field</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Output Generated</strong></p></th></tr></thead>
+
+         <tbody><tr><td colSpan="1" rowSpan="1"><p>Short Name</p></td><td colSpan="1" rowSpan="1"><p>VCT</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Program Number</p></td><td colSpan="1" rowSpan="1"><p>PAT, PMT, VCT</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Major/Minor Channel Number</p></td><td colSpan="1" rowSpan="1"><p>VCT</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Source ID</p></td><td colSpan="1" rowSpan="1"><p>VCT</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>PMT PID</p></td><td colSpan="1" rowSpan="1"><p>PAT, PMT</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Type</p></td><td colSpan="1" rowSpan="1"><p>VCT</p></td></tr></tbody>
+       </table>
+     </div>
+
+   * With the *Triveni&#x20;*&#x6D;ode, fill in the mandatory data related to the virtual program :
+
+     <div className="vos-table-scroll">
+       <table className="vos-source-table">
+         <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+         <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Field</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Output Generated</strong></p></th></tr></thead>
+
+         <tbody><tr><td colSpan="1" rowSpan="1"><p>Program Number</p></td><td colSpan="1" rowSpan="1"><p>PAT, PMT</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>PMT PID</p></td><td colSpan="1" rowSpan="1"><p>PAT, PMT</p></td></tr></tbody>
+       </table>
+     </div>
+
+     <Note>
+       **Note:&#x20;**&#x57;hen using the *Triveni&#x20;*&#x6D;ode, other data are provided by the PSIP injector. Fill in a **Program Number** matching the defined one on the PSIP injector side.
+     </Note>
+
+6. Click **Save**.
+
+The virtual program is shown with the ![](/images/vos360/ef2dce05b6082da614fd1aa4.png) icon as can be seen in the following example.
+
+![](/images/vos360/862eb7b850420cd433526c6c.png)
+
+<Note>
+  **Note:&#x20;**&#x57;hen you remove the original program, the virtual program will be removed automatically.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x49;n the virtual program, components can be muted by clicking the icon after the component.
+</Note>

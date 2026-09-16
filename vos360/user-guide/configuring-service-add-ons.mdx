@@ -1,0 +1,218 @@
+---
+title: Configuring service add-ons
+robots: noindex, nofollow
+---
+
+&#x20;The availability of service add-ons depends on the type of service you have configured. Before enabling service add-ons, you must create a service from an existing source, transcoding profile, and destination.
+
+Configure add-ons as required by the service:
+
+1. Navigate to **Configure Channels&#x20;**&#x61;pp > **Services**.
+
+2. Enable the **Add-ons&#x20;**&#x63;heckbox.
+
+   ![](/images/vos360/069f3cbf1bca10dfb8c4ef33.png)
+
+3. Turn **ON** your desired add-ons with specific configurations.
+
+## Logo
+
+If the service supports a channel logo, enable the **Logo** add-on and configure the following settings:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Image</strong></p></td><td colSpan="1" rowSpan="1"><p>Click the <strong>Edit</strong> icon to select an image in the VOS file system, or upload a new image file.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Placement</strong></p></td><td colSpan="1" rowSpan="1"><p>Indicate the desired position of the logo.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Offset</strong></p></td><td colSpan="1" rowSpan="1"><p>Indicate the horizontal and vertical offset (relative to the <strong>Placement</strong>) in pixels.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Define Logo Per Video Profile</strong></p></td><td colSpan="1" rowSpan="1"><p>If enabled, you can define a logo per video profile of the Lab Wizard profile for the multiscreen service.</p></td></tr></tbody>
+  </table>
+</div>
+
+## Graphics
+
+If the service supports graphic templates, enable the **Graphics** add-on and then configure the following settings:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Template</strong></p></td><td colSpan="1" rowSpan="1"><p>Click the <strong>Edit</strong> icon to select a graphics template file on the VOS file system, or to upload a new file.</p><ul><li><p><strong>Path to graphic template file</strong>: Enter the path to upload the graphic template by URLs. Note that HTTPS<span> URLs are supported in HTML5 graphics.</span></p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>RSS URL</strong></p></td><td colSpan="1" rowSpan="1"><p><span>Set the parameter to pass to the graphic template. This parameter is dependent on the graphic template. For the graphic template used for crawl text overlay, this could be the URL to an RSS feed containing the text to crawl. </span></p></td></tr></tbody>
+  </table>
+</div>
+
+## **DRM**
+
+For multiscreen services: If the service is to be encrypted, enable the **DRM** add-on and then select a DRM system and resource for each package type.
+
+<Note>
+  **Note:&#x20;**&#x59;ou must configure DRM systems in the Scrambling app.
+</Note>
+
+## CAS
+
+For linear services: If the service is to be scrambled, enable the **CAS** add-on and then configure the required parameters.
+
+<Note>
+  **Note:&#x20;**&#x59;ou must configure CAS systems in the Scrambling app.
+</Note>
+
+## **Video Insertion**
+
+If the service supports SCTE-35 video insertion, enable the **Video Insertion** add-on and then configure the following:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Acquisition Point ID</strong></p></td><td colSpan="1" rowSpan="1"><p>Type the ID of the Signal Acquisition System.</p></td></tr></tbody>
+  </table>
+</div>
+
+<Note>
+  **Note:&#x20;**&#x46;or a Kubernetes cluster with the ESAM End Point enabled, select the **Global** toggle to use the global endpoint configured on [Settings](/vos360/user-guide/settings). Alternatively, click the **Custom** toggle and type in the **ESAM Acquisition Point ID**.
+</Note>
+
+## **Traffic**
+
+To integrate a traffic system, enable the **Traffic** add-on and then configure the following:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Traffic ID</strong></p></td><td colSpan="1" rowSpan="1"><p>Type the ID of the traffic system.</p></td></tr></tbody>
+  </table>
+</div>
+
+## **Scheduler360**
+
+To integrate Scheduler360, enable the **Scheduler360** add-on and configure the following:
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Channel ID</strong></p></td><td colSpan="1" rowSpan="1"><p>Type the ID of the Scheduler360 channel.</p></td></tr></tbody>
+  </table>
+</div>
+
+<Note>
+  **Note:&#x20;**&#x20;VOS services can receive OPC playlists from the configured Scheduler360 channel.
+</Note>
+
+## **Timed Event**
+
+To integrate a management API server, enable the **Timed Event&#x20;**&#x61;dd-on and select from the **Timed Event Type&#x20;**&#x64;rop-down menu:
+
+* **Parental Control**
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Channel ID</strong></p></td><td colSpan="1" rowSpan="1"><p>Assign a unique ID to the channel (up to 36 Unicode characters). The ID is used by the Parental Control API to identify the channel.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>HLS ID3 PID</strong></p></td><td colSpan="1" rowSpan="1"><p>Specify the HLS ID3 PID for assigning the HLS ID3 timed metadata.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Callback URL</strong></p></td><td colSpan="1" rowSpan="1"><p>Type the API endpoint used to listen on the parental control insertion status.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Authentication </strong></p></td><td colSpan="1" rowSpan="1"><p>(Optional) Authentication can be configured for the Callback endpoint.</p></td></tr></tbody>
+  </table>
+</div>
+
+<Note>
+  **Note:&#x20;**&#x54;he Parental Control from the Timed Event add-on is service-affecting. Only OTT services are supported.
+</Note>
+
+* **DateRange Timed Metadata**
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Channel ID</strong></p></td><td colSpan="1" rowSpan="1"><p>Assign a unique ID to the channel (up to 36 Unicode characters). The DATERANGE TMD API will use this ID to associate and send TMD events to the channel correctly. This setting is used to insert DATERANGE timed metadata into HLS-fMP4 or CMAF-HLS live stream playlists as EXT-X-DATERANGE tags through an API. </p></td></tr></tbody>
+  </table>
+</div>
+
+<Note>
+  **Note:&#x20;**&#x54;he Daterange tags are supported in milliseconds for CMAF-HLS with the Live, Start-over/Catch-up workflow through API.
+</Note>
+
+* **ID3 Timed Metadata**\
+  **Note**: Custom ID3 timed metadata is used for live services with CMAF Ingest packaging output. In the **Destination&#x20;**&#x70;roflie, create a **CMAF Ingest&#x20;**&#x70;ackage and set **ID3 Track Mode&#x20;**&#x74;o “Separate Metadata Track”. Custom ID3 Metadata is injected via the Timed Metadata Controller (TMD) REST API.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Channel ID</strong></p></td><td colSpan="1" rowSpan="1"><p>Assign a unique ID to the channel (up to 36 Unicode characters). The Channel ID is used by the TMD REST API to identify the channel.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Custom ID3 Metadata Event PID</strong></p></td><td colSpan="1" rowSpan="1"><p>The default PID for custom ID3 metadata is 504.</p></td></tr></tbody>
+  </table>
+</div>
+
+## **Affiliate**
+
+If required, enable the **Affiliate** add-on and then provide the **Affiliate ID**.
+
+## **Time Adjustment**
+
+Optionally, enable the **Time Adjustment** add-on and then apply a time offset to adjust for channel latency due to (for example) processing time.
+
+## **Blackout Slate**
+
+If the service supports blackout slate, enable the **Blackout Slate** add-on and then configure the slate image and the following settings.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Image</strong></p></td><td colSpan="1" rowSpan="1"><p>Click the <strong>Edit </strong>icon and use the “File Uploader” or “Upload by URL” to upload your slate image to the system.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Trigger</strong></p></td><td colSpan="1" rowSpan="1"><ul><li><p>Auto (Default): Select this option if you need to trigger the blackout slate with both the SCTE-35 message and Monitor app. </p></li><li><p>ESAM Alternate Content: Select this option if you need to trigger the blackout slate with the Monitor app. Note that if this option is selected, do not configure the ESAM acquisition point ID or ESAM POIS endpoint for the service.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Zone Identity</strong></p></td><td colSpan="1" rowSpan="1"><p>(Optional) Enter the provided Zone identity <span>received from the ESAM message.</span></p></td></tr></tbody>
+  </table>
+</div>
+
+<Note>
+  **Note:&#x20;**&#x59;ou must enable this add-on to be able to invoke Override mode in the Playout Monitor app.
+</Note>
+
+## **Thumbnail Exporter**
+
+Thumbnails can be regularly generated from the source to encode and pushed to an sFTP server by enabling the **Thumbnail Exporter** add-on and configuring the following settings.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>SFTP Export Path</strong></p></td><td colSpan="1" rowSpan="1"><p><span>Supported protocol for exporting are</span><strong> </strong><em>FT </em><span>and</span><em> SFTP</em><span>. The syntax must be respected to have the protocol recognized by the add-on.</span><br /><span>The syntax template is : </span><strong>{"<"}<em>{"protocol>"}</em>{"://<"}<em>web or IP address</em>{">:<"}<em>{"port>/path/toSave/Thumbnail"}</em></strong><br /><span>Only the protocol and web or IP address are mandatory. If the port isn't specified, the default protocol's port will be used. If the path isn't specified, the thumbnails will be saved to the address root directory.</span><br /><u>Example of accepted address</u><span> : (SFTP) <a href="/vos360/user-guide/configuring-service-add-ons">sftp://192.18.10.1:2121/local/user/</a> ; </span>(SFTP with DNS address) sftp://<span><a href="http://namedomain.com/tmp">namedomain.com/tmp</a> ; (FTP) <a href="ftp://198.20.15.6:2000/user">ftp://198.20.15.6:2000/user</a> </span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>File Prefix</strong></p></td><td colSpan="1" rowSpan="1"><p><span>The name used to save the generated thumbnails. The thumbnail files will be saved under the name </span><strong>{"<prefix>_<date and time>.jpg "}</strong><span>in the export path URL. The date and time will be appended by the system and will be in UTC format. It follows the pattern </span><em>YYYYMMDDhhmmss</em><span>. </span><strong> </strong></p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Name Suffix</strong></p></td><td colSpan="1" rowSpan="1"><p>The parameter was added under the name "<strong>Name Suffix</strong>" with two available parameters:</p><ul><li><p><em>Timestamp: </em> This is the default parameter to add the date and time in UTC format following the file name.</p></li><li><p><em>None: </em>This is the new parameter to have the same file name all along. It can be used to overwrite the thumbnail at the destination at every export interval.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Username and Password</strong></p></td><td colSpan="1" rowSpan="1"><p><span>These are the server username and password used to log in to the specified export path. Failure to authenticate will raise a warning.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Export interval (in s)</strong></p></td><td colSpan="1" rowSpan="1"><p><span>The exportation interval between two thumbnails. </span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Width</strong></p></td><td colSpan="1" rowSpan="1"><p><span>The generated thumbnail width.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Height</strong></p></td><td colSpan="1" rowSpan="1"><p><span>The generated thumbnail height.</span></p></td></tr></tbody>
+  </table>
+</div>
+
+## **Input Monitoring**
+
+To be able to monitor a live transport stream from an HSP endpoint, enable the **Input Monitoring** add-on.\
+**Result:** You can obtain the input monitoring URL for an active service in the Monitor Channels app.
+
+## **Slate A/B Watermark**
+
+To generate two sets of output with the same content except one with watermark slate A inserted and another one with watermark slate B inserted, enable the **Slate A/B Watermark&#x20;**&#x61;dd-on.
+
+Choose from the following options:
+
+* **ViaccessOrca:** Link with the Viaccess-Orca backend (Viaccess Campaign Manager) to retrieve the slate A and B automatically.
+
+* **Generic:** Select the slate A and slate B images manually through the VOS UI. Slate images must be provisioned on VOS360. See [Configuring a signal loss image](/vos360/user-guide/configuring-the-signal-loss-input) for more information on how to provision the slates.
+
+<Note>
+  **Info:&#x20;**&#x59;ou need to turn on the **OTT Watermarking&#x20;**&#x61;nd set the "**Alt Watermarking Output Prefix**" (e.g. "b.") in the [Destination Profile](/vos360/user-guide/streaming-and-broadcast-destination-profile-parameters) for HLS, DASH, and CMAF packaging outputs. In addition, you need to configure **Output Mode&#x20;**&#x61;s "**Live Only**" in the [multiscreen/origin service destination](/vos360/user-guide/configuring-a-multiscreen-origin-service-destination).
+</Note>
+
+## **Kantar Snap Watermarking**
+
+To insert the Kantar watermarking into your service, enable the **Kantar Snap Watermarking** add-on. (This add-on is visible only if the Kantar Product and Audience license files have been loaded to the VOS system on the [Settings](/vos360/user-guide/settings) page.)
+
+Configure the Kantar Product and Audience licenses for the audio channels. (Refer to [Configuring Kantar audio watermarking](/vos360/user-guide/configuring-kantar-audio-watermarking) for details.)
+
+## Synamedia Watermark
+
+If the service supports Synamedia Watermark in the encoded stream, enable the **Synamedia Watermark** add-on and configure an valid **Channel ID**.
+
+<Note>
+  **Note:&#x20;**&#x54;o make this add-on visible you must first set the parameter '**isEnable**' of '**globalSynamediaWatermarkSetting**' through REST-API. This add-on is only shown on the service with **Multiscreen&#x20;**&#x70;rofile.
+</Note>
+
+## Operator Action
+
+To define the Start and End times for transcoded services, enable the **Operator Action&#x20;**&#x61;dd-on.
+
+* Turn on the **Mute Operation&#x20;**&#x74;oggle under the **Operator Action&#x20;**&#x61;dd-on to schedule or manually start and stop streaming on the output through the **Monitor Channels&#x20;**&#x61;pp. (Refer to [Scheduling streaming start and end times in the Monitor Channels app](/vos360/user-guide/scheduling-streaming-start-and-end-times-in-the-monitor-channels-app) for details.)

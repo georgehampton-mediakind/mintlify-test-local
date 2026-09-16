@@ -1,0 +1,27 @@
+---
+title: Loading a playlist from the Public API app
+robots: noindex, nofollow
+---
+
+You can load XML and BXF playlists using the Public API app, and you have the option to override the channel that the playlist is associated with.
+
+1. Navigate to the Public API app.
+
+2. If you want to override the channel that the playlist file is associated with, then do the following:
+
+   * Click **Playout Backend**, then select GET /playoutcontrol/v1/channels, and click **Try it out!**
+
+   * In the **Response Body**, find the **channelId** parameter and copy the value. This is the UUID.   \
+     ![](/images/vos360/663964a11b0b46d28277415c.png)
+
+3. From the Public API app, click **BxfControlAdaptor**, click POST /bxf-control-adapter/v1/opc/\{playlist\_file} and configure the following parameters:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>playlist_file</strong></p></td><td colSpan="1" rowSpan="1"><p>Enter a name that will be used to refer to the playlist once it has been uploaded to the VOS360.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>channel_id</strong></p></td><td colSpan="1" rowSpan="1"><p>If you want to override the channel ID that is stored in the playlist file, then paste the UUID from step 2 here.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>schedule</strong></p></td><td colSpan="1" rowSpan="1"><p>Browse to and select the playlist file you want to upload.</p></td></tr></tbody>
+     </table>
+   </div>
+
+4. Click **Try it Out!**

@@ -1,0 +1,36 @@
+---
+title: Updating a profile with REST API
+robots: noindex, nofollow
+---
+
+In general, it is recommended that you updatw a profile using the Lab Wizard app from the VOS360 UI instead of the REST API as the Lab Wizard app provides a manageable workflow for users to configure.
+
+If you must modify a profile with the REST API, follow these steps:
+
+1. From the **Lab Wizard** app, examine the Profile Name and Version Number of the Profile that you wish to update.
+
+2. Navigate to the **DevOps Portal** app > **Developer API**.
+
+3. Under **LabWizard**, navigate to **GET /labwizard/v1/profiles**, clic&#x6B;**&#x20;Try it out!**.
+
+4. Specify the Profile Name in the field **Filter By Profile Name&#x20;**&#x74;o find out the ID number of the Profile you wish to update.
+
+5. Navigate to **GET /labwizard/v1/profiles/(id)**, clic&#x6B;**&#x20;Try it out!**.
+
+6. In the **Response Body**, extract the Profile parameters (JSON) from the command.
+
+7. Update the Profile parameters (JSON):
+
+   * Update the information.
+
+   * Delete the "id".
+
+   * Increment "customerVersion" by one.
+
+8. Navigate to **POST /labwizard/v1/profiles**, click **Try it out!**.
+
+9. Place the updated Profile parameters (JSON) in the body.
+
+10. Click **Execute**.
+
+&#x20;Result: A new version of the profile is created with updated profile information.

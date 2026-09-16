@@ -1,0 +1,104 @@
+---
+title: Content Keys
+description: Understand content key policies, encryption schemes, DRM systems, and token authorization in MK.IO.
+sidebarTitle: Content Keys
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO lets you deliver video content to end-consumers in a controlled and secure manner. MK.IO’s streaming endpoints can deliver content using AES-128 (Advanced Encryption Standard) or any of the three major studio-approved digital rights management systems: Microsoft PlayReady, Google Widevine, and Apple FairPlay.
+
+## Content protection concepts
+
+### Clear Key protection
+
+Clear Key protection with AES-128 encryption is used to protect content on all devices.
+
+<Warning>
+  AES-128 does not provide the same level of security as the three DRM systems listed below.
+</Warning>
+
+### Digital Rights Management systems (DRM)
+
+* **Apple FairPlay**: DRM for iOS, tvOS, iPadOS, Safari, and macOS devices.
+* **Google Widevine**: DRM for Google Chrome, Firefox, Android, Android TV, and many other streaming devices.
+* **Microsoft PlayReady**: DRM for Microsoft Edge, Xbox, and other streaming video platforms.
+
+### JWT tokens
+
+A common use case for applying content protection is ensuring that users have the correct entitlement to access the video content. This is achieved by requiring an HTTP Header in the DRM license request and asking the MK.IO system to validate the values inside the **Issuer** and **Audience** fields in the JWT token.
+
+## Content Keys
+
+Both AES-128 and DRM (Widevine, FairPlay, PlayReady) are supported on the platform for both live and file-based streaming.
+
+The **Content Key Policy** is used to configure how the content key (secure access to your assets) is delivered to end clients. You need to set the requirements (restrictions) on the Content Key Policy that must be met in order for keys with the specified configuration to be delivered to clients.
+
+<Info>
+  A Content Key Policy is not needed for clear streaming.
+</Info>
+
+In most cases, the Content Key Policy is associated with the [Streaming Locator](/mkio/understanding/core-concepts/locators). When creating a custom streaming policy for advanced scenarios, you can specify the content key policy inside of a Streaming Policy.
+
+Each content policy can be assigned one or more DRMs. MK.IO also provides a service for delivering FairPlay, PlayReady, and Widevine licenses.
+
+## Token restriction
+
+<Warning>
+  It is not recommended to add *Clear Key* to a policy that is targeted for DRM as it reduces the security effectiveness.
+</Warning>
+
+For each DRM added, you can configure the token restriction:
+
+* **No token restriction**: Only recommended for testing purposes.
+* **Token validation**: Enforce access to the key with a SWT or JWT token. In this case, you must provide the **Issuer**, **Audience**, and **Primary Verification Key**.
+
+## DRM Specific Configurations
+
+### Widevine
+
+By default, the license configuration can be left empty and a default license configuration will be generated internally.
+
+It is possible to add a custom JSON configuration to define specific license parameters such as the persistency and validity of the license. The format of the JSON payload follows the policy overrides and license configuration syntax from the Widevine specification.
+
+**Example JSON Configuration:**
+
+```json
+{
+    "policy_overrides": {
+        "can_play": true,
+        "can_renew": false,
+        "can_persist": true,
+        "playback_duration_seconds": 10800,
+        "license_duration_seconds": 604800
+    }
+}
+```
+
+For more information about this configuration syntax, contact [MK.IO support](https://support.mk.io).
+
+### FairPlay
+
+FairPlay DRM requires a specific section to configure the FairPlay Certificate. You will be asked to provide the **certificate value**, the certificate **password**, and the **secret**.
+
+By default, licenses are non-persistent (lasting only as long as the playback session). You can enable offline usage by making them persistent with three options:
+
+* **No limit**: License is not limited in time.
+* **Limited**: A **Rental duration** can be specified.
+* **Offline rental**: Both **Playback duration** and **Storage duration** can be defined.
+
+### PlayReady
+
+By default, licenses are non-persistent. You can enable offline usage with the following options:
+
+* **Start time**: When the license becomes valid.
+* **End time**: When the license expires (absolute or relative).
+* **First play expiration**: Duration the license remains valid after the first playback starts.
+* **Grace period**: Extra time after expiry (ignored in PlayReady 3.0+ clients).
+
+PlayReady configuration also allows setting the minimum **Security Level Policy**:
+
+* **SL150**: No protection against unauthorized use (Testing only).
+* **SL2000**: Software or Hardware protection for commercial content.
+
+Finally, you can define one or more **advanced output protection settings**. More information can be found in the [PlayReady documentation](https://learn.microsoft.com/en-us/playready/overview/license-and-policies).

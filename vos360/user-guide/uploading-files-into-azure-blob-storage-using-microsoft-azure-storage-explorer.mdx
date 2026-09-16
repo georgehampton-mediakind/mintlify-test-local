@@ -1,0 +1,35 @@
+---
+title: Uploading files into Azure Blob Storage using Microsoft Azure Storage Explorer
+robots: noindex, nofollow
+---
+
+You can manually upload files into Azure Blob Storage by using the Microsoft Azure Storage Explorer.
+
+1. Open Microsoft Azure Storage Explorer.
+
+2. Navigate to your Azure Blob Storage container.
+
+   <Note>
+     **Note:&#x20;**&#x50;erform this step before connecting to the blob container to avoid a **Cannot read property 'uids' of undefined** error message.
+   </Note>
+
+3. Click **Add Account**.\
+   ![](/images/vos360/1697cc72a2f9ee06e38ec108.png)
+
+4. Select **Use a storage account name and key**.\
+   ![](/images/vos360/86bab1992f4e2eeb551b06ab.png)
+
+5. The account name and account key are displayed in the VOS360 Asset Acquisition application.\
+   ![](/images/vos360/6f2f362f59cb06341dd9624f.png)
+
+6. In the Azure Storage Explorer, click **Next** and then click **Connect.**
+
+7. To upload files, click **Upload** or drag and drop files into the window.
+
+8. Check the **Activities** window to make sure that the file is successfully uploaded.
+
+   ![](/images/vos360/cb1c4997029374e6f27d057a.png)
+
+<Note>
+  **Note:&#x20;**&#x4F;nce the file is uploaded and validated through the **Decision Queue** tab, by default the original source file is deleted from the Blob container. The source file is only saved in VOS360 internal storage.
+</Note>

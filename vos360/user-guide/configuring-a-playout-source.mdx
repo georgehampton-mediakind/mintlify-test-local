@@ -1,0 +1,145 @@
+---
+title: Configuring a playout source
+robots: noindex, nofollow
+---
+
+The source defines the frame rate, resolution, and languages for the playout channel. One source can be used in multiple services, each with a unique destination.
+
+<Note>
+  **Info:&#x20;**&#x57;hen the encoding profile is multiscreen, an interlaced Playout source is automatically converted to progressive.
+</Note>
+
+1. From the **Configure Channels** app, navigate to the **Sources&#x20;**&#x70;age. Click **+ Source**.
+
+2. In the **Input Source Name** field, enter the name of the new source.
+
+3. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+4. Below **Inputs**, configure the **Signal Loss** input with the desired image file, or click **Remove** to delete the input if it is not required.
+
+5. Click the **Add Input** icon, and then select **Playout** **Source** from the drop-down list.
+
+6. Optionally, specify a **Playlist offset** between -2 and 0 seconds.
+
+   <Note>
+     **Note:&#x20;**&#x49;f set to -2 seconds, an event that is scheduled at T0 will start at T0 -2 seconds.
+   </Note>
+
+7. For **Video Grooming**, define the frame rate and resolution for the playout source.
+
+8. For **Audio Streams**, specify each language to be used in the playout source.
+
+   <Note>
+     **Info:&#x20;**&#x4D;ultiple audio streams are supported in external live inputs and MXF assets with PCM audio only. The languages used by the assets must match the languages defined for the playout source.
+   </Note>
+
+   <Note>
+     **Info:&#x20;**&#x41; language must not be specified more than once.
+   </Note>
+
+9. Optionally, for **Data Streams**, choose an option from the **Type&#x20;**&#x64;rop-down list. Options include the following:
+
+   * SCTE-35: This option can configure a label for the output data stream.
+
+   * SCTE-27: This option can configure a label for the output data stream.
+
+   * DVB Subtitling: This option can configure the output DVB Subtitle data stream and generate DVB Subtitle components to convert input subtitles in the video source into DVB subtitles for Playout output.
+
+     <Note>
+       **Workflow to convert CC-708 (SRT) to DVB subtitles:**
+
+       1. Navigate to the **Asset Acquisition&#x20;**&#x61;pp > **Incoming&#x20;**&#x74;ab> **Upload&#x20;**&#x74;ab, and upload an MXF file containing CC-708 in the video essence.
+
+       2. Use the Asset Acquisition app to extract, and convert Closed Captions CC-708 to the SRT file (with SRT as intermediate format) and attach the SRT file to the MXF. Several CC languages can be extracted from the same MXF file.
+
+       3. When the upload is completed, check the extraction and conversion have been done by selecting the MXF you have uploaded in the **Library** tab and then selecting the **Subtitles** tab.
+
+       4. The playout service with this DVB Subtitling enabled converts the SRT (with SRT as intermediate format) to DVB subtitles when the MXF is played back.
+
+       Note that it is also supported to ingest sidecar SRT subtitles with the Playout file sources for further conversion to DVB subtitles.
+     </Note>
+
+     <Note>
+       **Workflow to convert STL to DVB subtitles:**
+
+       1. Navigate to the **Asset Acquisition&#x20;**&#x61;pp > **Incoming&#x20;**&#x74;ab> **Upload&#x20;**&#x74;ab, and upload an STL file in the video essence.
+
+       2. Use the Asset Acquisition app to extract, and convert the STL file.
+
+       3. When the upload is completed, check the extraction and conversion have been done by selecting the STL you have uploaded in the **Library** tab and then selecting the **Subtitles** tab.
+
+       4. The playout service with this DVB Subtitling enabled converts the SLT to DVB subtitles.
+
+       Note that it is also supported to ingest **STL&#x20;**&#x73;ubtitles with the Playout file sources for further conversion to DVB subtitles.
+     </Note>
+
+     * Configure the Label, Subtitle Type, Page, and Language for the output data stream as desired.
+
+       <Note>
+         **Enable video burn-in for DVB subtitles:**
+
+         1. Configure a **Label&#x20;**&#x69;n the playout source for the transcoding profile.
+
+         2. From the transcoding profiles (IPTV/Multiscreen profiles), navigate to the **Metadata** section and set the **Burn In DVB Subtitles** to "True" to enable video burn-in for DVB subtitles.
+       </Note>
+
+     * (Optional) Click the **Enable Conversion&#x20;**&#x63;heckbox for the CC-708/STL to DVB subtitles conversion and configure the output settings as follows:
+
+       * Frame Size (e.g. 1920x1080)
+
+       * Font (e.g. HelveticaRoundedLT.ttf). You can add fonts from the **Configure Channels&#x20;**&#x61;pp > **Settings&#x20;**> **Advanced&#x20;**&#x74;ab> **Fonts&#x20;**&#x73;ection.
+
+       * Font Density (e.g. 1.6)
+
+       * Text Outline Width: (e.g. 3)
+
+       * Background Transparency (e.g.100)
+
+       * Min Bitrate
+
+       * Text Color (e.g. F6F906 (yellow) or FFFFFF (white))
+
+   * Teletext: This option can configure the output data stream.
+
+     * &#x20;Configure the Label, Subtitle Type, Page, and Language for the output stream as desired.
+
+   * ID3: This option can configure a label for the output data stream.
+
+   * Unknown: This option can configure a label for the output data stream.
+
+10. Optionally, specify the **Duck Level** and the **Voice Over Level** in the **Voice over** area.
+
+11. Set the time zone for your source from the **Time Zone** drop-down list.
+
+    <Note>
+      **Note:** For drop-frame sources (29.97, 59.94 fps), configure the **UTC Time of Daily Adjustment** (or the hour at which the adjustment is done, 0-23).
+    </Note>
+
+12. Optionally, choose an option from the **Max Asset Bitrate** drop-down list.
+
+13. Optionally, choose an option from the **Default Live Source&#x20;**&#x74;o have a live source on the output when there is no event to play (or when an asset is missing). The live sources must be created beforehand, with the redundancy mode available for both the configured primary and secondary sources.
+
+    * **Primary**: Choose the primary live source from the drop-down menu.
+
+    * **Seconday**: Choose the secondary live source from the drop-down menu. If the secondary source is configured, the source redandancy mode will be enabled. Note that the primary source can have different components than the secondary source.
+
+    * **Redundancy Mode**: The redundancy mode is applicable when a secondary source is configured. Note that the modification of the redundancy mode is seamless. It does not cause any switch or switch-back unless required by the new mode.
+
+      * *Auto / Revert on secondary failure*: The switch from the primary to the secondary is automatic on the synchronization loss detection on the primary. The switch back to the primary is automatic on the synchronization loss detection on the secondary source. Manual switching is allowed through the Playout Monitor UI.
+
+      * *Auto / Revert on stable primary*: The switch from the primary to the secondary is automatic on the synchronization loss detection on the primary. The switch back to the primary is automatic when primary is “stable” for the configured duration. “stable” means no synchronization loss dectection during the period. Manual switching is allowed through the Playout Monitor UI, even before the delay is reached. You can configure **Stable Duration Before Revert (s)&#x20;**&#x77;ith the range from 60 to 86400 seconds (24h).
+
+      * *Manual*: No automatic switch or switch-back in this mode. You need to select the default live source from the Playout Monitor UI manually.
+
+14. Optionally, click the checkbox to enable **Live Input Monitoring&#x20;**&#x6F;n the Playout Monitor UI.
+
+15. Optionally, click the **Playlist: do not show gap between events in an error** checkbox to disable the displayed alarm if a playlist has a gap.
+
+16. Optionally, specify the value for **Maximum number of sequences**.\
+    This parameter impacts memory usage by the playout service, as the first two minutes of all enabled sequences are loaded. For example, a 3-minute sequence of 50 Mb/s assets will consume 750 MB of memory. Insufficient memory may impact service performance.
+
+17. Optionally, specify the **Number of past events to display** in the Playout Monitor. The value range is 0 to 30.
+
+18. Optionally, specify the value for **Hide "too short asset error" up to**. The value range is from 0 to 10000 ms.
+
+19. Click **Create**.

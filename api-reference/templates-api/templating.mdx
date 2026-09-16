@@ -1,0 +1,42 @@
+---
+title: Templating
+---
+
+## Templating
+
+Configurations are stored by type, and identified by name.
+You can upload multiple versions of the same configuration, each version will be identifiable by its hash.
+You may also assign a tag to a configuration version to make it easier to identify.
+The latest uploaded version of each configuration is automatically tagged as "latest".
+
+The supported types of configuration are:
+- contentDecisioning: Configuration of alternate content decisioning, supporting placement requests in SCTE-130 format.
+- contentProcessing: Configuration for real-time content processing such as decoding.
+- encodingLive: Configuration for real-time live encoding.
+- manifestConditioning: Configuration for conditioning of SCTE-35 signals in packaging manifests.
+- manifestConditioningPlugin: Plugin for conditioning of SCTE-35 signals in packaging manifests.
+- multiviewComposing: Configuration for combining multiple sources into a multiview output.
+- splicing: Configuration for real-time media insertion or switching.
+- streamConditioning: Configuration for SCTE-35 manipulation, slate/logo insertion, and live/file switching.
+- streamPersonalization: Configuration of real-time manifest manipulation, for ad insertion or blackout.
+- streamPersonalizationPlugin: Plugin for real-time stream processing such as ad insertion, or blackout.
+- viewingPolicyManager: Configuration of media schedules, viewing rights, and content restrictions.
+- viewingPolicyManagerPlugin: Plugin for importing or transforming media schedule and viewing rights metadata.
+
+* [List the latest versions of configurations.](/api-reference/templates-api/templating/list-the-latest-versions-of-configurations)
+
+* [List the latest versions of configurations.](/api-reference/templates-api/templating/list-the-latest-versions-of-configurations-get)
+
+* [Get the latest version of this configuration.](/api-reference/templates-api/templating/get-the-latest-version-of-this-configuration)
+
+* [Create a new configuration, or a new version of a configuration.](/api-reference/templates-api/templating/create-a-new-configuration-or-a-new-version-of-a-configuration)
+
+* [Delete all versions of this configuration.](/api-reference/templates-api/templating/delete-all-versions-of-this-configuration)
+
+* [Get all versions of this configuration.](/api-reference/templates-api/templating/get-all-versions-of-this-configuration)
+
+* [Get a version of a configuration by hash or by tag.](/api-reference/templates-api/templating/get-a-version-of-a-configuration-by-hash-or-by-tag)
+
+* [Delete a version of a configuration by hash or by tag.](/api-reference/templates-api/templating/delete-a-version-of-a-configuration-by-hash-or-by-tag)
+
+* [Get information on the types of configuration supported by this project.](/api-reference/templates-api/templating/get-information-on-the-types-of-configuration-supported-by-this-project)

@@ -1,0 +1,48 @@
+---
+title: Configuring and operating a playout service
+robots: noindex, nofollow
+---
+
+Operators can use the VOS Playout Monitor app to monitor playout channels and perform master control operations. It supports automatic execution of a playlist derived from a traffic schedule, as well as automatic fetch from an S3 bucket.
+
+* *Primary events* consist of video events, or clips. Both file-based assets and live input sources can be used for primary events. Live inputs and MXF assets support multiple languages, with multiple language playback in the output stream.
+
+* *Secondary events* refer to graphics events, including logos and animations, and are always associated with a primary event. They are always executed with timing that is relative to the primary event.
+
+S3 Bucket assets should be uploaded using the Public API app. Azure Blob storage assets should be uploaded using the Microsoft Azure Storage Explorer. Logos and graphic templates may be manually uploaded using the **Web Uploader** in Asset Acquisition. File-based video assets may also be uploaded manually in Asset Acquisition, but this is not recommended for production environments. For more information, refer to [/wiki/spaces/VOS360DOCC/pages/167379215](/vos360/user-guide/managing-media-assets).
+
+<Note>
+  **Info:** You must configure at least one playout service in the **Configure Channels** app before you can access the Playout Monitor app.
+</Note>
+
+The following topics are included in this section:
+
+* [Configuring a playout service](/vos360/user-guide/configuring-a-playout-service)
+
+* [Configuring an external live feed](/vos360/user-guide/configuring-an-external-live-feed)
+
+* [VOS Playout Monitor app overview](/vos360/user-guide/vos-playout-monitor-app-overview)
+
+* [Configuring and triggering SCTE-35 dynamic ad insertion](/vos360/user-guide/configuring-and-triggering-scte-35-dynamic-ad-insertion)
+
+* [Configuring DVB subtitles and Teletext for a playout service](/vos360/user-guide/configuring-dvb-subtitles-and-teletext-for-a-playout-service)
+
+* [Using live inputs for a playout channel on Azure](/vos360/user-guide/using-live-inputs-for-a-playout-channel-on-azure)
+
+* [VOS playlist schema](/vos360/user-guide/vos-playlist-schema)
+
+* [Loading a playlist](/vos360/user-guide/loading-a-playlist)
+
+* [Creating a primary event](/vos360/user-guide/creating-a-primary-event)
+
+* [Creating a secondary event](/vos360/user-guide/creating-a-secondary-event)
+
+* [Creating and playing a sequence](/vos360/user-guide/creating-and-playing-a-sequence)
+
+* [Creating VOS Playout clean and dirty outputs](/vos360/user-guide/creating-vos-playout-clean-and-dirty-outputs)
+
+* [About Override mode](/vos360/user-guide/about-override-mode)
+
+* [Supported alarms](/vos360/user-guide/supported-alarms)
+
+* [About as-run logs](/vos360/user-guide/about-as-run-logs)

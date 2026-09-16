@@ -1,0 +1,55 @@
+---
+title: Adding transcoding services to the multiplexer
+robots: noindex, nofollow
+---
+
+You can add transcoding services to the multiplexer you have created in the Configure Broadcast app.
+
+1. From the **Source&#x20;**&#x70;anel on the left, drag and drop the program to the desired **Multiplexer&#x20;**&#x6F;n the right.
+
+   ![](/images/vos360/7c7f0d45a50f57df7bdb8145.png)
+
+2. Choose the way you want to process from the **Add Transcoding service&#x20;**&#x77;indow. \
+   ![](/images/vos360/b6952b816c5fa331cbaf979b.png)
+
+3. The Add Transcoding Service to Multiplexer window displays.
+
+   ![](/images/vos360/af5dd44eb03ee92cc6450e02.png)
+
+4. From the **Source&#x20;**&#x74;ab, set the parameters as follows.
+
+   * **Primary**: This is the primary source to be used for the transcoding service.
+
+   * **Secondary**: This is the secondary source to be used for the transcoding service.
+
+5. From the **Transcoding&#x20;**&#x74;ab, choose the **Transcoding** and **Destination** profiles.
+
+   ![](/images/vos360/25f19ff64f69d6f8933085c4.png)
+
+   * **Process Name&#x20;**&#x61;nd **Program Number&#x20;**&#x63;an be remapped.
+
+   * Choose the **Destination Profile**. The Destination Profile can be modified once the service is created. This requires a restart of the service.
+
+   * Choose the bitrate mode **VBR&#x20;**(ON) or **CBR&#x20;**(OFF).
+
+   * Define the video **bitrate&#x20;**&#x61;ccording to bitrate mode.
+
+   * Addons: Turn these option **ON** to enable the insertion of logos, graphics, or video.
+
+6. From the **Remapping** tab, you may customize the Program Name, Program Number, Program Type, and PMT PID that can be remapped to the mux output.
+
+7. From the **Descriptors** tab, add any descriptor if required. Once added the descriptors can be re-ordered.
+
+8. Configure the status of the transcoding service.
+
+   * **Stopped**: The transcoding service is not started. The mux monitoring does not consider the service as an input. This program is not present in the output of the mux.
+
+   * **Off-air**: The transcoding service is started. The stream is sent to the mux but the service does not use any pool bandwidth. The mux monitoring provides information on this program. This program is not present in the output of the mux.
+
+   * **On-air**: The transcoding service is started. The mux monitoring provides information on this program. This program is present in the output of the mux.
+
+9. Click **Save**. \
+   A thumbnail of each program appears in the **Programs** tab.\
+   ![](/images/vos360/f51bcfec3e778a8366e1d1c3.png)\
+   If a service has an alarm, click the exclamation mark to show the notification.\
+   ![](/images/vos360/f40d8e3a38bb2aa989aeb3b4.png)

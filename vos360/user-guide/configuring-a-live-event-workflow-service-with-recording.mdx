@@ -1,0 +1,102 @@
+---
+title: Configuring a Live Event Workflow service with recording
+robots: noindex, nofollow
+---
+
+1. Navigate to **Lab Wizard** app > **Destination Profile**.
+
+   * Create HLS(sTS/fMP4) and DASH packages individually and set **Common Segment Url Delivery&#x20;**&#x74;o "True" for each packaging output.\
+     ![](/images/vos360/d646df640355c699f5d0ecd3.png) ![](/images/vos360/442687a60297a23cde723090.png)
+
+   * Enable the **Pull Packaging** and set the **Recording/Buffer Time&#x20;**&#x74;o a minimum of 1500 minutes (25 hours) for recording purposes.
+
+   * Set the **DVR window size&#x20;**&#x77;ith minimum **120s&#x20;**&#x66;or each packaging output.
+
+2. &#x20;Navigate to the **Lab Wizard&#x20;**&#x61;pp > **Multiscreen Profile**.
+
+   * Enable the **Live Event&#x20;**&#x63;heckbox in the **Allowed Addon** to set the multiscreen profile for Live Event purposes. This multiscreen profile will fall into the Live Event category once saved. \
+     ![](/images/vos360/6a803bb0b7000aebc5b27e37.png)
+
+3. Navigate to the **Configure Channels&#x20;**> **Sources** tab to create a source input for the Live Event service.
+
+4. Navigate to the **Configure Channels** > **Destinations&#x20;**&#x74;ab and configure the following:
+
+   * From the **Profile&#x20;**&#x64;rop-down menu, select the destination profile you created with **Common Segment Url Delivery&#x20;**&#x73;et with "True" in the HLS/DASH packages. \
+     &#x20;![](/images/vos360/2cbd2dad892f3cc3c198a23c.png)
+
+   * From the **Outputs&#x20;**&#x73;ection, navigate to the **Files Output > Internal&#x20;**&#x61;nd configure the following:
+
+     * **Publish Name**: This name must not be used before (not just unique) per the Live Event Workflow service serving from the cluster.
+
+     * &#x20;**Output Mode:&#x20;**&#x54;his should be configured as "Live and Timeshift".
+
+5. Navigate to the **Configure Channels** > **Services&#x20;**&#x74;ab to create a service with the appropriate profiles:
+
+   1. Select the Destination profile with the HLS/DASH packages enabled with **Common Segment Url Delivery&#x20;**&#x73;et to "True".
+
+   2. Select the Multiscreen profile with the **Live Event&#x20;**&#x63;heckbox enabled.
+
+   3. Click the **Online** button to activate the Live Event Workflow service (at least 30 minutes before the scheduled Live Event start time).
+
+      <Note>
+        **Info:&#x20;**&#x4F;nline the service for Live Event Workflow via the following apps:
+
+        * **Configure Channels&#x20;**&#x61;pp
+
+        * **Monitor Channels&#x20;**&#x61;pp (**Recommended**)
+      </Note>
+
+      <Note>
+        **Info:&#x20;**&#x57;hen clicking the **Offline&#x20;**&#x62;utton, the Live Event Workflow service will be turned off. \
+        When clicking the **Delete&#x20;**&#x62;utton, the Live Event Workflow service will be deleted.
+      </Note>
+
+      <Note>
+        **Info:&#x20;**&#x41;fter creating the service, a URL will be generated. the same URL will be used to access the live and the recording in the future.\
+        URL example: [https://cdn-abc-efg03-07.comala.video/Content/LiveEvent/a0b985764-d1b2-f59d-b040-82f7b3a6dbbb/HLS\_TS/master.m3u8](https://origin-hkv-onyx03-01.nebula.video/Content/LiveEvent\(channelId=a0b59371-d1b2-f59d-b040-82f7b3a6dbbb,assetId=a0b59371-d1b2-f59d-b040-82f7b3a6dbbb\)/HLS_TS/master.m3u8)\
+        The playback URL will be processed as "503 Service unavailable" when the Live service is running and the Live Event recording is not started. Once the "LiveEvent start time" is reached you will be able to pull the manifest.
+      </Note>
+
+## Start/end a Live Event Workflow recording
+
+<Note>
+  **Info:&#x20;**&#x54;here will be a 90-second delay (read-after-write latency) from "Service start time" before the "LiveEvent start time" can be set.\
+  For example, if the Service started at 2024-05-13T14:30:00.001Z, then the "LiveEvent start time" should be equal to or later than 2024-05-13T14:31:30.001Z (Service start time +90 seconds).
+
+  Hence it is recommended for users to have the service online and in the "Preview" state 30 minutes from the scheduled Live Event start time, in such case, the 90s offset can be avoided.
+
+  * Keep the service online and in the "Preview" state to have the service ready to start the live event.
+
+  * Online the service at least 30 minutes before the scheduled Live Event start time.
+</Note>
+
+1. Navigate to the **Monitor Channels&#x20;**&#x61;pp > **Live Event Schedule&#x20;**&#x73;ection.\
+   ![](/images/vos360/65dfedcc369399579afcfc2d.png)
+
+2. Specify the **Start Time&#x20;**&#x66;or the Live Event recording.
+
+   <Note>
+     **Info:&#x20;**&#x54;he playback URL will return content from the specified start time to the current time.
+   </Note>
+
+3. Specify the **End Time** for the Live Event recording.
+
+   <Note>
+     **Info:&#x20;**&#x54;he playback URL will return content from the specified start time to the specified end time.
+   </Note>
+
+4. (Optional) Turn "On" the **Confidence Monitoring&#x20;**&#x74;o obtain preview URLs for playback testing on 3rd party players without exposing the content to end users when a Live Event recording is initiated.
+
+5. (Optional) Once the Live Event recording is completed, check the **Live Event Recorded&#x20;**&#x73;ection to view the recorded assets saved in the **Asset Acquisition&#x20;**&#x61;pp.
+
+## Live Event Workflow Best Practices
+
+![](/images/vos360/ae5a3cc8b59fb963223c8d3f.png)
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><th colSpan="1" rowSpan="1"><p /></th><th colSpan="1" rowSpan="1"><p><strong>Operation Notes</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Recommendations</strong></p></th></tr><tr><th colSpan="1" rowSpan="2"><p><strong>Creation</strong></p></th><td colSpan="1" rowSpan="1"><p>A dedicated destination profile must be created on the Configure Channels app per live event service</p></td><td colSpan="1" rowSpan="1"><p>The destination profile name can be the same as the publishing name for ease of identification</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>The "Publishing Name" of the destination profile must be unique per live event service</p></td><td colSpan="1" rowSpan="1"><p>Use of the event name and start time can be an option</p></td></tr><tr><th colSpan="1" rowSpan="2"><p><strong>Offline State</strong></p></th><td colSpan="1" rowSpan="1"><p>The operator should activate the live event service and have it ready in the "Preview" state 30 minutes prior to the start of the event.</p></td><td colSpan="1" rowSpan="1"><p /></td></tr><tr><td colSpan="1" rowSpan="1"><p>The operator should consider and enable slate insertion at the start of the event, this enables the downstream devices to start the playback session prior to the event, and avoid network bottleneck due to peak request at the start of the event.</p></td><td colSpan="1" rowSpan="1"><p /></td></tr><tr><th colSpan="1" rowSpan="2"><p><strong>Update</strong></p></th><td colSpan="1" rowSpan="1"><p><span>If updating the live event schedule (startTime or endTime) to a future time that is at least 5 minutes from the current time:</span></p><ul><li><p><strong>Start Time Update</strong></p><ul><li><p>The <code>startTime</code> can be updated when the event is in the "Offline" or "Preview" states.</p></li><li><p>The <code>startTime</code> must be set to a future time that is at least 5 minutes from the current time.</p></li></ul></li><li><p><strong>End Time Update</strong></p><ul><li><p>The <code>endTime</code> can be updated when the event is in the "Offline", "Preview", or "Live" states.</p></li><li><p>The <code>endTime</code> must be set to a future time that is at least 5 minutes from the current time.</p></li></ul></li></ul></td><td colSpan="1" rowSpan="1"><p /></td></tr><tr><td colSpan="1" rowSpan="1"><p><span>If updating the live event schedule (startTime or endTime) in less than 5 minutes from the current time, follow the Recommendations.</span></p></td><td colSpan="1" rowSpan="1"><p>Manual operation to go "Live" or "End" the live event.</p></td></tr><tr><th colSpan="1" rowSpan="1"><p><strong>Allocating State</strong></p></th><td colSpan="1" rowSpan="1"><p>{"While the live event is in an \"Allocating\" state, and the operator is required to deactivate the service, it must be done via the Configure Channels App, PUT \"/configure/v1/services/{id}\"."}<br />"Offline" via the Monitor Channels App is not allowed.</p></td><td colSpan="1" rowSpan="1"><p>Use the Configure Channels App</p></td></tr><tr><th colSpan="1" rowSpan="1"><p><strong>Preview State</strong></p></th><td colSpan="1" rowSpan="1"><p>Previewing the service is only allowed via the Monitor Channels App UI.<br />Confidence monitoring URLs during the "Preview" stage is under roadmap.</p></td><td colSpan="1" rowSpan="1"><p>Monitor Channels App UI</p></td></tr><tr><th colSpan="1" rowSpan="2"><p><strong>Live State</strong></p></th><td colSpan="1" rowSpan="1"><p>If the live event has started, or the scheduled start time has reached, and is in "Live" state, and would like to restart or update with a new start time.</p></td><td colSpan="1" rowSpan="1"><p>Create a new live event with the updated start time</p><p /></td></tr><tr><td colSpan="1" rowSpan="1"><p>The operator should not perform deletion of the live event service while it is in "Preview", "Live" and "Stopping" states, as it will corrupt the live event record.</p></td><td colSpan="1" rowSpan="1"><p>Wait for the service to be in "Finished" state before deletion</p></td></tr><tr><th colSpan="1" rowSpan="2"><p><strong>Finished State</strong></p></th><td colSpan="1" rowSpan="1"><p>The operator should only deactivate/delete a live event service when it is in a "Finished" state</p></td><td colSpan="1" rowSpan="1"><p>After ending a live event, it takes ~2 minutes for a live event to transition from "Stopping" to "Finished" state.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>The operator should deactivate the Cloud Source or Cloud Edges if the live event is ended and in a "Finished" state to save the usage</p></td><td colSpan="1" rowSpan="1"><p /></td></tr><tr><th colSpan="1" rowSpan="4"><p><strong>General Operations</strong></p></th><td colSpan="1" rowSpan="1"><p>The operator should activate the LRS (Cloud Source), and "Preview" the live event service at least 30 minutes prior to the scheduled event start time, this provides time for event preparation and ensure the readiness to serve the event.</p></td><td colSpan="1" rowSpan="1"><p /></td></tr><tr><td colSpan="1" rowSpan="1"><p>For big events, origin will auto-scale the origin capacity at the beginning of the event. To prevent any player discontinuities due to auto-scaling time, the operator can add "Origin/Reserved capacity" to increase the number of origin nodes.</p></td><td colSpan="1" rowSpan="1"><p /></td></tr><tr><td colSpan="1" rowSpan="1"><p>The Live event duration is supported up to 24 hours. </p><p>For live event duration beyond 12 hours, package segment length is required to be 4 sec or greater; configurable via destination profile.</p></td><td colSpan="1" rowSpan="1"><p /></td></tr><tr><td colSpan="1" rowSpan="1"><p><span>The service status should be queried no more frequently than once every 60 seconds.</span><br />ex. GET "<span>{"https://your.vos360.video-01.vos360.video/vos-api/monitor/v1/services-status/{id}\""}</span></p></td><td colSpan="1" rowSpan="1"><p /></td></tr></tbody>
+  </table>
+</div>

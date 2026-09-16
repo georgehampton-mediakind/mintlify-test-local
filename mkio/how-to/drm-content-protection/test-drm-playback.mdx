@@ -1,0 +1,125 @@
+---
+title: Test DRM Playback
+description: Validate DRM-protected playback using MKPlayer and configure the MKPlayer SDK for content protection.
+sidebarTitle: Test DRM Playback
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+After creating a content key policy and streaming locator, test that your encrypted streams play correctly. MK.IO provides the MKPlayer testing page for quick validation. For integration into your own application, use the MKPlayer SDK.
+
+## Test with MKPlayer
+
+<Steps>
+  <Step title="Get the playback and license URLs">
+    <span id="get-the-playback-and-license-urls" className="mk-legacy-anchor" />
+
+    1. Navigate to the **Assets** page and select your asset.
+    2. Select the streaming locator and a running streaming endpoint.
+    3. Select **Apply** to generate the URLs.
+    4. Copy the **playback URL** for your chosen protocol (HLS or DASH).
+    5. Copy the **license acquisition URL** for your DRM system (Widevine, PlayReady, FairPlay, or ClearKey).
+  </Step>
+
+  <Step title="Configure MKPlayer">
+    <span id="configure-mkplayer" className="mk-legacy-anchor" />
+
+    1. Navigate to the **MKPlayer** page.
+    2. Select the **protocol** (HLS or DASH).
+    3. Select the **DRM system** that matches your content key policy.
+    4. Paste the playback URL in **Source URL**.
+    5. Paste the license acquisition URL in **License URL**.
+  </Step>
+
+  <Step title="Add authorization (token-protected content)">
+    <span id="add-authorization-token-protected-content" className="mk-legacy-anchor" />
+
+    If your content key policy uses token restriction, add the JWT token in the **License request headers** field:
+
+    ```json
+    {"Authorization": "Bearer <your-jwt-token>"}
+    ```
+
+    See [JWT token authentication](/mkio/how-to/drm-content-protection/jwt-token-authentication) to generate a token.
+  </Step>
+
+  <Step title="Play">
+    <span id="play" className="mk-legacy-anchor" />
+
+    Select **Play**. If the configuration is correct, the player decrypts and plays the stream.
+  </Step>
+</Steps>
+
+### Troubleshooting playback errors
+
+| Error                              | Cause                                     | Solution                                                                                                                            |
+| ---------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `DRM_FAILED_LICENSE_REQUEST`       | Missing or invalid JWT token.             | Verify the token and add it to the license request headers.                                                                         |
+| License URL not populated          | Streaming locator not applied.            | Select **Apply** on the streaming locator to generate URLs.                                                                         |
+| Playback fails on specific browser | DRM system not supported on that browser. | Select the correct DRM for the browser. See [DRM support by platform](/mkio/how-to/drm-content-protection#drm-support-by-platform). |
+
+## Configure the MKPlayer SDK
+
+For integration into your own application, use the MKPlayer SDK to configure DRM playback programmatically.
+
+### Prerequisites
+
+* Install the latest version of [MKPlayer SDK](https://www.npmjs.com/package/@mediakind/mkplayer).
+* Complete the **Getting Started** steps in the [MKPlayer documentation](/mkio/reference/player-sdk).
+
+### Build the source configuration
+
+Create a source configuration object with your playback URLs and DRM license URLs. You can include multiple DRM systems in the configuration. The player automatically selects the most suitable one for the current platform.
+
+```javascript
+const sourceConfig = {
+  title: "Title for your source",
+  description: "Description for your source",
+  hls: "HLS URL as copied from the Assets page",
+  dash: "DASH URL as copied from the Assets page",
+  drm: {
+    // For Safari Browser with HLS + FairPlay Content Protection
+    fairplay: {
+      LA_URL: "FairPlay License URL as copied from the Assets page",
+      certificateURL: "FairPlay Certificate URL as copied from the Assets page",
+      headers: {
+        "Authorization": "Bearer <jwtToken>"
+      }
+    },
+    // For Chrome, Edge browsers
+    widevine: {
+      LA_URL: "Widevine License URL as copied from the Assets page",
+      headers: {
+        "Authorization": "Bearer <jwtToken>"
+      }
+    },
+    // For Edge (Windows) browser
+    playready: {
+      LA_URL: "PlayReady License URL as copied from the Assets page",
+      headers: {
+        "Authorization": "Bearer <jwtToken>"
+      }
+    }
+  }
+};
+```
+
+Each platform or browser has a preferred DRM system. If you are uncertain which DRM to use, include all applicable systems in the configuration. The player selects the best match for the current environment.
+
+Remove the `headers` objects if your content key policy does not use token restriction.
+
+### Load and play
+
+Pass the source configuration to the player:
+
+```javascript
+player.load(sourceConfig)
+  .then(() => {
+    console.log("Source loaded successfully");
+  })
+  .catch((error) => {
+    console.error("An error occurred while loading the source");
+  });
+```
+
+Refer to the [MKPlayer documentation](/mkio/reference/player-sdk) for additional configuration options and event handling.

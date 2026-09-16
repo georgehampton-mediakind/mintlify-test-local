@@ -1,0 +1,301 @@
+---
+title: Interaction with the deployment on a specific server
+sidebarTitle: Monitor the deployment
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The product is installed as a set of pods running on a k3s deployment in a namespace called mediakind.
+
+In the following paragraphs, more information is provided about how to interact with the different microservices composing the product as well as where to find useful information about the installation.
+
+Interaction is possible using either the kubectl command line tool or the k9s environment tool.
+
+* For more details about the usage of the kubectl tool, please refer to the official documentation available here: [https://kubernetes.io/docs/reference/kubectl/](https://kubernetes.io/docs/reference/kubectl/)
+
+* For more details about the usage of the k9s tool, please refer to the official documentation available here: [https://k9scli.io](https://k9scli.io)
+
+## Monitor the status of microservices
+
+The product is composed of a set of microservices. Faults in any of them may result in misbehavior and affect customer operations.
+
+1. Login on the server where the product is installed.
+2. Switch to user mediakind (for password information, ask MediaKind support): su - mediakind
+
+<Tabs>
+  <Tab title="Using kubectl">
+    1) Type `kubectl get pods -n mediakind | grep stream-processor`. A list of pods appears with some information associated to each of them: name, ready, status, restarts, age.
+
+    ![1 using kubectl](/_machine-assets/2322c6c09c714dfff0241238b3617087054ba1fa08e21dc48bd9c3bcb9595bf7.jpg)
+
+    <Info>
+      The installation of the stream-processor-asi and the stream-processor-simulcrypt controls is optional. They should not be present on your system unless you have chosen to install them and executed the additional installation steps as described in the installation guides.
+    </Info>
+
+    2. Verify that the status is “Running” for all the pods. If this is not the case, the system may not behave as expected.
+
+    If any of the pods is not in “Running” state, type any or all of these commands to help you understand what is wrong:
+
+    * kubectl get pods -n mediakind: Get the status of all the pods running on the server. It may be that some other microservice is also not in “Running” state.
+    * kubectl describe pod -n mediakind `<pod\_name\>: <pod_name>` is the name of the pod that is not in “Running” state. Check the last part of the information. It can contain a list of warning or error events.
+  </Tab>
+
+  <Tab title="Using k9s">
+    1. Type `k9s`. An interactive user interface appears. It can contain different information depending on whether it is the first time that the k9s runs on the server or not.
+
+    2. Type `:namespaces`.
+
+    3. Press **Enter**.
+
+       ![2 using k9s monitor1](/_machine-assets/3b25e02caea971f7894a29568f923fb437d84fed393e50c82a2d16dba9f7922c.jpg)
+
+    4. Use the **down arrow** key to highlight the line containing the string mediakind.
+
+    5. Press **Enter**. The user interface shows the complete list of pods running in the mediakind namespace. To check the status of the stream-processor pods, use the **down arrow** to scroll down until the group of pods starting with stream-processor appears.
+
+       ![3 using k9s monitor2](/_machine-assets/6c8230c8e16cf1e82976145f5d4ca9e348192f0f8ace37b0a773e66f617ea89c.jpg)
+
+       <Info>
+         The microservices listed on your installation may be a subset of the ones in this image. The installation of the stream-processor-asi and the stream-processor-simulcrypt controls is optional. They should not be present on your system unless you have chosen to install them and executed the additional installation steps as described in the installation guides.
+       </Info>
+
+    6. Verify that the status is “Running” for all the pods. If this is not the case, the system may not behave as expected.
+
+    If any of the pods is not in “Running” state, try the following to help you understand what is wrong:
+
+    1. Use the **up arrow** and **down arrow** keys to scroll the list of all the pods and check if any other microservice is also not in “Running” state.
+    2. When the line containing the name of the pod is highlighted, press the **d** key. A description of the pod appears.
+    3. Use the **down arrow** key to scroll down and check the last part of the information. It can contain a list of warning or error events.
+    4. To exit from the pod description, press the **Esc** key.
+  </Tab>
+</Tabs>
+
+## Get the logs from a specific service
+
+1. Login on the server where the product is installed.
+2. Switch to user mediakind (for password information, ask MediaKind support): `su - mediakind`
+
+<Tabs>
+  <Tab title="Using kubectl">
+    1) Type `kubectl get pods -n mediakind | grep stream-processor`. A list of pods appears with some information associated to each of them: name, ready, status, restarts, age.
+
+       ![1 using kubectl](/_machine-assets/2322c6c09c714dfff0241238b3617087054ba1fa08e21dc48bd9c3bcb9595bf7.jpg)
+
+       <Info>
+         The installation of the stream-processor-asi and the stream-processor-simulcrypt controls is optional. They should not be present on your system unless you have chosen to install them and executed the additional installation steps as described in the installation guides.
+       </Info>
+
+    2) Type `kubectl logs -n mediakind <pod name>` where `<pod_name>` is the name of the pod associated to the microservice of interest as it appears in the output of the previous command.
+       * For most microservices, the output contains the logs for the (single) container running in the pod. For the mux pod, add -c mux to get the logs from Mux or  to get the logs from PSI.
+       * The output of the kubectl logs command can be easily used as input into less, grep, sed or other string/stream manipulation commands.
+       * It is possible to also use the bark utility installed by default with the host application: `kubectl logs -n mediakind <pod name>| bark` to increase readability of the kubectl logs output.
+  </Tab>
+
+  <Tab title="Using k9s">
+    1. Type `k9s`. An interactive user interface appears. It can contain different information depending on whether it is the first time that the k9s runs on the server or not.
+    2. Type `:pods`.
+    3. Press **Enter**.
+    4. Use the **up arrow** and **down arrow** keys to scroll through the list and highlight the microservice of interest.
+    5. Press **Enter**. The list of containers running in the pod appears. Usually, there is only one container per pod, but some microservices have more. For example, the stream-processor-mux pod runs two containers. In this case, the user interface looks as follows:
+       ![4 using k9s getlogs](/_machine-assets/2d9619a58a8384b58f813067975f6d61421f716447d00ad288005bb66fcd2eee.jpg)
+    6. If more than container is available, use the **up arrow** and **down arrow** keys to highlight the container of interest. Otherwise, the one container of the pod will already be highlighted.
+    7. Press the **l** key. The logs for the microservice appears.
+       <Info>
+         The **CTRL+L** option may also be available. It can provide logs in a more readable format.
+       </Info>
+    8. To exit the logs screen, press the **Esc** key. To return to the pods list, press the **Esc** key again.
+  </Tab>
+</Tabs>
+
+## Restart a microservice
+
+The product microservices run as pods on the k3s deployment. The k3s framework ensures that all the required pods are always running. To restart a microservice, you only need to delete the corresponding pod. The k3s framework will restart it.
+
+1. Login on the server where the product is installed.
+2. Switch to user mediakind (for password information, ask MediaKind support): su - mediakind
+
+<Tabs>
+  <Tab title="Using kubectl">
+    1) Type `kubectl get pods -n mediakind | grep stream-processor`. A list of pods appears with some information associated to each of them: name, ready, status, restarts, age.
+
+       ![1 using kubectl](/_machine-assets/2322c6c09c714dfff0241238b3617087054ba1fa08e21dc48bd9c3bcb9595bf7.jpg)
+
+       <Info>
+         The installation of the stream-processor-asi and the stream-processor-simulcrypt controls is optional. They should not be present on your system unless you have chosen to install them and executed the additional installation steps as described in the installation guides.
+       </Info>
+
+    2) Verify that the status is “Running” for all the pods. If this is not the case, the system may not behave as expected.
+
+    3) Type `kubectl delete pod <pod name\> -n mediakind` where `<pod_name>` is the name of the pod associated to the microservice of interest as it appears in the output of the previous command.
+
+       For example, to delete the mux pod in the previous deployment, you need to type `kubectl delete pod stream-processor-config-8774bf6c-8gwkr -n mediakind`.
+
+       The string pod `<pod name>` deleted appears, which means that the pod has been successfully deleted.
+
+    4) Type `kubectl get pods -n mediakind | grep stream-processor` again to check that a new pod for the microservice is running.
+
+    The full name of the new pod is different than the previous one.
+
+    After the Mux pod has been deleted from the previous deployment, the new name can be “stream-processor-mux-c6f5f5579-f82mz”.
+  </Tab>
+
+  <Tab title="Using k9s">
+    1. Type `k9s`. An interactive user interface appears. It can contain different information depending on whether it is the first time that the k9s runs on the server or not.
+
+    2. Type `:pods`.
+
+    3. Press **Enter**. A list of all the pods appears.
+
+    4. Use the **down arrow** key to highlight the name of the pod of the microservice of interest.
+
+    5. Press **CTRL+D**. A popup window appears and asks to confirm.
+
+       ![5 using k9s restart](/_machine-assets/6b445899b83864aa799c4b567088992c8c9ee886704f118359206404907171b0.jpg)
+
+    6. If you want to cancel the operation, press **Enter**. If you want to confirm, use the **right arrow** key to highlight the **OK** option and press **Enter**.
+
+       A new pod appears for the microservice. The status of the current pod shows briefly as “Terminating”, then the corresponding line disappears.
+
+    7. Verify that the status of all the microservice is “Running”. It means that the system is healthy.
+  </Tab>
+</Tabs>
+
+## Check and edit the configuration of microservices
+
+The behavior of each stream-processor microservice depends not only on the configuration chosen for the Multiplexing service (on the user interface or through the API) but also on a set of microservice-specific configuration parameters.
+
+In other types of deployment, these could be available through config and/or ini files.
+
+In this deployment, for each microservice, these parameters are stored in the corresponding configmap. To view and change them, you can use either the kubectl command line tool or the k9s environment tool.
+
+Such configuration parameters include, for example:
+
+* the announcer addresses used for redundancy by the biss-ca, simulcrypt, statmux and Mux microservices;
+* the advanced Mux configuration parameters not exposed in the user interface but available in the “mpeg4.cfg” configuration section.
+
+  <Info>
+    Any configmap change on your server is only applicable for the server where it is applied. If you need the same change on other servers, connect to the specific server and perform the same changes. The changes will persist across the restarts of the same microservice, but will NOT persist if a new version of the product is installed on your server.
+  </Info>
+
+<Tabs>
+  <Tab title="Using kubectl">
+    <span id="to-view-a-specific-microservice-configuration-1" className="mk-legacy-anchor" />
+
+    ### To view a specific microservice configuration:
+
+    1. Type `kubectl get configmap -n mediakind | grep stream-processor`. A list of configmaps appears with some information associated to each of them: name, ready, status, restarts, age.
+
+       ![1 using kubectl](/_machine-assets/2322c6c09c714dfff0241238b3617087054ba1fa08e21dc48bd9c3bcb9595bf7.jpg)
+
+       <Info>
+         The installation of the stream-processor-asi and the stream-processor-simulcrypt controls is optional. They should not be present on your system unless you have chosen to install them and executed the additional installation steps as described in the installation guides.
+       </Info>
+
+    2. Type `kubectl get configmap -n mediakind <configmap> -o yaml` where `<configmap>` is the name of the configmap associated to the microservice of interest as it appears in the output of the previous command.
+
+    The output contains all the configuration parameters for the specified microservice.
+
+    To check the announcer muticast information for the Mux microservice, type `kubectl get configmap -n mediakind stream-processor-mux-config -o yaml` and search for the `announcer` part of the `sparkmuxIni.json:` section. It should look like this, but with a different value for the `multicastAddr` field, depending on your deployment and installation options:
+
+    ![7 using kubectl edit configuration2](/_machine-assets/165755cb7da07b82ba352e317ae70093ead95c8cf957a7e64d02666945e8ac0e.jpg)
+
+    <span id="to-edit-a-specific-microservice-configuration-1" className="mk-legacy-anchor" />
+
+    ### To edit a specific microservice configuration:
+
+    1. Type `kubectl get configmap -n mediakind | grep stream-processor`.
+
+    2. Type `kubectl edit configmap -n mediakind <configmap>` where `<configmap>` is the name of the configmap associated to the microservice of interest as it appears in the output of the previous command. The configmap is now open in vi editor and can be edited.
+
+    3. Apply your changes and save the configmap.
+
+    4. Restart the microservice.
+
+       <Info>
+         Although the changes have been saved in the configmap and can be viewed, they will not be applied by the microservice code until it is restarted.
+       </Info>
+  </Tab>
+
+  <Tab title="Using k9s">
+    ### To view a specific microservice configuration:
+
+    1. Type `k9s`. An interactive user interface appears. It can contain different information depending on whether it is the first time that the k9s runs on the server or not.
+
+    2. Type `:configmaps`.
+
+    3. Press **Enter**. A list of all the configmaps appears.
+
+    4. Use the **down arrow** key to highlight the name of the configmap of the microservice of interest.
+
+    5. Press **Enter** to view its content.
+
+    To check the announcer multicast information for the Mux microservice, use the **up arrow** and **down arrow** keys to highlight the stream-processor-mux-config:
+
+    ![8 using k9s edit configuration1](/_machine-assets/7d64ffebaf9c00cf78e5a81674ba1aa8cf18a4ae73122681c891f01c0cf44898.jpg)
+
+    Then press **Enter** and use the **down arrow** key. It should look like this, but with a different value for the “multicastAddr” field, depending on your deployment and installation options:
+
+    ![9 using k9s edit configuration2](/_machine-assets/831e2afff7333ea3b3e28c9383443e5b59d087d9bb55380158ed42c1f8d8339d.jpg)
+
+    <Info>
+      To exit the configmap content view and return to the list of configmaps, press the **Esc** key.
+    </Info>
+
+    ### To edit a specific microservice configuration:
+
+    1. Type `k9s`. An interactive user interface appears. It can contain different information depending on whether it is the first time that the k9s runs on the server or not.
+
+    2. Type `:configmaps`.
+
+    3. Press **Enter**.
+
+    4. Use the **down arrow** key to highlight the name of the configmap of the microservice of interest.
+
+    5. Press the **e** key. The configmap is now open in vi editor, and can be edited.
+
+    6. Apply your changes and save the configmap.
+
+    7. Restart the microservice.
+
+       <Info>
+         Although the changes have been saved in the configmap and can be viewed, they will not be applied by the microservice code until it is restarted.
+       </Info>
+  </Tab>
+</Tabs>
+
+## Further interaction with your k3s deployment
+
+You can use kubectl or k9s to get additional information about your deployment status and configuration.
+
+Here are a few examples of useful operations, assuming that the user is now familiar with either tool.
+
+* Check the version of a specific microservice: if the user interface is not available, it is possible to see the version of the microservices and all the containers by accessing their deployment.
+
+  * `k9s: deployments:, **d**` (describe)
+  * `kubectl: kubectl get deployments -n mediakind, kubectl get deployment <microservice> -n mediakind -o yaml`
+* Save the deployment or configmap for a microservice as yaml to file for later comparison with configuration on other servers
+
+## Check latest installation options
+
+To check the options used for the last product installation:
+
+1. Check the version of the product currently running on your server (either using the user interface or the kube commands).
+
+2. Navigate to the `/var/install` folder and list its content:
+
+   ```
+   cd /var/install
+   ls
+   ```
+
+   You see at least one subfolder named `stream-processor-xxx` where xxx is the version of the installed product. If you have installed different versions, you may see a few similar folders.
+
+3. Navigate to the `stream-processor-xxx` folder corresponding to the version currently running. It contains a subfolder called either standalone, controller, compact or server, depending on the type of installation (see the installation guides for details).
+
+4. Navigate to the subfolder.
+
+5. Read the previous installation parameters from the `last_configure.sh` file:
+
+   ```
+   cat last_configure.sh
+   ```

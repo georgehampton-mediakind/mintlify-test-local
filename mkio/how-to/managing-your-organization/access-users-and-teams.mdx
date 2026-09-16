@@ -1,0 +1,71 @@
+---
+title: Access, users and teams
+description: Manage user access to projects by organizing users into teams with role-based permissions.
+sidebarTitle: Access users and teams
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO uses **role-based access control (RBAC)** to manage who can access resources and what they can do. Users are assigned permissions through teams, allowing you to control access to projects across your organization.
+
+## Concepts
+
+* **Organization:** A company or group that uses MK.IO.
+* **Project:** Holds resources such as assets, live events, and transforms. Projects are linked to an organization and to a subscription **or** payment method for billing.
+* **User:** An individual who may belong to multiple teams and organizations. A user's permissions are granted through teams.
+* **Team:** A group of users within an organization. Teams are granted permissions on projects and resources.
+
+<img align="center" alt="Relationship between Organization, Team, User and Project" caption="Relationship between Administrators, Teams, Users and Projects" src="/images/mkio-rbac-simplified.png" />
+
+The first user in an organization is automatically granted **Administrators** access. Administrators have full control over the system, including the ability to invite users and create new teams.
+
+## Manage teams
+
+Project access is granted to users through teams. By default, every organization has two predefined teams: **Administrators** and **Everyone**.
+
+* **Administrators**: full access and administrative rights to all projects, including organization-level permissions such as viewing billing information.
+* **Everyone**: automatically includes all users in the organization. By default, this team provides access to all projects at a permission level set by Administrators: either *User* or *Reader*. Optionally, it can be configured to have no access.
+
+<img src="/images/mkio-access-users-teams-2.png" alt="Teams management page showing Administrators and Everyone teams" />
+
+## Create a team
+
+<Info>
+  This action is only available to members of the **Administrators** team.
+</Info>
+
+1. From the profile drop-down menu in the top right corner, navigate to **Organization Settings**, then select **Access Management**.
+2. From the **Teams** tab, click **Create Team**, then enter a name and a description.
+3. Click the team name to open it and manage members, projects, and access levels.
+
+## Edit team members
+
+<Info>
+  This action is only available to members of the **Administrators** team, or Team admins for the relevant team.
+</Info>
+
+From the **Teams** tab, select a team. Use the **Add user** button to add members. To set a user as a **Team admin** or remove them from the team, select the three-dot menu to the right of their username.
+
+## Edit project access for a team
+
+<Info>
+  This action is only available to members of the **Administrators** team.
+</Info>
+
+1. From the **Teams** tab, select a team.
+2. In the right-hand pane, add the projects the team should have access to.
+3. For each project, select the access level:
+   * **Reader**: read-only access.
+   * **User**: full access to create and modify objects in the project.
+
+## Edit team details or delete a team
+
+<Info>
+  This action is only available to members of the **Administrators** team.
+</Info>
+
+From the **Teams** tab, select the three vertical dots in the top right corner, then select the appropriate action.
+
+## Manage access with the API
+
+Use the [Users and teams API Guide](/api-guides/how-to/management/users-and-teams) to manage organization membership and team access through the Management API.

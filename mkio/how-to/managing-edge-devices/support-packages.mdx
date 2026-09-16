@@ -1,0 +1,37 @@
+---
+title: Support packages
+description: How to use Collect device logs to generate a support package for a Beam device in MK.IO.
+sidebarTitle: Device logs Support Package
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use **Collect device logs** in MK.IO to generate a support package for a Beam device and share it with MediaKind support. When you trigger the collection, MK.IO gathers the logs from the device in the background and emails you a download link you can forward to support. "Collect device logs" and "generate support package" are synonymous terms.
+
+If the device is managed directly rather than through MK.IO, generate the support package from the server UI instead. See [Generate a Support Package](/beam/system-admin/maintenance/generate-support-package).
+
+## Where to find it
+
+1. Go to **Devices** and select a device.
+2. Click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" /> on the device.
+3. Select **Collect device logs**.
+
+<Info>
+  **Collect device logs** is disabled if the device software version does not support this feature.
+</Info>
+
+## Collect logs
+
+1. Open the device action menu and click **Collect device logs**.
+2. In the **Describe the issue** field, enter a description of the problem you are experiencing. This field is required.
+3. Click **Collect logs**.
+
+MK.IO collects logs from the device in the background. Once complete, an email is sent to your account address with a download link that you can share with support. The download link will be valid for 30 days. A maximum of 5 support packages per device will be kept.
+
+<Info>
+  Only one log collection can run per device at a time. If a collection is already in progress, the drawer shows the current status. Wait for it to complete before requesting a new one.
+</Info>
+
+<Info>
+  In a Beam HA setup, log collection is only available on the active controller device.
+</Info>

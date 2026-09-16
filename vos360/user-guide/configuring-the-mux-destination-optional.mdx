@@ -1,0 +1,57 @@
+---
+title: Configuring the mux destination (optional)
+robots: noindex, nofollow
+---
+
+Configure a destination for mux services with the destination type configured as MPTS.
+
+<Note>
+  **Important!**
+
+  If you create and configure the mux service using the Configure Broadcast app, the mux destination is automatically created in the Configure Channel app. Refer to [Adding and configuring a multiplexer](/vos360/user-guide/adding-and-configuring-a-multiplexer) for details.
+</Note>
+
+**Before you begin**\
+[Configuring a source input](/vos360/user-guide/configuring-a-source-input)
+
+1. From the **Configure Channels** app, navigate to the **Destinations** page, click **+ Destination**.
+
+   ![](/images/vos360/e266b924fecabae2d3dc277f.png)
+
+2. For **Destination Name**, type the name of the mux destination.
+
+3. For **Type**, select **MPTS**.\
+   The default output type **IP&#x20;**&#x69;s selected under **Outputs**.
+
+4. Verify that the selected **Profile** is a mux profile.
+
+5. Optionally, in the **Labels** field, enter a label associated with the destination.
+
+   <Note>
+     **Info:&#x20;**&#x4C;abels can help you search and find destinations more quickly.
+   </Note>
+
+6. If you wish to use an output that is different from the default, click **Remove output** and then click **+Output** and select the desired output type from the list.\
+   The mux destinations use IP, Cloudlink, or Relay (HSP) outputs.
+
+7. Enter the multicast IP address and port number for the egress output streams.
+
+8. For mux output with a **CloudLink&#x20;**&#x64;estination, enter the name of the downlink CloudLink.
+
+9. For mux output with **SRT** destination, use the default SRT settings or configure the custom SRT settings:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>Encryption Type</p></td><td colSpan="1" rowSpan="1"><p>Choose an encryption standard, or select <strong>None</strong>.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Channel Name</p></td><td colSpan="1" rowSpan="1"><p>Enter a channel name that will also be used in the receiver configuration.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Bandwidth Overhead (%)</p></td><td colSpan="1" rowSpan="1"><p>The Bandwidth Overhead is the percentage of the Average Bandwidth used to accommodate SRT controls. The default value is 20%.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Latency (ms)</p></td><td colSpan="1" rowSpan="1"><p>Sending packets over a (usually unpredictable) network could result in time delay. SRT Latency is a fixed value (min. 0 ms, no max. value) representing the maximum buffer size available for managing SRT packets. The default value is 1000 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Timeout (ms)</p></td><td colSpan="1" rowSpan="1"><p>Connection timeout, in milliseconds. The default value is 10000 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Blocking Mode</p></td><td colSpan="1" rowSpan="1"><p>When blocking mode is enabled, the SRT function will not exit until the availability condition is satisfied. In non-blocking mode the SRT function always exits immediately, and in case of lack of resource availability, it returns an error with appropriate code. </p></td></tr></tbody>
+     </table>
+   </div>
+
+10. For mux output with **Cloud (Live** **Routing)** destination, the Cloud channel will be available as a source to be up-linked to the Harmonic's Cloud via Live Routing Service. This configuration requires access to the Syndicate app.
+
+11. For mux output with **Relay (HSP)** destination, no custom configurations are required.
+
+12. If the service will be encrypted and you want to be able to monitor clean video output, select **Output Monitor** and provide the delivery **IP address** and **Port** for monitoring.
+
+13. Click **Create**.

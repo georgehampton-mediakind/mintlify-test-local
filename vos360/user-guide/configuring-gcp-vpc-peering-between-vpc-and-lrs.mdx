@@ -1,0 +1,84 @@
+---
+title: Configuring GCP VPC peering between VPC and LRS
+robots: noindex, nofollow
+---
+
+## Requirements
+
+Make sure that you have the following:
+
+1. Access to Harmonic Hub [https://hub.harmonicinc.com/](https://hub.harmonicinc.com/)
+
+2. Your existing VPC in GCP.
+
+3. Your VPC details (e.g. GCP project ID, VPC name).
+
+<Warning>
+  **Warning!**
+
+  CIDR blocks of both peering sides should not overlap.
+</Warning>
+
+### Create GCP VPC peering
+
+1. Log in to Harmonic Hub.
+
+2. In header menu select the **My account** tab, and in the side menu select **Cloud Resource**.
+
+   ![](/images/vos360/a9842f031c04eb1b0879ebaf.png)
+
+3. In Cloud Resource page select the **GCP** tab and click **+ Resource**.
+
+   ![](/images/vos360/3372b591ccbb7ac583fc275d.png)
+
+4. Specify the VPC peering name and select the requester region (same region as used for customer VPC). The requester information should be filled automatically.
+
+   <Note>
+     **Info:** If the requester information is not automatically filled, please contact Harmonic support to get the required requester information and manually enter the requester fields.
+   </Note>
+
+   ![](/images/vos360/201e0f77e656859d136c9426.png)
+
+5. Specify the VPC peering accepter information, use the customer GCP project ID and VPC name.\
+   ![](/images/vos360/ba844fa03315efebd0f0907a.png)
+
+6. Clic&#x6B;**&#x20;Submit** and confirm the creation of VPC peering.
+
+   ![](/images/vos360/a23e5fff08bf0ef20cbc9d6e.png)
+
+   \
+   The VPC peering connection entity creation process has been started and can be verified using the **VPC PEERING JOB ID** link.
+
+   ![](/images/vos360/7eeab0a133a0ce7f83d7ca41.png)
+
+   <Note>
+     **Note:&#x20;**&#x4D;anual configuration on the accepter's side is required.
+   </Note>
+
+7. Ensure that the respective peering connection is configured from accepter's side. Peering connections are configured in the accepter's **GCP account** > **target GCP project** > **VPC network&#x20;**> **VPC network peering**.
+
+   ![](/images/vos360/85fd54453179c67968451e65.png)
+
+   There is no need to explicitly specify additional routes. Required routes are configured automatically if the respective peering configuration is created on accepter's side.
+
+   ![](/images/vos360/527b90075d5fcd37edf49e3a.png)
+
+8. After VPC peering creation is finished, a green **Active** label should be present on the peering connection entity in GCP peering list and in peering details page.
+
+   ![](/images/vos360/be730c57eeb3125b4fe4fe76.png)
+
+### Delete GCP VPC peering
+
+1. Navigate to **Harmonic Hub** > **My account** > **Cloud Resource** and select the VPC you want to delete.
+
+2. Click **Delete&#x20;**&#x6F;n the peering details page.
+
+   <Warning>
+     **Warning!**
+
+     Remember to double check if the Requester VPC ID and Accepter VPC ID are the correct pair to be deleted.
+   </Warning>
+
+3. The VPC peering connection entity deletion process has been started and can be verified using the **DELETE JOB ID** link.
+
+   ![](/images/vos360/aa966008edfb7aec7c862378.png)

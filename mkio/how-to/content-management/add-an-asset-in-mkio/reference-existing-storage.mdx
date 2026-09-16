@@ -1,0 +1,116 @@
+---
+title: Reference existing cloud storage content
+description: Point MK.IO at content already stored in Azure Blob Storage or Amazon S3 without moving or re-encoding files.
+sidebarTitle: Reference existing storage
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+If you already have media files in Azure Blob Storage or Amazon S3, you can reference them in MK.IO without moving, re-encoding, or copying anything. MK.IO creates an asset that maps directly to the existing container or prefix in your storage, and streams content from there.
+
+<Info>
+  This only works for storage accounts that are already connected to your MK.IO project. If you have not connected storage, see [Connect cloud storage](/mkio/getting-started/connect-cloud-storage) first.
+</Info>
+
+## Before you start: find your container details
+
+You need the exact name of the container (Azure) or bucket/prefix (S3) where your files live. The container name is **case-sensitive** and must match exactly: even a small typo will result in an empty asset.
+
+**Azure Blob Storage:**
+
+1. Open the [Azure Portal](https://portal.azure.com) and navigate to your Storage Account.
+2. In the left menu, select **Containers**.
+3. Copy the exact name of the container that holds your media files.
+4. If your files are in a subfolder within that container, note the folder path (for example, `videos/2024/campaign`).
+
+**Amazon S3:**
+
+1. Open the [AWS S3 Console](https://s3.console.aws.amazon.com).
+2. Find your bucket and navigate to the folder containing your media files.
+3. Note the bucket name and the full folder path (for example, `my-bucket` with prefix `content/episodes/`).
+
+## Create an asset from existing storage
+
+<Steps>
+  <Step title="Go to Assets">
+    <span id="go-to-assets" className="mk-legacy-anchor" />
+
+    Navigate to **Assets** in the left sidebar and click **+ Create Asset**.
+  </Step>
+
+  <Step title="Select &#x22;From a storage account&#x22;">
+    <span id="select-from-a-storage-account" className="mk-legacy-anchor" />
+
+    Choose the **From a storage account** option. This mode lets you point the asset at an existing location in your connected cloud storage.
+  </Step>
+
+  <Step title="Select your connected storage account">
+    <span id="select-your-connected-storage-account" className="mk-legacy-anchor" />
+
+    From the **Storage Account** dropdown, choose the storage account that contains your files. Only storage accounts that have already been connected to MK.IO appear here.
+  </Step>
+
+  <Step title="Enter the container name">
+    <span id="enter-the-container-name" className="mk-legacy-anchor" />
+
+    In the **Storage container** field, type the exact name of your existing container (Azure) or bucket (S3). This must already exist and contain your media files.
+
+    <Warning>
+      **This field is case-sensitive.** If your container is named `Media-Assets` and you type `media-assets`, MK.IO will create an empty container and your asset will appear empty. Double-check the spelling against your cloud storage console.
+    </Warning>
+  </Step>
+
+  <Step title="Set the storage directory (if files are in a subfolder)">
+    <span id="set-the-storage-directory-if-files-are-in-a-subfolder" className="mk-legacy-anchor" />
+
+    If your media files are in a subfolder within the container, enter the folder path in the **Storage directory** field (for example, `episodes/season-1`). Leave this empty if your files are at the root of the container.
+  </Step>
+
+  <Step title="Name the asset">
+    <span id="name-the-asset" className="mk-legacy-anchor" />
+
+    Enter a name for this asset in MK.IO. This is the display name you will see in MK.IO: it does not need to match the container name.
+  </Step>
+
+  <Step title="Create the asset">
+    <span id="create-the-asset" className="mk-legacy-anchor" />
+
+    Click **Add**. MK.IO creates the asset and immediately scans the storage location. If files are present, you will see them listed in the **Files on storage** section of the asset page within a few seconds.
+  </Step>
+</Steps>
+
+## Verify the asset has loaded correctly
+
+After creation, open the asset and check:
+
+1. **Files on storage**: You should see your media files listed with their names and sizes. If this section is empty, see [Why is my asset empty?](/mkio/how-to/content-management/add-an-asset-in-mkio/reference-existing-storage#why-is-my-asset-empty) below.
+2. **Tracks**: If you have pre-encoded content (with `.ism` manifest and encoded segments), tracks will be detected automatically. If you have only a raw source file, you need to run an encoding job before tracks appear.
+
+See [Verify your assets](/mkio/how-to/content-management/verify-your-assets-in-mkio) for full verification steps.
+
+## Why is my asset empty?
+
+If the **Files on storage** section shows no files after creation, check the following:
+
+**Container name does not match**
+The most common cause. Go to your cloud storage console and confirm the exact spelling and casing of the container name. Update the asset or delete it and recreate it with the correct name.
+
+**Wrong storage account selected**
+If you have multiple storage accounts connected, ensure you selected the one that contains the files.
+
+**Files are in a subfolder but directory was left empty**
+If your files are at `my-container/episodes/show-1/` and you set the container to `my-container` but left the directory empty, MK.IO looks at the root of the container. Set the **Storage directory** to `episodes/show-1`.
+
+**Storage account credentials have expired**
+SAS tokens and access keys can expire. Go to **Storage** in the left navigation and check that your storage account status is active. If credentials have expired, update them and try again.
+
+**Content type not yet supported**
+MK.IO indexes files with recognised media extensions. Very unusual file types or non-standard extensions may not appear in tracks even if files are present.
+
+## What to do next
+
+Once your asset shows files in storage, you can proceed based on what type of content you have:
+
+* **Pre-encoded content** (`.ism` manifest + encoded segments from AMS or another encoder): Add a streaming locator and publish directly. See [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content).
+* **Raw source files** (MP4, MXF, MOV): Run an encoding transform to produce adaptive bitrate output. See [Configure VOD transforms](/mkio/how-to/video-processing-encoding/configure-transformations).
+* **Files you need to add**: See [Add files to an existing asset](/mkio/how-to/content-management/add-files-to-an-existing-asset).

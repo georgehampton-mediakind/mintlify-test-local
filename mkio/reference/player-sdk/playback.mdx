@@ -1,0 +1,116 @@
+---
+title: Loading and playing content
+description: Load a source into MKPlayer and control playback using the player API.
+sidebarTitle: Loading and playing content
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Pass a source configuration object to `player.load()` to load content into an initialised player. You can then control playback or destroy the player instance when it is no longer needed.
+
+## Prerequisites
+
+You have an initialised `MKPlayer` instance. See [Installation and setup](/mkio/reference/player-sdk/setup).
+
+## Load a source
+
+Build a `MKSourceConfig` object that describes your content, then call `player.load()`:
+
+```javascript
+const sourceConfig = {
+  title: "My Stream",
+  description: "A brief description of the content",
+  poster: "https://my-cdn.com/mysource/poster.png",
+  hls: "https://my-cdn.com/mysource/hls/index.m3u8",
+  dash: "https://my-cdn.com/mysource/dash/manifest.mpd"
+};
+
+player.load(sourceConfig)
+  .then(() => {
+    console.log("Source loaded successfully");
+  })
+  .catch((error) => {
+    console.error("Source load failed: ", error);
+  });
+```
+
+Pass only one stream type in the source configuration: either `hls` or `dash`. When both are present, the player selects based on platform support.
+
+For DRM-protected content, you also need to pass a `drm` property. See [DRM protection](/mkio/reference/player-sdk/drm).
+
+## Source configuration options
+
+| Property           | Type                | Description                                                                                    |
+| ------------------ | ------------------- | ---------------------------------------------------------------------------------------------- |
+| `title`            | `string`            | Display title for the source.                                                                  |
+| `description`      | `string`            | Brief description of the source.                                                               |
+| `poster`           | `string`            | URL to a poster image shown before playback starts.                                            |
+| `hls`              | `string`            | URL to an HLS master playlist.                                                                 |
+| `dash`             | `string`            | URL to a DASH manifest.                                                                        |
+| `drm`              | `MKDrmConfig`       | DRM configuration for protected content. See [DRM protection](/mkio/reference/player-sdk/drm). |
+| `subtitleTracks`   | `MKSubtitleTrack[]` | External subtitle tracks to register with the player.                                          |
+| `enableLowLatency` | `boolean`           | Enables low-latency mode for live streams.                                                     |
+| `assetType`        | `MKAssetType`       | Required for registered sources. Values: `live`, `event`, `catchup`, `dvr`, `vod`.             |
+
+## Control playback
+
+After a source is loaded, use the player API to control playback:
+
+```javascript
+// Start or resume playback
+player.play();
+
+// Pause
+player.pause();
+
+// Seek to a position (seconds)
+player.seek(30);
+
+// Set volume (0–100)
+player.setVolume(80);
+
+// Mute and unmute
+player.mute();
+player.unmute();
+
+// Set playback speed (HTML5 player only)
+// Values between 0 and 1 are slow motion; values above 1 are fast forward
+player.setPlaybackSpeed(1.5);
+```
+
+## Unload a source
+
+To stop playback and clear the current source without destroying the player instance:
+
+```javascript
+player.unload()
+  .then(() => {
+    console.log("Source unloaded");
+  })
+  .catch((error) => {
+    console.error("Unload failed: ", error);
+  });
+```
+
+You can call `player.load()` again after `unload()` to play a different source.
+
+## Destroy the player
+
+To tear down the player entirely and release all held resources:
+
+```javascript
+player.destroy();
+```
+
+You must create a new `MKPlayer` instance after calling `destroy()`. Calling a player API method after `destroy()` returns a `PLAYER_API_NOT_AVAILABLE` error.
+
+It is recommended to wait for the `Destroy` event before discarding your player reference:
+
+```javascript
+player.on(mkplayer.MKPlayerEvent.Destroy, () => {
+  console.log("Player destroyed and resources released");
+  player = null;
+});
+
+player.destroy();
+```

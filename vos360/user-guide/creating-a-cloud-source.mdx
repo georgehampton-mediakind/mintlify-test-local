@@ -1,0 +1,48 @@
+---
+title: Creating a Cloud Source
+robots: noindex, nofollow
+---
+
+To create a Cloud Source, do the following:
+
+1. Navigate to the **Syndicate&#x20;**&#x61;pp.
+
+2. Click +**Cloud Source** in the top-right of the tab.
+
+3. Enter the following information:
+
+   * Cloud source name.
+
+   * Region.
+
+     <Note>
+       **Note:&#x20;**&#x4D;ultiple Cloud Edges can connect to the same Cloud Source to pull the same channel. If the Cloud Source endpoint is created in the same region with the VOS360 deployment, the endpoint will be available when adding a channel with the Cloud (Live Routing) input.
+     </Note>
+
+   * Source protocol. Choose either **SRT** or **RTMP**.
+
+   * For SRT sources, configure the following:
+
+     * Decryption method (choose from NONE, AES 128, AES 192, or AES 256).
+
+       <Note>
+         **Note:&#x20;**&#x49;f you choose none, you must enter a passphrase that is at least 10 characters long.
+       </Note>
+
+     * Stream type (choose from SPTS/MPTS or MBTS).
+
+       <Note>
+         **Note:&#x20;**&#x49;f you choose MBTS, choose the number of profiles from between 2 and 20.
+       </Note>
+
+     * Toggle Redundancy either **On** or **Off**. When **On**, choose either **Active-Standby** or **Active-Active**.
+
+   * For RTMP sources, configure the following:
+
+     * Toggle Redundancy either **On** or **Off**. When **On**, redundancy is set to **Active-Active**.
+
+   * (Optional) Add any custom labels.
+
+4. Click **Create** to create the new cloud source.
+
+5. Once a cloud source is created, a Cloud Source Ingest Endpoint is assigned. Click **Copy URL** to copy this information.

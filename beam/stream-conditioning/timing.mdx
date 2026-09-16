@@ -1,0 +1,21 @@
+---
+title: Configure Timings
+sidebarTitle: Configure Timing
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A tab is available to configure timing, retention time for **Stream Conditioning** service.
+
+A description of the different fields to configure is given below:
+
+| Parameter                         | Description                                                                                                                                           |
+| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Event history                     | Configure (in seconds) the duration the events will be kept in database once they have been processed.                                                |
+| Event transfer time               | This timing defines how long in advance the event shall be sent to the target component.                                                              |
+| Media clip pre-roll delay         | Necessary pre-roll time for the target component to fetch files such as creatives, program before it gets processed.                                  |
+| Live stream switch pre-roll delay | Pre-roll time required by the target component when switching from one live source to another. This value may vary depending on the target component. |
+
+Default values are configured by default. **Event transfer time**, as well as **Media clip pre-roll delay** and **Live stream switch pre-roll delay** are values applicable to MediaKind Live Encoder.
+
+![Example of  timings settings](/_machine-assets/319fcfc3c8d68385c05077b1ff21ebd2768ef9daa9c3bbbda7dca47e18078a11.png)

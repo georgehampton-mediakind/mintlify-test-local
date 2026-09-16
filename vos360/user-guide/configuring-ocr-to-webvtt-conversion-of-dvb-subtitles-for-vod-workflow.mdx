@@ -1,0 +1,42 @@
+---
+title: Configuring OCR to WebVTT conversion of DVB subtitles for VOD workflow
+robots: noindex, nofollow
+---
+
+DVB subtitles are in-band subtitles in MPEG transport stream and can be present inside VOD source files. To use these DVB subtitles in the VOD workflow, you can configure OCR to WebVTT conversion of DVB subtitles via the VOD destination profile.
+
+1. Navigate to **Lab Wizard** > **Destination** and open the destination profile created for the VOD workflow.
+
+2. For the HLS/DASH packages, configure **DVB Subtitle Handling** to "To WebVTT (OCR)".
+
+3. Navigate to **Asset Acquisition** app > **Settings** tab and select the **VOD destination profile** with **DVB Subtitle Handling** configured to "To WebVTT (OCR)" .\
+   ![](/images/vos360/547da044bc336882b3c2aa1a.png)
+
+4. Navigate to the **Public API** app.
+
+5. Under **Asset Acquisition General**, navigate to **POST/asset-acquisition/v1/grooming-profile**.
+
+   <Note>
+     **Note:** “dvbSubtitleHandling” is not supported via Asset Acquisition UI. Grooming profile must be created/modified via REST API.
+
+     The transcoding job is launched with grooming profile that has setting "dvbSubtitleHandling" set to 'OCR\_TO\_WEBVTT'. It is an inner field of 'subtitlesGrooming' field.
+   </Note>
+
+6. Use the HTTP Post to update the 'dvbSubtitleHandling'.
+
+   It is acceptable for grooming profile not containing any other grooming information at all. The plain grooming profile to enable OCR for DVB subtitles could be:\
+   `{`\
+   `  "id": "ocrProfileId",`\
+   `  "name": "ocrProfile",`\
+   `  "audioGrooming": { "audioTracks": [] },`\
+   `  "subtitlesGrooming": {`\
+   `    "dvbSubtitleHandling": "OCR_TO_WEBVTT",`\
+   `    "subtitles": []`\
+   `  },`\
+   `  "groomingMode": "UPDATE",`\
+   `  "groomingFileType": "TS"`\
+   `}`
+
+<Note>
+  **Note:** The "dvbSubtitleHandling" setting is job-wise. Applying OCR to specific DVB subtitle tracks but not others is not supported.
+</Note>

@@ -1,0 +1,32 @@
+---
+title: Update device software
+description: Install an available software bundle on a registered MK.IO edge device.
+sidebarTitle: Update device software
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use MK.IO to inspect and update the software running on a MediaKind Beam device. When the subscription supports software updates, available versions appear on the device's **Software** panel.
+
+1. In MK.IO, open the project that contains the device.
+2. Go to **Devices**, then select the device.
+3. In the **Software** panel, use the version menu to preload an available bundle or deploy a downloaded bundle.
+
+For automation, use the [Software and updates API Guide](/api-guides/how-to/fleets/software-and-updates).
+
+MK.IO provides the following functions:
+
+* View the current software bundle version.
+* View the bundle available for rollback.
+* View the bundles downloaded and ready to deploy.
+* Download a bundle and monitor its progress.
+* Switch the device to a downloaded bundle.
+* Roll back to the previous bundle.
+
+<Info>
+  **Software bundles**
+
+  MK.IO updates the full operating system and software stack through software bundles and the dual-bank mechanism in Beam devices. If the selected version matches the version in the second bank, the device performs a rollback instead of an upgrade or downgrade.
+</Info>
+
+Beam devices can store multiple software bundles for deployment. Storage for bundles is limited, so the device automatically deletes older bundles when a new bundle needs more space.

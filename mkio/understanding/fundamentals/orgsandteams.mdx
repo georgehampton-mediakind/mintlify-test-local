@@ -1,0 +1,38 @@
+---
+title: Organizations, projects and teams
+description: Understand how organizations, payment methods, projects, teams, roles, and scopes structure MK.IO access.
+sidebarTitle: Organizations, projects and teams
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Organizations, payment methods, projects, and teams define how MK.IO groups resources, billing, and access. Understand these relationships before you redeem a direct sale, create projects, or assign access.
+
+## Organizations
+
+An **organization** is the highest-level MK.IO container. Users, payment methods, and projects are associated with an organization. A user can belong to multiple organizations, but each payment method and project belongs to one organization.
+
+## Payment methods
+
+A **payment method** defines how you pay MediaKind for MK.IO services. Payment methods can come from a cloud marketplace or a direct sale, and an organization can have more than one. For example, an organization can use a direct payment method for MK.IO Beam contribution channels and a marketplace payment method for cloud-committed streaming usage.
+
+## Projects
+
+A **project** contains media resources such as assets, live events, transforms, and devices. Each project has one assigned payment method and a cloud region for its MK.IO services. Organization administrators can change the payment method assigned to a project within the same organization.
+
+## Teams and access
+
+MK.IO uses role-based access control (RBAC) to grant project access through teams. Users can belong to multiple teams, and each team can receive access to one or more projects.
+
+Every organization includes two predefined teams:
+
+* **Administrators** have full project and organization-level access, including billing visibility.
+* **Everyone** automatically includes all users. Administrators can set its default project access to User, Reader, or no access.
+
+For administration steps, see [Access, users and teams](/mkio/how-to/managing-your-organization/access-users-and-teams).
+
+## Roles, scopes, and rights
+
+A **role** is a collection of capabilities. A **scope** identifies the projects, locations, or resources where those capabilities apply. A rights assignment combines a team, role, and scope to grant access.
+
+Use the [Users and teams API Guide](/api-guides/how-to/management/users-and-teams) when you need to inspect or automate the underlying access model.

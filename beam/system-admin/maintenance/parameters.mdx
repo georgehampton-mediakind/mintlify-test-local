@@ -1,0 +1,95 @@
+---
+title: Configuration parameters
+sidebarTitle: Parameters
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Backup parameters
+
+| Parameter | Description                                                                                                                                                          |
+| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Host      | Remote server hostname or IP address.                                                                                                                                |
+| Port      | IP Port for the secure FTP or FTPS connection.<br />Possible values: 1 to 65535<br />Recommended value: 21                                                           |
+| Path      | Backup file storage directory on the remote server. This path is a **relative path**, and must exist on the remote server. <br />Possible values: 128 characters max |
+| Username  | For the secure FTP connection. Must be a valid secure FTP or FTPS server user. <br />Possible values: 16 characters max                                              |
+| Password  | Allows the configured username to connect to the secure FTP server.<br />Possible values: 16 characters max                                                          |
+
+**Related information**\
+[Backup and restore configurations](/beam/system-admin/maintenance/backup-restore)
+
+## Failover parameters
+
+| Parameter             | Description                                                                                                                 |
+| :-------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| Group name            | Enter a unique failover group name for your selected primary and backup servers.                                            |
+| Failover level        | Whether this failover group should act at server or service level.                                                          |
+| Group processing type | Select the processing type to display compatible servers.                                                                   |
+| Group mode            | In Automatic mode, the system triggers a server failover when a critical alarm occurs (manual triggers are still possible). |
+
+**Related information**\
+[Create a failover group](/beam/system-admin/servers/failover#create-a-failover-group)
+
+## SNMP parameters (Settings menu)
+
+### Destination properties
+
+| Parameter         | Description                                                                                                   |
+| :---------------- | :------------------------------------------------------------------------------------------------------------ |
+| Active            | activate the SNMP notification to this destination.                                                           |
+| Notification type | Type of SNMP message (Traps and Inform messages).                                                             |
+| Name              | The name of the SNMP notification configuration (up to 64 characters)                                         |
+| IP address        | IP Address for the SNMP destination server (Hostnames and FQDNs are not supported).<br />Example: 192.168.1.1 |
+| Port              | Port used to send SNMP notifications.<br />Range: 0-65535                                                     |
+| Version           | Select the SNMP version to use.                                                                               |
+
+### Version Properties (2c)
+
+| Parameter      | Description                                       |
+| :------------- | :------------------------------------------------ |
+| Community name | Define the community that SNMP notification uses. |
+
+### Version properties 3
+
+| Parameter               | Description                                                                                                                                                                                                                                                                                                              |
+| :---------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mode                    | Select authorization and privacy settings. <br />Options:<br />-   `authNoPriv` (authentication but no encryption)<br />-   `noAuthNoPriv` (no authentication and no encryption)<br />-   `authPriv` (authentication and encryption)<br />Note: The **Version properties** for version 3 vary depending on the **Mode**. |
+| Security Name           | Name you want to give this security property.                                                                                                                                                                                                                                                                            |
+| Authorization algorithm | Select the hash-based algorithm.<br />Options: HMAC-SHA HMAC-MD5                                                                                                                                                                                                                                                         |
+| Authorization key       | Key for the authorization.                                                                                                                                                                                                                                                                                               |
+| Encryption algorithm    | Select the type of encryption.                                                                                                                                                                                                                                                                                           |
+| Encryption key          | Key for the encryption.                                                                                                                                                                                                                                                                                                  |
+
+**Related information**\
+[Alarm forwarding (SNMP)](/beam/system-admin/maintenance/alarms-events#alarm-forwarding-snmp)
+
+## Router parameters
+
+### Router Properties
+
+| Parameter  | Description                                                                                                  |
+| :--------- | :----------------------------------------------------------------------------------------------------------- |
+| Name       | The name used to identify the router.                                                                        |
+| IP Address | The IP address of the router. This field must be unique.                                                     |
+| Username   | The username used to login to the router via telnet.                                                         |
+| Password   | The password used to login to the router via telnet.                                                         |
+| Type       | The type of router being added to the system.<br />Possible values: **Panacea**, **Platinum** or **Nevion**. |
+
+### Input Labels
+
+| Parameter   | Description                                                                                                                                                                  |
+| :---------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Input Count | The number of input connectors on the router. This will alter the amount of input labels you are able to specify.                                                            |
+| Label       | The user-defined useful label for inputs to the router. <br />**Important:** The label must match the **Input label** referred to in the Live Encoder service **Input** tab. |
+
+### Output Connections
+
+| Parameter       | Description                                                                                                              |
+| :-------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| Output Count    | The number of output connectors on the router. This will alter the amount of output connections you are able to specify. |
+| Server Name     | The name of the server. This name must match an Live Encoder server from the server list.                                |
+| Server Board    | The SDI board in the server.<br />Important: This must match the **SDI card number** in the Live Encoder service.        |
+| Board Connector | The connector on the SDI board. **Important:** This must match the **Connector** in the Live Encoder service.            |
+
+**Related information**\
+[Router configuration](/beam/system-admin/network/router-configuration)

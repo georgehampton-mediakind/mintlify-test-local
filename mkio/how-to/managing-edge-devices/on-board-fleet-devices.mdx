@@ -1,0 +1,41 @@
+---
+title: On-board edge devices
+description: How to connect an edge device to MK.IO and register it to a project.
+sidebarTitle: Onboard devices
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Prepare an edge device, connect it to MK.IO, and register it to a project. Choose the onboarding path that matches how the installer can access the device.
+
+## On-boarding paths
+
+Different network environments call for different on-boarding approaches. Choose the path that fits your setup:
+
+<CardGroup cols={2}>
+  <Card title="Common workflow" href="/mkio/how-to/managing-edge-devices/on-board-fleet-devices/common-workflow" icon="rocket">
+    Set the device Control interface IP, connect to the device web UI, copy a short code, and enter it in MK.IO.
+  </Card>
+
+  <Card title="On-boarding via device terminal only" href="/mkio/how-to/managing-edge-devices/on-board-fleet-devices/terminal-only" icon="terminal">
+    Use when the installing engineer cannot access the device web UI. Obtain the Device ID from the terminal and register using the MK.IO UI.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="On-boarding via API" href="/mkio/how-to/managing-edge-devices/on-board-fleet-devices/api-onboarding" icon="cloud">
+    Register the device using the MK.IO API instead of the MK.IO UI. The device must still have internet access.
+  </Card>
+
+  <Card title="Removing devices" href="/mkio/how-to/managing-edge-devices/on-board-fleet-devices/remove-device" icon="ban">
+    How to remove an edge device from MK.IO using the UI or API.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Troubleshooting" href="/mkio/how-to/managing-edge-devices/on-board-fleet-devices/troubleshooting" icon="wrench">
+    How to troubleshoot common issues when on-boarding edge devices.
+  </Card>
+</CardGroup>
+
+Use the [Fleet device management API Guide](/api-guides/how-to/fleets/device-management) to register, inspect, update, or remove devices through the Fleet API.

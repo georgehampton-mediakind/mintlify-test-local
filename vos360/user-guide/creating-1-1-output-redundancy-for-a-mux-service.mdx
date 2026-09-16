@@ -1,0 +1,33 @@
+---
+title: Creating 1+1 output redundancy for a mux service
+robots: noindex, nofollow
+---
+
+You can set up 1+1 redundancy for the mux service output using the VOS360 UI.
+
+1. Navigate to the **Lab Wizard** app, and create a Mux Destination profile with the desired Mux Redundancy Mode configured.\
+   Configure the **Mux Redundancy Mode**:
+
+   * **Active-Active** (Active-Active means both Mux instances will output at the same time. Each of the Mux instance will output to a different address)
+
+   * **Active-Backup** (Active-Backup means only one Mux instance will output and the other will be muted. Both Mux instances will output to the same address)
+
+   ![](/images/vos360/040be2fbe7fcb33fff3a5e00.png)
+
+2. Navigate to **Configure Channels** > **Sources**, and configure the source input for the mux service.
+
+3. Navigate to **Configure Channels** > **Destinations**, and configure the mux destination.
+
+   * Setting "Active-Backup" redundancy for mux service: Configure the **Type** as MPTS and the **Profile** as the Mux Destination profile with "Active-Backup" enabled. Configure the output stream IP parameters in the "Outputs" section.
+
+     ![](/images/vos360/588c2d25a5561985d3f7372e.png)
+
+   * Setting "Active-Active" redundancy for mux service: Configure the **Type** as MPTS and the **Profile** as the Mux Destination profile with "Active-Active" enabled. The "Dual Service Output" section appears for setting the second output stream IP parameters.
+
+     ![](/images/vos360/3e14dad3c30dc95a7a8a7684.png)
+
+4. Navigate to **Configure Channels** > **Services**, create and activate the mux service.
+
+   * Set the **Redundancy** mode to **On**.
+
+     ![](/images/vos360/88daa4a95a7096f4280e99a2.png)

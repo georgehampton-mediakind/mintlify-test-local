@@ -1,0 +1,112 @@
+---
+title: Billing
+description: View organization billing totals, manage project payment methods, review usage, and configure Beam billing models in MK.IO.
+sidebarTitle: Billing
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use the **Billing** view within **Organization settings** to see your entitlements, review your spend, and understand your usage.
+
+<Info>
+  Billing information is organization-level, so the full billing view is available to **Administrators** only.
+</Info>
+
+## Open billing
+
+1. Select the profile menu in the top-right corner.
+2. Select **Organization settings**.
+3. Select **Billing** in the left sidebar.
+
+If you belong to multiple organizations, switch to the correct organization before opening **Billing**. You will be presented with the following information:
+
+<img src="/images/mkio/billing-overview.png" alt="Billing overview page showing billing filters, month-to-date totals, previous month spend, and payment method rows" width="800" style={{"display":"block","margin":"1.5rem auto"}} />
+
+## Understanding the billing overview
+
+The billing overview shows organization spend across projects, products, and payment methods. Use the product tabs to filter the view by **All**, **MK.IO**, or **MK.IO Beam**.
+
+| Area                    | What it shows                                                                                                                                        |
+| :---------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Total now**           | The current billing-month total across the selected product view. The line chart includes a dotted estimate for the rest of the month.               |
+| **Previous month**      | Previous monthly spend. Use the range selector to switch between **1 year**, **6 months**, and **3 months**.                                         |
+| **Payment method rows** | Each payment method associated with the organization, with the current total, project-level amounts, and a small spend chart when data is available. |
+| **Add payment method**  | Add a new payment method via either Azure Marketplace or AWS Marketplace.                                                                            |
+
+Billing updates can take approimately an hour to appear in the overview.
+
+## Understand payment methods
+
+A **payment method** represents how your organization pays MediaKind for MK.IO services. Payment methods can represent **Azure Marketplace**, **AWS Marketplace**, or **direct sale contracts** with MediaKind.
+
+Each project is associated with a payment method. An organization can have more than one payment method, and each payment method can have different projects associated with it. For more context, see [Payment methods](/mkio/understanding/fundamentals/orgsandteams#payment-methods).
+
+Each payment method can have a display name, which helps distinguish it from other payment methods associated with the same sales order, for example, when separate payment methods cover an Enterprise License Agreement (ELA) and contribution charges. Display names appear in the **Name** column of the payment methods list.
+
+If you can access only some projects in an organization, the full billing page may not be available. In that case, MK.IO can show that billing is managed by another organization instead of showing organization-wide billing details.
+
+## Move a project between payment methods
+
+Organization administrators can assign an existing project to another payment method in the same organization. Use this when a billing arrangement changes, such as when you activate a private marketplace offer.
+
+1. Select the profile menu in the top-right corner.
+2. Select **Organization settings**.
+3. Select **Projects** in the left sidebar.
+4. Find the project you want to move. The **Payment method** column shows its current assignment.
+5. Open the three-dot menu for the project, then select **Change payment method**.
+6. Assign the project to the destination payment method.
+
+Repeat these steps for each additional project you want to move.
+
+## View payment method details
+
+Select a payment method row to open its monthly details:
+
+<img src="/images/mkio/billing-payment-method-details.png" alt="Payment method details page showing project tabs, service filtering, meter rows, and CSV download" width="800" style={{"display":"block","margin":"1.5rem auto"}} />
+
+The payment method detail view includes:
+
+* Month navigation, including **This month**.
+* Project tabs, including **All projects** and one tab for each project associated with the payment method.
+* A **Service** filter.
+* Service groups and meter rows with monthly capacity, monthly peak usage, usage, and total columns.
+* **Download details as CSV** for the selected view.
+
+## View daily meter details
+
+Select a meter row to open the daily detail view for that meter.
+
+<img src="/images/mkio/billing-daily-detail.png" alt="Daily billing detail dialog showing total overage amount, usage, daily rows, and CSV download" width="500" style={{"display":"block","margin":"1.5rem auto"}} />
+
+The daily detail view shows the total overage amount, total usage, daily rows, and a separate **Download details as CSV** link.
+
+<Info>
+  **Usage can be reported later**
+
+  A monthly detail view can include usage from a previous month when that usage was reported during the selected month.
+</Info>
+
+## Change Beam billing model
+
+Administrators can edit the Beam billing model for a payment method.
+
+<img src="/images/mkio/billing-model-edit.png" alt="Edit payment method dialog showing measured consumption and capacity consumption options" width="500" style={{"display":"block","margin":"1.5rem auto"}} />
+
+1. From the billing overview, open the three-dot menu for a payment method.
+2. Open **Edit payment method**.
+3. Under **Beam billing model**, select one of the following options:
+   * **Measured consumption**: overages are billed per minute for each running workload on Beam devices. This is the default model.
+   * **Capacity consumption**: billing is based on the highest number of channels or workloads running at the same time during the calendar month. Additional entitlements are valid for the current calendar month.
+4. Select **Save changes**.
+
+<Warning>
+  **Beam billing model scope**
+
+  The Beam billing model setting does not affect MK.IO cloud services.
+</Warning>
+
+The Beam billing model choice applies to Beam contribution, reception, and encoding meters. Throughput meters, such as multiplexing and packaging, are always charged by usage, even when **Capacity consumption** is selected. Enterprise License Agreement (ELA) usage is also an exception: usage above purchased capacity is handled as additional capacity for the month.
+
+<Info>
+  Measured consumption can be more suitable for short overages. Capacity consumption can be more suitable when additional channels or workloads run for longer periods.
+</Info>

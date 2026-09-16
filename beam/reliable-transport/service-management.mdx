@@ -1,0 +1,261 @@
+---
+title: Reliable Transport services configuration and management
+sidebarTitle: Service configuration and management
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Import a Reliable Transport service
+
+Prior importing a service, make sure:
+
+* the format of the file is correct (valid json);
+* the `service_type` field in your configuration file is `srt` (even though the configuration may be for a Zixi connection);
+* the imported service id is different from the existing services;
+  * if the same id as an existing service is used, an option to override the existing service will be provided by the import UI.
+
+1. Display services.
+
+<Info>
+  You can import files retrieved from [a service exported from a different server](/beam/web-interface/services#export-a-service-configuration).
+</Info>
+
+2. Click **Import service...** and follow the instructions to [import Reliable Transport configurations](/beam/web-interface/services#import-a-service).
+
+3. Once imported, the service(s) appear in the list of services.
+
+## Create a new Reliable Transport service
+
+1. Display services.
+
+2. Click **Add service**
+
+3. Select **Reliable Transport**. The following page displays:
+
+   ![Services add rt new](/_machine-assets/2deb75459e8c4770b4cf61179c25a1f237cff230b9a8b96836f94e1b8523afb7.png)
+
+4. Assign a **name** to the new service (100 characters max). This name will appear in your Services page, therefore it is recommended to choose a unique name for each service for easier identification from the Services page.
+
+5. Continue the service configuration depending on your needs:
+
+   * [SRT connection configuration](/beam/reliable-transport/service-management#srt-or-rist-connection-configuration)
+   * [Zixi connection configuration](/beam/reliable-transport/service-management#zixi-connection-configuration)
+   * [RIST connection configuration](/beam/reliable-transport/service-management#srt-or-rist-connection-configuration)
+
+## Configure a Reliable Transport service
+
+### SRT or RIST connection configuration
+
+Below is an example of a typical SRT or RIST use case. A single input transport stream is sent via SRT or RIST to multiple clients.
+
+![rt srt rist multi output configuration example](/_machine-assets/14af7cbd1ce7bd03f8c477a857502f5e53fc1cc13e05bb9445e19e5475a80a96.png)
+
+To implement the use case above, the following Reliable Transport services are required:
+
+* 1 service with Input Mode = **UDP** and Output Mode = **SRT Listener** or Output Mode = **RIST Listener**
+* 1 service per client with Input Mode = **SRT Caller** or Input Mode = **RIST Caller** (respectively) and Output Mode = **UDP**
+
+<Info>
+  It is possible also to have UDP in ->SRT Caller -> SRT Listener -> UDP out. In that case just swap the Output/Input modes for the two services.
+</Info>
+
+### Zixi connection configuration
+
+Zixi services can be created to implement the following use case:
+
+Two services are required:
+
+![RT Zixi workflow](/_machine-assets/5955e282e5be75583d5c733986f5e0ae547839c10414b047c43a86bc3c788053.png)
+
+* Service 1 with Input Mode = **UDP** and Output Mode = **Zixi Feeder**
+* Service 2 with Input Mode = **Zixi Receiver** and Output Mode = **UDP**
+
+### Reliable Transport parameters
+
+The configuration of the Input and Output section for the service depends on the use case needed.
+
+1. Select the **Input Mode** from the corresponding drop-down menu on the left side of the Reliable Transport service configuration page.
+
+   ![rt select input](/_machine-assets/242538eee2018d3adfc044907b03acfbbbf3b573bd008e71e940bce72501ae44.png)
+
+2. Select the **Output Mode** from the corresponding drop-down menu on the right side of the Reliable Transport service configuration page.
+
+   ![rt select output](/_machine-assets/724faf059690534ae902a3897e4e2e1c241b6afc212a4077eb65929a659bffb6.png)
+
+3. Complete the **Input** and **Output** parameters that come with the selected mode:
+
+   * [UDP configuration](/beam/reliable-transport/service-management#udp-configuration)
+   * [SRT Caller configuration](/beam/reliable-transport/service-management#srt-caller-configuration)
+   * [SRT Listener configuration](/beam/reliable-transport/service-management#srt-listener-configuration)
+   * [Zixi Feeder configuration](/beam/reliable-transport/service-management#zixi-feeder-configuration)
+   * [Zixi Receiver configuration](/beam/reliable-transport/service-management#zixi-receiver-configuration)
+   * [RIST configuration](/beam/reliable-transport/service-management#rist-configuration)
+   * [RTMP Caller configuration](/beam/reliable-transport/service-management#rtmp-caller-configuration)
+   * [RTMP Listener configuration](/beam/reliable-transport/service-management#rtmp-listener-configuration)
+
+### UDP configuration
+
+![rt config udp](/_machine-assets/778344cb8d4029074365c140bc8e59df183c7780a71f203e246585522e494a69.png)
+
+Fields marked with \* are mandatory.
+
+#### Input
+
+| Name                | Description                                                                                                                                                                                                                       | Values                                      |
+| :------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------ |
+| Network interface\* | Name of the network interface on which the UDP stream will be received as it appears in the list from Servers->System Settings->Nework Settings: Devices. A dropdown is available for convenience but free text can also be used. | String of max 32 alphanumeric characters    |
+| Stream Address\*    | Multicast address of the UDP stream                                                                                                                                                                                               | IPv4 address. Does not allow leading zeros. |
+| Port\*              | Multicast port of the UDP stream                                                                                                                                                                                                  | Integer number between 1024 and 65535       |
+| Source Address      | Source address of the input multicast stream                                                                                                                                                                                      | IPv4 address. Does not allow leading zeros. |
+
+#### Output
+
+| Name                | Description                                                                                                                                                                                                                   | Values                                      |
+| :------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------ |
+| Network interface\* | Name of the network interface on which the UDP stream will be sent as it appears in the list from Servers->System Settings->Nework Settings: Devices. A dropdown is available for convenience but free text can also be used. | String of max 32 alphanumeric characters    |
+| Stream Address\*    | Multicast address of the UDP stream                                                                                                                                                                                           | IPv4 address. Does not allow leading zeros. |
+| Destination Port\*  | Multicast port of the UDP stream                                                                                                                                                                                              | Integer number between 1024 and 65535       |
+| Source Address      | User-specified source multicast address for the outgoing stream                                                                                                                                                               | IPv4 address. Does not allow leading zeros. |
+| Source Port         | User-specified source multicast port for the outgoing stream                                                                                                                                                                  | Integer number between 1024 and 65535       |
+
+### SRT Caller configuration
+
+![rt config srt caller](/_machine-assets/590b027c8765ba8b4f3588e5f4c981783cfd97dd6a7f34a9492ea4806d738f02.png)
+
+| Name                       | Description                                                                                                                                                                                                      | Values                                                 |
+| :------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------- |
+| Listener Address\*         | IP Address or hostname of the SRT Listener to connect to.                                                                                                                                                        | IPv4 address (without leading zeros) or hostname.      |
+| Listener Port\*            | Port of the SRT Listener                                                                                                                                                                                         | Integer number between 1024 and 65535                  |
+| Caller Port                | The local port to bind SRT connection to. Default 0 value means auto assigned.                                                                                                                                   | Integer number between 1024 and 65535                  |
+| Network interface          | Name of the network interface the SRT Caller will use as it appears in the list from Servers->System Settings->Nework Settings: Devices. A dropdown is available for convenience but free text can also be used. | String of max 32 alphanumeric characters               |
+| Stream ID                  | The SRT Stream ID sent to the remote listener. Supports opaque strings and structured access-control format as per the SRT spec.                                                                                 | String, up to 512 bytes                                |
+| Encryption                 | Choose the type of encryption for the SRT stream.                                                                                                                                                                | Drop-down menu: Not set, AES-128, AES-192, AES-256     |
+| Pass Phrase                | If Encryption parameter value is *Not set*, this field is grayed out. Otherwise, will contain the encryption passphrase.                                                                                         | String of minimum 10 characters.                       |
+| Latency                    | These values can be adjusted depending on the link characteristics in terms of round-trip time and packet loss rate.                                                                                             | In milliseconds, between 60 and 8000.                  |
+| Maximum Bandwidth Overhead | Percentage bitrate overhead that can be used by the SRT link.                                                                                                                                                    | Percentage, between 5 and 100. Value=0 means infinite. |
+
+#### Predicted Worst Case Link Characteristics
+
+The **Latency** and **Maximum Bandwidth Overhead** should match for Listener and Caller on the same connection. In case of mismatch, the highest values will be used.
+
+To calculate the optimal values for **Latency** and **Maximum Bandwidth Overhead**:
+
+1. Click the **Calculate** button to launch the **Latency and Bandwidth overhead calculator**.
+
+2. Set **Round Trip Time** and **Packet Loss Rate** according to the instructions and make sure the calculated values for **SRT latency** and **Maximum Bandwidth Overhead** do not show errors.
+
+3. Use the calculated values to fill in the **Latency** and **Maximum Bandwidth Overhead** in the SRT Caller parameters section.
+
+4. Click **Set** to automatically apply the calculated values.
+
+### SRT Listener configuration
+
+![rt config srt listener](/_machine-assets/e09dbc906ae2ecab4b748e5245f9c0ccf2304945038db682c2d211109b8caa4d.png)
+
+| Name                       | Description                                                                                                                                                                                                                    | Values                                                 |
+| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------- |
+| Listener Interface\*       | Name of the network interface on which the Listener will be active as it appears in the list from Servers->System Settings->Network Settings: Devices. A dropdown is available for convenience but free text can also be used. | String of max 32 alphanumeric characters               |
+| Listener Port\*            | Port of the SRT Listener                                                                                                                                                                                                       | Integer number between 1024 and 65535                  |
+| Maximum connections        | Maximum allowed number of SRT Callers that can connect to the output SRT Listener.                                                                                                                                             | Integer number between 1 and 65535                     |
+| Encryption                 | Choose the type of encryption for the SRT stream.                                                                                                                                                                              | Drop-down menu: Not set, AES-128, AES-192, AES-256     |
+| Pass Phrase                | If Encryption parameter value is *Not set*, this field is grayed out. Otherwise, will contain the encryption passphrase.                                                                                                       | String of minimum 10 characters.                       |
+| Latency                    | These values can be adjusted depending on the link characteristics in terms of round-trip time and packet loss rate.                                                                                                           | In milliseconds, between 60 and 8000.                  |
+| Maximum Bandwidth Overhead | Percentage bitrate overhead that can be used by the SRT link.                                                                                                                                                                  | Percentage, between 5 and 100. Value=0 means infinite. |
+
+The latency and overhead can be configured as per [Predicted Worst Case Link Characteristics](/beam/reliable-transport/service-management#predicted-worst-case-link-characteristics) above.
+
+### Zixi Feeder configuration
+
+![rt config zixi feeder](/_machine-assets/13f2c6012c65b5e1df089e8fbd67be4afdc56611a99838a8df34f8ee4d875b15.png)
+
+| Name            | Description                                                                                                         | Values                                                                                                            |
+| :-------------- | :------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------- |
+| Host            | The Zixi Broadcaster address (FQDN or IP Address)                                                                   | String or IPv4 address.                                                                                           |
+| Port            | The Zixi Broadcaster port to connect to.                                                                            | Integer number between 1024 and 65535, default 2088.                                                              |
+| Encryption      | Choose the type of encryption for the Zixi stream.                                                                  | Drop-down menu: Not set, AES-128, AES-192, AES-256                                                                |
+| Pass Phrase     | If Encryption parameter value is *Not set*, this field is grayed out. Otherwise, contain the encryption passphrase. | Hexadecimal characters string. Expected length: 32 chars for AES-128, 48 chars for AES-192, 64 chars for AES-256. |
+| Steam ID        | Zixi stream ID. Custom identifier.                                                                                  | String of max 128 characters.                                                                                     |
+| Password        | \[Optional] Password associated to the Zixi stream.                                                                 | String of max 128 characters.                                                                                     |
+| Maximum Bitrate | Maximum bitrate of the stream sent through the Zixi connection, in kbps.                                            | Integer number between 1 and 2147483.                                                                             |
+| Maximum Latency | Zixi stream latency in milliseconds.                                                                                | Integer number between 30 and 10000                                                                               |
+
+#### Multiple Zixi Broadcasters management
+
+A Zixi Feeder output can be configured and connected to multiple Zixi Broadcasters, however:
+
+* The Zixi Feeder will only connect to one of them;
+* The choice is random (will not necessarily connect to the first one specified, even if available).
+
+1. Click **Add New Connection** to configure a new pair of **Host**/**Port** information for a different Zixi Broadcaster.
+
+2. Repeat for each new Zixi Broadcaster to configure.
+
+### Zixi Receiver configuration
+
+![rt config zixi receiver](/_machine-assets/954997b6d84a382acfcd6199a25dab0ffc36e9165b4285a96c38df07b2af482e.png)
+
+| Name            | Description                                                                                                                                                             | Values                                                                                                            |
+| :-------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| Host            | The Zixi Broadcaster address (FQDN or IP Address)                                                                                                                       | String or IPv4 address.                                                                                           |
+| Port            | The Zixi Broadcaster output port to connect to.                                                                                                                         | Integer number between 1024 and 65535, default 2077.                                                              |
+| Remote ID       | Zixi Remote ID (unique identifier for the Zixi receiver).                                                                                                               | This value cannot be edited. It is assigned automatically when creating the service.                              |
+| Encryption      | Choose the type of encryption for the Zixi stream.                                                                                                                      | Drop-down menu: Not set, AES-128, AES-192, AES-256                                                                |
+| Pass Phrase     | If Encryption parameter value is *Not set*, this field is grayed out. Otherwise, contain the encryption passphrase. Shall match the corresponding feeder configuration. | Hexadecimal characters string. Expected length: 32 chars for AES-128, 48 chars for AES-192, 64 chars for AES-256. |
+| Steam ID        | Zixi stream ID. Custom identifier. Shall match the corresponding feeder configuration.                                                                                  | String of max 128 characters.                                                                                     |
+| Password        | \[Optional] Password associated to the Zixi stream. Shall match the corresponding feeder configuration.                                                                 | String of max 128 characters.                                                                                     |
+| Maximum Latency | Zixi stream latency in milliseconds.                                                                                                                                    | Integer number between 30 and 10000                                                                               |
+
+### RIST configuration
+
+![rt config rist](/_machine-assets/0d1dca27bf3de799151540e430c0a8cd5c54f8e45ddf9eb0157aa72a830be9e3.png)
+
+<span id="input---rist-caller" className="mk-legacy-anchor" />
+
+#### Input - RIST Caller
+
+| Name               | Description                                                                                                                                                                                                       | Values                                             |
+| :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------- |
+| Listener Address\* | Address or hostname of the RIST Listener to connect to.                                                                                                                                                           | IPv4 address (without leading zeros) or hostname.  |
+| Listener Port\*    | Port of the RIST Caller                                                                                                                                                                                           | Integer number between 1024 and 65535              |
+| Network interface  | Name of the network interface the RIST Caller will use as it appears in the list from Servers->System Settings->Nework Settings: Devices. A dropdown is available for convenience but free text can also be used. | String of max 32 alphanumeric characters           |
+| Encryption         | Choose the type of encryption for the SRT stream.                                                                                                                                                                 | Drop-down menu: Not set, AES-128, AES-192, AES-256 |
+| Pass Phrase        | If Encryption parameter value is *Not set*, this field is grayed out. Otherwise, will contain the encryption passphrase.                                                                                          | String of minimum 10 characters.                   |
+
+An advanced settings section is available by expanding the panel at the bottom of the Input configuration page. While the default settings are suitable for most applications, an experienced user can tune these to optimise the configuration their specific scenario. Detailed descriptions of each setting can be seen by hovering the cursor over the question mark between each configuration parameter's name and the configuration box for the value.
+
+<span id="output---rist-listener" className="mk-legacy-anchor" />
+
+#### Output - RIST Listener
+
+| Name                 | Description                                                                                                                                                                                                                    | Values                                             |
+| :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------- |
+| Listener Interface\* | Name of the network interface on which the Listener will be active as it appears in the list from Servers->System Settings->Network Settings: Devices. A dropdown is available for convenience but free text can also be used. | String of max 32 alphanumeric characters           |
+| Listener Port\*      | Port of the RIST Listener                                                                                                                                                                                                      | Integer number between 1024 and 65535              |
+| Maximum connections  | Maximum allowed number of SRT Callers that can connect to the output SRT Listener.                                                                                                                                             | Integer number between 1 and 65535                 |
+| Encryption           | Choose the type of encryption for the SRT stream.                                                                                                                                                                              | Drop-down menu: Not set, AES-128, AES-192, AES-256 |
+| Pass Phrase          | If Encryption parameter value is *Not set*, this field is grayed out. Otherwise, will contain the encryption passphrase.                                                                                                       | String of minimum 10 characters.                   |
+
+An advanced settings section is available by expanding the panel at the bottom of the Output configuration page. While the default settings are suitable for most applications, an experienced user can tune these to optimise the configuration their specific scenario. Detailed descriptions of each setting can be seen by hovering the cursor over the question mark between each configuration parameter's name and the configuration box for the value.
+
+### RTMP Caller configuration
+
+![rt config rtmp caller](/_machine-assets/751fd3795150752599b29def5df0af72ec96f41dc350aeba083e5b669a53947b.png)
+
+| Name               | Description                                                                     | Values                                |
+| :----------------- | :------------------------------------------------------------------------------ | :------------------------------------ |
+| Listener Address\* | IP Address of the RTMP Listener to connect to.                                  | IPv4 address (without leading zeros). |
+| Listener Port\*    | Port of the RTMP Listener                                                       | Integer number between 256 and 65535  |
+| Caller Port        | The local port to bind RTMP connection to. Default 0 value means auto assigned. | Integer number between 1024 and 65535 |
+| Application\*      | Name of the RTMP application instance to connect to.                            | String                                |
+| Stream\*           | The name of the stream being transferred.                                       | String                                |
+| rtmps              | Enables RTMPS encryption.                                                       | Tick box, off by default.             |
+
+### RTMP Listener configuration
+
+![rt config rtmp listener](/_machine-assets/6b2c775474d8ff5fe4d87d3884afb064d26ba38dd277cc748ede9a8a42418e78.png)
+
+| Name                 | Description                                                                                                                                                                                                                    | Values                                   |
+| :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------- |
+| Listener Interface\* | Name of the network interface on which the Listener will be active as it appears in the list from Servers->System Settings->Network Settings: Devices. A dropdown is available for convenience but free text can also be used. | String of max 32 alphanumeric characters |
+| Listener Port\*      | Port of the RTMP Listener                                                                                                                                                                                                      | Integer number between 256 and 65535     |
+| Maximum connections  | Maximum allowed number of RTMP Callers that can connect to the output RTMP Listener.                                                                                                                                           | Integer number between 1 and 65535       |

@@ -1,0 +1,76 @@
+---
+title: Configuring a Delay Line service
+robots: noindex, nofollow
+---
+
+The source input of a Delay Line service is derived from the output of Loop Record services. The Delay Line service allows the recorded TS (loop record) to be replayed with a fixed delay of XX hours/XX minutes without modifying the input TS.
+
+## Prerequisites
+
+Before configuring a Delay Line service, create a Loop Record service as the input TS source (**SPTS CBR&#x20;**/ **SPTS VBR&#x20;**/ **MPTS CBR&#x20;**&#x73;upported for Delay Line services) first. (Refer to [Configuring a Loop Record service](/vos360/user-guide/configuring-a-loop-record-service) for details.)
+
+<Note>
+  **Note:&#x20;**&#x45;nsure that you set the depth of the Loop Record service (default is 6 hours) to a duration greater than the delay you plan to configure in the Delay Line service.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x54;o best conserve resources, do not use the “Loop Record with Preview” profile in the Loop Record service.
+</Note>
+
+## Configure a Delay Line service
+
+1. Navigate to the **Configure Channels** app > **Sources&#x20;**&#x74;ab to create a Delay Line source.
+
+   <Warning>Source screenshot 1 is missing from the Scroll HTML export. Review the original “Configuring a Delay Line service” page before publishing this page.</Warning>
+
+<Note>
+  **Info:&#x20;**&#x54;he Delay Line source does not support signal loss configurations for input source redundancy.
+</Note>
+
+2. Select a **Loop record service&#x20;**&#x74;hat records the stream for delayed playback.
+
+3. Configure the following parameters to set the fixed delay you want to apply to the recorded TS:
+
+   * **Delay**: The delay in milliseconds. The minimum value is 180,000 (for example, 3 minutes). It will be lower than the recording buffer size of the corresponding Loop Record service.
+
+     * The minimum delay is 5 minutes (even if the UI limits to 3 minutes, it is recommended not to configure less than 5 minutes).
+
+     * The maximum delay is 15 days (the depth of the record service must be consistent).
+
+   * **Delay update**: This toggle enables a scheduled update of the delay, for example, for the next daylight saving time transition. The “Next delay” and “Next delay activation date” will be configured.
+
+   * **Next delay activation date**: The UTC date when the next delay will be applied, expressed by a string with the following format "yyyy-mm-dd hh:mm:ss" (for example, 2024-11-20 04:00:00)
+
+   * **Next delay**: The next delay to apply when the activation date is reached, also expressed in milliseconds.
+
+4. Click **Create**.
+
+5. Navigate to the **Configure Channels** app > **Destination** tab to create a new destination (could be an IPTV destination or an SRT destination) as you do for a transcoding service.
+
+   <Warning>Source screenshot 2 is missing from the Scroll HTML export. Review the original “Configuring a Delay Line service” page before publishing this page.</Warning>
+
+6. Navigate to the **Configure Channels** app > **Services** tab to create a new service using the source and the destination created before, and the destination (could be an IPTV destination or an SRT destination) as you do for a transcoding service.
+
+   <Warning>Source screenshot 3 is missing from the Scroll HTML export. Review the original “Configuring a Delay Line service” page before publishing this page.</Warning>
+
+## Schedule an update on the delay
+
+To schedule an update of the delay (for example, to automate the summer/winter time change), you can define a different time delay to be applied from a given date.
+
+1. Navigate to the **Configure Channels&#x20;**&#x61;pp > **Sources** tab.
+
+2. Edit the Delay Line source:
+
+   <Warning>Source screenshot 4 is missing from the Scroll HTML export. Review the original “Configuring a Delay Line service” page before publishing this page.</Warning>
+
+   * Set the **Delay update&#x20;**&#x74;o “ON”.
+
+   * Set the **Next delay activation date** from which to use this new delay (UTC time).
+
+   * Set the **Next delay**.
+
+In the screenshot above, the delay applied before April 25, 2 a.m. (UTC) time is 1 hour, and after this date it is 2 hours. Therefore, on April 25 at 2:00 a.m., the Delay Line service will rewind 1 hour and replay the same content. Inversely, with a new delay smaller than the initial one, there would have been a gap in the output signal.
+
+<Note>
+  **Info:&#x20;**&#x43;hanging the delay does not restart the service.
+</Note>

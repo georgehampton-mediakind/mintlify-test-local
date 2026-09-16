@@ -1,0 +1,33 @@
+---
+title: Configure Regional Statmux
+description: Configure a Regional Statmux in MK.IO Beam.
+sidebarTitle: Configure Regional Statmux
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Regional statmux lets you efficiently combine national and regional channels in the same pool.
+
+MK.IO Beam supports encoding **multiple** regional channels. Each regional set can be inserted into its corresponding **regional multiplex** alongside shared national channels, while still using **statistical multiplexing** to save bandwidth.
+
+For example, if you have 4 **national channels** and 2 **regional channels** for each of 2 regions, you can create 2 multiplexes:
+
+### Multiplex 1 (Region 1)
+
+* National Channel 1
+* National Channel 2
+* National Channel 3
+* National Channel 4
+* Regional Channel 1 (Region 1)
+* Regional Channel 2 (Region 1)
+
+### Multiplex 2 (Region 2)
+
+* National Channel 1
+* National Channel 2
+* National Channel 3
+* National Channel 4
+* Regional Channel 1 (Region 2)
+* Regional Channel 2 (Region 2)
+
+National channels are common across multiplexes, while regional channels are unique to each multiplex.

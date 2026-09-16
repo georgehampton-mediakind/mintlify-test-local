@@ -1,0 +1,141 @@
+---
+title: Manage templates
+sidebarTitle: Using templates
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Templates are a set of parameters saved from an existing service configuration. This allows you to easily create new services that share the same settings.
+
+You can create a template from an existing service configuration. The template is stored separately from the services.<br />
+Service templates include:
+
+* Constants: all parameters that are common to all services sharing the template.
+* Variables: parameters that depend on the service.
+
+Selecting a template when creating a service replaces the default settings with the template presets.
+It still requires entering missing variable information identified in the user interface.
+
+<Info>
+  You can export variables to a CSV file for mass configuration.
+</Info>
+
+Changing a template requires:
+
+* Changing the template name.
+* Version management is implemented (can embed versions).
+
+## Display templates
+
+1. Click **Templates** from the left-side menu panel. If any, the available templates display in a table.
+
+   ![view templates home controller](/_machine-assets/73a8852adb808b1342165ddca5fc3b2d61097ac94a1675b894ee1d9bf3c53cb1.png)
+
+2. You can edit the number of rows displayed or use the search bar to filter the display.
+
+### Template parameters
+
+| Column          | Description                                                                      |
+| :-------------- | :------------------------------------------------------------------------------- |
+| Name            | Unique template name.                                                            |
+| Processing Type | The service processing type.                                                     |
+| No. of Services | Total number of services in your solution that are configured with the template. |
+| Creation date   | Template creation date (YYYY-MM-DD) and time (HH:MM:SS).                         |
+| Actions         | Export or delete.                                                                |
+
+## Create a template
+
+To create a template, follow these steps:
+
+1. [Display services](/beam/web-interface/services#display-services).
+
+2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> and ensure that service parameters comply to expected configurations.
+
+3. From the **Services** page, Click the 3-vertical dots icon then select **Save as template**.
+
+4. Enter a unique **Name** and click **Create**.
+
+5. [Check that the template displays in the **Templates** table](/beam/web-interface/templates#display-templates).
+
+6. You can [create a new service from the template](/beam/web-interface/templates#create-a-new-service-from-a-template).
+
+## Delete a template
+
+<Info>
+  **Deleting a template** has no impact on services created from that template.
+</Info>
+
+To delete a template, follow these steps:
+
+1. Display templates.
+
+2. Click <img src="/icons/ui/delete.svg" alt="Delete" className="mk-ui-icon" width="16" height="16" /> in the **Actions** column.
+
+3. Confirm the action if prompted. The template is deleted and no longer displays in the table.
+
+## Create a new service from a template
+
+When creating a new service, you can apply a template to automatically insert existing service configuration parameters.
+
+<Info>
+  You **can edit any service settings**, even if the service was created from a template.
+</Info>
+
+Before you start, [ensure a template already exists](/beam/web-interface/templates#display-templates).
+
+1. Click **Services** in the left-side menu panel.
+
+2. Click **Add service** then select a service type from the list to display options.
+
+3. Next to the **Template** parameter, select a template from the list of available templates.
+
+4. Click **Save**. The service is created and displays in the **Services** grid.
+
+5. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit or to check the service configuration for accuracy.
+
+## Export a template
+
+You can export templates to share them on different MediaKind Controllers.
+
+1. [Display templates](/beam/web-interface/templates#display-templates).
+
+2. Click ![button export template mfvp controller](/_machine-assets/71e457044d160a03f4e7c024c8b1ea6af4f52c7cf35d00cd5266890ea4ccbc3c.png) to export. The file is downloaded in relation to your web browser download settings.
+
+<Warning>
+  The download date is in the downloaded file name. The date is in the following format: MM/DD/YYYY.
+</Warning>
+
+## Export a template variables form
+
+You can download template variables to use in massive configurations.
+
+1. [Display templates](/beam/web-interface/templates#display-templates).
+
+2. Click ![button export form template mfvp controller](/_machine-assets/2b9e7ec6a9230a44dcf98d42b82e584c59d33736a15f0554ce1d95d4c67d98da.png) to export. A .csv file is downloaded in relation to your web browser download settings.
+
+<Warning>
+  The download date is in the downloaded file name. The date is in the following format: MM/DD/YYYY.
+</Warning>
+
+## Import a template
+
+Before you start, ensure a template file exported from a different Controller environment is available.
+
+1. [Display templates](/beam/web-interface/templates#display-templates).
+
+2. Click **Actions**.
+
+3. Select **Import template**.
+
+   ![button actions import template mfvp controller](/_machine-assets/283b3c6fa8324aad12b0b5a0eee21be5759c4bd1f7bc39c4456c2d65f0877661.png)
+
+4. Click **Select file** to choose a file, then click **Import**.
+
+   ![view import service mfvp controller](/_machine-assets/f27b4e20492e77b16763b276831b1d809a544f4016b0d968bad52aa36646e5a2.png)
+
+   The template is uploaded and available in the **Templates** table.
+
+<Warning>
+  * Template names must be unique.
+  * You are unable to import a template if the template with the same name already exists on this Controller.
+</Warning>

@@ -1,0 +1,81 @@
+---
+title: Creating and activating an IPTV service
+robots: noindex, nofollow
+---
+
+**Before you begin**\
+[Configuring a source input](/vos360/user-guide/configuring-a-source-input)\
+[Configuring the IPTV/Broadcast destination](/vos360/user-guide/configuring-the-iptv-broadcast-destination)
+
+Select the transcoding profile, source, and destination to be used for the IPTV service and configure any service add-ons. Activate the service when it is ready for broadcast.
+
+IPTV services typically use an IPTV transcoding profile and IPTV destination, or a multiscreen transcoding profile with an ATS destination.
+
+1. From the **Configure Channels** app, navigate to the **Services** page, click **+ Service**.\
+   **Result**: The **Create Service** wizard opens.\
+   ![](/images/vos360/f0fe498facea61f6a479e3b4.png)
+
+2. On the **Profile** tab, select the transcoding profile the service will use, and then click **Next**.
+
+3. On the **Source** tab, select the name of the primary source, and optionally, an alternate source / tertiary source, and then click **Next**.
+
+   <Note>
+     **Note:&#x20;**&#x54;he input streams of the paired CloudLink instances must be identical.
+   </Note>
+
+4. On the **Destination** tab, select the name of the destination from the **Destination** drop-down list and then click **Next**.
+
+5. If necessary, on the **Commit** tab, for **Program Number**, type a program number for the video channel.
+
+6. In the **Service Name** field, enter the name of the new service.
+
+7. Optionally, select the **Priority&#x20;**&#x64;rop-down menu for the service. Options are **Low**, **Normal**, or **High**. The default setting is Normal.
+
+   <Note>
+     **Note:&#x20;**&#x59;ou can use this Priority tag to quickly view the status and configuration of the high-priority services (and other priorities as well) in case any service is down and requires manual attention.
+   </Note>
+
+8. Optionally, turn the **Redundancy** setting to **On** to activate service-level redundancy.
+
+   <Note>
+     **Info:&#x20;**&#x49;n Redundancy Mode, VOS creates two services for the same channel (active-standby), using the same configuration. In the event that the active service fails, stream processing or packaging tasks failover to the standby service.
+   </Note>
+
+   <Note>
+     **Note:&#x20;**&#x54;ranscode services must have an alternate input source configured, or the service must use a paired CloudLink.
+   </Note>
+
+9. Optionally, turn the **Input Tracking** setting to **On** to activate the Input Service Tracking feature.
+
+10. Optionally, turn the **Dynamic Program&#x20;**&#x73;etting to **On** to activate the dynamic program for the service.
+
+11. Optionally, turn the **Source Failover** to **On** to activate source redundancy for the service.
+
+12. Optionally, select the **Geo Redundancy** setting for the service. Options are **Auto**, **On**, or **Off**. The default setting is Auto.
+
+    <Note>
+      **Note:&#x20;**&#x49;f 1+1 geo-redundancy is enabled on the VOS cluster, all services will be paired up between two VOS instances. This option allows pairing up some services only instead of all services between two VOS instances for the geo-redundancy feature. If this option is set to Off, geo-redundancy on the particular service will be disabled between two VOS instances, without causing impact and without having to stop/restart the service.
+    </Note>
+
+13. Optionally, select the **Geo Redundancy Time Reference&#x20;**&#x66;or the geo-redundancy configured service. Options are **Auto** and **VITC**. By default, the value is Auto which means the geo-redundancy uses PTS as a reference for sychronization. The VITC option is applicable for TS or SRT input and the associated geo-redundancy uses VITC as a reference.
+
+14. Optionally, change **Timecode Generation** from **Disabled&#x20;**&#x74;o **UTC&#x20;**&#x61;fter changing the **Daily Sync Time (UTC hour)** under the **Settings** > **Advanced** tab.
+
+15. Optionally, select **Stream Conditioning&#x20;**&#x66;or configuring when the source contains an SCTE-35 component (TS source) or SCTE-104 component (Baseband source). By default, the value is Auto which means IDR insertion depends on the output SCTE-35 message. The “On ESAM ConditioningInfo” option allows for inserting IDR on the reception of ConditioningInfo section through ESAM protocol.
+
+16. Select **Active&#x20;**&#x69;f you want the service to go online when you commit to the new service.
+
+17. Configure service add-ons as required by the channel.\
+    **Note:** To enable the EAS settings for an IPTV service, navigate to **Configure Broadcast** > **Settings** and configure EAS\_NET or EAS\_NET (S3 based). Doing so allows the EAS add-on to be visible and accessible for IPTV services.
+
+18. Optionally, turn the **Mute Notifications** setting to **On** to prevent the notifications from being noticed.
+
+    <Note>
+      **Note:&#x20;**&#x47;eo-redundancy notifications cannot be muted as they are related to global settings instead of service-specific settings.
+    </Note>
+
+19. When you have finalized the service settings, click **Commit**.
+
+<Note>
+  **Note:&#x20;**&#x4F;nce the service is activated, you can monitor ingest, transcode, and output bitrates in the Monitor Channels app. Refer to Monitoring a transport stream for more information.
+</Note>

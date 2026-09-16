@@ -1,0 +1,48 @@
+---
+title: Adding a DRM system
+robots: noindex, nofollow
+---
+
+You can configure digital rights management (DRM) systems in the Scrambling app and assign them to OTT services in the Configure Channels app.
+
+In order to have different keys for each service, unique ResourceIDs are recommended per service. Appending a suffix to the end of a common "Content ID/Resource ID" would allow the KMS to better differentiate between multiple package formats within the same service and return the relevant DRM metadata. For example: Harmonic\_HLS, Harmonic\_SSKR, Harmonic\_DASH.
+
+<Note>
+  **Note:** Ensure that you specify the **Encryption Method** in the destination profile for each service that will use the DRM system.
+</Note>
+
+1. From the **Scrambling** app, navigate to the **DRM** tab, click **Systems > Add System**.
+
+2. Configure the following settings:
+
+   1. **DRM System Name:** The name of the configured DRM system.
+
+   2. **Encryption Interface:** This is the protocol used to interface with the DRM server.\
+      Note: For Harmonic KMS (HKMS) API, using the minimum implementation is recommended. While the full implementation provides the benefit of an additional key session layer for redundancy and horizontal scaling, there may already be pre-existing redundancy/scaling methods within the DRM implementation, making the minimum implementation a simpler, better approach.
+
+   3. **Requestor ID:** ID of the transcoder or scrambler requesting the key session. The requestor ID must be unique among all devices that connect to the same DRM system. If it is not provided, then a random UUID is used.
+
+   4. **CENC Setting:** Configure the DRM systems that are used for CENC encryption in HLS, DASH or CMAF. Applicable only to CPIX based KMS API types.
+
+3. To add a "Content ID/Resource ID", click in the **Resources** field.
+
+   1. In the **DRM Resources** dialog, configure the following settings:
+
+      1. **Packaging Type:** Choose the targeted packaging (HLS, DASH, MSS, CMAF).
+
+      2. **Name:** Enter the name of the configured DRM resource.
+
+      3. **Content ID/Resource ID:** ID of the asset/live channel that is to be encrypted. Maximum 128 characters. If it is not provided, then a random UUID is used.
+
+   2. Click **Save**.
+
+   3. Repeat this step for each Content ID/Resource ID you want to add.
+
+4. Click **+Key Management Server&#x20;**&#x74;o add a primary KMS server, and then enter the **KMS URL**.
+
+5. Optionally, add a backup KMS server in addition to the primary KMS server,
+
+6. Click **Save**.
+
+&#x20;**Result** \
+You can assign the DRM system to an OTT service when you configure service add-ons in the Configure Channels app.

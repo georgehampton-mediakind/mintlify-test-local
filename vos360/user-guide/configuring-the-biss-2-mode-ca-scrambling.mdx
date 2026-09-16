@@ -1,0 +1,101 @@
+---
+title: Configuring the BISS-2 mode CA scrambling
+robots: noindex, nofollow
+---
+
+You can configure the BISS-2 mode CA scrambling (also called BISS-CA)secure protocol used primarily for high-value satellite contributions.
+
+To configure BISS-CA, perform the following:
+
+1. Navigate to the **Scrambling** app, then the **CAS** tab.
+
+2. In the **Settings** tab, turn on the **Enable BISS-CA** toggle and click **Save**.
+
+3. After saving, select the new **BISS-CA** tab.
+
+4. From the **Global Settings&#x20;**&#x74;ab, configure the following sections:
+
+   * Session Key Settings
+
+     * When the “Enable Periodic Update” toggle is turned on, configure the following:
+
+       * *Update Period*: Specify the periodic update period for the session key.
+
+       * *EMM Acquisition Time:&#x20;*&#x53;pecify the EMM acquisition time for the session key.
+
+         **Note**: In a BISS-CA environment, the efficiency of the authorization process depends on the interplay between three variables: **EMM Bitrate**, **Number of Decoders**, and **Acquisition Time**.
+
+         The **EMM Bitrate** is the amount of bandwidth (in kbps) allocated within the Transport Stream to carry authorization messages. The **Acquisition Time** (or "Waiting Time") is the duration a decoder must wait to receive its specific "key" to start decrypting the content.
+
+         The relationship is **inversely proportional**:
+
+         * **Higher Bitrate** = **Lower Acquisition Time** (Faster)
+
+         * **Lower Bitrate** = **Higher Acquisition Time** (Slower)
+
+         In BISS-CA, EMMs are sent in a "carousel" (a continuous loop). Since a BISS-CA stream might need to address hundreds or thousands of decoders, each with its own unique Public Key, the stream cannot send all keys at once. It sends them one after another.
+
+         If you have 500 decoders to authorize:
+
+         * **Low Bitrate (e.g., 10 kbps):** The carousel takes a long time to complete a full turn. A decoder that just tuned in might have to wait **30 to 60 seconds** before its specific EMM appears in the stream.
+
+         * **High Bitrate (e.g., 200 kbps):** The carousel spins much faster. The same decoder will receive its EMM in **1 or 2 seconds**.
+
+   * Geo Redundancy Settings
+
+     * Configure the BISS-CA scrambler role:
+
+       * Follower
+
+       * Leader
+
+         * Follower VOS IP address or hostname
+
+         * Unique identifier as a client app of the follower VOS.
+
+         * Client secret used on the follower VOS.
+
+       * Standalone (default)
+
+   * Other Settings
+
+     * Set the ECM period.
+
+5. From the **EMM Streams** tab, configure the following:
+
+   1. Click the “**+**” button to configure an EMM stream:
+
+      * EMM stream name
+
+      * EMM stream bitrate
+
+   2. Click **Save**.
+
+6. From the **Receivers&#x20;**&#x74;ab, configure the following:
+
+   1. Click the “**+**” button to add a receiver:
+
+      * Receiver name
+
+      * Public key
+
+   2. Click **Save**.\
+      **Note**: The expected public key is the receiver’s RSA-2048 public key. After creating the receiver, it becomes visible and editable. The entitlement key ID is computed from this public key.
+
+7. From the **Entitlement Sessions&#x20;**&#x20;tab, configure:
+
+   1. Click the “**+”** button to configure:
+
+      * Entitlement session name
+
+      * Entitlement session ID (ESID)
+
+      * Original network ID (ONID)
+
+      * Associate an EMM Stream
+
+   2. Click **Save**.
+
+      &#x20;**Note**: The couple ESID/ONID shall be unique. Once created, the entitlement session is visible and editable
+
+   3. Click on the receivers listed in “Available Receivers” to authorize receivers.

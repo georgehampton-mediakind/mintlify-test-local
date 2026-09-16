@@ -1,0 +1,21 @@
+---
+title: Configure Notifications
+sidebarTitle: Configure Notifications
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The notification tab allows you to configure notifications for incoming or ongoing SCTE35 signals.
+
+A description of the different fields to configure is given below:
+
+| Parameter | Description                                                               |
+| :-------- | :------------------------------------------------------------------------ |
+| Name      | Name of the webhook endpoint.                                             |
+| Type      | Type of notification to send. Only scte35 is supported.                   |
+| URL       | HTTP URL of the webhook endpoint.                                         |
+| Key       | Secret used by the webhook listener to authenticate the webhook sender.   |
+| Signal    | Required for Type “SCTE-35”. Value is either **Incoming** or **Outgoing** |
+| Filters   | Notification is sent only if the SCTE-35 matches these conditions.        |
+
+You can configure as many SCTE35 filters and notification as needed by clicking the **+ Add** button.

@@ -1,0 +1,74 @@
+---
+title: Configure network interfaces
+description: How to configure network interfaces, static routes, DNS, time synchronization, IGMP settings, and bonded interfaces on an MK.IO Beam device.
+sidebarTitle: Configure Network Interfaces
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+You can configure network settings from the **System Settings** tab on the server information page:
+
+1. Go to the **Servers** view.
+2. Click the **Details** <img src="/icons/ui/view.svg" alt="View" className="mk-ui-icon" width="16" height="16" /> button to open the server information.
+3. Go to the **System Settings** tab.
+
+<Warning>
+  Changes to network interface configuration can result in the device becoming unreachable.
+</Warning>
+
+## Set the hostname
+
+1. Enter the new hostname in the **Hostname** field.
+2. Click **Save** at the bottom of the page.
+
+## Set IP addresses, subnet masks, gateway address, DHCP, and firewall zone
+
+1. Go to the **Network devices** section on the **System Settings** page.
+2. Click the **Edit** <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> button next to an interface to open its settings.
+3. Enable or disable **DHCP**. When DHCP is enabled, the interface IP address and DNS servers are allocated automatically. DHCP-allocated values cannot be edited and are shown for reference only.
+4. If DHCP is disabled, enter the IP address and subnet mask in the **Addresses** field using CIDR notation.
+5. Optionally, enter the default gateway in the **Gateway** field.
+6. Optionally, enter a value in the **Gateway metric** field. Usually this is left blank.
+7. Optionally, set the firewall zone in the **Firewall zone** field. Valid values are **control**, **data**, or **control & data (public)**.
+8. Click **Confirm**, then click **Save** at the bottom of the page.
+
+<Warning>
+  While you can configure multiple default gateways, this can cause routing issues and should be done with caution. If you define multiple gateways, ensure the **Control** interface has the lowest gateway metric. In most cases, adding a static route is the recommended way to achieve the desired routing.
+</Warning>
+
+## Configure static routes
+
+<Info>
+  Configuring static routes and gateway metric is possible in Beam 1.9 and later.
+</Info>
+
+You can add static routes to an interface to direct traffic for specific subnets through a particular gateway. This is often a better alternative to configuring multiple default gateways.
+
+1. In the **Network devices** section, click the **Edit** <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> button for the interface you want to configure.
+2. In the **Edit Network Device** dialog, in the **Static routes** section:
+   * To **add** a route, click **+ Add route**. Enter the **Destination (CIDR)** and **Gateway**, then click **Add Route**.
+   * To **edit** a route, click the **Edit** <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> button next to it.
+   * To **delete** a route, click the **Delete** <img src="/icons/ui/delete.svg" alt="Delete" className="mk-ui-icon" width="16" height="16" /> button next to it.
+3. Click **Confirm** in the **Edit Network Device** dialog.
+4. Click **Save** at the bottom of the **System Settings** page to apply the changes.
+
+## Set DNS addresses
+
+1. Go to the **DNS** section on the **System Settings** page.
+2. Click the **Edit** <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> button next to an interface to open its DNS settings.
+3. If DHCP is disabled, add at least one DNS server in the **Addresses** field using CIDR notation. DNS servers allocated by DHCP cannot be edited and are shown for reference only.
+4. Click **Confirm**, then click **Save** at the bottom of the page.
+
+## Set IGMP version
+
+1. Go to the **IGMP mode** section on the **System Settings** page.
+2. From the drop-down, select **Automatic v2/v3** or **Force v2**.
+3. Click **Save** at the bottom of the page.
+
+## Set time synchronization
+
+See [Configure System Clock](/beam/system-admin/network/system-clock).
+
+## Configure bonded interfaces
+
+To configure active-backup bonded interfaces for redundancy from the command line, see [Configure Bonded Network Interfaces](/beam/system-admin/network/bonded-interfaces).

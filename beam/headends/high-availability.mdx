@@ -1,107 +1,121 @@
 ---
-title: "High-Availability Headend Configuration on MK.IO Beam"
-sidebarTitle: "High Availability"
-description: "Configure MK.IO Beam headend high-availability settings to minimize downtime and maintain continuous channel playout during hardware failures."
+title: MK.IO Beam for headends, high availability controller, distributed workers
+sidebarTitle: High availability
 ---
 
-MK.IO Beam supports high-availability (HA) headend configurations for distributed deployments where multiple worker nodes carry live services. HA headends support three primary use cases — live broadcast, live streaming, and live stream processing — each with configurable N+M or 1+1 redundancy.
+<span id="_top" className="mk-legacy-anchor" />
 
-## Use Cases
-
-### Live Broadcast
+## Live Broadcast use case
 
 The target of the Live Broadcast use case is to encode or transcode a set of incoming sources and multiplex them with optional encryption into an MPTS for distribution to end-users via traditional broadcast networks using digital terrestrial, satellite, or cable transmission.
 
-![High availability distributed broadcast](https://docs.mediakind.com/beam-img/BeamDistributedBroadcast.png)
+![BeamDistributedBroadcast](/beam-img/BeamDistributedBroadcast.png)
 
 In this configuration, Live Encoding receives the incoming sources, encodes or transcodes them into SPTS streams, and sends them to Multiplexing. Multiplexing receives the encoded streams and combines them to produce a DVB-compliant MPTS stream.
 
-### Live Streaming
+## Live Streaming use case
 
-The target of the Live Streaming use case is to encode or transcode a set of incoming sources and package them in different ABR formats including HLS, DASH, and HSS.
+The target of the Live Streaming use case is to encode or transcode a set of incoming sources and Package them in different ABR formats including HLS DASH and HSS.
 
-![High availability distributed live streaming](https://docs.mediakind.com/beam-img/BeamDistributedLiveStreaming.png)
+![BeamDistributedStreaming](/beam-img/BeamDistributedLiveStreaming.png)
 
-In this configuration, Live Encoding receives the incoming sources, encodes or transcodes them into SPTS streams. These streams are packaged into segments and manifests so that players can stream them adaptively over HTTP.
+In this configuration, Live Encoding receives the incoming sources, encodes or transcodes them into SPTS streams, these streams are Packaged into segments and manifests so that players can stream them adaptively over HTTP.
 
-Live Encoding and Packaging Services may be deployed to the same distributed server nodes or to separate server nodes, with the choice dependent on each server node's capacity.
+Live Encoding and Packaging Services may be deployed to the same distributed server nodes, or separate server nodes with the choice dependent on the server node capacity.
 
-### Live Stream Processing
+## Live Stream Processing use case
 
-The target of the Live Stream Processing use case is to encode or transcode a set of incoming sources and dynamically substitute content in response to time-based (POIS) or signal-based (SCTE-35) triggers.
+The target of the Live Streaming use case is to encode or transcode a set of incoming sources and dynamically substitute content in response to Time (POIS) or Signal (SCTE-35) based triggers.
 
-![High availability distributed stream processing](https://docs.mediakind.com/beam-img/BeamDistributedStreamProcessing.png)
+![BeamDistributedStreaming](/beam-img/BeamDistributedStreamProcessing.png)
 
-In this configuration, Live Encoding receives the incoming sources and encodes or transcodes them into SPTS streams. The TS Splicer dynamically substitutes content within a live MPEG-2 Transport Stream without decoding and re-encoding the video, in response to SCTE-35 trigger signals or a schedule.
+In this configuration, Live Encoding receives the incoming sources, encodes or transcodes them into SPTS streams. Live Stream Processing dynamically substitutes content within a live MPEG-2 Transport Stream without decoding and re-encoding the video content from one source with content from another in response to SCTE-35 trigger signals or a schedule.
 
-Live Encoding, Viewing Policy Manager (VPM), Stream Conditioning (SC), and TS Splicer Services may be deployed to the same distributed server nodes or to separate server nodes based on available capacity.
+Live Encoding, Viewing Policy Manager (VPM) Stream Conditioning (SC) and TS Splicer Services may be deployed to the same distributed server nodes, or separate server nodes with the choice dependent on the server node capacity.
 
 ## Redundancy
 
-### N+M Redundancy
+<span id="nm-redundancy" className="mk-legacy-anchor" />
 
-N+M redundancy is supported, where N is a collection of servers dedicated to active services and M is a smaller collection of servers available to carry services when a dedicated server or its sources fail.
+### N+M redundancy
 
-#### Using Controller Failover Groups for N+M Redundancy
+N+M redundancy is supported, where N is a collection of servers dedicated to active services and M is a smaller collection of servers that may be used for carrying some active services if some of the dedicated servers, or their dedicated sources, fail.
 
-N+M redundancy is provided through **Failover Groups**, accessible via the **Controller Failover** menu. Failover groups provide server or service level redundancy for Live Encoding, Packaging, Viewing Policy Manager, Stream Conditioning, and TS Splicer services.
+<span id="using-controller-failover-groups-for-nm-redundancy" className="mk-legacy-anchor" />
 
-When adding or editing a group, configure the following options:
+#### Using Controller Failover groups for n+m redundancy
 
-- **Group name** — a name representing the purpose of the failover group.
-- **Failover level:**
-  - **Server** — fail over all services to a backup server.
-  - **Service** — fail over only the affected services to a backup server.
-- **Group Processing Type** — the service types affected by the failover group (used when a worker server hosts multiple service types).
-- **Group failover mode:**
-  - **Automatic** — failover is triggered on a critical alarm.
-  - **Manual** — failover is only triggered by user action.
-- **Available servers** — servers eligible for Primary or Backup roles.
-- **Primary Servers** — servers normally active and not used as failover targets.
-- **Backup Servers** — servers normally inactive and reserved for backup use.
+MK Controller n+m redundancy is provided through "Failover Groups", this is accessible via the Controller Failover menu. Failover groups provide server or service level redundancy for Live Encoding, Packaging, Viewing Policy Manager, Stream Conditioning and TS Splicer services.
 
-<Note>
-  Backup servers must be compatible with the services being used for failover, including network interface naming.
-</Note>
+From the Failover page:
+On adding a group, or editing an existing group the user is presented with options to specify a group with
 
-<Warning>
-  Following a failover operation, the backup server now in use cannot be used for further failover operations until the fault condition on the original primary server is cleared and services are reverted.
-</Warning>
+* Group name - a name which represents the purpose of the failover group.
 
-Additional notes on failover group behavior:
+* Failover level:
+  * Server - failover all services to a backup server, for a failover operation.
+  * Service - failover just the affected services, to a backup server, for a failover operation.
 
-1. Manual failover and revert for an existing group are exercised through the **Detail** Failover Actions icon.
-2. Some Group Processing Type options include **(Dual Output)**. Use this option with Live Encoding and TS Splicer services configured for Dual Output Prevention. It reduces outage during failover by starting the service on the backup server before stopping it on the primary (after a 3-second stabilization period).
-3. Failover group processing type handling operates on a subset of processing types. Any services of a type listed in the chosen Group Processing Type will be moved from the nominated Primary to Backup server(s). Types not in use are ignored during failover and reversion.
+* Group Processing Type - The service types that are affected by a failover group, for the case when a worker Server hosts multiple service types.
+
+* Group failover mode:
+  * Automatic - failover will be triggered on critical alarm.
+  * Manual - failover is only triggered by user action.
+
+* Available servers - The collection of servers that may be used for Primary or Backup operation.
+
+* Primary Servers - The collection of servers which are dedicated as Primary servers for a failover group. These servers are those which are expected to be normally active and may not be used as a failover target server.
+
+* Backup Servers - The collection of servers which are dedicated as Backup servers for a failover group. These servers are expected to be normally inactive and available for uses solely as backup server(s).
+
+1. The backup server(s) need(s) to be compatible with the services being used for failover, including network interface naming.
+
+2. Following a failover operation, the “now” in-use backup server may not be used for any further failover operations. Clearing the fault condition on the origin server and then reverting the failed services back to the origin server will allow the backup server to be used for failovers from other servers.
+
+3. Manual failover and revert, for an existing group, is exercised through the "Detail" Failover Actions icon.
+
+4. Some Group Processing Type options include "(Dual Output)". This option is to be used with Live Encoding and TS Splicer Services, that have been configured for "Dual Output Prevention". The option's purpose is to reduce/avoid outage seen with failover operations, by starting the Service on the Backup server ahead of stopping it on Primary Server. (On confirming the service has started on the backup, a period of 3s will be waited for stabilisation, prior to stopping the service on the Primary server.)
+
+5. Failover group processing type handling operates on a subset of processing types - any services of the type listed in the chosen "Group processing type" selection will be moved from nominated Primary to backup server(s). If chosen Group processing type list, has processing types which are not in use, these will be ignored during failover and reversion operations.
+
+<span id="11-redundancy" className="mk-legacy-anchor" />
 
 ### 1+1 Redundancy
 
-1+1 redundancy is supported, where two servers host or carry the same active service(s).
+1+1 redundancy is supported, where two servers are used to host/carry the same active service(s).
 
-#### 1+1 Multiplexer Service — Active/Active Operation
+<span id="11-multiplexer-service-active-active-operation" className="mk-legacy-anchor" />
 
-This is the default output handling when two servers are assigned to the same Multiplexer service. Both servers transmit simultaneously, and the downstream recipient determines which server's output to use. Define multiple outputs and use the **Server filter** field to ensure each output is unique per server.
+#### 1+1 Multiplexer service Active Active operation
 
-<Tip>
-  If using Active/Active mode, consider disabling automatic Multiplexer server failover handling to prevent unintended behavior. This maintenance operation should only be configured by a qualified person.
-</Tip>
+This mode is the default output handling for when two servers are assigned to the same Multiplexer service.
 
-#### 1+1 Multiplexer Service — Active/Standby Operation
+When operating in this mode, the service will be transmitting/outputting on both Servers, it will be the responsibility of the downstream recipient to determine which server's Multiplexer output to use. It is recommended that multiple Outputs are defined, and the "Server filter" field is used to ensure that the outputs are unique for each server.
 
-Enable this by selecting **IP Active/Standby** and/or **ASI Active/Standby** in the Multiplexer service configuration. When enabled and the service is started, both servers carry the service in an active state but only one server is actively outputting. When the active server fails, the standby server takes over.
+\**If using this mode of operation, consider disabling automatic Multiplexer server failover handling. This maintenance operation is detailed in the MediaKind High Availability Distributed MOP document, and should only be configured by a qualified person.*
 
-#### 1+1 Live Encoding and TS Splicer — Dual Output Prevention
+<span id="11-multiplexer-service-active-standby-operation" className="mk-legacy-anchor" />
 
-Live Encoding and TS Splicer services can be configured so that multiple servers are assigned to the same service, but only one server actively outputs at any time. Enable this by selecting **Dual Output Prevention** in the service's General tab and configuring the inter-server communication parameters.
+#### 1+1 Multiplexer service Active Standby operation
 
-When enabled and the service is started, both servers carry the service in an active state, but only one server outputs. Combine this with the **Dual Output** Failover Group Processing Type to allow the service to start on the backup server before stopping on the primary, reducing outage during failover.
+This handling is enabled by selecting "IP Active/Standby" and/or "ASI Active/Standby" in the Multiplexer service configuration.
 
-### Packager Redundancy Considerations
+When enabled and the service is started, both servers will carry the services in an active state, but they are not both actively outputting/transmitting over the configured IP or ASI output. One server is active and outputting/transmitting and the service on the other server will be in an active and synchronised, but standby state.
 
-In addition to standard Packager service configuration, ensure that the Live Encoding output(s) include Publishing Points for all Backup and 1+1 partner servers, as well as the Primary Server.
+On failure of the actively outputting/transmitting server, the service in standby mode on the other server will take over.
 
-## Next Steps
+<span id="11-live-encoding-and-ts-splicer-dual-output-prevention-operation" className="mk-legacy-anchor" />
 
-- Configure failover groups: [Servers and Failover](/beam/system-admin/servers-and-failover)
-- Set up packager output: [Packager](/beam/headends/packager)
-- Review server management: [System Administration](/beam/system-admin/overview)
+#### 1+1 Live Encoding and TS Splicer dual output prevention operation
+
+MediaKind Live Encoding and TS Splicer services may be configured in such a way that multiple servers are assigned to the same service but only one Server will be actively outputting/transmitting.
+
+This feature is enabled by selecting "Dual Output prevention" in the Live Encoding and TS Splicer services General tab and then detailing parameters for the communication between the servers assigned for the same service.
+
+When enabled and the service is started, both servers will carry the services in an active state, but only a single server will be outputting/transmitting.
+
+This setting may be used in conjunction with the "Dual Output" Failover group processing type options, to allow the service to be started on the backup server, ahead of stopping it on the Primary server. The effect being to reduce outages during failover operations.
+
+### Packager redundancy considerations
+
+In addition to standard Packager service configuration, ensure that the Live Encoding Output(s) include Publishing points for all Backup and 1+1 partner servers, as well as the Primary Server.

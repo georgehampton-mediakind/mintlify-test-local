@@ -1,0 +1,106 @@
+---
+title: Create a live event
+description: Create a single-source live event, choose its output, recording, and viewing settings, then start it and prepare playback.
+sidebarTitle: Create a live event
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This guide creates a live event that turns one source into a stream that viewers can watch. During creation, you select the source, encoding profile, recording storage, and viewing window. You can schedule the event or start it immediately after creation.
+
+## Prerequisites
+
+* A source created in **Live** > **Sources**. See [Create an SRT source](/mkio/how-to/live-streaming/live/create-a-live-source).
+* An encoding profile and storage option available in the Live interface.
+
+## Choose event settings
+
+| Setting                                    | Choose it for                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------- |
+| **Sources**                                | The one input that this live event streams.                         |
+| **Encoding profile**                       | The output quality and bitrate options shown by the profile picker. |
+| **Storage**                                | The location where the event saves recorded content.                |
+| **Window length**                          | How far back viewers can watch.                                     |
+| **Schedule start and stop**                | A planned start and stop time.                                      |
+| **Start event immediately after creation** | Starting the event as part of creation.                             |
+
+The encoding profile determines output quality and bitrate for the renditions. For a first test, use a profile agreed for your audience and playback devices. After creation, **Overview** > **View encoding profile** shows the selected profile's **Renditions**, including **Name**, **Codec**, and **Bitrate**, so you can check what it produces before starting.
+
+## Create the event
+
+1. Go to **Live**.
+2. Select **New live**.
+3. Select **Create an event**.
+4. Enter a value in **Name**.
+5. Under **Sources**, select **Add source**, then select the source you created. The source selection identifies the input used by the event.
+6. Under **Encoding profile**, select the required profile. The Live interface shows options including **default\_AV1**, **default\_1080p**, and **default\_720p**.
+7. Under **Storage**, select where to save recorded content. Choose the storage location that owns the recording for this event.
+8. Under **Window length**, select how far back viewers can watch. The Live interface offers **30 minutes**, **2 hours**, **4 hours**, **8 hours**, **1 day**, **10 days**, and **30 days**.
+9. To plan a broadcast, enable **Schedule start and stop** and enter **Start date and time** and **Stop date and time**. This keeps the planned start and end with the event configuration.
+10. To begin as soon as the event is created, enable **Start event immediately after creation**. Leave it disabled when you want to check the configuration before starting.
+11. Select **Create**.
+
+![The Create a live event page showing source selection, encoding profile, storage, window length, scheduling, and immediate-start options.](/_machine-assets/75833350762b67c518a6636846ab6bc0006f9dd5d27836f9670fc4a97281cabe.png)
+
+For API options that configure live event inputs and encoding, see [Manage Live resources](/api-guides/how-to/live/manage-live), [Live API inputs](/api-guides/how-to/live/core-concepts/inputs), and [Live templates](/api-guides/how-to/live/core-concepts/templates).
+
+## Start and verify the event
+
+If you did not enable **Start event immediately after creation**, open the event and select **Start**. The event page displays **Event is running** when the event is running. Select **Overview** to see the selected source, its input address, and the player.
+
+Configure your encoder with the source address and connection settings, then begin sending the stream. In **Live** > **Sources**, **Active** means the source is in use; it does not prove that media is arriving. Complete the playback checks below to verify the broadcast.
+
+## View and manage the event
+
+Open **Live** and select the event from the **Live** tab. The event page has **Overview** and **Settings** tabs.
+
+* Use **Overview** to view the selected source and event player.
+* Select **Settings** to view **General** and **Streaming configuration**. The streaming configuration includes **Streaming locators**.
+* Select **Playback settings** to manage streaming locators.
+* Select **Schedule options** to manage the event schedule.
+* Select **Stop** to stop a running event, or **Delete** to remove the event.
+
+![The Settings tab for a running live event, showing General, Streaming configuration, and Streaming locators.](/_machine-assets/71cad5d8b841a28e8ff841dd1dfc5e21a8a85befeff65e6c672a0ffa8595bcf9.png)
+
+## Create a streaming locator
+
+Select **Playback settings** on the event page to manage the streaming locators shown for the event.
+
+1. Select **Playback settings**.
+2. Select **Customize playback settings** to open **Settings**.
+3. Under **Streaming locators**, select **Create a streaming locator**.
+4. Enter a value in **Name**.
+5. Select the required **Streaming policy**. Select a **Content key policy** when your playback policy uses one.
+6. Optionally enter an **Expiration date and time**.
+7. Select **Create**.
+
+![The Create a streaming locator dialog with fields for Name, Streaming policy, Content key policy, Expiration date and time, and ID.](/_machine-assets/a06e6f4f9c61e850b1f1bbdc92285e55cd851a3c40c107e357fd38301f7954bb.png)
+
+For locator and streaming endpoint automation, see [Publishing with the Media API](/api-guides/how-to/media/publishing).
+
+<Warning>
+  **Start the streaming endpoint**
+
+  Playback does not work until the streaming endpoint is running. Start the endpoint before you test the player or share playback with viewers.
+</Warning>
+
+For the endpoint and publishing model, see [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content).
+
+## Copy a playback URL and verify the stream
+
+1. Open the event and select **Playback settings**.
+2. Select **HLS streaming URL** for HTTP Live Streaming (HLS), or **DASH streaming URL** for Dynamic Adaptive Streaming over HTTP (DASH), to copy the playback address for the locator.
+3. Open that address in a player that supports the selected format and streaming policy.
+4. Confirm that the picture updates and that the expected audio is present. A running event or a loaded player alone does not establish that the current source is reaching viewers.
+
+Use **Overview** to compare the event's player with the expected source. If playback fails, follow [Troubleshoot Live playback](/mkio/how-to/live-streaming/live/troubleshoot-live-playback).
+
+## Finish a test
+
+Select **Stop** on the event when the test ends, then check that its **Status** in the **Live** list is **Stopped**. Stop your contribution encoder too. If you started a streaming endpoint only for this test, follow [Stop the test resources](/mkio/getting-started/live-stream-in-five-minutes#stop-the-test-resources) after checking that no other streams use it. A shared endpoint may still be serving other viewers.
+
+## What comes next
+
+If the source remains inactive or the player cannot load playback, use [Troubleshoot Live playback](/mkio/how-to/live-streaming/live/troubleshoot-live-playback).
+
+For an automated equivalent, follow the [Live event walkthrough](/api-guides/how-to/live/walkthrough). It creates the source through the Media API, references an encoding template, and creates the event through the Live API.

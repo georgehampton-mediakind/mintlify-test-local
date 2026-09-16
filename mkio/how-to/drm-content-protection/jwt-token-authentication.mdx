@@ -1,0 +1,130 @@
+---
+title: JWT Token Authentication
+description: Generate and configure JWT tokens for DRM license acquisition in MK.IO.
+sidebarTitle: JWT Token Authentication
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+When a content key policy uses token restriction, the player must include a valid JWT token in the license acquisition request. MK.IO validates the token against the issuer, audience, and primary verification key configured in the policy before issuing a decryption license.
+
+## How JWT tokens work with DRM
+
+The token acts as proof that the viewer is authorized to access the content. The flow works as follows:
+
+1. Your application generates a JWT token using the same signing key configured in the content key policy.
+2. The player includes the token as an `Authorization` header in the license request.
+3. MK.IO validates the token signature, issuer, and audience.
+4. If valid, MK.IO returns the decryption license. If invalid, the request is rejected.
+
+## Required and optional claims
+
+The JWT token payload must include certain claims that match the content key policy configuration.
+
+| Claim                                                    | Required | Description                                                                                                                                 |
+| -------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `iss`                                                    | Yes      | The issuer value. Must match the **Issuer** field in the content key policy.                                                                |
+| `aud`                                                    | Yes      | The audience value. Must match the **Audience** field in the content key policy.                                                            |
+| `exp`                                                    | No       | Token expiry time as a Unix epoch timestamp in seconds. The token cannot be used after this time.                                           |
+| `nbf`                                                    | No       | "Not before" time as a Unix epoch timestamp in seconds. The token cannot be used before this time.                                          |
+| `urn:microsoft:azure:mediaservices:contentkeyidentifier` | No       | The streaming locator content key ID. Use this claim to bind the token to a specific locator. The value is available through the MK.IO API. |
+
+## Generate a JWT token
+
+<Steps>
+  <Step title="Gather your policy values">
+    <span id="gather-your-policy-values" className="mk-legacy-anchor" />
+
+    Retrieve the following values from the content key policy you created:
+
+    * **Issuer**: the string you entered in the issuer field.
+    * **Audience**: the string you entered in the audience field.
+    * **Primary verification key**: the Base64-encoded key you entered.
+  </Step>
+
+  <Step title="Build the token payload">
+    <span id="build-the-token-payload" className="mk-legacy-anchor" />
+
+    Construct the JWT payload with the required claims:
+
+    ```json
+    {
+      "iss": "<your-issuer>",
+      "aud": "<your-audience>"
+    }
+    ```
+
+    To add an expiry, include the `exp` and optionally `nbf` claims:
+
+    ```json
+    {
+      "iss": "<your-issuer>",
+      "aud": "<your-audience>",
+      "nbf": 1707942000,
+      "exp": 1707942300
+    }
+    ```
+
+    The `nbf` and `exp` values are Unix epoch timestamps in seconds. Do not wrap them in quotes.
+  </Step>
+
+  <Step title="Sign the token">
+    <span id="sign-the-token" className="mk-legacy-anchor" />
+
+    Use a JWT generation tool such as [jwt.io](https://jwt.io) to sign the token:
+
+    1. In the **PAYLOAD** section, enter your claims JSON.
+    2. In the **VERIFY SIGNATURE** section, paste your **primary verification key** in the secret field.
+    3. Check the **secret base64 encoded** checkbox.
+    4. The **Encoded** panel on the left displays the signed JWT token.
+
+    The algorithm must be `HS256` (HMAC with SHA-256), which is the default.
+  </Step>
+
+  <Step title="Use the token in playback">
+    <span id="use-the-token-in-playback" className="mk-legacy-anchor" />
+
+    Include the JWT token in the license request headers when configuring your player:
+
+    ```json
+    {"Authorization": "Bearer <your-jwt-token>"}
+    ```
+
+    In MKPlayer, paste this value in the **License request headers** field. In the MKPlayer SDK, pass it in the `headers` object of the DRM configuration. See [Test DRM playback](/mkio/how-to/drm-content-protection/test-drm-playback) for details.
+  </Step>
+</Steps>
+
+## Example
+
+The following example shows a complete JWT configuration:
+
+**Content key policy settings:**
+
+| Field                    | Value                      |
+| ------------------------ | -------------------------- |
+| Issuer                   | `mycompany`                |
+| Audience                 | `myaudience`               |
+| Primary verification key | `bXljb21wYW55YXVkaWVuY2U=` |
+
+**JWT payload:**
+
+```json
+{
+  "iss": "mycompany",
+  "aud": "myaudience",
+  "nbf": 1707942000,
+  "exp": 1707942300
+}
+```
+
+**Signing secret:** `bXljb21wYW55YXVkaWVuY2U=` (with **secret base64 encoded** checked).
+
+The resulting encoded token is used as the `Bearer` value in the `Authorization` header.
+
+## Programmatic token generation
+
+For production use, generate JWT tokens server-side rather than using jwt.io. Any JWT library that supports HS256 signing can produce valid tokens. Decode the Base64 primary verification key and use it as the HMAC secret.
+
+<Warning>
+  Never expose the primary verification key in client-side code. Generate tokens on your server and pass them to the player at runtime.
+</Warning>

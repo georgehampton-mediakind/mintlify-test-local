@@ -1,0 +1,69 @@
+---
+title: Advanced live streaming features
+description: Enable automatic transcription, SRT ingest, extended archive windows, and AI features on your MK.IO live events.
+sidebarTitle: Advanced features
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This guide uses **Live Events**. For the **Live** interface, including reusable sources and multiview, start with [Live and multiview](/mkio/how-to/live-streaming/live).
+
+These capabilities extend the core live streaming workflow. All advanced features require the **Live Encoding** event type unless noted otherwise.
+
+## Automatic live transcription
+
+MK.IO can generate real-time subtitles as your stream runs using Azure Cognitive Services. Transcribed captions appear as a selectable subtitle track in compatible players.
+
+This workflow uses the **Artificial Intelligence (AI) Pipeline** setting on the live event.
+
+**To enable:**
+
+1. When creating the live event, select **Live Encoding** as the event type.
+2. In **Advanced settings**, set **AI Pipeline** to `Predefined_ACSLiveTranscription`.
+3. Set **Language** to the BCP-47 language code of the source audio (for example, `en-US` for US English, `fr-FR` for French, `de-DE` for German).
+
+Only one source language can be transcribed per live event. For source language guidance, see [Transcription transform](/mkio/reference/encoding-transform-presets/audio-speech-transcription#source-language).
+
+<Info>
+  Live transcription is billed as an additional service. See [MK.IO pricing](https://mediakind.com/mkio/pricing/) for details.
+</Info>
+
+## Secure Reliable Transport ingest
+
+Secure Reliable Transport (SRT) is an open-source protocol designed for reliable streaming over unpredictable networks. Compared to Real-Time Messaging Protocol (RTMP), SRT:
+
+* Recovers from packet loss without visible artefacts
+* Works over high-latency or congested connections
+* Provides encrypted transport by default
+* Is increasingly used in professional broadcast workflows
+
+SRT connections use a passphrase. MK.IO uses AES-128 encryption by default, although protocol negotiation can select another supported key length.
+
+**To use SRT:**
+
+1. When creating the live event, select **Live Encoding** as the event type. SRT is not available with passthrough mode.
+2. In **Input Settings**, set **Input protocol** to **SRT**.
+3. After the event starts, use the SRT input URL shown on the live event page as the destination in your encoder (for example, in FFmpeg or a hardware encoder that supports SRT).
+
+## Extended archive window
+
+By default, the archive window determines how much of the live stream is available for time-shifted playback and how long the recording is retained before the event is stopped.
+
+* Minimum: 1 minute
+* Maximum: 7 days
+* When the archive window exceeds 25 hours, the player manifest presents a rolling 25-hour window of the most recent content. The full recording is still stored in your cloud storage.
+
+For details on accessing long recordings and time-based playback, see [Extended archive window](/mkio/how-to/live-streaming/extended-archive-window).
+
+## Low-latency streaming
+
+MK.IO supports reduced-latency delivery for scenarios where real-time viewer interaction matters. Examples include live auctions, sports betting, and interactive broadcasts where a few seconds of delay changes the viewer experience.
+
+Contact the [MK.IO sales team](https://mediakind.com/contact/) for access and configuration details.
+
+## Artificial intelligence for recordings
+
+After stopping a live event, the recording becomes a standard Video on Demand (VOD) asset. You can then apply AI transforms to the recorded content:
+
+* **Transcription and translation**: Generate subtitle files in multiple languages from the recorded audio. See [VOD transcription and translation](/mkio/how-to/ai-features/vod-transcription-and-translation-transforms).
+* **Dubbing**: Replace the audio track with AI-generated dubbed audio in another language. See [VOD dubbing](/mkio/how-to/ai-features/multi-language-vod-dubbing).

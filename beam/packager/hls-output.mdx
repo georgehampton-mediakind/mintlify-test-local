@@ -1,0 +1,50 @@
+---
+title: HLS over TS specific output settings (HTTP Live Streaming)
+sidebarTitle: HLS over TS specific output settings
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Packager can enable the HLS (HTTP Live Streaming) mode over TS (Transport Streams). In this mode, you can configure the following parameters.
+
+## General
+
+You can configure for HLS over TS:
+
+* [General parameters](/beam/packager/parameters/hls-over-ts#general)
+* [HLS playlists](/beam/packager/parameters/hls-over-ts#hls)
+* [Delivery](/beam/packager/parameters/hls-over-ts#delivery)
+
+## HLS output type configuration
+
+### Playlists
+
+By default, the output manifest is delivered without any specific bitrate filtering. Depending on your delivery needs, you can adjust the bitrate filtering on your manifest and add manifests with variant filtering parameters.
+
+**Stream characteristics** filtering for **HLS** outputs can be based either on:
+
+* Bitrate in kbps - for Video/Audio/Subtitle streams filters.
+
+  ![MFVP stream char filtering bitrate](/_machine-assets/c74639c0664210ffa258f32bdcd906f6345f3521fdd78447efd30be3d39b8f33.png)
+
+* Codec (H.264 or HEVC) - for the Video streams filter.
+
+  ![MFVP stream char filtering codec](/_machine-assets/69df1ec9748c4938ca43c5a5d7fb6c1480060c6c548418e077da6e3fa6b3eaad.png)
+
+* Language (H.264 or HEVC) - for the audio streams filter.
+
+  ![MFVP stream char filtering language](/_machine-assets/31b8dc987e3751d76e613e911f9e326d31d50594c453dea307fdda79333135f6.png)
+
+* Width (pixels) or Height (pixels) for the Thumbnail streams filter.
+
+  ![MFVP stream char filtering thumbnail](/_machine-assets/3bb5ba148336d9c248dd3aff46c9e08689f0b132ab7e444973bbd56930994dba.png)
+
+## Delivery
+
+You can define **Access URL**.
+
+For more details, see [Delivery](/beam/packager/parameters/hls-over-ts#delivery).
+
+## Content replacement
+
+This feature is not currently used in MK.IO Beam.

@@ -1,0 +1,60 @@
+---
+title: OpenID Verification Key
+description: Delegate JWT token validation to an external identity provider using OpenID Connect in MK.IO.
+sidebarTitle: OpenID Verification Key
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+You can delegate JWT token authentication to an external identity provider using OpenID Connect (OIDC). Instead of configuring a static verification key in the content key policy, MK.IO retrieves the signing key from the identity provider's OIDC discovery document.
+
+## How it works
+
+OpenID Connect is a protocol that enables applications to support authentication through a centralized identity provider. When you configure OIDC in a content key policy, MK.IO:
+
+1. Fetches the discovery document from the URL you provide.
+2. Extracts the public signing key from the document.
+3. Uses that key to validate JWT tokens in license requests.
+
+This means the `keyValue` of the primary verification key can be left empty in the policy, since MK.IO obtains the key dynamically.
+
+## Create a policy with OpenID Connect
+
+Use the MK.IO API to create a content key policy that includes an `openIdConnectDiscoveryDocument` field:
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/contentKeyPolicies/policy_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer <YOUR_MKIO_JWT>' \
+     --data '
+{
+    "properties": {
+        "options": [
+            {
+                "restriction": {
+                    "issuer": "issuer",
+                    "audience": "audience",
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyTokenRestriction",
+                    "restrictionTokenType": "Jwt",
+                    "primaryVerificationKey": {
+                        "@odata.type": "#Microsoft.Media.ContentKeyPolicySymmetricTokenKey",
+                        "keyValue": ""
+                    },
+                    "openIdConnectDiscoveryDocument": "https://{host_url}/.well-known/OpenIdConfiguration"
+                },
+                "configuration": {
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyWidevineConfiguration",
+                    "widevineTemplate": "{}"
+                }
+            }
+        ]
+    }
+}
+'
+```
+
+Replace `https://{host_url}/.well-known/OpenIdConfiguration` with the discovery document URL from your identity provider.
+
+MK.IO retrieves the JWT signing key from the discovery document and uses it to validate tokens for this content key policy. The content key policy can then be used when preparing the asset for streaming. See [Stream live and VOD assets](/mkio/how-to/content-delivery-publishing/stream-content) for details.

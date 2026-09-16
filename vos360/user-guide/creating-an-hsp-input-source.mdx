@@ -1,0 +1,51 @@
+---
+title: Creating an HSP input source
+robots: noindex, nofollow
+---
+
+HSP source support has restrictions in this release: single profile, TS format (HLS v3), and no late audio binding.
+
+Click ***+*****Source** and select IP to create an HSP source:\
+![](/images/vos360/dc39011823f58415602c87ac.png)
+
+## **Settings tab**
+
+**Source information:**
+
+* Define an input source name that will appear on the Configure Broadcast view.
+
+* Configure the standard for the type of signaling in the source: DVB or ATSC.
+
+  <Note>
+    **Note:&#x20;**&#x53;electing ATSC enables incoming PSIP analysis. Major channel and minor channel numbers are displayed and PSIP EIT remultiplexing is then possible.
+  </Note>
+
+* Define the maximum number of programs authorized from this input.
+
+**Input**:
+
+1. Specify the **Endpoint URL** to pull the source content from (Pull mode).
+
+2. (Optional) If unauthorized access is not allowed to read the HSP input, configure the primary **Authentication Passphrase** (the authentication passphrase will be encrypted). If not, keep the configuration empty.
+
+3. (Optional) Set the **Input Buffer Size&#x20;**&#x69;n 2 to 60 seconds. The HSP buffer reception can be configured to deal with short latency applications or to match network performance.
+
+   * If not specified, the input will buffer 2 segments by default (Auto).
+
+   * If the configured input buffer size is smaller than the 2-segment duration, the input will buffer 2 segments as it is the minimum requirement.
+
+   * If the configured input buffer size is not a multiple of segment duration, the input buffer size will be rounded up to the duration of the smallest number of segments larger than the input buffer size.
+
+4. If **Enable Redundancy&#x20;**&#x69;s turned on, configure the parameters for the backup: Endpoint URL, Network, Authentication Passphrase, Input Buffer Size.
+
+5. Set the **Redundancy Mode**: "Auto / Revert on backup failure", "Manual".
+
+6. In case source Redundancy mode is configured with "Redundancy mode" - "Auto / Revert on backup failure":
+
+   * The toggle "Failover settings" is visible and set to "Global" by default.
+
+   * The "Scrambled Video Pid" and "Continuity Counter Error" trigger can be set if failover settings are custom. These triggers are in read-only if the failover settings are Global.
+
+Click **+Create**, the source appears on the left panel.
+
+![vos360\_hsp\_input.png](/images/vos360/57d368bf1edbbd01197c35af.png)

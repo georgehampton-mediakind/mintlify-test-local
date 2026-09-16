@@ -1,0 +1,44 @@
+---
+title: Live events
+description: Configure MK.IO live events, connect RTMP or SRT sources, manage recording, and publish live playback URLs.
+sidebarTitle: Live events
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO has two live streaming workflows. Use the **Live** interface for new events, sources, and multiview events. Use the Media API workflow when you already automate live events and outputs through the Media API.
+
+## Use Live and multiview
+
+The **Live** interface is the recommended starting point for new work. It keeps source creation, single-source events, multiview events, and playback checks in one workflow. Create sources first, then use them in either a live event or a multiview event.
+
+* [Live and multiview](/mkio/how-to/live-streaming/live) for the complete Live workflow.
+* [Create an SRT source](/mkio/how-to/live-streaming/live/create-a-live-source) to prepare Secure Reliable Transport (SRT) ingest.
+* [Create a live event](/mkio/how-to/live-streaming/live/create-a-live-event) to stream one source.
+* [Create a multiview live event](/mkio/how-to/live-streaming/live/create-a-multiview-live-event) to combine sources in one layout.
+
+## Use the Media API workflow
+
+The established workflow creates Media API live events, live outputs, streaming locators, and streaming endpoints. Keep using it for existing API-backed integrations.
+
+* [Live stream in five minutes](/mkio/getting-started/live-stream-in-five-minutes) for a first Real-Time Messaging Protocol (RTMP) test.
+* [Configure a Media API live event](/mkio/how-to/live-streaming/set-up-a-live-streaming-event) for passthrough, encoding, RTMP, encrypted RTMP (RTMPS), SRT, archive, and transcription options.
+* [Configure an extended archive window](/mkio/how-to/live-streaming/extended-archive-window) when the default archive duration is not enough.
+
+## Connect a Media API source
+
+Choose the guide for your source software:
+
+<CardGroup cols={3}>
+  <Card title="OBS Studio" href="/mkio/how-to/live-streaming/set-up-the-source-stream-using-obs" icon="video" />
+
+  <Card title="FFmpeg" href="/mkio/how-to/live-streaming/set-up-the-source-stream-using-ffmpeg" icon="terminal" />
+
+  <Card title="GStreamer" href="/mkio/how-to/live-streaming/set-up-the-source-stream-using-gstreamer" icon="code" />
+</CardGroup>
+
+## Publish and monitor
+
+* [Publish the live output](/mkio/how-to/content-delivery-publishing/stream-content) with a streaming endpoint and locator.
+* [Monitor MK.IO services](/mkio/how-to/monitor-your-services) through operational metrics.
+* [Build live workflows with the Media API](/api-guides/how-to/media/live-streaming).

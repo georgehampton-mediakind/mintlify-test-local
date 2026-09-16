@@ -1,0 +1,72 @@
+---
+title: Configuring a Live Event Workflow service with Pre-roll Slate Insertion
+robots: noindex, nofollow
+---
+
+The Pre-roll Slate Insertion feature allows users to schedule the replacement of service content with a static image slate during the pre-roll period (i.e., before the event start time and the beginning of the recording).
+
+<Note>
+  **Info:**
+
+  * Viewers can connect to the stream as soon as the pre-roll starts.
+
+  * Replay recordings do not include any content occurring during the pre-roll period.
+
+  * Optionally, a slate can be set up to block the stream's content during the pre-roll.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x52;efer to the following limitations for Pre-roll Slate Insertion:
+
+  * It cannot work on a transcode passthrough service, as we need the transcode phase to insert the slate. Note that Pre-roll without slate insertion is still available in this case.
+
+  * It cannot work on an audio-only service, since slate insertion requires a video stream.
+</Note>
+
+## Add a slate image to the service add-ons
+
+To use Slate Insertion, you need to prepare the Slate images in advance. The recommended format for slates is PNG, but any image format supported by VOS is acceptable. Slate images may include transparency. Ensure the slate image fits the size and aspect ratio of the input stream.
+
+1. Create a Live Event Workflow service (refer to [Configuring a Live Event Workflow service with recording](/vos360/user-guide/configuring-a-live-event-workflow-service-with-recording) for details).
+
+2. Navigate to the **Configure Channels&#x20;**> **Services** tab and open the Live Event Workflow service.
+
+   ![image-20250916-090104.png](/images/vos360/8ee357f42105bdac14d1fd88.png)
+
+3. Navigate to the **Add-ons** section > **Blackout Slate** add-on and use the **Edit** icon above the image.
+
+   ![image-20250916-090218.png](/images/vos360/689da1494d780db807c2ed00.png)
+
+4. Use the **File Uploader** or **Upload by URL** to upload your image to the system.
+
+   ![image-20250627-092328.png](/images/vos360/79119651101ea3c45d9b7511.png)
+
+5. Return to the **Library** tab to confirm that your image is available.
+
+6. Click **Cancel&#x20;**&#x74;o leave the UI.
+
+<Note>
+  **Info:&#x20;**&#x43;licking **Cancel** to leave the UI allows the Configure Image UI to manage slate images without performing any unwanted configuration.
+</Note>
+
+## Start/end a Live Event Workflow with Pre-roll slate insertion
+
+1. Navigate to the **Monitor Channels&#x20;**&#x61;pp and open the Live Event Workflow service.
+
+2. From the **Live Event Schedule&#x20;**&#x73;ection, select a preroll slate within available image IDs.
+
+   ![vos\_preroll\_slate.png](/images/vos360/f06c360da6a372b844f4ea75.png)
+
+3. Set a **Preroll Duration** and &#x61;**&#x20;Start Time**.
+
+4. You need to have your Preroll start (ie, your *Start Time&#x20;*&#x6D;inus you&#x72;*&#x20;Preroll Duration*) at least 5 minutes in the future. UI will not allow the action otherwise
+
+5. Once set for the first time, you can change your Preroll Slate at any time, including less than 5 minutes before Preroll start, as long as you change **only** the slate.
+
+   ![vos\_live\_event-20250915-153537.png](/images/vos360/f93ac7787e4e40a7074fa719.png)
+
+<Note>
+  **Info:&#x20;**&#x41;ny change that would impact the timing of the service (i.e. Preroll Duration or Start Time) will need to respect the 5 minutes rule.
+</Note>
+
+**Result:&#x20;**&#x54;he slate will automatically appear (Preroll Duration time) before the Start Time, and vanish at the Start Time.

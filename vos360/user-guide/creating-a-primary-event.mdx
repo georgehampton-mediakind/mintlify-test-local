@@ -1,0 +1,33 @@
+---
+title: Creating a primary event
+robots: noindex, nofollow
+---
+
+You can create file-based and live primary events by simple drag-and-drop from the **Assets** or **Feed** widget. You can also use the **New primary event** dialog to create file-based primary events.
+
+Note that if you want to specify an audio grooming profile for a primary event, you must do so using the **New Primary Event** dialog.
+
+1. Click the **Edit** slider button to activate Edit mode.
+
+2. Create a primary event using one of the following methods:
+
+   * Select a file-based video asset from the **Assets** widget, or select a live input from the **Feeds** widget, and then drag it to the **Events&#x20;**&#x74;able before the first event, between two events, or after the last event.\
+     A new primary event is automatically inserted. To edit the event details, select the event on the **Events&#x20;**&#x74;able and click **Edit**.
+
+   * On the **Events&#x20;**&#x74;able, select a primary event and click **Create event before** or **Create event after**.
+
+     The **New Primary Event** dialog opens, where you may configure the primary event details.
+
+   Configure the primary event details:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Asset</strong></p></td><td colSpan="1" rowSpan="1"><p>If the asset is already registered in Asset Acquisition library, you can provide either the file name or the file name with extension.</p><p>If the asset ingest is triggered on playlist reception, then you must provide the full S3 or Azure Blob URL.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Title</strong></p></td><td colSpan="1" rowSpan="1"><p>(Optional) Type the title of the primary event.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Description</strong></p></td><td colSpan="1" rowSpan="1"><p>(Optional) Type a description of the primary event.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Start</strong></p></td><td colSpan="1" rowSpan="1"><p>Specify a start mode for the primary event:</p><ul><li><p><strong>Follow</strong>: A follow start mode event is taken to air when the current on-air event ends. Automatic time ripple is applied to follow start events. If the first event in a playlist has a follow start mode, it is treated as a manual start event and requires a <strong>Take Next</strong> command to go to air. If there is no on-air event, or the on-air event has a manual end mode, the next follow event is not automatically taken to air. A <strong>Take Next</strong> command is required to advance the playlist.</p></li><li><p><strong>Fixed</strong>: A fixed start mode event is taken to air at its scheduled start date/time.</p></li><li><p><strong>Manual</strong>: A manual start mode event requires a <strong>Take Next</strong> trigger to go to air.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Duration</strong></p></td><td colSpan="1" rowSpan="1"><p>Specify an end mode for the primary event:</p><ul><li><p><strong>Duration</strong>: A primary event with duration end mode will end when the scheduled duration for the event expires. A primary event with duration end mode can also be preempted by an upcoming fixed start event.</p></li><li><p><strong>Manual</strong>: A primary event with manual end mode remains on-air until a <strong>Take Next</strong> command is received from the operator, or it is preempted by an upcoming fixed start event.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Start of Material (SOM)</strong></p></td><td colSpan="1" rowSpan="1"><p>Specify the starting point for playback of video clips in one of the following ways:</p><ul><li><p>As a frame offset from the beginning of the file</p></li><li><p>As the timecode value of the frame at which playback will begin</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Audio Profile Name</strong></p></td><td colSpan="1" rowSpan="1"><p>(MXF files with PCM audio only) Specify the audio grooming profile to be used for the primary event. Audio grooming profiles are configured in the Asset Acquisition app. Refer to <a href="/vos360/user-guide/creating-an-audio-grooming-profile-for-mxf-files">Creating an audio grooming profile for MXF files</a> for more information.</p><blockquote><p><strong>Info:</strong> The languages defined in the grooming profile must match the languages defined for the playout source.</p></blockquote><blockquote><p><strong>Note: </strong>For .mp4 files, it is not possible to select an audio grooming profile. For the first audio, the first stereo pair is played. For the second audio, the second stereo pair is played, and so on.</p></blockquote></td></tr></tbody>
+     </table>
+   </div>
+
+3. Click **Create** or **Save**.
+
+4. When you are finished editing the playlist, click the **Edit** slider button to deactivate Edit mode.

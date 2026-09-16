@@ -1,0 +1,77 @@
+---
+title: Control Interface Wizard
+description: Use the control-wizard command-line tool to configure the Control network interface, set an HTTP proxy, and diagnose connectivity.
+sidebarTitle: Control Interface Wizard
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+# Control Interface Wizard (`control-wizard`)
+
+The `control-wizard` is a command-line tool for network configuration on a Beam device. It provides a text-based wizard to configure the primary *Control* interface, set up an HTTP proxy, and diagnose connectivity issues.
+
+This tool is especially useful during the initial setup of a device before the web UI is accessible, or for troubleshooting network problems directly from the terminal.
+
+## Aliases
+
+For convenience, you can use shorter commands:
+
+* `cw` is an alias for `control-wizard`.
+* `cs` is an alias for `control-wizard --status`, which runs the wizard in a read-only monitoring mode.
+
+## When to use the wizard
+
+You can use the `control-wizard` to:
+
+* Set the IP address for the *Control* interface during initial device setup.
+* Configure an HTTP proxy if one is required to connect to MK.IO.
+* Diagnose network connectivity problems from the terminal.
+* View a real-time display of network interface status.
+
+## Configure the Control IP Address
+
+During the initial quick start, if the device has not obtained an IP address via DHCP, you must use `control-wizard` to set one manually.
+
+1. Log in to the terminal with the default credentials.
+2. Type `control-wizard` (or `cw`) and press Enter.
+3. Follow the on-screen prompts to configure the IP address, subnet mask, and gateway for the *Control* interface.
+
+## Configure an HTTP Proxy
+
+If the device requires an HTTP proxy to reach the internet to connect to MK.IO, you can configure it from the wizard.
+
+<Steps>
+  <Step title="Open the proxy configuration">
+    <span id="open-the-proxy-configuration" className="mk-legacy-anchor" />
+
+    1. Log in to the device's terminal.
+    2. Run the `control-wizard` command.
+    3. Press **P** to configure a proxy.
+  </Step>
+
+  <Step title="Enter proxy details">
+    <span id="enter-proxy-details" className="mk-legacy-anchor" />
+
+    1. Enter the **Proxy IP Address**, **Port**, **Username**, and **Password** when prompted.
+    2. Press **Enter** to apply the settings.
+  </Step>
+
+  <Step title="Verify and quit">
+    <span id="verify-and-quit" className="mk-legacy-anchor" />
+
+    1. The wizard automatically tests the proxy settings, and the results are displayed on screen.
+    2. Press **Q** to quit the wizard.
+  </Step>
+</Steps>
+
+## Diagnose and View Network Status (`cs`)
+
+The `cs` command provides a read-only, real-time view of network status, which is useful for diagnosing connectivity issues and monitoring interface state. It is an alias for `control-wizard --status`.
+
+When you run `cs`, it displays both the connectivity status to the MK.IO API and the state of local network interfaces, including IP addresses and traffic. This is a useful first step when troubleshooting on-boarding issues.
+
+To use the status viewer, type `cs` in the terminal and press Enter.
+
+<Info>
+  Running the full `control-wizard` (or `cw`) for configuration also shows the MK.IO API connectivity test on startup.
+</Info>

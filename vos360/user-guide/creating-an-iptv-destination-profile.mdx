@@ -1,0 +1,31 @@
+---
+title: Creating an IPTV destination profile
+robots: noindex, nofollow
+---
+
+If necessary, modify the Harmonic master IPTV destination profile as required by your IPTV system.
+
+1. Navigate to the **Lab Wizard** app > **Profiles** tab and click **Destination** to display only destination profiles.
+
+2. Click the desired IPTV profile to open the **Profile Editor**.
+
+3. Optionally, type a new **Profile Name**.
+
+4. If the transcoding profile supports PIP, choose from SPTS/MPTS for **Picture in Picture Mode**.
+
+5. To enable **Mute Output On Signal Loss**, toggle the selector to the **On** position.
+
+6. Select the protocol to be used for **Encapsulation Mode**.
+
+7. If you selected RTP in the previous step, optionally, configure the ports/multicast addresses by numbers to enable SMPTE 2022-7 hitless redundancy on the output.\
+   **Info:&#x20;**&#x54;o enable SMPTE 2022-7 hitless redundancy on the IPTV destination, you can create dual destinations using the same IPTV destination profile with the RTP settings configured. For example, create a destination using the same IPTV Destination Profile and configure the "Outputs" settings for "*Primary IP*" and "*2nd IP*" to enable SMPTE 2022-7 hitless redundancy.
+
+8. Optionally, enable and configure FEC settings.
+
+9. Enter a brief description of the profile changes, and then click **Save as Version**.\
+   After a profile has been updated, you cannot revert your changes.
+
+   **Result**: On the **Profile panel**, the **Customer Version Number** increases by 1.
+
+&#x20;**What to do next**\
+You must validate the new profile before you can apply it to a destination.

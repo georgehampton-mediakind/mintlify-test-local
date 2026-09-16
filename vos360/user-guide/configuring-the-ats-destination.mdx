@@ -1,0 +1,58 @@
+---
+title: Configuring the ATS destination
+robots: noindex, nofollow
+---
+
+**Before you begin**\
+[Configuring a source input](/vos360/user-guide/configuring-a-source-input)
+
+Configure the ATS destination to use an ATS profile and multicast IP address.
+
+1. From the **Configure Channels** app, navigate to the **Destinations** page, click **+ Destination**.\
+   ![](/images/vos360/48b93041cfa4dbc665cac409.png)
+
+2. For **Destination Name**, type the name of the ATS destination.
+
+3. For **Type**, select **ATS**.\
+   The default output type changes to CloudLink.
+
+4. Verify that the selected **Profile** is an ATS profile.
+
+5. Optionally, in the **Labels** field, enter a label associated with the destination, such as Cartoon or Premium.
+
+   <Note>
+     **Info:&#x20;**&#x4C;abels can help you search and find destinations more quickly.
+   </Note>
+
+6. f you wish to use an output that is different from the default, click **Remove output** and then click **+Output** and select the desired output type from the list.\
+   ATS destinations use IP, CloudLink, and HSP outputs.
+
+7. (Optional) In addition to the Primary destination output, you can create additional outputs for the same destination type (e.g. 2nd IP, 3rd IP and so on) by clicking **+Output**.
+
+   ![vos360\_outputs\_ats.png](/images/vos360/b2bebcd64d90a1004f53a977.png)
+
+8. Configure the general settings for the Outputs section:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>IP address</p></td><td colSpan="1" rowSpan="1"><p>Enter the multicast IP address for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Enter the port number for the egress output streams.</p><blockquote><p><strong>Note: </strong>Port numbers will be incremented for each output video stream in the profile.</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Source IP address</p></td><td colSpan="1" rowSpan="1"><p>Enter the virtual source IP address for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Enter the virtual source UDP port for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Rank</p></td><td colSpan="1" rowSpan="1"><p>Used if multiple outputs are configured.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Status</p></td><td colSpan="1" rowSpan="1"><p>Determine how outputs are paired for redundancy:</p><ul><li><p><strong>Mandatory</strong> output is active.</p></li><li><p><strong>Standby</strong> output is muted.</p></li><li><p><strong>Disabled</strong> output remains inactive until the status is changed to <strong>Standby</strong> or <strong>Mandatory</strong> using the VOS REST API or UI.<br />The first Mandatory output will be paired with the first Standby output, and so on.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Output Monitor</p></td><td colSpan="1" rowSpan="1"><p>If the service will be encrypted and you want to be able to monitor clean video output, select <strong>Output Monitor</strong> and provide the delivery <strong>IP address</strong> and <strong>Port</strong> for monitoring.</p></td></tr></tbody>
+     </table>
+   </div>
+
+9. For ATS output with **CloudLink** destination, select the name of the downlink CloudLink.
+
+10. For ATS output with **HSP&#x20;**&#x64;estination, no custom configuration is required.
+
+11. For ATS output with **Cloud (Live** **Routing)** destination, the Cloud channel will be available as a source to be up-linked to Harmonic's Cloud via Live Routing Service. This configuration applies to **VOS360** and needs to have access to the Syndicate app only.
+
+12. For ATS output with **SRT** destination, use the default SRT settings or configure the custom SRT settings:
+
+    <div className="vos-table-scroll">
+      <table className="vos-source-table">
+        <tbody><tr><td colSpan="1" rowSpan="1"><p>Stream ID </p></td><td colSpan="1" rowSpan="1"><p>Customize the Stream ID to be inserted into the outgoing streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Encryption Type</p></td><td colSpan="1" rowSpan="1"><p>Choose an encryption standard, or select <strong>None</strong>.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Channel Name</p></td><td colSpan="1" rowSpan="1"><p>Enter a channel name that will also be used in the receiver configuration.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Bandwidth Overhead (%)</p></td><td colSpan="1" rowSpan="1"><p>The Bandwidth Overhead is the percentage of the Average Bandwidth used to accommodate SRT controls. The default value is 20%.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Latency (ms)</p></td><td colSpan="1" rowSpan="1"><p>Sending packets over a (usually unpredictable) network could result in time delay. SRT Latency is a fixed value (min. 0 ms, no max. value) representing the maximum buffer size available for managing SRT packets. The default value is 1000 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Timeout (ms)</p></td><td colSpan="1" rowSpan="1"><p>Connection timeout, in milliseconds. The default value is 10000 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Blocking Mode</p></td><td colSpan="1" rowSpan="1"><p>When blocking mode is enabled, the SRT function will not exit until the availability condition is satisfied. In non-blocking mode the SRT function always exits immediately, and in case of lack of resource availability, it returns an error with the appropriate code. </p></td></tr></tbody>
+      </table>
+    </div>
+
+13. Click **Create**.

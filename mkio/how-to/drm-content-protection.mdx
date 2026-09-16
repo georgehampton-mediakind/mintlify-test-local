@@ -1,0 +1,121 @@
+---
+title: Content key policies
+description: Protect live and VOD streams with content key policies, encryption, DRM, and token authentication in MK.IO.
+sidebarTitle: Content key policies
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Digital Rights Management (DRM) encrypts your media content so that only authorized players and devices can decrypt and play it back. MK.IO handles DRM key management and license delivery, so you can protect live and VOD streams without running your own license server.
+
+<span id="how-drm-works-in-mkio" className="mk-legacy-anchor" />
+
+## How DRM works in MK.IO
+
+DRM protection in MK.IO relies on three components working together:
+
+1. **Content key policy**: defines which encryption schemes to use (ClearKey, Widevine, PlayReady, FairPlay) and whether a JWT token is required for license acquisition.
+2. **Streaming policy**: determines the encryption format applied to your packaged streams (CENC or CBCS).
+3. **Streaming locator**: ties an asset to a streaming policy and content key policy, producing encrypted playback URLs and license acquisition URLs.
+
+When a player requests a protected stream, it contacts the MK.IO license server with the appropriate credentials. MK.IO validates the request, issues the decryption key or license, and the player decrypts the stream for playback.
+
+## Encryption types
+
+MK.IO supports four encryption modes. Choose the one that matches your security requirements and target platforms.
+
+| Encryption type | Protocols | Encryption format     | Use case                                                              |
+| --------------- | --------- | --------------------- | --------------------------------------------------------------------- |
+| **ClearKey**    | HLS, DASH | HLS: CBCS, DASH: CENC | Lowest latency encryption. Suitable for basic protection and testing. |
+| **Widevine**    | HLS, DASH | CENC                  | Chrome, Android, smart TVs, and other Widevine-licensed devices.      |
+| **PlayReady**   | HLS, DASH | CENC                  | Edge, Xbox, Windows devices, and PlayReady-licensed smart TVs.        |
+| **FairPlay**    | HLS only  | CBCS                  | Safari and Apple devices. Requires an Apple FairPlay certificate.     |
+
+<Warning>
+  Do not add ClearKey to a policy that also uses DRM schemes (Widevine, PlayReady, or FairPlay). Combining ClearKey with DRM reduces the security effectiveness of the policy.
+</Warning>
+
+## Streaming policy and encryption pairing
+
+When you create a streaming locator, the streaming policy you select must match the content key policy. MK.IO provides predefined streaming policies for common configurations:
+
+| Streaming policy                   | Required DRM schemes              | Notes                                                                  |
+| ---------------------------------- | --------------------------------- | ---------------------------------------------------------------------- |
+| `Predefined_ClearStreamingOnly`    | None                              | No encryption. Use for testing unprotected playback.                   |
+| `Predefined_ClearKey`              | ClearKey                          | Basic encryption without a full DRM license server.                    |
+| `Predefined_MultiDrmStreaming`     | Widevine, PlayReady, and FairPlay | Full multi-DRM. The content key policy must include all three schemes. |
+| `Predefined_MultiDrmCencStreaming` | Widevine and PlayReady            | CENC-only multi-DRM. No FairPlay required.                             |
+
+## DRM support by platform
+
+Each browser and platform supports specific DRM systems. The player automatically selects the correct DRM based on the environment.
+
+| Platform                 | Recommended DRM       | Protocol |
+| ------------------------ | --------------------- | -------- |
+| Chrome, Firefox, Android | Widevine              | DASH     |
+| Safari, iOS, macOS       | FairPlay              | HLS      |
+| Edge (Windows)           | PlayReady             | DASH     |
+| Smart TVs (varies)       | Widevine or PlayReady | DASH     |
+
+For a detailed compatibility matrix, refer to the [Bitmovin DRM support reference](https://developer.bitmovin.com/playback/docs/drm-content-protection).
+
+## High-level workflow
+
+Follow these steps to protect and play back an encrypted asset:
+
+1. **Verify your asset plays unencrypted.** Create a streaming locator with `Predefined_ClearStreamingOnly` and confirm playback works before adding encryption.
+2. **[Create a content key policy](/mkio/how-to/drm-content-protection/create-content-key-policy)** with your chosen DRM schemes and token settings.
+3. **Create a streaming locator** that references both your streaming policy and content key policy.
+4. **[Test playback](/mkio/how-to/drm-content-protection/test-drm-playback)** using MKPlayer or your player SDK with the encrypted URLs and license acquisition URLs.
+
+## Guides
+
+<CardGroup cols={2}>
+  <Card title="Create a Content Key Policy" href="/mkio/how-to/drm-content-protection/create-content-key-policy">
+    Configure DRM schemes and token restrictions.
+  </Card>
+
+  <Card title="ClearKey Encryption" href="/mkio/how-to/drm-content-protection/clearkey-encryption">
+    Set up basic encryption with or without JWT tokens.
+  </Card>
+
+  <Card title="Multi-DRM Encryption" href="/mkio/how-to/drm-content-protection/multi-drm-encryption">
+    Configure Widevine, PlayReady, and FairPlay together.
+  </Card>
+
+  <Card title="JWT Token Authentication" href="/mkio/how-to/drm-content-protection/jwt-token-authentication">
+    Generate and configure JWT tokens for license requests.
+  </Card>
+
+  <Card title="Test DRM Playback" href="/mkio/how-to/drm-content-protection/test-drm-playback">
+    Validate encrypted playback with MKPlayer.
+  </Card>
+</CardGroup>
+
+## Automate content protection
+
+Use the [Content protection API Guide](/api-guides/how-to/media/content-protection) to create content key policies and protected streaming locators through the Media API.
+
+## Advanced configuration
+
+<CardGroup cols={2}>
+  <Card title="External PlayReady License" href="/mkio/how-to/drm-content-protection/external-playready-license-url">
+    Use a third-party PlayReady license server.
+  </Card>
+
+  <Card title="Explicit Content Keys" href="/mkio/how-to/drm-content-protection/explicit-content-keys">
+    Define your own encryption keys instead of auto-generated ones.
+  </Card>
+
+  <Card title="RSA Key for Token Validation" href="/mkio/how-to/drm-content-protection/rsa-key-for-token-validation">
+    Use RSA keys instead of symmetric keys for JWT validation.
+  </Card>
+
+  <Card title="OpenID Verification Key" href="/mkio/how-to/drm-content-protection/openid-verification-key">
+    Delegate token validation to an external identity provider.
+  </Card>
+
+  <Card title="Custom Claims in Policies" href="/mkio/how-to/drm-content-protection/custom-claims">
+    Use custom JWT claims to select between multiple policy options.
+  </Card>
+</CardGroup>

@@ -1,0 +1,63 @@
+---
+title: Creating a grooming profile for TS files
+robots: noindex, nofollow
+---
+
+TS audio grooming profiles can be applied to single TS sources.
+
+**Before you begin**\
+Ensure that you have configured system languages in **Channels > Settings**.
+
+1. From Asset Acquisition, select the **Settings** tab, and then click **Profiles**.
+
+2. Click **Create** and select the TS option from the pull-down menu.
+
+3. Enter a **Profile Name**.
+
+4. Select how the grooming profile should be applied to the source audio:
+
+   * **Update missing fields only**
+
+   * **Override all fields**
+
+5. On the **Audio** tab, configure the following settings for each audio track:
+
+   * **PID:** The packet identifier for the audio stream.
+
+   * **Language**: Configure the languages to be used.
+
+   * **Type**: Select from the following:
+
+     * **Not defined**
+
+     * **Clean effects**
+
+     * **Hearing impaired**
+
+     * **Visual impaired commentary**
+
+   * **Labels**: Add a label, if needed.
+
+   * **Ignore**: Select if you wish to exclude the track from the output.
+
+6. On the **Subtitles** tab, click **Add**, and then configure the following settings:
+
+   * **PID**
+
+   * **Type**: Select from the following:
+
+     * **Closed Caption**
+
+     * **Teletext**
+
+     * **DVB**
+
+   * **Page**
+
+   * **Language**
+
+7. Click **Save**.
+
+<Note>
+  **Note:** A grooming profile is necessary to convert Closed Captions to WebVTT and SMPTE-TT formats.
+</Note>

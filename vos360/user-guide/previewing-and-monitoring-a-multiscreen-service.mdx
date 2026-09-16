@@ -1,0 +1,57 @@
+---
+title: Previewing and monitoring a multiscreen service
+robots: noindex, nofollow
+---
+
+You can use the embedded player in the Monitor Channels app to verify video output for services with DASH packaging. For services with HLS and MSS packaging, you must verify the video output externally.
+
+1. From **Monitor Channels > Services**, verify that a small graph appears to the right of the service that you recently activated.\
+   The small graph indicates that the service is active.
+
+2. Click the active service to display the visualization graph.\
+   The bitrate represented in the output graph depends on the type of service (linear or multiscreen).
+
+   **Playout service with DASH output**
+
+   ![vos360\_playout\_dash\_preview.png](/images/vos360/60aee6c24edd3f3c6ba57fef.png)
+
+   \
+   &#x20;**Pull packaging-only service**
+
+   ![vos360\_pull\_packaging\_only.png](/images/vos360/633cf080342c6d438b9d04c8.png)
+
+   <Note>
+     **Note:&#x20;**&#x50;ure packaging services do not display a **Transcode** graph.
+   </Note>
+
+   <Note>
+     **Note:&#x20;**&#x46;or pull-packaging services, the **Origin** graph shows the total output bitrate to players or CDN parent cache servers requesting the video. A bitrate of 0 Mbps indicates that no player is currently requesting the video.
+   </Note>
+
+   <Note>
+     **Note:&#x20;**&#x46;or push-packaging services, a **Package** graph shows the total output bitrate to the publishing point.
+   </Note>
+
+3. To preview a multiscreen service with DASH output, click the **Watch Output Video** icon on the graph, verify the video output, and then click **Close** to exit the video player.
+
+   <Warning>
+     **Warning!**
+
+     In browser live video monitoring and previewing is unavailable in Apple devices running iOS. Instead of displaying the video the player appears but displays with a black screen. To work around the issue, you should use a browser on a different device.
+   </Warning>
+
+4. To preview a multiscreen service with HLS or MSS output in an external player, do the following:
+
+   * Point to the **Copy Output URL** (push pin) icon and select the desired format.
+
+   * Open a Web browser, and then enter the URL for your web-based video player.
+
+     <Note>
+       **Note:&#x20;**&#x45;nsure that the player you wish to use supports the transport protocol required by the packaging mode.
+     </Note>
+
+   * Paste the output URL for the service into the video player and then click **Load** or **Play**.
+
+   * Verify the video output.
+
+5. Return to the Monitor Channels app, and then click **Hide** to close the visualization graph.

@@ -1,0 +1,214 @@
+---
+title: Content protection
+description: Protect playback with content key policies and streaming policies, including a complete multi-DRM request you can copy and run.
+sidebarTitle: Content protection
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+To configure protected playback with Digital Rights Management (DRM) using the Media API, you combine three resources that meet at the streaming locator:
+
+* A **content key policy** defines *how* decryption keys and DRM licenses are delivered, and *who* is allowed to receive them.
+* A **streaming policy** defines *how* the content is encrypted for playback.
+* A **streaming locator** ties a policy pair to an asset and publishes it.
+
+Separating these resources lets you reuse one key-delivery policy across many assets while choosing a different encryption model for each publication context. You need a content key policy whenever playback must be restricted to entitled viewers or encrypted with DRM, and you can skip it entirely for unprotected playback.
+
+This guide builds a working multi-DRM policy. For conceptual background on each DRM system, see the [content protection overview](/mkio/understanding/core-concepts/content-protection).
+
+## How the pieces fit together
+
+The protected playback chain is always the same three steps:
+
+1. Create or choose a **content key policy** (the subject of this guide).
+2. Create or choose a **streaming policy** (predefined policies cover most cases).
+3. Create a **streaming locator** that references the asset, the streaming policy, and the content key policy.
+
+The rest of this guide builds that chain.
+
+## The minimal working policy
+
+A content key policy is a named resource. Its `properties.options` array holds one or more *options*, and every option pairs two things:
+
+* a `configuration`: the DRM system and its license rules.
+* a `restriction`: who is allowed to receive a license.
+
+The most common production setup is multi-DRM (PlayReady and Widevine) gated behind a JSON Web Token (JWT). The request below creates that policy. Replace `<PROJECT_NAME>` and the verification key with your own values.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/contentKeyPolicies/multi-drm-policy" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "description": "PlayReady and Widevine, gated by a JWT token",
+      "options": [
+        {
+          "name": "playready-jwt",
+          "configuration": {
+            "@odata.type": "#Microsoft.Media.ContentKeyPolicyPlayReadyConfiguration",
+            "licenses": [
+              {
+                "allowTestDevices": false,
+                "licenseType": "NonPersistent",
+                "contentType": "Unspecified",
+                "contentKeyLocation": {
+                  "@odata.type": "#Microsoft.Media.ContentKeyPolicyPlayReadyContentEncryptionKeyFromHeader"
+                }
+              }
+            ]
+          },
+          "restriction": {
+            "@odata.type": "#Microsoft.Media.ContentKeyPolicyTokenRestriction",
+            "issuer": "https://your-company.com",
+            "audience": "your-video-app",
+            "restrictionTokenType": "Jwt",
+            "primaryVerificationKey": {
+              "@odata.type": "#Microsoft.Media.ContentKeyPolicySymmetricTokenKey",
+              "keyValue": "<BASE64_HMAC_SECRET>"
+            }
+          }
+        },
+        {
+          "name": "widevine-jwt",
+          "configuration": {
+            "@odata.type": "#Microsoft.Media.ContentKeyPolicyWidevineConfiguration",
+            "widevineTemplate": "{}"
+          },
+          "restriction": {
+            "@odata.type": "#Microsoft.Media.ContentKeyPolicyTokenRestriction",
+            "issuer": "https://your-company.com",
+            "audience": "your-video-app",
+            "restrictionTokenType": "Jwt",
+            "primaryVerificationKey": {
+              "@odata.type": "#Microsoft.Media.ContentKeyPolicySymmetricTokenKey",
+              "keyValue": "<BASE64_HMAC_SECRET>"
+            }
+          }
+        }
+      ]
+    }
+  }'
+```
+
+The fields that matter most:
+
+* `@odata.type` is the discriminator on every nested object. It selects which configuration, restriction, or key type the object is. The values are fixed strings and must match exactly.
+* `widevineTemplate` is a JSON string, not a JSON object. An empty `"{}"` tells MK.IO to generate a default Widevine license. Supply a custom template only when you need to control persistence or validity.
+* `keyValue` is the Base64-encoded HMAC secret your application signs tokens with. It is the same secret on both sides: the policy verifies what your token server signs.
+* `issuer` and `audience` must match the `iss` and `aud` claims your tokens carry. A mismatch rejects the license request.
+
+A successful create returns `201 Created` with the stored policy. A name that already exists returns `409 Conflict`. For the full request and response schema, see the [Media API reference](/api-reference/media-api).
+
+## Choosing the configuration
+
+The `configuration` block selects the DRM system. Each system covers different platforms, so the choice is driven by the devices you need to reach.
+
+| You need to reach                                       | Use this configuration | `@odata.type`                                             |
+| :------------------------------------------------------ | :--------------------- | :-------------------------------------------------------- |
+| Edge, Xbox, Windows                                     | PlayReady              | `#Microsoft.Media.ContentKeyPolicyPlayReadyConfiguration` |
+| Chrome, Firefox, Android, Android TV                    | Widevine               | `#Microsoft.Media.ContentKeyPolicyWidevineConfiguration`  |
+| Safari, iOS, tvOS, macOS                                | FairPlay               | `#Microsoft.Media.ContentKeyPolicyFairPlayConfiguration`  |
+| Basic encryption, lowest latency, no DRM license server | Clear Key              | `#Microsoft.Media.ContentKeyPolicyClearKeyConfiguration`  |
+
+To cover every platform, include all three DRM configurations in one policy, as the minimal example does for two of them. FairPlay is the one configuration that needs extra setup: it requires a Base64-encoded certificate (`fairPlayPfx`), its password (`fairPlayPfxPassword`), and a Base64-encoded application secret key (`ask`). Supply the certificate password directly, without Base64 encoding it. The FairPlay configuration also requires `rentalAndLeaseKeyType` and `rentalDuration`; see `ContentKeyPolicyFairPlayConfiguration` in the [Media API reference](/api-reference/media-api) for their supported values. The other systems work with the fields shown above.
+
+Clear Key uses AES-128 and does not reach the security of the three DRM systems. Do not add Clear Key to a policy intended for DRM, because it lowers the overall protection. For the per-system setup detail, see [multi-DRM encryption](/mkio/how-to/drm-content-protection/multi-drm-encryption).
+
+## Choosing the restriction
+
+The `restriction` block decides who receives a license.
+
+| Your situation                                | Use this restriction | `@odata.type`                                       |
+| :-------------------------------------------- | :------------------- | :-------------------------------------------------- |
+| Production: only entitled viewers may play    | Token restriction    | `#Microsoft.Media.ContentKeyPolicyTokenRestriction` |
+| Testing only: anyone with the stream may play | Open restriction     | `#Microsoft.Media.ContentKeyPolicyOpenRestriction`  |
+
+An open restriction needs no other fields and is for testing only. A token restriction is the production default and needs `issuer`, `audience`, `restrictionTokenType`, and a `primaryVerificationKey`.
+
+The verification key type is itself chosen by `@odata.type`:
+
+| Signing approach        | Key type  | `@odata.type`                                              | Required fields       |
+| :---------------------- | :-------- | :--------------------------------------------------------- | :-------------------- |
+| Symmetric (HMAC, HS256) | Symmetric | `#Microsoft.Media.ContentKeyPolicySymmetricTokenKey`       | `keyValue`            |
+| Asymmetric (RSA)        | RSA       | `#Microsoft.Media.ContentKeyPolicyRsaTokenKey`             | `modulus`, `exponent` |
+| Certificate (X.509)     | X.509     | `#Microsoft.Media.ContentKeyPolicyX509CertificateTokenKey` | `rawBody`             |
+
+Symmetric (HS256) is the default and the simplest. Choose RSA when your security model requires asymmetric keys; see [RSA key for token validation](/mkio/how-to/drm-content-protection/rsa-key-for-token-validation).
+
+## Attach the policy at the locator
+
+A content key policy takes effect only when a streaming locator references it. The locator joins the asset, a streaming policy, and the content key policy.
+
+```bash
+curl -X PUT "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/streamingLocators/protected-locator" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "properties": {
+      "assetName": "output-video",
+      "streamingPolicyName": "Predefined_MultiDrmCencStreaming",
+      "defaultContentKeyPolicyName": "multi-drm-policy"
+    }
+  }'
+```
+
+Use a predefined streaming policy unless you have a reason not to. The predefined policies remove all custom encryption configuration:
+
+| Streaming policy                   | Encryption                        | Requires in the content key policy  |
+| :--------------------------------- | :-------------------------------- | :---------------------------------- |
+| `Predefined_ClearStreamingOnly`    | None                              | Nothing                             |
+| `Predefined_ClearKey`              | Clear Key (AES-128)               | A Clear Key option                  |
+| `Predefined_MultiDrmCencStreaming` | PlayReady and Widevine            | Both PlayReady and Widevine options |
+| `Predefined_MultiDrmStreaming`     | PlayReady, Widevine, and FairPlay | All three options                   |
+
+The minimal example pairs with `Predefined_MultiDrmCencStreaming` because it defines PlayReady and Widevine. To add Safari and Apple devices, add a FairPlay option to the policy and switch the locator to `Predefined_MultiDrmStreaming`.
+
+## What goes wrong
+
+* **The streaming policy and the content key policy disagree.** The streaming policy enforces which DRM schemes the content key policy must contain. A `Predefined_MultiDrmStreaming` locator fails if the policy does not include all three schemes, and a `Predefined_MultiDrmCencStreaming` locator fails if it lacks PlayReady or Widevine. Match the table above.
+* **The token is signed with a different key, issuer, or audience.** MK.IO validates the token signature against `primaryVerificationKey`, and the `iss` and `aud` claims against the policy. Any mismatch rejects the license, even when the stream itself publishes correctly.
+* **The verification key leaks into client code.** Generate tokens on your server and pass them to the player at runtime. Never ship the `keyValue` secret in client-side code.
+* **Playback shows a license error during testing.** A protected stream opened without a token can surface a `DRM_FAILED_LICENSE_REQUEST` error. That is expected: the encrypted stream needs a token that has not been provided yet.
+
+For the token flow and the required claims, see [JWT token authentication](/mkio/how-to/drm-content-protection/jwt-token-authentication).
+
+## Related operations
+
+List the content key policies in a project:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/contentKeyPolicies" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+Retrieve a single policy:
+
+```bash
+curl -X GET "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/contentKeyPolicies/multi-drm-policy" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+A standard `GET` never returns secret values, such as the verification key. When you need to inspect or rotate secrets, use the secrets variant, and only then:
+
+```bash
+curl -X POST "https://app.mk.io/api/v1/projects/<PROJECT_NAME>/media/contentKeyPolicies/multi-drm-policy/getPolicyPropertiesWithSecrets" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
+
+## Where to go deeper
+
+For the concepts and platform-level setup behind these requests:
+
+* [Content protection overview](/mkio/understanding/core-concepts/content-protection): how DRM, keys, and licenses work in MK.IO.
+* [Multi-DRM encryption](/mkio/how-to/drm-content-protection/multi-drm-encryption): per-system configuration detail.
+* [JWT token authentication](/mkio/how-to/drm-content-protection/jwt-token-authentication): the token flow and claim requirements.
+* [Using custom claims in content key policies](/mkio/how-to/drm-content-protection/custom-claims): route different licenses from one policy.
+
+For the complete, field-level request and response schema, including every configuration and restriction variant this guide does not cover:
+
+* [Media API reference](/api-reference/media-api).
+
+## What comes next
+
+* [Streaming and publishing](/api-guides/how-to/media/publishing): connect the policy to locators and live playback.

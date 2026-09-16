@@ -1,0 +1,49 @@
+---
+title: Troubleshooting on-boarding of edge devices
+description: How to troubleshoot common issues with on-boarding of edge devices.
+sidebarTitle: Troubleshooting onboarding
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use these checks when an edge device cannot connect to MK.IO or complete registration.
+
+## Prerequisites
+
+* All edge devices require a [network interface configured as Control with an IP address](/beam/quick-start#set-control-ip-address).
+
+* [DNS addresses that can resolve external domain names](/beam/system-admin/network/configure-nics#set-dns-addresses) such as `https://api.mk.io/`.
+
+* To register and manage an edge device, it must be able to connect to `https://api.mk.io/`. This requires either:
+  * A default gateway that can route to the internet, and any customer-managed firewall MUST allow egress TCP port 443 to `https://api.mk.io/`.
+  * *Or*, configuration to use an [HTTP proxy](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/common-workflow#configure-an-http-proxy-optional) that can reach `https://api.mk.io/`.
+
+* The device must have connected at least once to `https://app.mk.io/` before it can be registered.
+
+## Cannot add device
+
+When manually adding a device via the MK.IO UI, you may see an error similar to:
+
+`1000.4500.1500.1300 - Device is not recognised. A device with this ID has never connected to MK.IO. Connect the device to MK.IO and try again.`
+
+Check that the device network settings are correctly configured. See [Network Configuration](/beam/system-admin/network/configure-nics).
+
+## Connected field shows No in the device web UI
+
+**Diagnose via the device's local web UI:**
+
+1. Open the device's local web UI: `http://<Control-IP-Address>`.
+2. Go to **Appliance** > **Fleet**. After a few seconds, additional information appears.
+3. Click <img src="/icons/ui/wrench.svg" alt="Wrench" className="mk-ui-icon" width="16" height="16" /> next to the **Connected: No** field to run diagnostics.
+4. Resolve the network problem or configuration issue, then try again.
+
+**Diagnose via the device's local terminal:**
+
+1. Log in to the device's terminal.
+2. Run the `control-wizard` command.
+3. MK.IO API connectivity is tested and results display on screen.
+4. Press **Q** to quit.
+
+## Short code not accepted
+
+Short codes are short-lived. You can also use the **Device ID**.

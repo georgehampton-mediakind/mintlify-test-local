@@ -1,0 +1,48 @@
+---
+title: MKCustomUI API
+description: Reference the MKCustomUI class, configuration properties, and public methods.
+sidebarTitle: MKCustomUI API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use the `MKCustomUI` class and method reference when configuring or controlling a custom MKPlayer user interface.
+
+## Constructor
+
+* `new MKCustomUI(player)`: creates a UI builder using the MKPlayer instance and its internal Bitmovin engine.
+
+## Default UI variants (classic style, return `UIManager`)
+
+* `buildDefaultUI(config?)`: Builds the standard defauly UI for browser use.
+* `buildDefaultSmallScreenUI(config?)`: Builds the default UI optimized for mobile and small screens.
+* `buildDefaultTvUI(config?)`: Builds the default UI tailored for TV devices.
+* `buildDefaultCastReceiverUI(config?)`: Builds the default UI for Chromecast receiver.
+
+## Modern UI variants (return `UIManager`)
+
+* `buildModernUI(config?)`: Builds the modern UI layout for general use.
+* `buildModernSmallScreenUI(config?)`: Builds the modern UI layout for mobile and small screens.
+* `buildModernTvUI(config?)`: Builds the modern UI layout for TV devices.
+* `buildModernCastReceiverUI(config?)`: Builds the modern UI layout for Chromecast receiver.
+
+## Fully custom UI (advanced, return `UIManager`)
+
+* `customUi(uiContainer, config?)`: Attach a fully custom `UIContainer`.
+* `customUiVariant(uiVariants, config?)`: Configure multiple responsive UI variants and switch by condition.
+
+## UI container factory methods (no `UIManager` attachment)
+
+* `modernUI(config)`: Creates a general modern UI container without attaching it to the player.
+* `modernSmallScreenUI()`: Creates a modern UI container optimized for small screens.
+* `modernCastReceiverUI()`: Creates a modern UI container structure for cast receivers.
+
+## Ads-only UI container methods
+
+* `modernAdsUI()`: Creates a modern ads-only UI container.
+* `modernSmallScreenAdsUI()`: Creates a modern ads-only UI container optimized for small screens.
+* `modernTvAdsUI()`: Creates a modern ads-only UI container tailored for TV devices.
+
+## TV UI with spatial navigation (container only)
+
+* `modernTvUI()`: Creates a modern TV UI container with spatial navigation support.

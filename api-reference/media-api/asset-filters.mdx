@@ -1,0 +1,47 @@
+---
+title: Asset Filters
+---
+
+# Asset Filters
+
+Asset filters allow for just-in-time filtering of the contents of a video manifest. This is useful, for instance, when you want to present 
+specific language tracks to a user based on their language preferences, or when you need to suppress certain tracks from being presented to
+devices that lack support, or when you want to present a specific bitrate to users when a stream starts.
+
+Asset filters are applied to a specific asset, and are evaluated at the time of playback. They are not applied to the underlying asset itself,
+and multiple filters can be applied to a single asset. Filters are applied in the order they are created, with multiple filters being OR'd together
+to produce the final result.
+
+Filters have several important capabilities:
+
+1. Initial bitrate selection. In an HLS playlist, this feature determines the order of the tracks in the playlist, which determines where the client starts playback. 
+    Adjust this value in order to tune the initial playback experience for your users.
+2. VOD time window filtering. This is a capability that permits for a time window to be applied for a VOD asset's presentation. Consider a scenario where you have a
+    24-hour asset comprised of 24 back-to-back one-hour programs. You might create 24 separate asset filters and 24 separate streaming locators in order to present 24 unique 
+    programs to your users. Why you would prefer this approach over simply creating 24 separate assets is an exercise left to the reader.
+3. Live window delays (liveWindowBackoff). You can delay playback behind the "live point", for instance to allow for a delay in the presentation of a live event. This is useful in cases where 
+    you have a global cache that you would like to preheat. Clients view the delayed presentation, while the cache is populated with the live presentation. 
+4. Live Sliding Window duration. This is setting the window of time between the live point of a manifest and the last video segment in a manifest. A live manifest, especially for 
+    long-duration content, can impair startup times. A common use case is to construct two live manifests, one with a short window for fast startup and playback at the live point, 
+    and another with a longer window for users who want to watch the entire event.
+5. Track filtering. Actually this is track inclusion. Define predicates that describe your video content and any matching tracks will be included in the manifest. Use this feature
+    to create differentiated manifests based on client capabilities, or languages, or any other criteria you can think of.
+
+Asset filters and account filters are exactly the same. Asset filters differ from account filters in that they are only assignable to a specific asset, though the interface is identical. Prefer asset filters in cases where your content
+is unique - typically VOD content time window filtering. In cases where you want a common set of rules applied across all your content, use an account filter.
+
+* [List Account Filters](/api-reference/media-api/asset-filters/list-account-filters)
+
+* [Get Account filter](/api-reference/media-api/asset-filters/get-account-filter)
+
+* [Create or Update Account Filter](/api-reference/media-api/asset-filters/create-or-update-account-filter)
+
+* [Delete Account Filter](/api-reference/media-api/asset-filters/delete-account-filter)
+
+* [List Asset Filters](/api-reference/media-api/asset-filters/list-asset-filters)
+
+* [Get Asset Filter](/api-reference/media-api/asset-filters/get-asset-filter)
+
+* [Create or Update Asset Filter](/api-reference/media-api/asset-filters/create-or-update-asset-filter)
+
+* [Delete Asset Filter](/api-reference/media-api/asset-filters/delete-asset-filter)

@@ -1,8 +1,10 @@
 ---
-title: "Authenticate with the MK.IO APIs Using Bearer Tokens"
-sidebarTitle: "Authentication"
-description: "Create a personal API token in MK.IO, pass it in the Authorization header, and set up local environment variables for API development."
+title: Authentication and tokens
+description: Create a personal API token, understand what it grants access to, and send it with requests to any MK.IO API.
+sidebarTitle: Authentication and tokens
 ---
+
+<span id="_top" className="mk-legacy-anchor" />
 
 The MK.IO APIs use bearer authentication. You create a personal API token in the MK.IO web application, send it in the `Authorization` header, and the request runs with the same organization and project access as the user who created it.
 
@@ -10,36 +12,23 @@ The MK.IO APIs use bearer authentication. You create a personal API token in the
 
 Create a token in the MK.IO web application:
 
-<Steps>
-  <Step title="Open your profile menu">
-    Open the profile menu in the top right corner and select your email address.
-  </Step>
-  <Step title="Navigate to API tokens">
-    Go to [**Your personal API tokens**](https://app.mk.io/user/profile).
-  </Step>
-  <Step title="Add a new token">
-    Select **Add Token**.
-  </Step>
-  <Step title="Configure the token">
-    Enter a description and an expiration date in UTC.
-  </Step>
-  <Step title="Create and copy the token">
-    Select **Create**. Copy the token to a secure location immediately — it is visible for 5 minutes only.
-  </Step>
-</Steps>
+1. Open the profile menu in the top right corner and select your email address.
+2. Go to [**Your personal API tokens**](https://app.mk.io/user/profile).
+3. Select **Add Token**.
+4. Enter a description and an expiration date in UTC.
+5. Select **Create**.
+6. Copy the token to a secure location. It is visible for 5 minutes only.
 
-<Note>
-  For the full token-management pages in the MK.IO product, see [API tokens](/mkio/admin/api-tokens).
-</Note>
+For the full token-management pages in the MK.IO product, see [API tokens](/mkio/how-to/managing-your-organization/api-tokens).
 
 ## What a personal token represents
 
 The personal token contains:
 
-- The identity of the user.
-- The identity of the organization.
-- The token type and expiration date.
-- Optionally, a reduced set of permissions when the token grants only a subset of the user's access.
+* The identity of the user.
+* The identity of the organization.
+* The token type and expiration date.
+* Optionally, a reduced set of permissions when the token grants only a subset of the user's access.
 
 The token therefore carries the access of the user who created it. When that user's access changes, the token's effective access changes with it.
 
@@ -47,13 +36,13 @@ The token therefore carries the access of the user who created it. When that use
 
 Every MK.IO API uses the same header:
 
-```
+```http
 Authorization: Bearer <YOUR_TOKEN>
 ```
 
 For requests that carry a body, send JSON headers as well:
 
-```
+```http
 Content-Type: application/json
 Accept: application/json
 ```
@@ -106,25 +95,13 @@ This keeps the examples short and makes it easier to switch projects or rotate t
 
 A token grants MK.IO access to anyone who holds it, so treat it as a secret:
 
-<Warning>
-  Do not commit tokens to source control or embed them in client-side code or public applications. Rotate and replace them immediately if they are exposed.
-</Warning>
-
-- Do not commit tokens to source control.
-- Do not embed them in client-side code or public applications.
-- Rotate and replace them if they are exposed.
-- Use a narrower token type when you want to reduce the blast radius. See [Tokens](/api-guides/management/tokens) for the Management API workflow.
+* Do not commit tokens to source control.
+* Do not embed them in client-side code or public applications.
+* Rotate and replace them if they are exposed.
+* Use a narrower token type when you want to reduce the blast radius. See [Tokens](/api-guides/how-to/management/tokens) for the Management API workflow.
 
 ## Next steps
 
-<CardGroup cols={3}>
-  <Card title="Your First API Call" icon="terminal" href="/api-guides/getting-started/first-api-call">
-    Confirm that your token and project access work.
-  </Card>
-  <Card title="Tokens" icon="key" href="/api-guides/management/tokens">
-    Create, inspect, and revoke tokens through the Management API.
-  </Card>
-  <Card title="Which API to Use" icon="map" href="/api-guides/getting-started/which-api">
-    Choose the API that owns the resources in your workflow.
-  </Card>
-</CardGroup>
+* [Your first API call](/api-guides/getting-started/first-api-call): confirm that your token and project access work.
+* [Tokens](/api-guides/how-to/management/tokens): create, inspect, and revoke tokens through the Management API.
+* [Which API to use](/api-guides/getting-started/which-api): choose the API that owns the resources in your workflow.

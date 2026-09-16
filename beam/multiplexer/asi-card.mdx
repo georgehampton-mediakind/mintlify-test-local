@@ -1,0 +1,261 @@
+---
+title: ASI Card Configuration Tool
+sidebarTitle: ASI Card Configuration Tool
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+<span id="installation--usage" className="mk-legacy-anchor" />
+
+## Installation & Usage
+
+The configuration tool is installed as part of the cRPM ASI driver installation. It is available from the following location on the M1 or G8 platform:
+
+`/opt/mediakind/utility/bin/asi_config/`
+
+To get help on the command line options, add -h to the command line.
+
+**Example:** `./asi_config -h` or `./asi_config set connector -h`
+
+By default, the ASI configuration tool connects to the Multiplexer ASI API on the machine where the tool is running, i.e., **localhost**.
+
+To tell the tool to connect to a different server, use the `--host` optional command line argument:
+**Example:** `./asi_config --host <controller_vip>`
+
+For commands that produce output, you can use the optional argument --json to request that the output is rendered in as a JSON document. This can be useful if the content is used for further processing.
+
+<span id="known-server-types--aliases" className="mk-legacy-anchor" />
+
+## Known Server Types & Aliases
+
+Many of the commands require the user to identify a specific card for the ASI API.
+
+To simplify this for the users, the tool allows server definition files to be created, in which one or more aliases can be associated with a pre-defined PCI bus number/slot number pair.
+
+If you provide your own servers, you can create your own server definition files by using the existing ones (for example: m1.json) as templates.
+
+## Server Type Description File Definition
+
+Each server description file is a JSON document and is composed of an array of objects, one for each board location.
+
+Each board entry in the array has three properties: pciBusNumber, pciSlotNumber and aliases.
+
+* pciBusNumber - The PCI bus number required for the ASI API.
+* pciSlotNumber - The slot number required for the ASI API. Also known as device by tools such as lspci.
+* aliases - An array of strings containing several alternative aliases for this board location.
+  * **Example:** “2”, “top-middle” and “tm” might all be alternatives.
+
+To help with identifying bus numbers and device slots in usage, you can use the lspci command. This provides the location of every PCI device in the format `[[[[<domain>]:]<bus>]:][<slot>][.[<func>]]`. The domain is optional, or only shown if various domains are present.
+
+<Info>
+  All values are hexadecimal.
+</Info>
+
+Here is an example output of the lspci command for an M1 with 2 Dektec cards, on bus 01 and 02:
+
+```
+[root@m1-225 asi_config]# lspci | grep DekTec
+01:00.0 Non-VGA unclassified device: DekTec Digital Video B.V. Device 0882
+02:00.0 Non-VGA unclassified device: DekTec Digital Video B.V. Device b87e
+```
+
+## Commands
+
+### get servers
+
+Displays a list of the ASI servers configured for the system.
+
+**Example of usage:**
+
+```
+[root@m1-227 asi_config]# ./asi_config get servers
+m1-217
+m1-227
+```
+
+Gets the configured ASI servers for **localhost**.
+
+### get connectors
+
+Displays a list of the configured connectors.
+
+Required arguments in order:
+
+`asi_server_name`: The name of the ASI server to show ASI information for.
+
+Optional arguments:
+
+* `--type server_type`: Specifies a server type to look up an alias for a specific board. (Example: m1)
+* `--alias alias`: Specifies a board alias when used with the --type argument. (Example: top-left)
+* `--pci bus_number`: Specifies the PCI bus number associated with a specific ASI card.
+* `--slot slot_number`: Specifies a specific slot number associated with a specific ASI card. Use with the --pci option.
+
+**Example of usage:**
+
+* `asi_config get connectors m1-227`: Gets the configured connectors for ASI server 'm1-227'.
+* `asi_config get connectors m1-227 --type m1 --alias top-left`: Gets the configured connectors for the card in the top-left slot of the m1 ASI server 'm1-227'.
+* `asi_config get connectors m1-227 --pci 1 --slot 0`: Gets the configured connectors for the card attached to PCI bus 1 in slot 0 on ASI server 'm1-227'.
+
+**Example with output:**
+
+```
+[root@m1-227 asi_config]# ./asi_config get connectors m1-227
+Server: m1-227
+
+ REST ID | Direction | PCI Bus No. | PCI Slot No. | Connector | Interface | Multicast      | Port | Input Packet Length | Alias
+================================================================================================================================
+1        |   input   |      1      |      0       |     1     |    lo     |  239.123.1.1   | 1234 |        auto         |
+2        |   input   |      1      |      0       |     2     |    lo     |  239.123.1.2   | 1234 |        auto         |
+3        |   input   |      1      |      0       |     3     |    lo     |  239.123.1.3   | 1234 |        auto         |
+4        |   input   |      1      |      0       |     4     |    lo     |  239.123.1.4   | 1234 |        auto         |
+```
+
+### remove server
+
+Removes all the connectors associated with the specified server.
+
+**Example of usage:**
+
+* `asi_config remove server m1-227`: Removes the ASI server m1-227 and all the connectors associated with it.
+
+### remove connector
+
+Removes a single connector.
+
+Required arguments in order:
+
+1. `asi_server_name`: The name of the ASI server to update.
+2. `server_type_or_pci_bus_number`: The type of server when using an alias or the actual PCI bus number (int) of the board being removed.
+3. `alias_or_slot_number`: The alias for the board or the actual slot number (int) for the board.
+4. `connector`: The physical connector index (1 based) on the board.
+
+**Example of usage:**
+
+* `asi_config remove connector m1-227 m1 top-left 3`: Removes the third connector for the top-left board in an M1 server.
+* `asi_config remove connector m1-227 1 0 3`: Removes the third connector for the board associated with PCI bus 1 on slot 0.
+
+### remove api-connector
+
+Removes a single connector identified by its API number (REST ID in the table from get connectors).
+
+Required arguments in order:
+
+1. `asi_server_name`: The name of the ASI server to update.
+2. `api_connector`: The API connector number associated with the connector to remove. This is the value that is set in Multiplexer configurations.
+
+**Example of usage:**
+
+* `asi_config remove api-connector m1-227 1`: Removes the connector with the API number of 1 from the server called m1-227.
+
+### set connector
+
+Sets the properties for a connector. Connectors can be identified via the board and index.
+
+Required arguments in order:
+
+1. `server`: The name of the ASI server to update.
+2. `server_type_or_pci_bus_number`: The type of server when using an alias or the actual PCI bus number (int) of the board being removed.
+3. `alias_or_slot_number`: The alias for the board or the actual slot number (int) for the board.
+4. `connector`: The physical connector index (1 based) on the board.
+
+After these arguments, you must specify either input or output.
+
+### input
+
+Sets the connector as an ASI input.
+
+Optional arguments:
+
+* `--multicast` or `-m`: The multicast address (URL format) to which the content from this ASI connector should be re-transmitted. If not set, the tool will pick a multicast that is not already in use for an existing connector.
+* `--interface` or `-i`: The name of the network interface to use for the multicast transmission. If not specified, the interface 'lo' is used.
+* `--set_api_id` or `-a`: Specifies the ID to associate with this connector in the REST API. If not set, an ID is auto-generated.
+* `--input_packet_length` or `-ipl`: Specifies the input packet length for the connector. Values supported are `auto`, `188` and `204`.
+
+**Example of usage:**
+
+```
+[root@m1-227 asi_config]# ./asi_config set connector m1-227 1 0 1 input --interface lo --multicast udp://239.123.1.1:1234 -ipl 204
+ REST ID | Direction | PCI Bus No. | PCI Slot No. | Connector | Interface | Multicast      | Port | Input Packet Length | Alias
+================================================================================================================================
+1        |   input   |      1      |      0       |     1     |    lo     |  239.123.1.1   | 1234 |         204         |
+```
+
+Configures the API connector with the ID of 1 to be an input and have the multicast and port values. Additionally, it configures the input packet length to be 204 bytes. Please note that supported Dektec cards always operate in `auto` mode. Output packet length can be configured in the Multiplexer output settings.
+
+### output
+
+Sets the connector as an ASI output.
+
+Optional arguments:
+
+* `--set_api_id`: Specifies the ID to associate with this connector in the REST API. If not set, an ID is auto-generated.
+* `asi_config set connector m1-227 m1 top-left 3 input`: Sets the third connector on the card in the top-left slot of the M1 server m1-227 to be an input.
+* `asi_config set connector m1-227 m1 top-left 3 input --multicast udp://239.34.221.1:5000 --interface lo --set_api_id 3`: Sets the third connector on the card in the top-left slot of the M1 server m1-227 to be an input with data transmitted on the loopback interface using a multicast group address of 229.34.221.1 on port 5000. The ASI content can be used by setting the ASI connector to 3 in the Multiplexer configuration.
+* `asi_config set connector m1-227 m1 top-left 3 output`: Sets the third connector on the card in the top-left slot of the M1 server m1-227 to be an output.
+
+**Example of usage:**
+
+```
+[root@m1-227 asi_config]# ./asi_config set connector m1-227 1 0 1 output
+ REST ID | Direction | PCI Bus No. | PCI Slot No. | Connector | Interface | Multicast      | Port | Input Packet Length | Alias
+================================================================================================================================
+1        |  output   |      1      |      0       |     1     |    lo     |  239.123.1.1   | 1234 |         204         |
+```
+
+Configures the API connector with the ID of 1 to be an output.
+
+Interface, Multicast, Port and Input Packet Length values in the table do not apply to output connectors.
+
+### set api-connector
+
+Changes an existing connector using its REST ID.
+
+Required arguments in order:
+
+1. `asi_server_name`: The name of the ASI server to update.
+2. `api_connector`: The API connector number associated with the connector. This is the value that is set in Multiplexer configurations.
+
+After these arguments, you must specify either input or output. The same optional arguments as in [set connector](/beam/multiplexer/asi-card#set-connector) are supported.
+
+**Example of usage:**
+
+```
+[root@m1-227 asi_config]# ./asi_config set api-connector m1-227 1 input --multicast udp://239.123.1.6:1234 -ipl auto
+ REST ID | Direction | PCI Bus No. | PCI Slot No. | Connector | Interface | Multicast      | Port | Input Packet Length | Alias
+================================================================================================================================
+1        |   input   |     -1      |      -1      |     1     |    lo     |  239.123.1.6   | 1234 |        auto         |
+```
+
+### export
+
+Exports the current configuration to a file.
+
+Required arguments in order:
+
+* `file`: The path to the file to create.
+
+Optional arguments:
+
+* `--server`: The name of a single ASI server to export. If not set, all servers are exported.
+
+**Example of usage:**
+
+* `asi_config export /home/mfeng/asi_settings.json`: Exports all the ASI configuration to the file asi\_settings.json.
+* `asi_config export /home/mfeng/m1-227.json --server m1-227`: Exports the ASI configuration for server m1-227 to the file m1-227.json.
+
+### import
+
+Imports the ASI configuration from a file.
+
+Required arguments in order:
+
+* `file`: The path to the file to import the settings from.
+
+Optional arguments:
+
+* `--server`: The name of a single ASI server to import. If not set, all servers are imported.
+
+**Example of usage:**
+
+* `asi_config import /home/mfeng/asi_settings.json`: Imports all the ASI configuration from the file asi\_settings.json.
+* `asi_config import /home/mfeng/m1-227.json --server m1-227`: Imports the ASI configuration for server m1-227 from the file m1-227.json.

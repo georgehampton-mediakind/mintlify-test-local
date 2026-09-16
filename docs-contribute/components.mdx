@@ -1,0 +1,304 @@
+---
+title: Component Reference
+description: The small supported component set for portable documentation content.
+sidebarTitle: Component Reference
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use standard Markdown for normal documentation. MDX is reserved for Starlight steps, cards, and the two supported inline icon components described on this page.
+
+The content-contract check rejects new component types, executable expressions, imports, and raw HTML. Existing pages with advanced MDX remain buildable through a compatibility baseline, but that baseline is a migration record, not an authoring menu.
+
+## Normal content contract
+
+| Content need                    | Supported representation           |
+| :------------------------------ | :--------------------------------- |
+| Headings, paragraphs, and links | Markdown                           |
+| Ordered and unordered lists     | Markdown                           |
+| Code                            | Inline code and fenced code blocks |
+| Tables                          | Markdown tables                    |
+| Images                          | Markdown image syntax              |
+| Callouts                        | Starlight Markdown asides          |
+| Procedures with rich steps      | Starlight `Steps`                  |
+| Clickable navigation cards      | `Cards` and `Card`                 |
+| Product interface controls      | `UiIcon`                           |
+| General inline symbols          | `Fa`                               |
+
+Prefer a `.md` file when Markdown can represent the page. Use `.mdx` only when the page needs one of the supported components.
+
+## Callouts
+
+Use Starlight asides for information a reader might otherwise skip and regret missing. The supported variants are `note`, `tip`, `caution`, and `danger`.
+
+```md
+:::caution[Before you continue]
+Verify your credentials before running this step.
+:::
+```
+
+Do not use the legacy `Callout` component in new content.
+
+## Steps
+
+Use Starlight `Steps` when each step needs nested content such as code, images, or callouts. The component must contain one ordered list.
+
+```mdx
+<Steps>
+
+1. **Configure the product**
+
+   Enter the required settings.
+
+2. **Verify the configuration**
+
+   Confirm that the product reports the expected state.
+
+</Steps>
+```
+
+Use a normal Markdown ordered list for short procedures.
+
+## Cards
+
+Use cards for a small set of meaningful navigation choices. A card with an `href` is clickable across its full surface.
+
+```mdx
+<Cards columns={2}>
+  <Card title="Getting started" href="/mkio/getting-started" icon="fa-rocket">
+    Start a first workflow.
+  </Card>
+  <Card title="API reference" href="/api-reference/media-api" icon="code">
+    Look up endpoints and schemas.
+  </Card>
+</Cards>
+```
+
+| Prop      | Component | Description                                                          |
+| :-------- | :-------- | :------------------------------------------------------------------- |
+| `columns` | `Cards`   | Number of grid columns. The default is `2`.                          |
+| `title`   | `Card`    | Card heading and accessible link label.                              |
+| `href`    | `Card`    | Link destination.                                                    |
+| `icon`    | `Card`    | Optional icon name supported by `Fa`.                                |
+| `target`  | `Card`    | Optional link target. Use `_blank` only when a new tab is necessary. |
+
+## Product interface icons
+
+Use `UiIcon` when an instruction needs to reproduce a verified product control. The component uses the exact repository-owned product icon and emits a readable label in machine-generated Markdown.
+
+```mdx
+Select <UiIcon name="edit" /> to edit the output.
+```
+
+The name must exist in `src/lib/ui-icons.mjs`. Do not add an approximate icon or guess which control a screenshot represents.
+
+## General inline icons
+
+Use `Fa` only when a small general symbol makes an instruction more precise and does not claim to reproduce a product control.
+
+```mdx
+Select <Fa name="gears" /> to open the documented settings menu.
+```
+
+The icon name must exist in `src/components/Fa.tsx`. Do not add decorative icons to prose. A new product-specific inline component requires documentation-platform review before use.
+
+## Advanced compatibility
+
+The components in this section remain executable so existing pages retain their rendered and machine-readable content. They are not part of the normal authoring contract. Do not use them on a new page.
+
+`Accordion`, `ApiEndpoint`, `Callout`, `LegacySteps`, `QuickLink`, `QuickLinks`, `Table`, `Td`, `Th`, `Tr`, `WorkflowCard`, `WorkflowCards`, `TabItem`, and `Tabs` are auto-imported when an existing page uses them. Do not add manual imports for those components.
+
+### Accordion
+
+`Accordion` renders collapsible content.
+
+```mdx
+<Accordion title="What does this setting control?" defaultOpen={false}>
+  Existing explanatory content.
+</Accordion>
+```
+
+| Prop          | Description                                                                               |
+| :------------ | :---------------------------------------------------------------------------------------- |
+| `title`       | Summary shown on the closed component.                                                    |
+| `defaultOpen` | Opens the component on initial render when set to `true`. The default is `false`.         |
+| `icon`        | Optional icon name supported by `Fa`. The component also accepts the legacy `fa-` prefix. |
+| `iconColor`   | Optional Cascading Style Sheets (CSS) colour applied to the icon.                         |
+
+Use a heading and normal content when you migrate an accordion unless collapsing the content remains necessary.
+
+### Legacy callouts
+
+`Callout` renders the old custom callout design. Use a Starlight aside for new content.
+
+```mdx
+<Callout type="warning" title="Before you continue">
+  Verify the existing requirement.
+</Callout>
+```
+
+| Prop    | Description                                                          |
+| :------ | :------------------------------------------------------------------- |
+| `type`  | `info`, `warning`, `success`, or `error`. The default is `info`.     |
+| `title` | Optional callout heading.                                            |
+| `icon`  | Optional icon name supported by `Fa`. The default comes from `type`. |
+
+### Legacy steps
+
+`LegacySteps` preserves the former heading-based procedure layout. It applies the `mk-steps` wrapper to its children.
+
+```mdx
+<LegacySteps>
+
+### Configure the service
+
+Complete the existing instruction.
+
+### Verify the service
+
+Confirm the sourced result.
+
+</LegacySteps>
+```
+
+Migrate a page to Starlight `Steps` when you are already changing the procedure and can verify the rendered sequence.
+
+### Quick links
+
+`QuickLinks` and `QuickLink` render the existing compact link grid.
+
+```mdx
+<QuickLinks columns={2}>
+  <QuickLink title="Stream content" href="/mkio/how-to/content-delivery-publishing/stream-content" icon="tower-broadcast" badge="Popular" />
+</QuickLinks>
+```
+
+| Prop        | Component    | Description                                                     |
+| :---------- | :----------- | :-------------------------------------------------------------- |
+| `columns`   | `QuickLinks` | Grid columns from `1` to `4`. The default is `2`.               |
+| `title`     | `QuickLink`  | Link text.                                                      |
+| `href`      | `QuickLink`  | Link destination.                                               |
+| `icon`      | `QuickLink`  | Optional icon name supported by `Fa`, or an existing icon node. |
+| `iconColor` | `QuickLink`  | Optional legacy colour value.                                   |
+| `badge`     | `QuickLink`  | Optional short badge text.                                      |
+
+Use `Cards` for a new curated navigation grid or a Markdown link list for simple related links.
+
+### Workflow cards
+
+`WorkflowCards` and `WorkflowCard` render existing linked sequences.
+
+```mdx
+<WorkflowCards columns={1}>
+  <WorkflowCard
+    title="Existing workflow"
+    icon="fa-film"
+    steps={[
+      { title: "Upload", href: "/mkio/how-to/content-management", description: "Add the source asset." },
+      { title: "Publish", href: "/mkio/how-to/content-delivery-publishing", description: "Create the playback path." }
+    ]}
+  />
+</WorkflowCards>
+```
+
+| Prop        | Component       | Description                                                                          |
+| :---------- | :-------------- | :----------------------------------------------------------------------------------- |
+| `columns`   | `WorkflowCards` | Grid columns from `1` to `3`. The default is `1`.                                    |
+| `title`     | `WorkflowCard`  | Workflow heading.                                                                    |
+| `icon`      | `WorkflowCard`  | Optional icon name supported by `Fa`. The component accepts the legacy `fa-` prefix. |
+| `iconColor` | `WorkflowCard`  | Accepted for compatibility but not used by the current renderer.                     |
+| `steps`     | `WorkflowCard`  | Array of objects with `title`, `href`, and optional `description` values.            |
+
+Use Starlight `Steps` or a normal ordered list for new procedures.
+
+### Application Programming Interface endpoint
+
+`ApiEndpoint` renders four existing endpoint summaries. The custom API reference does not use this component.
+
+```mdx
+<ApiEndpoint
+  method="POST"
+  baseUrl="https://api.example.test"
+  path="/v1/resources"
+  description="Create the documented resource."
+  parameters={[{ name: "resourceName", description: "Existing resource name." }]}
+  headers={[{ name: "Authorization", value: "Bearer &lt;TOKEN&gt;" }]}
+  body={{ name: "example" }}
+/>
+```
+
+| Prop          | Description                                                                    |
+| :------------ | :----------------------------------------------------------------------------- |
+| `method`      | Hypertext Transfer Protocol (HTTP) method label. The default is `GET`.         |
+| `baseUrl`     | Base URL displayed before the path.                                            |
+| `path`        | Endpoint path appended to `baseUrl`.                                           |
+| `description` | Optional summary below the method and URL.                                     |
+| `parameters`  | Array of path-parameter objects with `name` and optional `description` values. |
+| `headers`     | Array of objects with `name`, `value`, and optional `description` values.      |
+| `body`        | String, object, or array displayed as the request body.                        |
+
+Use the OpenAPI-backed API reference or standard Markdown code and tables for new API documentation.
+
+### Table wrappers
+
+`Table`, `Tr`, `Th`, and `Td` preserve custom tables that cannot yet be represented as Markdown tables.
+
+```mdx
+<Table>
+  <Tr>
+    <Th>Field</Th>
+    <Th>Description</Th>
+  </Tr>
+  <Tr>
+    <Td>`name`</Td>
+    <Td>Existing field description.</Td>
+  </Tr>
+</Table>
+```
+
+`Table` accepts an optional `class` value. It also accepts the legacy `align` array but ignores it. `Tr` accepts `class`. `Th` and `Td` accept `class` and `style`. The wrappers pass other existing Hypertext Markup Language (HTML) table attributes to their matching element.
+
+Use a Markdown table for new structured lookup content.
+
+### Tabs
+
+`Tabs` and `TabItem` preserve existing mutually exclusive alternatives. Each `TabItem` uses a `label`.
+
+```mdx
+<Tabs>
+  <TabItem label="First option">Existing first option.</TabItem>
+  <TabItem label="Second option">Existing second option.</TabItem>
+</Tabs>
+```
+
+Use separate headings for new content unless a real requirement needs mutually exclusive alternatives.
+
+### Trusted HTML and tooltips
+
+`RenderHTML` and tooltip expressions preserve imported legacy parameter data. They require explicit imports after the frontmatter:
+
+```mdx
+import tooltips from 'reuse/tooltips/output_tooltip_muselive';
+import RenderHTML from '@components/renderhtml';
+```
+
+Existing pages can render a trusted tooltip string directly or pass it through `RenderHTML` when the source contains trusted formatting:
+
+```mdx
+{tooltips.output_type.label}
+<RenderHTML>{tooltips.output_type.description}</RenderHTML>
+```
+
+On an existing tooltip-backed page, you can add a static lookup that uses an already imported tooltip variable, a literal key, and one of the generated data fields: `label`, `description`, `type`, `unit`, `range`, `recommendations`, or `example`. Both dot and bracket key syntax are supported. The content-contract check confirms that the imported repository module, key, and field exist. Dynamic keys and arbitrary expressions remain unsupported.
+
+`RenderHTML` inserts its child as HTML. Use it only with the repository-owned tooltip modules already used by the compatibility corpus. Never pass contributor input, user input, remote content, or an unreviewed string to it. Do not add a tooltip import or `RenderHTML` to new content.
+
+If standard Markdown and the supported component set cannot represent a real requirement:
+
+1. Describe the content need to the documentation-platform maintainer.
+2. Confirm that an existing semantic construct cannot represent it.
+3. Define its rendering, machine-output, accessibility, and migration behavior before adding a component.
+4. Update the content contract and contributor guidance in the same reviewed change.
+
+Do not regenerate or expand the compatibility baseline only to make a validation failure disappear.

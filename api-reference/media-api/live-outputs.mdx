@@ -1,0 +1,27 @@
+---
+title: Live Outputs
+---
+
+# Live Outputs
+
+Live Outputs are how video from a LiveEvent is written to an Asset. A Live Event on its own will encode video, but will not write that video 
+to a permanent location. This is what Live Outputs achieve. A single Live Event can have multiple Live Outputs, for instance you may elect to have 
+one output storing a 2 minute rolling buffer of content for a traditional live stream, and a second output with a 24-hour rolling buffer for
+a catchup service. If you have an event-based service with recurring events, you may elect to have a pool of Live Events that are reused for each
+event, each time with a different set of Live Outputs. Live Outputs cannot be modified.
+
+A typical workflow will involve creating a Live Event, an asset for the content, and a Live Output to write the content to the asset. 
+
+## Key Differences with this API
+
+- Rewind Window is not yet supported
+- outputSnapTime is not yet supported
+- The fragmentsPerTsSegment parameter is likely ignored
+
+* [List Live Outputs](/api-reference/media-api/live-outputs/list-live-outputs)
+
+* [Get](/api-reference/media-api/live-outputs/get)
+
+* [Create](/api-reference/media-api/live-outputs/create)
+
+* [Delete](/api-reference/media-api/live-outputs/delete)

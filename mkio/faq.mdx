@@ -1,0 +1,121 @@
+---
+title: Frequently asked questions
+description: Find answers to common MK.IO questions about onboarding, storage, APIs, billing, support, and media workflows.
+sidebarTitle: FAQ
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Find the right starting point for common MK.IO setup, playback, account, and automation questions. The portal guides focus on the user interface, while the Application Programming Interface (API) Guides cover automated workflows.
+
+## Onboarding
+
+<Accordion title="Where should I start with MK.IO?">
+  Start with [What is MK.IO?](/mkio/getting-started/what-is-mkio) if you want to understand the platform and its resources. To validate a live workflow, follow [Live stream in five minutes](/mkio/getting-started/live-stream-in-five-minutes). For Video on Demand (VOD) processing, follow [Publish your first VOD asset](/mkio/getting-started/video-on-demand-vod-workflows).
+</Accordion>
+
+<Accordion title="Should I start with live or on-demand video?">
+  Choose live streaming when an encoder sends a continuous source to MK.IO. Choose Video on Demand (VOD) when your video already exists as a file or when you want to publish a completed live recording. [What is MK.IO?](/mkio/getting-started/what-is-mkio#choose-live-or-on-demand-video) compares both workflows.
+</Accordion>
+
+<Accordion title="What do I need for my first workflow?">
+  You need an activated MK.IO account, a project, and connected cloud storage. A live workflow also needs a prepared source encoder. Start with [Set up your MK.IO account](/mkio/getting-started/account-setup-and-first-steps) and [Connect cloud storage](/mkio/getting-started/connect-cloud-storage).
+</Accordion>
+
+<Accordion title="How do I navigate the portal?">
+  [Navigate the MK.IO portal](/mkio/getting-started/platform-navigation-and-key-features) maps the **Organize**, **Create**, and **Deliver** groups to the relevant guides. Transforms and jobs are both under **Video Processing**.
+</Accordion>
+
+<Accordion title="Can I migrate from Azure Media Services?">
+  Yes. Start with [Migrate from Azure Media Services](/mkio/how-to/migrate-from-azure-media-services) for the migration path and links to asset, playback, and organization guidance.
+</Accordion>
+
+## Storage and assets
+
+<Accordion title="Why does MK.IO need my cloud storage?">
+  MK.IO uses connected cloud storage for source files, processing outputs, and live recordings. The media files remain in storage that you control. [Connect cloud storage](/mkio/getting-started/connect-cloud-storage) explains the portal setup.
+</Accordion>
+
+<Accordion title="Which storage providers can I connect?">
+  The portal guide covers Amazon S3 and Azure Blob Storage. The Media API also defines Google Cloud Storage registration through `Google.Storage`. See [Connect cloud storage](/mkio/getting-started/connect-cloud-storage) and the [Storage API Guide](/api-guides/how-to/media/storage).
+</Accordion>
+
+<Accordion title="Does MK.IO copy my existing media?">
+  An MK.IO asset is a logical pointer to a location in your cloud storage. Read [Assets and asset filters](/mkio/understanding/core-concepts/assets) before referencing existing content or choosing deletion behavior.
+</Accordion>
+
+<Accordion title="Can deleting an asset delete its files?">
+  Yes, depending on the deletion behavior selected when the asset was created. Check the asset setting before deletion because MK.IO may also delete the associated files from cloud storage. See [Assets and asset filters](/mkio/understanding/core-concepts/assets#what-is-an-asset).
+</Accordion>
+
+## Playback and delivery
+
+<Accordion title="Why do I need an endpoint and locator?">
+  A streaming endpoint supplies the delivery hostname. A streaming locator publishes a specific asset under a streaming policy and supplies its playback path. MK.IO combines them into the playback URL. See [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content).
+</Accordion>
+
+<Accordion title="Why is my asset not playing?">
+  Confirm that the asset has playable content, its streaming locator is applied, and the selected streaming endpoint is running. MK.IO displays the HTTP Live Streaming (HLS) and Dynamic Adaptive Streaming over HTTP (DASH) paths after these resources are in place. Use [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content) to check the complete setup.
+</Accordion>
+
+<Accordion title="What does a content delivery network do?">
+  A Content Delivery Network (CDN) caches content across distributed servers so viewers can retrieve it from a closer location. MK.IO supports CDN endpoints and external CDN configurations. Start with [Streaming endpoints](/mkio/understanding/core-concepts/endpoints) and [Streaming endpoints and playback](/mkio/how-to/content-delivery-publishing).
+</Accordion>
+
+## Workflows and APIs
+
+<Accordion title="How do transforms and jobs relate?">
+  A transform defines a reusable processing task. A job applies that transform to an input and produces an output asset. See [Transforms and jobs](/mkio/understanding/core-concepts/transforms-and-jobs), [Video processing](/mkio/how-to/video-processing-encoding), or the [Transforms and jobs API Guide](/api-guides/how-to/media/transforms-and-jobs).
+</Accordion>
+
+<Accordion title="Can I use both the portal and APIs?">
+  Yes. Use the portal guides for MK.IO user interface workflows and the API Guides for automation. The guides link between both approaches where the same resources are available. Start with [Choose an API](/api-guides/getting-started/which-api).
+</Accordion>
+
+<Accordion title="How do I automate MK.IO workflows?">
+  Use the [API Guides](/api-guides) for task-based automation guidance and the [API Reference](/api-reference/media-api) for endpoint and schema details. Start with [Choose an API](/api-guides/getting-started/which-api) and [API authentication](/api-guides/getting-started/authentication).
+</Accordion>
+
+<Accordion title="How do I create an API token?">
+  Create personal, service, or restricted access tokens from the organization settings. See [Create API tokens](/mkio/how-to/managing-your-organization/api-tokens) and the [Token API Guide](/api-guides/how-to/management/tokens).
+</Accordion>
+
+<Accordion title="Does MK.IO provide a player?">
+  Yes. Use the [MK Player Software Development Kit (SDK)](/mkio/reference/player-sdk) for setup, playback, events, subtitles, and Digital Rights Management (DRM). Use [Player customization](/mkio/reference/player-customization) to configure the player interface.
+</Accordion>
+
+<Accordion title="How do I protect content?">
+  Start with [Content protection concepts](/mkio/understanding/core-concepts/content-protection), then choose a guide under [Content key policies](/mkio/how-to/drm-content-protection). The [Content protection API Guide](/api-guides/how-to/media/content-protection) covers API-based workflows.
+</Accordion>
+
+<Accordion title="How do I know a resource is ready?">
+  MK.IO resources move through provisioning and runtime states. For example, a live event reaches `Running`, while an asset reaches `Ready`. Use [Resource states](/mkio/reference/resource-states) to interpret the values shown by MK.IO and returned by the APIs.
+</Accordion>
+
+## Accounts and billing
+
+<Accordion title="Can I subscribe through a marketplace?">
+  MK.IO supports subscriptions through Azure Marketplace and Amazon Web Services (AWS) Marketplace. See [Set up your MK.IO account](/mkio/getting-started/account-setup-and-first-steps) for Azure and [Subscribe through AWS Marketplace](/mkio/how-to/managing-your-organization/subscribe-through-aws-marketplace) for AWS.
+</Accordion>
+
+<Accordion title="Where can I review usage and pricing?">
+  Use [Billing and usage](/mkio/how-to/managing-your-organization/billing) to review organization usage. Check the [MK.IO pricing page](https://mediakind.com/mkio/pricing/) for current rates, and stop resources when a guide tells you they continue to incur charges.
+</Accordion>
+
+<Accordion title="Which resources should I stop after testing?">
+  Stop live events and streaming endpoints when you no longer need them because both incur charges while running. The live quickstart includes a [cleanup checklist](/mkio/getting-started/live-stream-in-five-minutes#stop-the-test-resources).
+</Accordion>
+
+<Accordion title="How do I manage users and access?">
+  MK.IO uses organizations, projects, users, and teams to control access. See [Organizations and teams](/mkio/understanding/fundamentals/orgsandteams) and [Manage users and teams](/mkio/how-to/managing-your-organization/access-users-and-teams).
+</Accordion>
+
+## Support and availability
+
+<Accordion title="Where can I get technical support?">
+  Use the [MK.IO support portal](https://support.mk.io) for technical assistance and documentation questions.
+</Accordion>
+
+<Accordion title="Where can I find availability information?">
+  Review [Platform availability](/mkio/reference/platform-availability) and the [MK.IO service-level agreement](https://www.mediakind.com/pdf/legal/MKIO-Service-Level-Agreement_Rev.24_05.pdf).
+</Accordion>

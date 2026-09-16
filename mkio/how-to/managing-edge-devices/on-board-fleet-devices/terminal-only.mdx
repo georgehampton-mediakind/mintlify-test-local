@@ -1,0 +1,75 @@
+---
+title: On-board edge devices using device terminal only
+description: How to connect an edge device to MK.IO and register it to a project using the device terminal only.
+sidebarTitle: Onboarding via terminal only
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Connect and register an edge device from its terminal when the installing engineer cannot access the local web UI.
+
+## Prerequisites
+
+* The device has been [configured with a *Control IP address*](/beam/quick-start#set-control-ip-address).
+* You can access the device's terminal via a keyboard and monitor or via SSH.
+
+<span id="overview-of-adding-the-device-to-mkio" className="mk-legacy-anchor" />
+
+## Overview of adding the device to MK.IO
+
+This on-boarding process has two parts:
+
+1. From the device's local terminal, copy the **Device ID**.
+2. Use the **Device ID** to register the device [via the MK.IO UI](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/terminal-only#add-the-device-using-the-mkio-ui).
+
+Once registered, the device is available for monitoring and control through MK.IO, including its web UI.
+
+<Info>
+  **Remote on-boarding**
+
+  The two steps above do not need to be completed by the same person. In a remote on-boarding scenario, the engineer installing the device can pass the Device ID verbally to an MK.IO user with permission to register it.
+</Info>
+
+<Steps>
+  <Step title="Configure an HTTP proxy (optional)">
+    <span id="configure-an-http-proxy-optional" className="mk-legacy-anchor" />
+
+    A proxy only needs to be configured when internet connectivity for MK.IO is only possible via a proxy. Running this command without changing any settings also lets you diagnose connectivity issues.
+
+    1. Log in to the device's terminal.
+    2. Run the `control-wizard` command.
+    3. Press **P** to configure a proxy.
+    4. Enter the **Proxy IP Address**, **Port**, **Username**, and **Password**.
+    5. Press **Enter** to apply.
+    6. Proxy settings are tested and results displayed on screen.
+    7. Press **Q** to quit.
+  </Step>
+
+  <Step title="Obtain the Device ID">
+    <span id="obtain-the-device-id" className="mk-legacy-anchor" />
+
+    The **Device ID** displays on the device's terminal. Press **Enter** if needed to clear the screen. It also displays when you log in to the device terminal through SSH.
+  </Step>
+
+  <Step title="Add the device using the MK.IO UI">
+    <span id="add-the-device-using-the-mkio-ui" className="mk-legacy-anchor" />
+
+    <Warning>
+      The device must have connected to MK.IO before you can register it. If the device cannot reach MK.IO, see [Troubleshooting on-boarding](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/troubleshooting).
+    </Warning>
+
+    Follow [Add the device using the MK.IO UI](/mkio/how-to/managing-edge-devices/on-board-fleet-devices/common-workflow#add-the-device-using-the-mkio-ui). Enter the **Device ID** in place of the short code.
+  </Step>
+
+  <Step title="Verify on-boarding">
+    <span id="verify-on-boarding" className="mk-legacy-anchor" />
+
+    You can now [view device information](/mkio/how-to/managing-edge-devices/display-device-information) and [access the remote UI](/mkio/how-to/managing-edge-devices/access-the-remote-device-ui).
+  </Step>
+
+  <Step title="Update device software">
+    <span id="update-device-software" className="mk-legacy-anchor" />
+
+    Once the device is registered, before commissioning, [update the device software to the latest version](/mkio/how-to/managing-edge-devices/update-device-software).
+  </Step>
+</Steps>

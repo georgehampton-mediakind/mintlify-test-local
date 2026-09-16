@@ -1,0 +1,72 @@
+---
+title: Processing requirements
+robots: noindex, nofollow
+---
+
+Harmonic follows a process that defines the CPU and memory needed for a transcoding profile. This process is called benchmarking and needs a transcoding and destination profile to be calculated.
+
+To modify your profiles, do the following:
+
+<Note>
+  **Note:&#x20;**&#x56;erify that Harmonic has enabled the option to allow you to modify profiles through the Hub.
+</Note>
+
+1. Log in to Hub.
+
+2. Select the **Software** tab.
+
+3. Open an IPTV or OTT transcoding/destination profile (e.g."Multiscreens Gold HD v.1"), and make the desired video and audio configurations. Make sure to follow the [Lab Wizard profile guidelines](/vos360/user-guide/lab-wizard-profile-guidelines).
+
+4. Click the **Processing Requirements** section under a transcoding profile and enter the information required for calculating CPU/Memory processing data through a benchmark. Make sure that you select the correct destination profile in **Destination Profile**.
+
+   ![](/images/vos360/22824727a4d0963f8c95744b.png)
+
+5. Add text in the **Save with a message...** field to distinguish your new version.
+
+6. Click **Save as version** to create a new profile version, and wait for the benchmark process to finish. Depending on the complexity of the profile, this process can be immediate or can take up to 2 hours.
+
+7. Use the profile if the status is **Ready for Provision**.
+
+## Processing requirements field information
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /><col span="1" /></colgroup>
+
+    <thead><tr><th colSpan="1" rowSpan="1"><p><strong>Field Name</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Description</strong></p></th><th colSpan="1" rowSpan="1"><p><strong>Options/Default</strong></p></th></tr></thead>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>CPU Requirement</p></td><td colSpan="1" rowSpan="1"><p>This parameter is calculated by the automated benchmarking system and put into the transcoding profile.</p></td><td colSpan="1" rowSpan="1"><p><span>Numerical</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Memory Requirement</p></td><td colSpan="1" rowSpan="1"><p>This parameter is calculated by the automated benchmarking system and put into the transcoding profile.</p></td><td colSpan="1" rowSpan="1"><p><span>Numerical</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>GPU Requirement</p></td><td colSpan="1" rowSpan="1"><p>This parameter is calculated by the automated benchmarking system and put into the transcoding profile when the GPU node is selected.</p></td><td colSpan="1" rowSpan="1"><p><span>Numerical</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Cloud Type</p></td><td colSpan="1" rowSpan="1"><p><span>Choose the cloud provider where the VOS360 cluster runs.</span></p></td><td colSpan="1" rowSpan="1"><ul><li><p>Azure (default)</p></li><li><p>AWS</p></li><li><p>GCP</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Destination Profile</p></td><td colSpan="1" rowSpan="1"><p>Choose the Destination Profile associated with the Transcoding Profile.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None (default)</p></li><li><p>For IPTV transcoding profile, list all types of destination profiles under the same account, including <strong>IPTV Destination</strong> and <strong>ATS Destination</strong>, as well as <strong>Destination</strong> profiles</p></li><li><p>For OTT transcoding profile, list only <strong>Destination</strong> profiles</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Input Transport Type</p></td><td colSpan="1" rowSpan="1"><p>Choose the Input Transport type for the transcoding services.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>SRT (default)</p></li><li><p>Zixi</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Input Format</p></td><td colSpan="1" rowSpan="1"><p>Choose the video format of the source.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None (default)</p></li><li><p>Other options: 480i/576i/720p/1080i/1080p/2160p</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Input Frame Rate</p></td><td colSpan="1" rowSpan="1"><p>Choose the video frame rate of the source.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None (default)</p></li><li><p>Other options depend on the selected <strong>Input Format</strong> value.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Input Codec</p></td><td colSpan="1" rowSpan="1"><p>Choose the video codec used in the source.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None (default)</p></li><li><p>Other options depend on the selected <strong>Input Format</strong> and <strong>Input Frame Rate</strong> values.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Input Bitrate (Mbps)</p></td><td colSpan="1" rowSpan="1"><p>Choose the desired input bitrate of the compressed video in the source, using the closest matching bitrate available.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None (default)</p></li><li><p>Other options depend on the selected <strong>Input Format</strong>, <strong>Input Frame Rate</strong>, and <strong>Input Codec</strong> values.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Input UHD Source</p></td><td colSpan="1" rowSpan="1"><p>If the source is UHD video format (2160p), then is the source SDR or HDR.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>SDR (default)</p></li><li><p>HDR10</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Source Redundant</p></td><td colSpan="1" rowSpan="1"><p>Choose if TS Source Redundancy is to be enabled.</p><blockquote><p><strong>Note: </strong>With TS source redundancy, the transcoder will decode both the primary and backup sources simultaneously before the re-encoding stage. TS source redundancy will reduce the transcoding channel density on an ingress node.</p></blockquote></td><td colSpan="1" rowSpan="1"><ul><li><p>None (default)</p></li><li><p>True</p></li><li><p>False</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Channel Origination Config</p></td><td colSpan="1" rowSpan="1"><p>If the service requires playout functionality with graphics, choose the level of graphics support required.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>Live only, no playout (default)</p></li><li><p>Playout, Low graphics</p></li><li><p>Playout, Medium graphics (up to 2 layers, e.g. motion graphic and logo)</p></li><li><p>Playout, High graphics (up to 4 layers, e.g. squeezeback, ticker, motion graphics and logo)</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Nielson ID3 Audio Watermarking</p></td><td colSpan="1" rowSpan="1"><p>Configure the Nielsen audio watermark.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>False (default)</p></li><li><p>True</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>OCR Subtitling</p></td><td colSpan="1" rowSpan="1"><p>Configure image-based subtitle conversion to text-based subtitle.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>False (default)</p></li><li><p>True</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>DVB Subtitles Quantity</p></td><td colSpan="1" rowSpan="1"><p>Number of OCR track conversions.</p></td><td colSpan="1" rowSpan="1"><ul><li><p>1-5</p></li><li><p>2 (default)</p></li></ul></td></tr></tbody>
+  </table>
+</div>
+
+Other benchmark-related fields are hard-coded according to the transcoding profile type (IPTV/OTT), or are read from the selected destination profile. They are not required from the Profile Editor UI.
+
+## Benchmarking results
+
+After you finish entering the processing requirements, the new profile triggers the benchmark process. A record is automatically created using the provided inputs in the Profile Editor and other defaults.
+
+As the benchmark process calculates the CPU/memory requirement, it displays the following status updates:
+
+* Calculating requirements
+
+* Successful completion
+
+* Unsuccessful completion
+
+### Calculating requirements
+
+![](/images/vos360/5c63d751c0f81f48313a7dc1.png)
+
+At this stage, **No (calculating CPU/memory requirement data...)** is displayed under the **Ready for Provision** field. The profile is not available and cannot be used.
+
+### Successful completion
+
+![](/images/vos360/8f91a29d62d3d909149a3a29.png)
+
+At this stage, **Yes** is displayed under the **Ready for Provision** field. The profile is ready for use.
+
+### Unsuccessful completion
+
+![](/images/vos360/dbc1198ddb4e17ef3ce86833.png)
+
+At this stage, No (**Please contact Harmonic support)** is displayed under the **Ready for Provision** field. The profile cannot be used. Contact Harmonic Support through the Hub support process. Make sure to provide your profile name and ID.

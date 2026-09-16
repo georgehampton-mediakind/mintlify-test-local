@@ -1,0 +1,71 @@
+---
+title: Configuring the IPTV/Broadcast destination
+robots: noindex, nofollow
+---
+
+**Before you begin**\
+[Configuring a source input](/vos360/user-guide/configuring-a-source-input)
+
+You can configure an IPTV/Broadcast service destination to use IP, CloudLink, Zixi and SRT output. Additionally, you can create a DiviTrack/Statmux pool for the IPTV/Broadcast destination output.
+
+1. From the **Configure Channels** app, navigate to the **Destinations** page, click **+ Destination**.\
+   ![](/images/vos360/53550183eaf1d780a648d0af.png)
+
+2. For **Destination Name**, type the name of the destination.
+
+3. For the **Type** of destination the service will have, select **Broadcast**.\
+   **Result**: The default output type **IP&#x20;**&#x69;s selected under **Outputs**.
+
+4. Select the desired destination **Profile** from the drop-down list.
+
+5. If you wish to be able to filter destinations according to user-defined labels, enter one or more labels for the destination.
+
+6. If you wish to use an output that is different from the default, click **Remove output** and then click **+Output** and select the desired output type from the list.\
+   IPTV/Broadcast destinations use IP, DiviTrack Pool, CloudLink, Zixi, SRT, Cloud and Relay (HSP) outputs.
+
+7. (Optional) In addition to the Primary destination output, you can create additional outputs for the same destination type (e.g. 2nd IP, 3rd IP and so on) by clicking **+Output**.\
+   ![](/images/vos360/471c28031c865945e344c188.png)
+
+8. Configure the general settings for the Outputs section:
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>IP address</p></td><td colSpan="1" rowSpan="1"><p>Enter the multicast IP address for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Enter the port number for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Source IP address</p></td><td colSpan="1" rowSpan="1"><p>Enter the virtual source IP address for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Enter the virtual source UDP port for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Rank</p></td><td colSpan="1" rowSpan="1"><p>Used if multiple outputs are configured.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Status</p></td><td colSpan="1" rowSpan="1"><p>Determine how outputs are paired for redundancy:</p><ul><li><p><strong>Mandatory</strong> output is active.</p></li><li><p><strong>Standby</strong> output is muted.</p></li><li><p><strong>Disabled</strong> output remains inactive until the status is changed to <strong>Standby</strong> or <strong>Mandatory</strong> using the VOS REST API or UI.<br />The first Mandatory output will be paired with the first Standby output, and so on.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Output Monitor</p></td><td colSpan="1" rowSpan="1"><p>If the service will be encrypted and you want to be able to monitor clean video output, select Output Monitor and provide the delivery IP address and Port for monitoring.</p></td></tr></tbody>
+     </table>
+   </div>
+
+9. For IPTV/Broadcast output with **DiviTrack Pool** destination, refer to [Creating a DiviTrack/Statmux pool for IPTV/Broadcast destination](/vos360/user-guide/creating-a-divitrack-statmux-pool-for-iptv-broadcast-destination).
+
+10. For IPTV/Broadcast output with **CloudLink** destination, select the name of the downlink CloudLink.
+
+11. For IPTV/Broadcast output with **Zixi** destination, use the default Zixi settings or configure the custom Zixi settings:
+
+    <div className="vos-table-scroll">
+      <table className="vos-source-table">
+        <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+        <tbody><tr><td colSpan="1" rowSpan="1"><p>Encryption Type</p></td><td colSpan="1" rowSpan="1"><p>Choose an encryption standard, or select <strong>None</strong>.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Channel Name</p></td><td colSpan="1" rowSpan="1"><p>Enter a channel name that will also be used in the receiver configuration.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>FEC Overhead (%)</p></td><td colSpan="1" rowSpan="1"><p>FEC overhead in % over the source bitrate. The default value is 20%.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>FEC Block (ms)</p></td><td colSpan="1" rowSpan="1"><p>Maximum time of the FEC block, in milliseconds. The default value is 10 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Max Latency (ms)</p></td><td colSpan="1" rowSpan="1"><p>Maximum latency for error correction, in milliseconds. The default value is 1501 ms.</p><blockquote><p><strong>Note: </strong>You must enter a value greater than 1500 ms.</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Timeout (ms)</p></td><td colSpan="1" rowSpan="1"><p>Connection timeout, in milliseconds. The default value is 10000 ms.</p></td></tr></tbody>
+      </table>
+    </div>
+
+12. &#x20;For IPTV/Broadcast output with **SRT** destination, use the default SRT settings or configure the custom SRT settings:
+
+    <div className="vos-table-scroll">
+      <table className="vos-source-table">
+        <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+        <tbody><tr><td colSpan="1" rowSpan="1"><p>Encryption Type</p></td><td colSpan="1" rowSpan="1"><p>Choose an encryption standard, or select <strong>None</strong>.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Channel Name</p></td><td colSpan="1" rowSpan="1"><p>Enter a channel name that will also be used in the receiver configuration.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Bandwidth Overhead (%)</p></td><td colSpan="1" rowSpan="1"><p>The Bandwidth Overhead is the percentage of the Average Bandwidth used to accommodate SRT controls. The default value is 20%.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Latency (ms)</p></td><td colSpan="1" rowSpan="1"><p>Sending packets over a (usually unpredictable) network could result in time delay. SRT Latency is a fixed value (min. 0 ms, no max. value) representing the maximum buffer size available for managing SRT packets. The default value is 1000 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Timeout (ms)</p></td><td colSpan="1" rowSpan="1"><p>Connection timeout, in milliseconds. The default value is 10000 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Blocking Mode</p></td><td colSpan="1" rowSpan="1"><p>When blocking mode is enabled, the SRT function will not exit until the availability condition is satisfied. In non-blocking mode the SRT function always exits immediately, and in case of lack of resource availability, it returns an error with appropriate code. </p></td></tr></tbody>
+      </table>
+    </div>
+
+    <Note>
+      **Note:&#x20;**&#x53;RT for SPTS outputs (Caller Mode) can be configured to use a specific Network interface. A Stream ID can be customized to be inserted into the outgoing SRT streams.
+    </Note>
+
+13. For IPTV/Broadcast output with **Cloud (Live** **Routing)** destination, the Cloud channel will be available as a source to be up-linked to the Harmonic's Cloud via Live Routing Service. This configuration is applicable to **VOS360** and needs to have access to the Syndicate app only.
+
+14. For IPTV/Broadcast output with **Relay (HSP)** destination, no custom configurations are required.
+
+15. Click **Create**.

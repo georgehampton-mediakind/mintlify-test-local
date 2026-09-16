@@ -1,0 +1,38 @@
+---
+title: Asset conversion transform
+description: Convert live recordings or VOD assets to the MP4 formats produced by MK.IO asset conversion presets.
+sidebarTitle: Asset Conversion Transform
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A reusable **asset conversion transform** converts a live-event recording or Video on Demand (VOD) asset to an MP4 asset. The selected preset determines the files MK.IO creates.
+
+Use asset conversion for legacy Azure Media Services (AMS) events or older Smooth Streaming assets that need the MP4v4 format. After conversion, the asset can use features such as thumbnails, subtitle side-loading, Artificial Intelligence (AI) transcription and translation, and VOD dubbing.
+
+MK.IO provides three built-in presets:
+
+* **CopyTopBitrateInterleaved:** Generates a single MP4 file using the top-bitrate video rendition with all audio interleaved. Use this for download-only scenarios. This file requires a `Predefined_DownloadOnly` or `Predefined_DownloadAndClearStreaming` streaming policy.
+* **CopyAllBitratesNonInterleaved:** Copies all video and audio streams as separate output files. Use this when your source video rendition files contain video only, with no audio interleaved. Output includes:
+  * MP4 files (`.mp4`), one per video or audio rendition.
+  * A server manifest (`.ism`) used as the access point for streaming endpoints.
+  * A client manifest (`.mpd`).
+  * Index files (`.mpi`), one per rendition.
+* **CopyAllBitratesInterleaved:** Copies all video streams as separate files with all audio interleaved in each. Use this when your source asset has audio bundled within each video rendition. This is the most common structure for HTTP Smooth Streaming (HSS) assets from AMS. Output includes:
+  * MP4 files (`.mp4`), one per video rendition with all audio interleaved.
+  * A server manifest (`.ism`) used as the access point for streaming endpoints.
+  * A client manifest (`.mpd`).
+  * Index files (`.mpi`), one per rendition.
+
+<Info>
+  **For VOD dubbing:** Use `CopyAllBitratesInterleaved` when converting legacy HSS assets for use with VOD dubbing. This is the most common choice for AMS-sourced assets. See the [Convert HSS assets for VOD dubbing](/mkio/how-to/ai-features/convert-hss-for-vod-dubbing) guide for step-by-step instructions.
+</Info>
+
+When you run an asset conversion job, select the source asset. MK.IO identifies its source files automatically.
+
+## Use an asset conversion transform
+
+Create a transform with one of the built-in asset conversion presets, then run a job against the live recording or VOD asset you want to convert.
+
+* [Configure transforms](/mkio/how-to/video-processing-encoding/configure-transformations) explains how transforms define a reusable processing operation.
+* [Run VOD jobs](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs) explains how to apply a transform to an input asset and write the result to an output asset.

@@ -1,0 +1,23 @@
+---
+title: VOS CloudLink
+robots: noindex, nofollow
+---
+
+<Note>
+  **Note:&#x20;**&#x43;loudLink reaches end of support life by the end of 2027. If you use CloudLink to ingest live sources from on-premises to the cloud, consider replacing it with the XOS appliance.
+</Note>
+
+CloudLink is the bridge between the legacy networking and the cloud-friendly environment. When receiving a multicast stream over UDP, it must convert to unicast UDP with deep packet recovery and FEC in order to be ingested by the cloud environment.
+
+The CloudLink supports MPEG over IP multicast inputs. It uses a multicast-to-unicast transformation algorithm for delivery of source streams. Each CloudLink can be associated with one VOS360.
+
+The CloudLink is installed on a dedicated server platform and deployed in a virtual machine environment with a Type 1 or Type 2 hypervisor. It is accessible via a Linux-based Terminal User Interface (TUI) application. For both CentOS and Windows network environments, a DHCP server is required to allocate IP addresses for the single or multiple interfaces used by the CloudLink software.
+
+<Note>
+  **Note:** For production environments, Harmonic recommends deploying the OVA on a Type 1 hypervisor (ESXi). Using CloudLink on Type 2 hypervisor for production environments is not supported.
+</Note>
+
+**VOS CloudLink**\
+![](/images/vos360/dc6e5e951eed58caabf8c313.png) \
+**CloudLink video propagation**\
+![](/images/vos360/00bd27aa5aa7654dbf552626.png)

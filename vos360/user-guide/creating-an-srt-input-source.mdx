@@ -1,0 +1,48 @@
+---
+title: Creating an SRT input source
+robots: noindex, nofollow
+---
+
+From the **Configure Broadcast** app, click ***+Source*** and select **SRT&#x20;**&#x74;o create an SRT source **with proxy**:
+
+![](/images/vos360/917eefdba5a5ef6f8771d1d0.png)
+
+## **Settings tab**
+
+**Source information**:
+
+* Define an input source name that will appear on the Configure Broadcast view.
+
+* Configure the standard for the type of signaling in the source: DVB or ATSC.
+
+  <Note>
+    **Note:&#x20;**&#x53;electing ATSC enables incoming PSIP analysis. Major channel and minor channel numbers are displayed and PSIP EIT remultiplexing is then possible.
+  </Note>
+
+* Define the maximum number of programs authorized from this input.
+
+**Input**:
+
+* Set the network IP parameters that will allow the VOS to retrieve the SRT source and its associated programs.
+
+* (Optional) Set High Jitter to **ON**.
+
+* Set the Sync Loss Detection Threshold (Default is 0.2 seconds)
+
+* If source redundancy is used, set the network IP parameters that will allow the VOS to retrieve the backup SRT source.
+
+  * Set the Failover Settings:
+
+    * Global - Default settings are defined in Configure Channel → Settings → Advanced
+
+    * Custom - Continuity Counter Error and Scrambled Video PID can be selected
+
+* If ST 2022-7 redundancy is selected, configure the network IP parameters allowing VOS to retrieve the backup SRT stream to perform hitless input redundancy based on ST 2022-7.
+
+  <Note>
+    **Note:&#x20;**&#x54;he range for the ST 2022-7 Delay Buffer is 0 to 200 ms, with a default value of 50 ms.
+  </Note>
+
+Click **+Create**, the source appears on the left panel.
+
+![](/images/vos360/3a8c907072bdd0d157bfff52.png)

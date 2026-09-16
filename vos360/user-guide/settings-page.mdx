@@ -1,0 +1,24 @@
+---
+title: Settings page
+robots: noindex, nofollow
+---
+
+From the **Settings** page, you can opt to delete source files after processing, enable automatic transcoding, and configure audio grooming profiles.
+
+**Asset Acquisition Settings page**
+
+![](/images/vos360/75935c96d0bdab9e7e8b9e37.png)![](/images/vos360/5628b5f7c1930368339a9aac.png)
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Keep Source Files</p></td><td colSpan="1" rowSpan="1"><p>De-select to delete source files from VOS storage upon job completion. Customers may wish to keep the source files in case re-transcoding is needed later without re-ingesting.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Decision Defaults Video</p></td><td colSpan="1" rowSpan="1"><p>Enable automatic transcoding of assets (from the watch folder on Amazon S3 bucket, Azure Blob Storage or Google Cloud Storage).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Priority</p></td><td colSpan="1" rowSpan="1"><p>Select a priority level for automatic jobs.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Unified (one for all)</p></td><td colSpan="1" rowSpan="1"><p><span>If this option is selected, you can define a single transcoding profile for all input files.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Source resolution based</p></td><td colSpan="1" rowSpan="1"><p> If this option is selected, you can add a default profile for SD, HD, and UHD definition types.</p><blockquote><p><strong>Note: </strong>You must select at least one profile for each definition type.</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Common Decision Defaults</p></td><td colSpan="1" rowSpan="1"><p>When enabled, you can add a default profile for SD, HD, and UHD definition types.</p><blockquote><p><strong>Note: </strong>You must select at least one profile for every type.</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Profile(s)</p></td><td colSpan="1" rowSpan="1"><p>Add transcoding profile (only validated profiles are listed).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Groom MXF/MOV/TS/MP4 with Profile</p></td><td colSpan="1" rowSpan="1"><p>Create audio subtitle grooming profile for MXF/MOV/TS/MP4 files.</p><blockquote><p><strong>Note:</strong> If the video asset is going to be used for playout channels or if there are any audio/subtitle PIDs from the VOD source file need to be changed or removed then the asset needs to have a initial Grooming stage.</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Decision Defaults Audio - Profile(s) </p></td><td colSpan="1" rowSpan="1"><blockquote><p><strong>Note: </strong>This option is only available when <strong>Decision Defaults Video</strong> is turned on (Select "Unified (one for all)" or "Source resolution based" from the drop-down).</p></blockquote><p>Enable automatic transcoding of "audio-only" assets (from the watch folder on Amazon S3 bucket, Azure Blob Storage or Google Cloud Storage).</p><p>You can add the "audio-only" transcoding profile for all audio-only input files (<span>The transcoding profile for audio-only assets needs to have the "processing" configuration set to "e_DISABLE" in the Multiscreen profile via REST API (</span><code>multiscreenProfileProperties.video.processing": "e_DISABLE").</code> <span> </span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p>VOD Destination Profile</p></td><td colSpan="1" rowSpan="1"><p>It is used to package all the VOD contents available in the Library</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Enable Encryption</p></td><td colSpan="1" rowSpan="1"><p>Enable this checkbox if the VOD contents are configured to use DRM and to select the DRM system for each packaging format. Each VOD asset shall be assigned to its individual resourceId to complete the encryption configuration.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Enable Thumbnail Indexing for Packaging</p></td><td colSpan="1" rowSpan="1"><p>Enable this checkbox if you want thumbnails to be prepared for every VOD asset.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Apply Logo Template</p></td><td colSpan="1" rowSpan="1"><p>Add a logo to the VOD asset with desired graphic and logo settings.</p></td></tr></tbody>
+  </table>
+</div>
+
+**Asset Acquisition Profiles page**
+
+For information on creating grooming profiles, see [Creating an audio grooming profile](/vos360/user-guide/creating-an-audio-grooming-profile).
+
+![](/images/vos360/841734201d6f365fe760f062.png)

@@ -1,0 +1,30 @@
+---
+title: DRM system integration
+robots: noindex, nofollow
+---
+
+A KMS (Key Management Server) API must be used to exchange encryption key and DRM metadata between an OTT packager/scrambler (VOS) and a third-party KMS.
+
+Several types of KMS APIs are supported:
+
+* CPIX API
+
+  * Standard API defined by DASH-IF workgroup ([https://dashif.org/](https://dashif.org/) )
+
+  * Supported for all OTT packaging formats and all DRM systems
+
+* Harmonic KMS (HKMS) API
+
+  * Proprietary Harmonic API
+
+  * Harmonic KMI (Key Management Interface) is an XML/SOAP-based API
+
+  * Supported for all OTT packaging formats and all DRM systems
+
+* Widevine API
+
+  * Used to integrate with Widevine ([https://www.widevine.com/](https://www.widevine.com/) ) cloud KMS service
+
+  * Limited to DASH packaging format and Widevine DRM
+
+Depending on the DRM solution selected and depending on the KMS API that must be used, an integration process might be required.

@@ -1,0 +1,64 @@
+---
+title: TS Multiplexer profile parameters
+robots: noindex, nofollow
+---
+
+Refer to parameters descriptions when you need to update parameters for the TS Multiplexer profile.
+
+To modify the TS Multiplexer profile parameters, navigate to **Lab Wizard** app > **TS Multiplexer**.
+
+## **TS Bitrate parameters**
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>TS Bitrate</p></td><td colSpan="1" rowSpan="1"><p>This refers to the output TS bitrate.</p></td></tr></tbody>
+  </table>
+</div>
+
+\
+**Signaling Table parameters**
+------------------------------
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Table Name</p></td><td colSpan="1" rowSpan="1"><ul><li><p>SDT Actual</p></li><li><p>PAT</p></li><li><p>PMT</p></li><li><p>CAT</p></li></ul><p><strong>Note</strong>: multiplexer configuration allows to generate other tables, through Configure Broadcast GUI.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Building Mode</p></td><td colSpan="1" rowSpan="1"><ul><li><p>None</p></li><li><p>Local</p></li></ul></td></tr></tbody>
+  </table>
+</div>
+
+## **Default PID Mapping parameters**
+
+Defines what are the output PIDs by default, ie when they are not defined in multiplexer configuration.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Keep input PID</p></td><td colSpan="1" rowSpan="1"><p>Keep all original PIDs from sources</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Paradigm</p></td><td colSpan="1" rowSpan="1"><p>The default output PIDs for PMT, video, audio, data and SCTE-35 depends on the output Program Number, following parameters defined in this section.</p></td></tr></tbody>
+  </table>
+</div>
+
+## **Maximum inputs number**
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Transcoding services</p></td><td colSpan="1" rowSpan="1"><p>Maximum number of transcoding services connected to this multiplexer.</p><p>If exceeded, the multiplexer will automatically restart when you add a new transcoding service.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>TS sources</p></td><td colSpan="1" rowSpan="1"><p>Maximum number of TS/IP sources connected to this multiplexer.</p><p>If exceeded, the multiplexer will automatically restart when you add a new TS/IP source.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>SRT sources</p></td><td colSpan="1" rowSpan="1"><p>Maximum number of SRT sources connected to this multiplexer.</p><p>If exceeded, the multiplexer will automatically restart when you add a new SRT source.</p></td></tr></tbody>
+  </table>
+</div>
+
+\
+**Processing Requirements parameters**
+--------------------------------------
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>CPU Requirement</p></td><td colSpan="1" rowSpan="1"><p>Specify the number of CPU cores that must be allocated to the services using this profile.</p><p>Please contact Harmonic representatives before changing this parameter.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Memory Requirement</p></td><td colSpan="1" rowSpan="1"><p>Specify the amount of memory (MB) that must be allocated to the services using this profile.</p><p>Please contact Harmonic representatives before changing this parameter.</p></td></tr></tbody>
+  </table>
+</div>

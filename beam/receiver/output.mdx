@@ -1,0 +1,71 @@
+---
+title: Configure the output
+sidebarTitle: Output
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO Beam can output decoded video, audio and data using one or more of the following transport
+methods for distribution to other devices:
+
+<CardGroup cols={2}>
+  <Card title="SDI Output" href="/beam/receiver/output/sdi" icon="plug">
+    Broadcast standard for transmitting uncompressed video, audio, and data over coaxial or fiber cables.
+  </Card>
+
+  <Card title="SMPTE ST 2022-6 Output" href="/beam/receiver/output/smpte-st-2022-6" icon="network-wired">
+    IP-based standard that encapsulates a complete SDI signal (video, audio, and data) into a single stream.
+  </Card>
+
+  <Card title="SMPTE ST 2110 Output" href="/beam/receiver/output/smpte-st-2110" icon="network-wired">
+    Native IP standard that transports video, audio, and data as separate, independent streams.
+  </Card>
+
+  <Card title="Transport Stream Passthrough" href="/beam/receiver/output/ts-passthrough" icon="shuffle">
+    Convert a satellite feed into an IP UDP multicast transport stream and decrypt the content.
+  </Card>
+</CardGroup>
+
+## Output Profile selection
+
+Some output configurations require optimizations to get the best performance. The following
+**output profiles** are available:
+
+| Output Profile           | Receiver Service Type                                                                                                                                      | Other Service Types |
+| :----------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------ |
+| Standard                 | Recommended for:<br />- SDI output (all video formats)<br />- SMPTE ST 2022-6 output (all video formats)<br />- SMPTE ST 2110 output (SD/HD video formats) | Recommended         |
+| SMPTE ST 2110 UHD Output | Mandatory for:<br />- SMPTE ST 2110 output (UHD video formats)                                                                                             | Not recommended     |
+
+These **output profiles** are optimized for the *Receiver* service and support mixed output
+configurations. For other service types, such as *Live Encoding*, use the **Standard** output profile.
+
+### Service Running Blocked by the Current Output Profile
+
+In some cases, a *Receiver* service may be prevented from starting and entering the *Running* state.
+In this case, an alarm is raised indicating that the service configuration is not compatible with
+the selected **output profile**. Refer to the alarm description for guidance on resolving the issue
+and bringing the service into the *Running* state.
+
+For example, if the output profile is set to **Standard** and a UHD receiver service is configured
+for SMPTE ST 2110 output, a **Service blocked** alarm will indicate that **SMPTE ST 2110 UHD Output**
+is required. While the alarm is active, the service remains in a *Failed* state and cannot enter the
+*Running* state.
+
+## Configure the Output Profile
+
+To configure the output profile, follow these steps:
+
+1. Select <Icon icon="sliders" aria-label="sliders icon" /> **Appliance** from the left-hand side menu.
+
+2. Click the **Output Profile** tab.
+
+3. Select the appropriate output profile setting from the **Output profile** drop-down menu
+
+4. Click the **Apply and Reboot** button.
+
+5. A confirmation pop-up window will appear asking, "Are you sure?"
+
+6. Review any warnings or guidance provided. If you are sure, click **Yes, configure and REBOOT!**
+   Otherwise, click **Cancel** to abort.
+
+7. Following the reboot, refresh the web page. The reboot may take a few minutes to complete.

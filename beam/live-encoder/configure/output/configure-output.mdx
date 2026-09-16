@@ -1,0 +1,149 @@
+---
+title: Configure the output
+sidebarTitle: 'Configure the output '
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+{ /* TODO: update links (especially ./parameters/) once MD files are created */}
+
+## Configure the output stream general parameters
+
+To configure the output stream general parameters, follow these steps:
+
+1. From the **Output** tab, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output parameters. The Output parameters display.
+
+2. Configure the [**General parameters**](/beam/live-encoder/parameters/output#general-parameters).
+
+3. With MPEG-2 TS output, configure the [associated parameters](/beam/live-encoder/parameters/output#general-mpeg-2-ts-parameters).
+
+4. With DASH-IF CMAF Ingest, configure the [associated parameters](/beam/live-encoder/parameters/output#general-dash-if-cmaf-ingest-parameters).
+
+5. Configure the [output streams](/beam/live-encoder/parameters/output#output-stream-parameters).
+
+6. Click **Save and continue** or **Save and exit** to save your changes.
+
+### Activate EBP on audio output
+
+1. From the **Output** tab, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output.
+
+2. From the **General parmeters** section, unfold the **GOP signaling**  dropdown menu to display possible values.
+
+3. Select either **EBP based** or **ALD based** to display **EBP on audio** checkbox.
+
+   ![screen output parameters ebp on audio mfvp el](/_machine-assets/469a3be2bffe7ee1071ff418969230d3d49501dab82088b11b4114df967df174.png)
+
+4. Tick the checkbox to activate **EBP on audio**, then click **OK**.
+
+   ![screen output parameters ebp on audio box mfvp el](/_machine-assets/a0918b5df1bd7630d717a57a7e401c3bddefdcd85e9f172c68f9a8894b44f9ad.png)
+
+## Configure the output stream MPEG-2 TS parameters
+
+To configure the output stream MPEG-2 TS parameters, follow these steps:
+
+1. From the **Output** tab, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output.
+
+2. Go to the **Common MPEG-2 TS parameters** section. The MPEG-2 TS parameters are displayed.
+
+3. Enter the appropriate values for each [MPEG-2 TS parameter](/beam/live-encoder/parameters/output#mpeg-2-ts-common-parameters).
+
+4. You can [specify the streams that will be included in the output stream](/beam/live-encoder/configure/output/configure-output#define-the-output-stream-composition)).
+
+5. Click **Save and continue** or **Save and exit** to save your changes.
+
+## Create output streams
+
+Before you start: ensure input streams are configured.
+
+1. From the **Output** tab, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output.
+
+2. Go to the **Output streams** section then click the **Add** button. Output stream parameters are displayed.
+
+   ![screen output parameters blank mfvp el](/_machine-assets/e94bfa37be951c7e1ac59dbef3f1167f34470256e8d52cb9f6d56930ad4096d9.png)
+
+3. Configure settings and select streams.
+
+4. [Activate FEC](/beam/live-encoder/configure/output/configure-output#activate-fec-on-existing-output-streams) to display additional FEC options.
+
+5. [Link the output to a predefined subset](/beam/live-encoder/configure/output/configure-output#link-an-output-stream-to-a-predefined-subset) to synchronize streams or to distribute the streams across multiple servers.
+
+6. Select any video, audio or subtitle [streams to add to the output](/beam/live-encoder/configure/output/configure-output#define-the-output-stream-composition).
+
+7. Click **Ok** to save.
+
+### Define the output stream composition
+
+You can specify the composition of the output stream by selecting the video, audio and private streams that will be sent to the output.
+
+Before you start: ensure input stream configurations are set.
+
+1. From the **Output** tab, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output.
+
+2. Go to the **Output streams** section then click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output stream.
+
+   ![screen output parameters blank mfvp el](/_machine-assets/e94bfa37be951c7e1ac59dbef3f1167f34470256e8d52cb9f6d56930ad4096d9.png)
+   *Example of output stream configuration*
+
+3. Tick the check boxes to select the streams to include in the output. Available streams depend on configured Inputs, Processing, and Encoding options.
+
+   * video
+   * audio
+   * subtitle
+   * metadata
+   * etc.
+
+   <Info>
+     By default, one transport stream is defined using the first video stream and the first audio stream.
+   </Info>
+
+4. Click **Ok** to confirm. The output stream configuration is displayed in the output stream IP address and stream composition.
+
+5. Click **Save and continue** or **Save and exit** to save your changes.
+
+### Activate FEC on existing output streams
+
+<Info>
+  Only available with MPEG-2 TS/RTP transport protocol.
+</Info>
+
+1. From the **Output** tab, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output.
+
+2. Go to the **Output streams** section then click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output stream.
+
+3. Tick the **FEC** checkbox to activate. Additional FEC parameters display.
+
+4. Enter [FEC parameters](/beam/live-encoder/parameters/output#output-stream-parameters)
+
+5. Click **Ok** to save.
+
+### Link an output stream to a predefined subset
+
+You can link an output stream to a subset. Once linked, these subsets can be used to synchronize streams or to distribute the streams across multiple servers.
+
+Before you start: ensure [server subsets](/beam/live-encoder/configure#create-subset-variants) are created.
+
+1. From the **Output** tab, click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output.
+
+2. Go to the **Output streams** section then click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the output stream.
+
+3. For the **Subset** parameter select an existing preset in the drop-down list. The output stream is linked to the selected subset.
+
+4. Click **Ok** to save.
+
+## Configure a DASH-IF CMAF output
+
+DASH-IF CMAF Ingest is a protocol for transport of fragmented MP4 in CMAF container format between Live Encoder and a Packager.
+
+To configure a DASH-IF CMAF output, follow these steps:
+
+1. From the **Encoding** tab, go to the **Video** > **Gop settings** section then enter a value for **Low latency fragment(s) per GOP** (see [GOP settings](/beam/live-encoder/parameters/encoding/video#gop-settings)).
+
+2. From the **Output** tab, create or edit an existing output.
+
+   * In the **General parameters** section, set the **Transport protocol** to **DASH-IF CMAF INGEST**, then define the associated parameters (see [Output general parameters](/beam/live-encoder/parameters/output#general-parameters)).
+
+   * In the **MP4 general parameters** section, set the number of **GOPs per segment**. You can optionally enable Low latency and Unix epoch relative timestamps. Fragment(s) per GOP value is retrieved from the Low latency fragment(s) per GOP field that you previously defined. (See [DASH-IF CMAF parameters](/beam/live-encoder/parameters/output#general-dash-if-cmaf-ingest-parameters))
+
+   * The **Tracks** section displays all the streams configured in the **Encoding** tab. [You can change their track ID and add an optional label](/beam/live-encoder/parameters/output#tracks).
+
+   * In the **Output groups** section, select the tracks to be added in the output (see [Defining the output stream composition](/beam/live-encoder/configure/output/configure-output#define-the-output-stream-composition)).

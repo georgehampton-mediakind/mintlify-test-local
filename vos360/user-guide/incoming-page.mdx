@@ -1,0 +1,82 @@
+---
+title: Incoming page
+robots: noindex, nofollow
+---
+
+From the **Incoming** page, you can upload files, capture assets, create jobs, and view jobs that await processing.
+
+## Asset Web upload
+
+<Note>
+  **Input Type (file extension) for Asset Acquisition:**
+
+  VIDEO: ts, trp, mp4, mxf, mov, mkv, mpg, 3gp, avi, m2s, m2t, m4t, avc, wmv, avchd, qt, m4v, mp2, mpeg, mpe, ogg\
+  AUDIO: mp3, m4a, flac, wav, ts (without video track)
+</Note>
+
+![](/images/vos360/104de33d0fde4d86749035d5.png)
+
+<Note>
+  **Note:&#x20;**&#x44;epending on the configuration of your VOS360, the Upload tab represents the access credentials to the watch folder on Azure Blob, Amazon S3 or Google Cloud Storage.
+</Note>
+
+You can add assets and graphics directly on the **Incoming&#x20;**&#x74;ab. To do so, do the following:
+
+1. Click the **Asset Acquisition** app.
+
+2. Select the **Incoming&#x20;**&#x74;ab.
+
+3. Either drag and drop your asset or graphic into the **Web Uploader** widget, or click **Select files&#x20;**&#x74;o locate them on your machine.\
+   If you choose **Select files**, navigate to your assets or graphics, select them, and click **Open**.
+
+4. Once uploaded, the graphics display in the **Graphics** tab.
+
+5. To use the uploaded assets or graphics on a Playout service, see the Assets, Graphics, and Feed widget section [here](/vos360/user-guide/playout-monitor-page).
+
+<Note>
+  **Note:&#x20;**&#x54;he web upload widget accepts the files up to 2 GB. Due to this limitation, it is highly recommended to use other ways to ingest file sources (Azure Blob, Amazon S3, Google Cloud Storage, URL).
+</Note>
+
+<Note>
+  **Ingest audio-only assets to Asset Acquisition:**
+
+  WAV files ingested by the **Web Uploader** and default file server (watch folder) are being considered as graphics for Playout application and will appear in the **Asset Acquisition&#x20;**> **Graphics&#x20;**&#x74;ab. But if the WAV file is injected via asset REST API, it will be ingested as an AOD asset for delivery.
+</Note>
+
+## Recording
+
+The Recording tab allows to capture assets from Live streams:
+
+* Long lasting catchup (LLCU)
+
+* Loop Record
+
+All assets captured from Live streams, including Live Event assets, are listed on the Recording tab with their necessary information like playback URLs.
+
+![image-20260204-175346.png](/images/vos360/fad035903e003f2edae0a905.png)
+
+## Decision Queue
+
+![](/images/vos360/219f9a5a8e6316b59d991b04.png)
+
+<Note>
+  **Info:&#x20;**&#x57;hen you select multiple source files or apply multiple profiles to source files, one job is created for each source file and profile combination.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x54;he UI is limited to list by 50 assets. Please use the following Public Rest API to get a full list of files in addition to "Search by title" above.\
+  *Get /asset-acquisition/v1/assets/need\_decision*
+</Note>
+
+## Ready Queue
+
+![](/images/vos360/b15f6aa2031697ce2eef9f3a.png)
+
+<Note>
+  **Info:&#x20;**&#x52;ush jobs start after any remaining in-progress jobs are completed.
+</Note>
+
+<Note>
+  **Note:&#x20;**&#x54;he user interface has a limitation where it only allows the display of up to 50 jobs. Please use the following Public Rest API with the parameters skip and limit and the filtering by the status to get a full list of queued jobs:\
+  *Get /asset-acquisition/v1/jobs?status=QUEUED\&limit=50\&skip=0*
+</Note>

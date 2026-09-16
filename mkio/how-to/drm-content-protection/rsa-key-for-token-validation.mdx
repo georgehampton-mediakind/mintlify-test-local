@@ -1,0 +1,50 @@
+---
+title: RSA Key for Token Validation
+description: Use an RSA key pair instead of a symmetric key for JWT token validation in MK.IO content key policies.
+sidebarTitle: RSA Key for Token Validation
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+By default, MK.IO uses a symmetric key (HS256) for JWT token validation. If your security requirements call for asymmetric cryptography, you can configure an RSA key pair instead. This is done through the MK.IO API by providing the RSA `exponent` and `modulus` in the content key policy.
+
+## Create a policy with an RSA verification key
+
+Use the MK.IO API to create a content key policy that uses `ContentKeyPolicyRsaTokenKey` as the primary verification key type:
+
+```bash
+curl --request PUT \
+     --url https://app.mk.io/api/v1/projects/project_name/media/contentKeyPolicies/policy_name \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --header 'Authorization: Bearer <YOUR_MKIO_TOKEN>' \
+     --data '
+{
+    "properties": {
+        "options": [
+            {
+                "restriction": {
+                    "issuer": "issuer",
+                    "audience": "audience",
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyTokenRestriction",
+                    "restrictionTokenType": "Jwt",
+                    "primaryVerificationKey": {
+                        "@odata.type": "#Microsoft.Media.ContentKeyPolicyRsaTokenKey",
+                        "modulus": "",
+                        "exponent": ""
+                    }
+                },
+                "configuration": {
+                    "@odata.type": "#Microsoft.Media.ContentKeyPolicyWidevineConfiguration",
+                    "widevineTemplate": "{}"
+                }
+            }
+        ]
+    }
+}
+'
+```
+
+Replace the `modulus` and `exponent` values with your RSA public key parameters. Both values must be Base64-encoded.
+
+The content key policy can then be used when preparing the asset for streaming. See [Stream live and VOD assets](/mkio/how-to/content-delivery-publishing/stream-content) for details.

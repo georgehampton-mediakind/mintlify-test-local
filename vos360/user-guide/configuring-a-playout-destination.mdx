@@ -1,0 +1,58 @@
+---
+title: Configuring a playout destination
+robots: noindex, nofollow
+---
+
+The playout service can have an IP, downlink CloudLink, or CDN destination.
+
+**Before you begin**\
+[Configuring a playout source](https://confluence360.video.harmonicinc.com/wiki/spaces/V1UGD/pages/469191331/Configuring+a+playout+source)
+
+1. From the **Configure Channels** app, navigate to the **Destination&#x20;**&#x70;age. Click **+ Destination**.
+
+2. In the **Destination Name** field, enter the name of the new destination.
+
+3. Select the destination **Type** and **Profile**.
+
+4. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+5. Configure a signal loss output by selecting an image from a file server, or remove the output by clicking **Remove Output**.
+
+6. Click **+Output** and select the output type from the list.\
+   Note that Origin/CDN destinations have a single output option.
+
+7. Configure the settings for the type of output you are using.
+
+   * For IP and CloudLink outputs, configure the following settings:
+
+     <div className="vos-table-scroll">
+       <table className="vos-source-table">
+         <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+         <tbody><tr><td colSpan="1" rowSpan="1"><p>IP address</p></td><td colSpan="1" rowSpan="1"><p>Type the multicast IP address for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Type the port number for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Rank</p></td><td colSpan="1" rowSpan="1"><p>Used if multiple outputs are configured.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Status</p></td><td colSpan="1" rowSpan="1"><p>Determine how outputs are paired for redundancy:</p><ul><li><p><strong>Mandatory</strong> output is active.</p></li><li><p><strong>Standby</strong> output is muted.</p></li><li><p><strong>Disabled</strong> output remains inactive until the status is changed to <strong>Standby</strong> or <strong>Mandatory</strong> using the VOS REST API or UI.<br />The first Mandatory output will be paired with the first Standby output, and so on.</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>CloudLink</p></td><td colSpan="1" rowSpan="1"><p>If the output type is CloudLink, select the name of the downlink CloudLink.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Output Monitor</p></td><td colSpan="1" rowSpan="1"><p>If the service will be encrypted and you want to be able to monitor clean video output, select <strong>Output Monitor</strong> and provide the delivery <strong>IP address</strong> and <strong>Port</strong> for monitoring.</p></td></tr></tbody>
+       </table>
+     </div>
+
+   * For Zixi outputs, configure the following settings:
+
+     <div className="vos-table-scroll">
+       <table className="vos-source-table">
+         <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+         <tbody><tr><td colSpan="1" rowSpan="1"><p>IP Address</p></td><td colSpan="1" rowSpan="1"><p>Type the IP address for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Type the port number for the egress output streams.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Rank</p></td><td colSpan="1" rowSpan="1"><p>Used if multiple outputs are configured.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Status</p></td><td colSpan="1" rowSpan="1"><p>Determine how outputs are paired for redundancy:</p><ul><li><p><strong>Mandatory</strong> output is active.</p></li><li><p><strong>Standby</strong> output is muted.</p></li><li><p><strong>Disabled</strong> output remains inactive until the status is changed to <strong>Standby</strong> or <strong>Mandatory</strong> using the VOS REST API or UI.<br />The first Mandatory output will be paired with the first Standby output, and so on.|</p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p>Output Monitor</p></td><td colSpan="1" rowSpan="1"><p>If the service will be encrypted and you want to be able to monitor clean video output, select <strong>Output Monitor</strong> and provide the delivery <strong>IP address</strong> and <strong>Port</strong> for monitoring.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Encryption Type</p></td><td colSpan="1" rowSpan="1"><p>Choose an encryption standard, or select <strong>None</strong>.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Channel Name</p></td><td colSpan="1" rowSpan="1"><p>Enter a channel name that will also be used in the receiver configuration.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>FEC Overhead (%)</p></td><td colSpan="1" rowSpan="1"><p>FEC overhead in % over the source bitrate. The default value is 20%.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>FEC Block (ms)</p></td><td colSpan="1" rowSpan="1"><p>Maximum time of the FEC block, in milliseconds. The default value is 10 ms.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Max Latency (ms)</p></td><td colSpan="1" rowSpan="1"><p>Maximum latency for error correction, in milliseconds. The default value is 1501 ms.</p><blockquote><p><strong>Note: </strong>You must enter a value greater than 1500 ms.</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Timeout (ms)</p></td><td colSpan="1" rowSpan="1"><p>Connection timeout, in milliseconds. The default value is 10000 ms.</p></td></tr></tbody>
+       </table>
+     </div>
+
+   * For Origin/CDN outputs, configure the following settings for each OTT package output (DASH, HLS, and/or MSS):
+
+     <div className="vos-table-scroll">
+       <table className="vos-source-table">
+         <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+         <tbody><tr><td colSpan="1" rowSpan="1"><p>Rank</p></td><td colSpan="1" rowSpan="1"><p>Used if multiple outputs are configured.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Streaming Protocol</p></td><td colSpan="1" rowSpan="1"><p>Choose from HTTP and HTTPS.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Hostname</p></td><td colSpan="1" rowSpan="1"><p>Enter an IP address or a hostname.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Port</p></td><td colSpan="1" rowSpan="1"><p>Set to 80 for HTTP. Can be customized if required.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Path</p></td><td colSpan="1" rowSpan="1"><p>Full path of the publishing point on the configured hostname, including the specific sub-path for the service ("Service1", "CNN").</p><blockquote><p><strong>Note: </strong>The resulting URL of the publishing point is "http://HOSTNAME:PORT/PATH".</p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Username/Password</p></td><td colSpan="1" rowSpan="1"><p>Use only if authentication is required.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Compatibility Mode</p></td><td colSpan="1" rowSpan="1"><p><strong>Standard</strong>: WebDAV protocol <span>(HTTP PUT/DELETE/MKCOL), in the case of HLS, DASH, and HSS formats. (With this compatibility mode, missing sub-folders are created using "MKCOL" HTTP request method and segment are removed after they have reached the retention period using "DELETE" HTTP request method).</span></p><p><strong>Akamai</strong>: HTTP POST in the case of HSS. WebDAV, with specific features, in the case of HLS and DASH.<br />If you must publish to an Akamai CDN, then you must select <strong>Akamai</strong> for <strong>Compatibility Mode</strong>.</p><p><strong>Simple HTTP</strong>: Allows for only HTTP PUT requests to be sent. <span>If enabled, VOS will not delete segment files after the Segment Retention Period configured in the destination profile is reached and VOS will not create the missing sub-folders.</span></p><blockquote><p><strong>Note: </strong><span>To use Simple HTTP, the destination folder must exist on the remote server or the remote server must automatically create the missing folders based on the PUT request (as VOS will not make any WebDAV "MKCOL" request when using Simple HTTP publishing mode).</span></p><p>Automatically creating missing folders is not the standard behavior for most of the web servers supporting HTTP PUT. <span>When deactivating "Flattened Structure" (such as the use of a different subfolder for each video profile) or activating "Rollover Segment Dir," VOS automatically pushes to sub-folders and it is mandatory to use a server that can create those sub-folders automatically.</span></p></blockquote></td></tr><tr><td colSpan="1" rowSpan="1"><p>Chunked Encoding</p></td><td colSpan="1" rowSpan="1"><p>Allows you to send data in a series of chunks on a per-package basis.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Output Monitor</p></td><td colSpan="1" rowSpan="1"><p>If the service will be encrypted and you want to be able to monitor clean video output, select <strong>Output Monitor</strong> and provide the <strong>Hostname</strong> for monitoring.</p></td></tr></tbody>
+       </table>
+     </div>
+
+8. Optionally, configure additional outputs of the same type.
+
+9. Click **Create**.

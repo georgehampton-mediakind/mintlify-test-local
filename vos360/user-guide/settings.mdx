@@ -1,0 +1,60 @@
+---
+title: Settings
+robots: noindex, nofollow
+---
+
+You can define Service preferences and Video Languages preferences. In addition, you can customize global settings for Video, Audio, Subtitle, and Source.
+
+1. From the **Configure Channels** app, click **Settings&#x20;**&#x61;t the top right corner of the screen.
+
+   ![](/images/vos360/ea6db932908f7922a93243dc.png)
+
+2. Navigate to the **General** tab to define Service preferences and Video Languages preferences. \
+   ![](/images/vos360/1111ccd36f3ce9fc6cc88827.png)
+
+   <Note>
+     **Note:** If your desired language is not available here, it is possible to add the missing languages (included in the ISO-639-2 or ISO-639-3 languages) using the REST API. Please check with your Harmonic representative for details.
+   </Note>
+
+   <Note>
+     **Note:** This list appears when a language needs to be indicated in other pages (to select an audio component for instance).
+   </Note>
+
+3. Navigate the **Advanced** tab to customize global settings for Video, Audio, Subtitle, Source, etc.\
+   ![](/images/vos360/0c9f71c1d0244c721926c5ec.png)
+
+   ![](/images/vos360/d3625f2cba3b07b602346469.png)
+
+   * For the **NMOS** setting, NMOS IS-04/IS-05 can be enabled for provisioning the SMPTE 2110 source streams.
+
+4. (Optional) Configure the Timecode setting **Daily Sync Time (UTC Hour)** for 60Hz sources only.
+
+5. (Optional) Configure the global setting **GPS UTC Offset**. The default value is 18s. If the GPS UTC Offset is configured, the system time will be computed from the current UTC time and configured GPS UTC offset duration.
+
+6. For the **Fonts** setting, specify the "Path to Font File" and login credentials to upload the font files to the VOS system. These fonts can then be inserted into the service using the [Multiscreen profile parameters](/vos360/user-guide/streaming-profile-parameters) and [IPTV profile parameters](/vos360/user-guide/broadcast-profile-parameters) from the Lab Wizard app.\
+   ![](/images/vos360/7ca7e24fea72d06cc5b74809.png)
+
+7. For the **LUT** setting, the LUT file record can be added or deleted after adding the HTTPS path to retrieve the LUT file with the associated login credentials (Note that only the **.cube** extension is allowed). The 3D-LUT files can be used for HDR conversions (Color conversion) using the [Multiscreen profile parameters](/vos360/user-guide/streaming-profile-parameters) and [IPTV profile parameters](/vos360/user-guide/broadcast-profile-parameters) from the Lab Wizard app.\
+   \
+   ![](/images/vos360/db1dad353ccf8e1822f11471.png)
+
+8. For the **AHDR SL-HDR1 Configuration** setting, specify the "Path to AHDR SL-HDR1 Configuration File" and login credentials to upload the configuration JSON files to the VOS system for SL-HDR1 metadata generation. Once the valid AHDR SL-HDR1 configuration files are loaded, you can enable the SL-HDR metadata generation by configuring the **Color Conversion** and **HDR Dynamic Metadata&#x20;**&#x66;ields in [Multiscreen profile parameters](/vos360/user-guide/streaming-profile-parameters) and [IPTV profile parameters](/vos360/user-guide/broadcast-profile-parameters) from the Lab Wizard app.\
+   ![](/images/vos360/328b5435224f230527378196.png)
+
+9. For the **Dolby-Vision** setting, specify the "Path to Dolby-Vision File" and login credentials to upload the Dolby Vision files to the VOS system. Once the valid Dolby Vision files are loaded, you can enable Dolby Vision by configuring the **Color Conversion** and **HDR Dynamic Metadata&#x20;**&#x66;ields in [Multiscreen profile parameters](/vos360/user-guide/streaming-profile-parameters) and [IPTV profile parameters](/vos360/user-guide/broadcast-profile-parameters) from the Lab Wizard app.\
+   ![](/images/vos360/3e17db3c819304527dc3fc03.png)
+
+10. For the **Kantar Snap Watermarking Licenses&#x20;**&#x73;etting, the Kantar Product and Audience license files can be added to the VOS system to enable the Kantar Watermarking insertion. Once the valid license files are loaded, you can enable the watermarking by configuring the **Kantar Snap Watermarking&#x20;**&#x66;ield in [Multiscreen profile parameters](/vos360/user-guide/streaming-profile-parameters) and [IPTV profile parameters](/vos360/user-guide/broadcast-profile-parameters) from the Lab Wizard app.\
+    ![](/images/vos360/fdd95229688c67273b9e58cf.png)
+
+11. Click **Save**.
+
+<Note>
+  **Info:&#x20;**&#x59;ou can enable or disable the SCTE-104 server in the global settings using the Configure Settings API.
+
+  1. From the **Public API&#x20;**&#x61;pp,  click **Configure Settings**.
+
+  2. Navigate to **PUT /configure/v1/settings/service**, click **Try it out!**.
+
+  3. Set "*enableScte104Server*" to True/False to enable/disable the use of the SCTE-104 server.
+</Note>

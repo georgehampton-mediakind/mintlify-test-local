@@ -1,0 +1,36 @@
+---
+title: VOD asset with thumbnail seeking
+description: Add a generated thumbnail sprite to MKPlayer for thumbnail seeking during VOD playback.
+sidebarTitle: VOD asset with thumbnail seeking
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The prerequisite for a VOD playout with thumbnails seeking is the availability of a thumbnail sprite file from MK.IO. You can use the sample and guidelines from  [Generate thumbnail images](/mkio/reference/encoding-transform-presets/how-to-generate-thumbnails) and [Run VOD processing jobs](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs) to generate the sprite file.
+
+A streaming locator suitable for download will also be needed to get a URL to the sprite file. More information in [Stream live or VOD assets](/mkio/how-to/content-delivery-publishing/stream-content).
+
+## Configuring MKPlayer for playback
+
+Install the latest version of [MKPlayer SDK](https://www.npmjs.com/package/@mediakind/mkplayer), then follow the **Getting Started** steps in the [player documentation](/mkio/reference/player-sdk) for basic playback.
+
+In step 5 of the **Getting Started** guide, you configure the source content to use. Enabling thumbnail seeking is as easy as adding thumbnailTrack object to the sourceConfig object with the associated url.
+
+```javascript
+const sourceConfig = {
+    title: "Title for your source",
+    description: "Brief description of your source",
+    poster: "https://my-cdn.com/mysource/poster.png",
+    hls: "https://my-cdn.com/mysource/hls/index.m3u8",
+    dash: "https://my-cdn.com/mysource/dash/manifest.mpd",
+    thumbnailTrack: {
+      url: 'https://my-cdn.com/mysource/thumbnails/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.vtt'
+    }
+};
+```
+
+Once this is done, reloading the source in the player will make the thumbnails available. You can scroll over the time bar and see the thumbnails pop up like in the screenshot below:
+
+<img align="center" src="/images/mkio-vod-thumbnail-seeking.png" alt="bad98da image" />
+
+See the [player documentation](/mkio/reference/player-sdk) for integration details. The `thumbnailTrack` configuration is documented in [MKThumbnail](https://mkplayer.azureedge.net/%24web/websdk/latest/docs/interfaces/MKThumbnailTrack.html).

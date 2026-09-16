@@ -1,0 +1,140 @@
+---
+title: Events and error handling
+description: Subscribe to MKPlayer events and handle errors during setup and playback.
+sidebarTitle: Events and error handling
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MKPlayer fires events throughout the player lifecycle, from setup through playback to teardown. You subscribe to events either in the player configuration or dynamically using `player.on()`. Errors arrive as a specific event type with a structured error object.
+
+## Subscribe to events
+
+You can register event handlers in two ways.
+
+**In the player configuration** (before the player is created):
+
+```javascript
+const playerConfig = {
+  key: "YOUR_PLAYER_LICENSE_KEY",
+  events: {
+    [mkplayer.MKPlayerEvent.SourceLoaded]: (event) => {
+      console.log("Source loaded");
+    },
+    [mkplayer.MKPlayerEvent.Playing]: (event) => {
+      console.log("Playback started");
+    },
+    [mkplayer.MKPlayerEvent.Error]: (event) => {
+      console.error("Player error: ", event.code, event.message);
+    }
+  }
+};
+```
+
+**Dynamically at runtime** using `player.on()`:
+
+```javascript
+player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
+  console.log("Player is ready");
+});
+
+player.on(mkplayer.MKPlayerEvent.TimeChanged, (event) => {
+  console.log("Current time: ", event.time);
+});
+```
+
+## Remove event handlers
+
+To remove a specific handler:
+
+```javascript
+const handler = (event) => {
+  console.log("Playing");
+};
+
+player.on(mkplayer.MKPlayerEvent.Playing, handler);
+
+// Remove this specific handler later
+player.off(mkplayer.MKPlayerEvent.Playing, handler);
+```
+
+To remove all handlers for a given event type:
+
+```javascript
+player.offAll(mkplayer.MKPlayerEvent.Playing);
+```
+
+## Key player events
+
+| Event              | Fires when                                                                                                             |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `Ready`            | The player has enough data to start playback.                                                                          |
+| `SourceLoad`       | A new source load has been initiated.                                                                                  |
+| `SourceLoaded`     | A source has finished loading.                                                                                         |
+| `SourceUnloaded`   | The current source has been unloaded.                                                                                  |
+| `Play`             | The player enters the play state via a public API call or user interaction. Note: `autoplay` does not fire this event. |
+| `Playing`          | Playback has started.                                                                                                  |
+| `Paused`           | The player enters the paused state.                                                                                    |
+| `PlaybackFinished` | Playback of the current video has finished.                                                                            |
+| `TimeChanged`      | The current playback time has changed.                                                                                 |
+| `StallStarted`     | The player has begun buffering due to an empty buffer.                                                                 |
+| `StallEnded`       | The player has resumed after buffering.                                                                                |
+| `Destroy`          | The player instance has been destroyed.                                                                                |
+| `Error`            | An error has occurred during setup or playback.                                                                        |
+
+See the `MKPlayerEvent` enum in the SDK reference for the full list of events.
+
+## Handle errors
+
+All errors arrive on the `Error` event. The event object implements `MKErrorEvent` and includes:
+
+| Property           | Type     | Description                                               |
+| ------------------ | -------- | --------------------------------------------------------- |
+| `code`             | `string` | A structured error code, for example `"4-70-1103"`.       |
+| `message`          | `string` | A human-readable description of the error.                |
+| `name`             | `string` | The name of the error.                                    |
+| `troubleShootLink` | `string` | A link to a detailed troubleshooting guide, if available. |
+| `data`             | `object` | Additional error data, if available.                      |
+
+```javascript
+player.on(mkplayer.MKPlayerEvent.Error, (event) => {
+  console.error(`Error [${event.code}]: ${event.message}`);
+
+  if (event.troubleShootLink) {
+    console.info("Troubleshooting: ", event.troubleShootLink);
+  }
+});
+```
+
+## Common error codes
+
+### Setup errors
+
+| Code        | Constant                                        | Meaning                                                                                                                                       |
+| ----------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `4-70-1101` | `PLAYER_SETUP_NO_HTML_ELEMENT`                  | The container element passed to the player is not a valid `HTMLElement`. Check that the element exists in the DOM before creating the player. |
+| `4-70-1102` | `PLAYER_SETUP_MISSING_CONFIGURATION`            | No `MKPlayerConfig` was provided when creating the player instance.                                                                           |
+| `4-70-1103` | `PLAYER_SETUP_LICENSE_ERROR`                    | The player key was not granted playback. Check that your license key is correct.                                                              |
+| `4-70-1104` | `PLAYER_SETUP_MISSING_DOMAIN_LICENSE_ALLOWLIST` | The player build is domain-locked and the current domain is not in the allowlist.                                                             |
+| `4-70-1105` | `PLAYER_SETUP_MISSING_LICENSE_ALLOWLIST`        | The current domain has not been added to the license allowlist.                                                                               |
+| `4-70-1113` | `PLAYER_SETUP_UNSUPPORTED_PROTOCOL`             | The page was loaded using the `file://` protocol. Host the page on a web server using `http` or `https`.                                      |
+
+### Source errors
+
+| Code        | Constant                                | Meaning                                                                                                     |
+| ----------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `4-71-1201` | `PLAYER_SOURCE_INVALID`                 | The `MKSourceConfig` passed to `player.load()` is invalid. Ensure at least one valid stream URL is present. |
+| `4-71-1202` | `PLAYER_SOURCE_MANIFEST_INVALID`        | The downloaded manifest could not be parsed.                                                                |
+| `4-71-1208` | `PLAYER_SOURCE_COULD_NOT_LOAD_MANIFEST` | The manifest request failed after retries. By default, manifests are retried 2 times.                       |
+
+### Network errors
+
+| Code        | Constant                                   | Meaning                                                             |
+| ----------- | ------------------------------------------ | ------------------------------------------------------------------- |
+| `4-73-1009` | `PLAYER_GENERAL_NETWORK_ERROR`             | The device is not connected to the internet.                        |
+| `4-73-1401` | `PLAYER_NETWORK_MANIFEST_DOWNLOAD_TIMEOUT` | The manifest request timed out after the default 20-second timeout. |
+| `4-73-1402` | `PLAYER_NETWORK_SEGMENT_DOWNLOAD_TIMEOUT`  | A segment download timed out.                                       |
+
+### DRM errors
+
+See [DRM protection](/mkio/reference/player-sdk/drm) for the full list of DRM-specific error codes and guidance on resolving them.

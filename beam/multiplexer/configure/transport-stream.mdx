@@ -1,0 +1,559 @@
+---
+title: Transport Stream
+sidebarTitle: Transport Stream
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Create an output transport stream (mux)
+
+1. Display services.
+
+2. Click **Add service** > **Multiplexing**.
+
+   ![view add multiplexing new sp](/_machine-assets/fb57aa6640240bc70e661d0000ce2330f37ddcac25956cc5b6c46b073b845ae1.png)
+
+## Configure output transport stream elements
+
+1. Display services.
+
+2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service and display parameters. The transport stream parameters display.
+
+3. Select the transport stream, or an element in the stream, and use the action buttons to add, delete or organize items.
+
+   <Info>
+     Parameters, properties and options vary depending on the selected transport stream item.
+   </Info>
+
+   ![view configure ts sp](/_machine-assets/fc5e349b284fc189ba59636588605c426e1f88a3069dc22399875b3667cbab5a.png)
+
+## Configure a transport stream
+
+Create an output Transport Stream to aggregate outputs from multiple Encoding Live encoder sources.
+
+Before you start, ensure the multicast addresses of the Encoding Live output streams are known.
+
+1. Create a new **Multiplexing** service and configure the service settings.
+
+2. Configure the Transport Stream parameters:
+
+   1. Open the **Mux** tab to configure bit rate and TS levels.
+
+   2. Open the **Output** tab and select the output type:
+
+      * IP output type: enter the IP stream address and destination UDP port
+      * ASI output type: select the connector(s)
+      * RIST output type: select the RIST mode (Caller or Listener) and connections details
+
+   3. Open the **PSI/SI** tab and configure the PSI/SI generation and table repetition rates.
+
+3. Click **add** to add more Pass-through encoding services to the transport stream.
+
+   ![view output stream ts sp](/_machine-assets/fe69e2797bd09dd79fe9ac51e4bba9f36fc5656921a86cae301f945fc5d820d7.png)
+
+   <Info>
+     If the **Input Program** number is unknown then set to 0 to choose the first program referenced in the PAT of the incoming SPTS.
+   </Info>
+
+4. Save settings to return to the services page.
+
+5. Assign a server and start the Output Transport stream.
+
+## Organize elements in the transport stream
+
+1. Display services.
+
+2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service and display parameters. The transport stream parameters display.
+
+3. Use the buttons to shift up or down, to add or delete, or filter items in the stream.
+
+   ![view ts actions buttons add delete filter sp](/_machine-assets/2ae3aebdb7f410fe9db09ee4e9a89879b9b4048879fdcd4b38b9230c42ca6c46.png)
+
+## Delete an element from the transport stream
+
+1. Display services.
+
+2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service and display parameters. The transport stream parameters display.
+
+3. Click <img src="/icons/ui/delete.svg" alt="Delete" className="mk-ui-icon" width="16" height="16" /> to delete the item.
+
+   ![view ts actions buttons add delete filter sp](/_machine-assets/2ae3aebdb7f410fe9db09ee4e9a89879b9b4048879fdcd4b38b9230c42ca6c46.png)
+
+## Configure a service in the transport stream
+
+1. Display services.
+
+2. Click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" /> to edit the service and display parameters. The transport stream parameters display.
+
+3. Select the **Service** item in the transport stream, or select the transport stream and add a service to the output transport stream. The properties display.
+
+![view output conf sp](/_machine-assets/20db6aa698a15010cc1e915f913f16b6fb5ac28e3affa42066c89dd0edb0b68b.png)
+
+## Configuring a remux transport stream
+
+Create a basic output TS from fixed source input SPTS or MPTS. This section will describe how to select incoming PIDs and remap them into a new output Transport stream.
+
+The multicast addresses and PID mappings of the input transport streams are known.
+
+1. Create a new Multiplexing Service and configure the service settings.
+
+2. Configure Transport Stream parameters.
+
+   1. Open the **Mux** tab to configure bitrate and TS levels.
+
+   2. Open the **Output** tab and select the output type:
+
+      * IP output type: enter the IP stream address and destination UDP port
+      * ASI output type: select the connector(s)
+      * RIST output type: select the RIST mode (Caller or Listener) and connections details
+
+   3. Open the **PSI/SI** tab and configure the PSI/SI generation and table repetition rates.
+
+3. Click **add** to add output services to the transport stream.
+
+   * **Service Passthrough**: At a Service level it is possible to configure **Service Passthrough** mode to re-multiplex an entire incoming service. Selecting **Service Passthrough** displays the input specific parameters
+   * **Descriptor Regeneration**: Regenerate descriptors from an incoming TS. Enabling the **Regenerate Descriptor** setting displays the input TS parameters required to configure the incoming TS and Program number.
+
+4. Choose to re-order TS components using the Output Stream tool-bar.
+
+   ![view output stream ts sp](/_machine-assets/fe69e2797bd09dd79fe9ac51e4bba9f36fc5656921a86cae301f945fc5d820d7.png)
+
+5. Save settings to return to the services page.
+
+6. Assign a server and start the Output Transport stream.
+
+<span id="configuring-a-simulcrypt-output-transport-stream-1" className="mk-legacy-anchor" />
+
+## Configuring a simulcrypt output transport stream
+
+### Specific configuration with an external EIS
+
+If External EIS is being used:
+
+1. Click **Services** in the left-side menu panel.
+
+2. Edit the Multiplexing Service that you want to scramble.
+
+3. Select the **Scrambling** tab.
+
+4. Select **Transport Stream** under the **Scrambling Groups** panel.
+
+5. Click the **Enable EIS** check-box.
+
+   ![stream processing External EIS config](/_machine-assets/81c35c8fe408e176cfc40ae69421551308909e70627e0618254591c5f0b7dba3.png)
+
+### Configuring a simulcrypt output transport stream
+
+Create a basic output TS from fixed source input SPTS or MPTS. This section will describe how to remux services and scramble them in the output transport stream.
+
+* An unscrambled Transport Stream with three services is configured in Multiplexer.
+* The IP addresses and SuperCASID of any ECMG and EMMG servers are known.
+* The Access Criteria required for each SCG is known.
+
+Add Simulcrypt scrambling with an EMM stream to the unscrambled TS.
+
+1. Create **SCG 1**.
+
+   1. Click **Services** in the left-side menu panel.
+
+   2. Edit the Multiplexing Service that you want to scramble. The service configuration options display.
+
+   3. Select the **Scrambling** tab.
+
+      ![view scrambling tab sp](/_machine-assets/438bfca2525424a3aacafed77602d1cd98e267521c76890ce391f7e1dd4806fb.png)
+
+2. Configure scrambling for **Service 1**.
+
+   1. Drag and drop **Service 1** to the **Transport Stream** in the **Scrambling Groups** panel.
+
+      ![view scrambling groups sp](/_machine-assets/4c353f53b0e0c0c2fc8e915571417c0f1f52d06611b5c9131b97d61ea6244255.png)
+
+      A new **SCG** is created.
+
+   2. Click the **SCG** to display options. The **Scrambling Group Properties** display.
+
+   3. Enter a name for the **SCG**.
+
+      ![view scrambling groups configuration sp](/_machine-assets/c0e3d0da922be8a85b3645347fdab3cf580f1c29af86e0f623dc57de2da39e18.png)
+
+      The **SCG** name updates in the tree view.
+
+   4. Select the **Scrambling Algorithm** that applies:
+
+      * **CSA V1 48bits (Conformance Mode On)**
+      * **CSA V2 64bits (Conformance Mode Off)**
+      * **CISSA V1 TS Level**
+      * **CISSA V1 PES Level**
+      * **AES-ECB**
+
+   5. Select the behavior until all required ECMs for SCG first received:
+
+      * Component(s) in SCG not present in output TS
+      * Component(s) in SCG in-the-clear in output TS
+
+   6. Select the scrambling behavior to apply to the components:
+
+      * Checkbox ticked: Scramble components in the group
+      * Checkbox unticked: Does not scramble the components in the group
+
+   7. Configure an **ECMG** for the **SCG** by clicking **Scrambling Vendors** tab, then click **+ Add Vendor** to configure.
+
+      ![view scrambling vendors configuration sp](/_machine-assets/07f5589020adf8e9be3ac78a01b0ffa5fbd85199370d58a109860d5273c52374.png)
+
+      The ECMG configuration will be used to create **ECMs** that scramble services and components.
+
+   8. Add an ECM to **SCG 1** by selecting the **ECMs** tab, then click **+ Add ECM** to add and configure. (The **Vendor** is based on the ECMG definition). The **ECM** is now configured.
+
+      ![view scrambling groups properties sp](/_machine-assets/16fff78dbc41ff001cf6776ee450fb90e5e6184432326bd6bb20592a9fb9ea56.png)
+
+   9. Click **Save and continue** to scramble Service 1. The MediaKind ECM is present in the output transport stream.
+
+3. Configure scrambling for **Service 2**.
+
+   1. Drag and drop the video component with **PID 200** from Service 2 to the **Transport Stream** in the **Scrambling Groups** panel. A new SCG is created with **PID 200** as the scrambled component.
+
+      ![view scrambling groups2 sp](/_machine-assets/a1e8d90aa7fb2b88c60f298540d823a4243e1c624a85a1bc9a671d2f4927cfe5.png)
+
+   2. Drag and drop the video component with **PID 300** from Service 3 to the new SCG in the **Scrambling Groups**. PID 300 is added to the new SCG.
+
+      ![view scrambling groups2bis sp](/_machine-assets/9d1b3391f4671e3cf8b862177d82b8dcaaeac3ee7f7aa55305af0410384a6037.png)
+
+   3. Select the added SCG to edit the **Scrambling Groups Properties** and enter a name for it.
+
+   4. Add an ECM to **SCG 2** by selecting the **ECMs** tab, then click **+ Add ECM** to add and configure. **SCG 2** is complete.
+
+      ![view scrambling group properties ecm](/_machine-assets/e1d1090518d6fb537edcdcf79582991f9f26351d20eda2429cb644e95e36c682.png)
+
+   5. Click **Save and continue** to scramble PIDs in the SCG and to continue the configuration. MediaKind ECM is present in the output transport stream.
+
+4. Create an **EMM stream**.
+
+   1. In the **Multiplexing** tab, right click the **Transport Stream** node, then click **Add...** to add a new EMM.
+
+      ![view scrambling add emm sp](/_machine-assets/1f9590b46d16de8420e5a9b35b80117499295919722a38316af4412a59fcee4d.png)
+
+      The EMM stream is created.
+
+      ![view output stream emm sp](/_machine-assets/a5a4bf05a31daf62a46d2043d003ecf257a74873a2641541cbd05ce8166cfbd4.png)
+
+   2. Add the EMMG vendor using the **Scrambling Vendors** tab in the EMM properties.
+
+   <Info>
+     Destination UDP port is only required when streaming EMMs via UDP. Automatic mode allows the first Simulcrypt channel and stream to connect from the defined EMMG ClientID. Any later connection requests are rejected. Clear the check box to allow multiple connections and to manually add channel and stream definitions.
+   </Info>
+
+   ![view scrambling vendors properties sp](/_machine-assets/cc997a52b3f5bc0dcf192cd55359d2dfba48234dd7abf2f144d7a895d03bd53a.png)
+
+   3. Select the **EMM** tab and enter an **output PID** and **Vendor**.
+
+   4. If the EMM is streamed from an EMMG, the set **mode** to **Local Insertion**, otherwise leave the default value.
+
+5. Save the configuration to accept the EMMG connection.
+
+The EMM is present in the output Transport Stream.
+
+## Configuring a fixed key output transport stream
+
+Create a basic output TS from fixed source input SPTS or MPTS. This section will describe how to remux services and scramble them in the output transport stream.
+
+An unscrambled Transport Stream with three services is configured in Multiplexer.
+
+Add fixed key scrambling to the unscrambled TS.
+
+1. Create SCG 1.
+
+   1. Click **Services** in the left-side menu panel.
+
+   2. Edit the Multiplexing Service that you want to scramble. The service configuration options display.
+
+   3. Select the **Scrambling** tab.
+
+      ![view scrambling tab sp](/_machine-assets/438bfca2525424a3aacafed77602d1cd98e267521c76890ce391f7e1dd4806fb.png)
+
+2. Configure scrambling for Service 1.
+
+   1. Drag and drop **Service 1** to the **Transport Stream** in the **Scrambling Groups** panel.
+
+      ![view scrambling groups sp](/_machine-assets/4c353f53b0e0c0c2fc8e915571417c0f1f52d06611b5c9131b97d61ea6244255.png)
+
+      A new **SCG** is created.
+
+   2. Click the **SCG** to display options. The **Scrambling Group Properties** displays.
+
+   3. Enter a name for the **SCG**.
+
+      ![view scrambling groups configuration fixedkey sp](/_machine-assets/6e26bb076693cd3a637068192080f8f139170e883d74028b8a464a5968dfac71.png)
+
+      The **SCG** name updates in the tree view.
+
+   4. Select the fixed key **Scrambling Algorithm** to apply:
+
+      * BISS Mode1
+      * BISS Mode2
+
+   5. Enter the related **BISS Session Word**:
+
+      * 12 hex characters for BISS Mode1
+      * 32 hex characters for BISS Mode2
+
+   6. Select the scrambling behavior to apply to the components:
+
+      * Checkbox ticked: Scramble components in the group
+      * Checkbox unticked: Does not scramble the components in the group
+
+3. Configure scrambling for **Service 2**.
+
+   1. Drag and drop the video component with **PID 200** from Service 2 to the **Transport Stream** in the **Scrambling Groups** panel.
+
+      ![view scrambling groups2 sp](/_machine-assets/a1e8d90aa7fb2b88c60f298540d823a4243e1c624a85a1bc9a671d2f4927cfe5.png)
+
+      A new SCG is created with **PID 200** as the scrambled component.
+
+   2. Drag and drop the video component with **PID 300** from Service 3 to the new SCG in the **Scrambling Groups**.
+
+      ![view scrambling groups2bis sp](/_machine-assets/9d1b3391f4671e3cf8b862177d82b8dcaaeac3ee7f7aa55305af0410384a6037.png)
+
+      PID 300 is added to the new SCG.
+
+   3. Select the added SCG to edit the **Scrambling Groups Properties** and enter a name for it.
+
+   4. Select the fixed key **Scrambling Algorithm** to apply:
+
+      * BISS Mode1
+      * BISS Mode2
+
+   5. Enter the related **BISS Session Word**:
+
+      * 12 hex characters for BISS Mode1
+      * 32 hex characters for BISS Mode2
+
+   6. Select the scrambling behavior to apply to the components:
+
+      * Checkbox ticked: Scramble components in the group
+      * Checkbox unticked: Does not scramble the components in the group
+
+4. Save the configuration.
+
+Scrambled components are present in the output transport stream.
+
+## Configuring a BISS-CA output transport stream
+
+Create a basic output TS from fixed source input SPTS or MPTS. This section will describe how to remux services and scramble them in the output transport stream.
+
+An unscrambled Transport Stream with three services is configured in Multiplexer.
+
+Add BISS-CA scrambling with an EMM stream to the unscrambled TS:
+
+* EMM stream on PID 400 from ClientID 0x5555 with 500Kbs limit Channel and Stream unknown.
+* Create two output Scrambling Control Groups (SCG):
+  * **SCG 1**
+    * Scramble all components in Service 1
+    * Scramble with CSA1 scrambler
+    * Access Criteria 0x11112222
+    * Private Data 0x33334444
+    * One ECM with SuperCASID 0x12345678 with PSI signaling at service level
+  * **SCG 2**
+    * Scramble with CSA1 scrambler
+    * Scramble video PID 200 from Service 2
+    * Scramble video PID 300 from Service 3
+    * No Access Criteria or Private Data required
+    * One ECM SuperCASID 0x12345678 with PSI signaling at service level
+
+1. Create **SCG 1**:
+
+   1. Click **Services** in the left-side menu panel.
+
+   2. Edit the Multiplexing service that you want to scramble. The service configuration options display.
+
+   3. Select the **Scrambling** tab.
+
+      ![view scrambling tab sp](/_machine-assets/438bfca2525424a3aacafed77602d1cd98e267521c76890ce391f7e1dd4806fb.png)
+
+2. Configure scrambling for **Service 1**:
+
+   1. Drag and drop **Service 1** to the **Transport Stream** in the **Scrambling Groups** panel.
+
+      ![view scrambling groups sp](/_machine-assets/4c353f53b0e0c0c2fc8e915571417c0f1f52d06611b5c9131b97d61ea6244255.png)
+
+      A new **SCG** is created.
+
+   2. Click **SCG** to display options. The **Scrambling Group Properties** displays.
+
+   3. Enter a name for the **SCG**.
+
+      ![view scrambling groups configuration biss ca sp](/_machine-assets/bdbed94e6a692ecc9013dd0b8be7e873be51fdb2e99463d204f7f00527b052f7.png)
+
+      The **SCG** name updates in the tree view.
+
+   4. Select the **BISS-CA** as **Scrambling Algorithm**.
+
+   5. Enter the **ECM PID** and **EMM PID**.
+
+   6. Select the location in the PMT of the **CA descriptor**:
+
+      * Service
+      * Component
+
+   7. Enter the four-hex unique ID for the **Entitlement Session**.
+
+   8. Select a pre-imported file that contains the **Active Key**.
+
+   9. Select the **Behaviour until all required ECMs for SCG first received**:
+
+      * Component(s) in SCG not present in output TS
+      * Component(s) in SCG in-the-clear in output TS
+
+   10. Select the scrambling behavior to apply to the components:
+
+       * Checkbox ticked: scramble components in the group
+       * Checkbox unticked: does not scramble the components in the group
+
+   <Info>
+     Changing the default value of an advanced parameter promotes from the **Advanced Settings** area to the **Main Settings** area.
+   </Info>
+
+   * **EMM bitrate**
+   * **Period to play the session word** (must be greater than the **Additional Descrambler Delay** and less than or equal to the **Session Key Period**)
+   * **Period to play the key session** (defaults to 0, if not 0 must be greater than 60 seconds and a multiple of the session word period)
+   * **Prevent Descrambled Forward**
+   * **Prevent Decode Forward**
+   * **Insert Watermark**
+   * **EMM ingest Buffer Duration**
+   * **Additional Descrambler Delay**
+
+   11. Click **Save and continue** to scramble Service 1. MediaKind ECM is present in the output transport stream.
+
+3. Configure scrambling for **Service 2**:
+
+   1. Drag and drop the video component with **PID 200** from Service 2 to the **Transport Stream** in the **Scrambling Groups** panel.
+
+      ![view scrambling groups2 sp](/_machine-assets/a1e8d90aa7fb2b88c60f298540d823a4243e1c624a85a1bc9a671d2f4927cfe5.png)
+
+      A new SCG is created with **PID 200** as the scrambled component.
+
+   2. Drag and drop the video component with **PID 300** from Service 3 to the new SCG in the **Scrambling Groups**.
+
+      ![view scrambling groups2bis sp](/_machine-assets/9d1b3391f4671e3cf8b862177d82b8dcaaeac3ee7f7aa55305af0410384a6037.png)
+
+      PID 300 is added to the new SCG.
+
+   3. Select the added SCG to edit the **Scrambling Groups Properties** and enter a name for it.
+
+   4. Click **Save and continue** to scramble PIDs in the SCG and to continue the configuration. MediaKind ECM is present in the output transport stream.
+
+4. Save the configuration to accept the EMMG connection.
+
+The EMM is present in the output Transport Stream.
+
+<Info>
+  Please be aware of the following considerations when configuring BISS-CA:
+
+  * If interoperability with MediaKind RX8200 is required, **Additional Descrambler Delay** must be set to 60 seconds.
+  * BISS-CA timings are not accurate when session word and session key change at same time.
+  * The EMM repetition period has an effect on the **EMM bitrate**. If the EMM repetition rate is too low and the key files are too large, the EMM bitrate on the output will be higher than the configured bitrate.
+</Info>
+
+## Configuring a dynamic PID output transport stream (remapping PID for remuxing)
+
+Create a basic output TS from fixed source input SPTS or MPTS. This example configuration describes how to select incoming PIDs and remap them into a new output Transport stream.
+
+The multicast addresses and PID mappings of the input transport streams are known.
+
+Create a DVB Transport Stream with the following requirements:
+
+* **Output TS bitrate:** 40 Mbs
+* **TS ID and Original Network ID:** 10
+* **Multicast address:** 239.0.0.1, Port 5000, UDP delivery
+* **PSI required:** PAT, PMT, SDT, TOT, TDT
+* **3 Output Services:**
+
+  | Channel | Video Input PID                          | Video Output PID | Audio Input PID                 | Audio Output PID | Service descriptor               |
+  | ------- | ---------------------------------------- | ---------------- | ------------------------------- | ---------------- | -------------------------------- |
+  | 1       | 100                                      | 100              | 101                             | 101              | Use existing descriptor          |
+  | 2       | 100                                      | 200              | 101                             | 201              | Use existing descriptor          |
+  | 3       | Set **Input Tag** to **30** on Program 3 | 300              | Set to **English** on Program 3 | 301              | Replace Service Type for type 23 |
+
+1. Create a new Multiplexing Service: **Services** > **Add service** > **Multiplexing**. The service options display.
+
+2. Configure the required (\*) parameters in the **Mux** tab.
+
+   <Info>
+     Changing the default value of an advanced parameters promotes from the **Advanced Settings** area to the **Main Settings** area.
+   </Info>
+
+   ![view properties mux sp](/_machine-assets/883663462c699b93650840f99129769fcb692eb9dd0ab3ae4a95aa2f8d8b59e1.png)
+
+3. Configure the output multicast details in the **Output** > **Output** tab. Multiple outputs for the same Transport Stream can be added using the `+Add` button.
+
+   ![view properties output sp](/_machine-assets/8bb2a00e11552bd46850d83046090819baf3508507585b7c807771a956250365.png)
+
+4. Configure **Tables** in the **PSI/SI** tab.
+
+   ![view properties psi si sp](/_machine-assets/e8fad1cfacc016a4d317a326934e15c8b1d9d0bc2c5137a89176854555be838b.png)
+
+5. Add a TOT descriptor to the output service.
+
+   ![view tot descriptor local time offset ts sp](/_machine-assets/ad113a320181782b39395da1bcf791359890fc8a4825c2ad13b17083c6d50979.png)
+
+6. Click **Add output** and configure components for **Service 1**.
+
+   1. Set the **Regenerate Descriptor** to **On**.
+
+   <Info>
+     Parameters vary in relation to your selection and configuration. Orange indicates that a change is made. The changes are applied upon saving the configuration.
+   </Info>
+
+   ![view output conf sp](/_machine-assets/20db6aa698a15010cc1e915f913f16b6fb5ac28e3affa42066c89dd0edb0b68b.png)
+
+   2. Add video and audio components, then configure (see table above for example parameters).
+
+   ![view input conf sp](/_machine-assets/93ace011878605d2ed1bc83a60a12cf873d551ba0e959439216224c702d5aebe.png)
+
+   ![view input conf sp sources](/_machine-assets/5e76edba505f2a25f9a4cc7f7bc7efa71b0db8ceb2041e92479ccc4b8cd8c99a.png)
+
+   * **To regenerate a descriptor:** You can regenerate descriptors from an incoming TS by enabling the Regenerate Descriptor option with the incoming TS and Program number.
+   * **For Service Passthrough:** Set to **On** in order to re-multiplex an entire incoming service. **This avoids the need to explicitly define the components and descriptors** included in the service.
+
+7. Click **Add output** and configure components for **Service 2**.
+
+   In our example, Service 2 needs the input PIDs to be remapped to new PIDs in the output TS.
+
+   ![view input pid conf sp](/_machine-assets/f4980f09a9773015bbfc393694b214a6d56b398d6082f4fb9d3083b3a5e77079.png)
+
+   ![view output pid conf sp](/_machine-assets/f0e5b38c96a253e3eac95da6f3d1a84430debb082624edc40e5a31efee22ec61.png)
+
+8. Click **Add output** and configure components for **Service 3**.
+
+   <Info>
+     See example settings in the table above for dynamic PID tracking using a Video **Input Tag**.
+   </Info>
+
+   1. Set the Input selection mode to **Tag**, and set the **Input tag** to 30 for **Program number** 3 (this is for dynamic PID tracking using the example parameters from the table above).
+
+      ![view input selection mode tag sp](/_machine-assets/55afdbcff8e258522ba0008f5278321311064e95ac0ae7e5b8b09eacabe72525.png)
+
+   2. Configure the **Audio Language** using the example parameters from the table above.
+
+      ![view audio input selection mode tag sp](/_machine-assets/bd5ee9758d8d95a422eff8a25280d93f987ee3b3e38789b3a94fbb60e542119f.png)
+
+   3. Add a service descriptor to replace the existing descriptor with the new service type.
+
+      ![view service descriptor sp](/_machine-assets/f1d088a6134eaad565fc75c8a216b5eb750b96b557f3609f5246cf7e9f9d65a6.png)
+
+      The output Transport Stream is populated with services ready for play out.
+
+   4. Use the buttons in the toolbar to reorder elements in the stream.Edited elements display in orange.
+
+      ![view ts sp](/_machine-assets/37d7a9690b9ff723f1aa40901f84a88319e3aa168b8ed2f5c99bfc9123169f84.png)
+
+      Changes are applied when saved.
+
+9. Click **Save and exit** to apply changes.
+
+10. Assign a server to the service.
+
+11. Click <img src="/icons/ui/play.svg" alt="Play" className="mk-ui-icon" width="16" height="16" /> to start the transport stream.
+
+The Status column shows **started**.
+
+![view mux server selection sp](/_machine-assets/de7f3b08f5b9f6605c24b78344c0a913e32171cf24479c8794710a9e51f93af0.png)

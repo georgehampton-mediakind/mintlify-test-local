@@ -1,0 +1,177 @@
+---
+title: API Guides
+description: Explore MediaKind API guides for authentication, shared concepts, and workflow-driven integrations across the platform.
+sidebarTitle: Welcome to the APIs
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Explore the MediaKind API guides to learn how to integrate MediaKind's services into your workflows.
+
+## Getting Started
+
+Prepare your environment, authenticate your API calls, and learn how the platform represents resources.
+
+<CardGroup cols={2}>
+  <Card title="Quick Start & Authentication" href="/api-guides/getting-started/authentication" icon="rocket">
+    Get your API credentials, authenticate your requests, and make your first API call.
+  </Card>
+
+  <Card title="Shared Concepts" href="/api-guides/understanding/overview" icon="lightbulb">
+    Understand platform-wide concepts like pagination, rate limiting, error handling, and resource states.
+  </Card>
+</CardGroup>
+
+## Media API
+
+Ingest, transcode, package, protect, and publish live and on-demand video assets.
+
+<CardGroup cols={2}>
+  <Card title="Media API Reference" href="/api-reference/media-api" icon="book">
+    Interactive endpoints, schemas, and request/response examples for the Media API.
+  </Card>
+
+  <Card title="Automate a VOD Pipeline" href="/api-guides/how-to/media/vod-pipeline" icon="film">
+    A complete recipe from upload through encoding and packaging to playout.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={3}>
+  <Card title="Storage" href="/api-guides/how-to/media/storage" icon="database">
+    Configure input and output storage containers.
+  </Card>
+
+  <Card title="Assets" href="/api-guides/how-to/media/assets" icon="folder-open">
+    Upload media files and track asset lifecycles.
+  </Card>
+
+  <Card title="Transforms & Jobs" href="/api-guides/how-to/media/transforms-and-jobs" icon="sliders">
+    Define transcode settings and submit transcode jobs.
+  </Card>
+
+  <Card title="Live Streaming" href="/api-guides/how-to/media/live-streaming" icon="video">
+    Configure live events, inputs, outputs, and streaming channels.
+  </Card>
+
+  <Card title="Publishing & Delivery" href="/api-guides/how-to/media/publishing" icon="tower-broadcast">
+    Create streaming locators and construct playback URLs.
+  </Card>
+
+  <Card title="Content Protection" href="/api-guides/how-to/media/content-protection" icon="shield">
+    Apply DRM and content key policies to secure streams.
+  </Card>
+</CardGroup>
+
+## Management API
+
+Control organizations, users, teams, projects, webhook notifications, and usage reporting.
+
+<CardGroup cols={2}>
+  <Card title="Management API Reference" href="/api-reference/management-api" icon="book">
+    Endpoints, schemas, and request/response examples for organization management.
+  </Card>
+
+  <Card title="Provision Organizations & Users" href="/api-guides/how-to/management/org-provisioning" icon="user-lock">
+    Bootstrap organizations, structure projects, and define team memberships.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={3}>
+  <Card title="Tokens" href="/api-guides/how-to/management/tokens" icon="key">
+    Create and rotate personal access tokens.
+  </Card>
+
+  <Card title="Webhook Rules" href="/api-guides/how-to/management/webhooks" icon="bell">
+    Configure HTTP callbacks to receive event-driven notifications.
+  </Card>
+
+  <Card title="Usage & Billing" href="/api-guides/how-to/management/usage-and-billing" icon="chart-line">
+    Query billing telemetry and track resource consumption.
+  </Card>
+</CardGroup>
+
+## Fleets API
+
+Register, update, and manage hardware and software device inventory for on-premises edge deployments.
+
+<CardGroup cols={2}>
+  <Card title="Fleets API Reference" href="/api-reference/fleets-api" icon="book">
+    Endpoints, schemas, and request/response examples for fleet operations.
+  </Card>
+
+  <Card title="Manage Fleet Devices" href="/api-guides/how-to/fleets/device-management" icon="server">
+    Register devices, configure settings, and monitor edge appliance health.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Backups & Restores" href="/api-guides/how-to/fleets/backups-and-restores" icon="box-archive">
+    Backup device configurations and restore edge states.
+  </Card>
+
+  <Card title="Software & Updates" href="/api-guides/how-to/fleets/software-and-updates" icon="cloud-arrow-down">
+    Manage device software versions and roll out fleet-wide updates.
+  </Card>
+</CardGroup>
+
+***
+
+## Live API
+
+Create and manage live channels, events, and multiview compositions for live media processing.
+
+<CardGroup cols={2}>
+  <Card title="Live API Reference" href="/api-reference/live-api" icon="book">
+    Endpoints, schemas, and request/response examples for live media processing.
+  </Card>
+
+  <Card title="Core concepts" href="/api-guides/how-to/live/core-concepts" icon="lightbulb">
+    Understand resource types, billing models, and how live resources connect to templates and sources.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={3}>
+  <Card title="Live channels and events" href="/api-guides/how-to/live/manage-live" icon="tower-broadcast">
+    Create and operate liveChannels and liveEvents for single-input live encoding.
+  </Card>
+
+  <Card title="Multiview" href="/api-guides/how-to/live/multiview" icon="grid">
+    Compose multiple live inputs into a single multiview output.
+  </Card>
+
+  <Card title="Scheduled operations" href="/api-guides/how-to/live/scheduled-operations" icon="calendar">
+    Automate start and stop times for any live resource.
+  </Card>
+</CardGroup>
+
+***
+
+## Templates API
+
+Manage the versioned configuration templates that live encoding, multiview, and stream conditioning resources depend on.
+
+<CardGroup cols={2}>
+  <Card title="Templates API Reference" href="/api-reference/templates-api" icon="book">
+    Endpoints, schemas, and request/response examples for the Templates API.
+  </Card>
+
+  <Card title="Manage templates" href="/api-guides/how-to/templates/manage-templates" icon="file-code">
+    Create, version, tag, and reference configuration templates. Start from presets or upload your own.
+  </Card>
+</CardGroup>
+
+***
+
+## Infrastructure APIs
+
+Configure network settings and sites across the platform.
+
+<CardGroup cols={3}>
+  <Card title="Infrastructure API Reference" href="/api-reference/infrastructure-api" icon="book">
+    Endpoints, schemas, and details for infrastructure resource operations.
+  </Card>
+
+  <Card title="Set up Networks & Sites" href="/api-guides/how-to/infrastructure/networks-and-sites" icon="network-wired">
+    Provision network configuration and link sites.
+  </Card>
+</CardGroup>

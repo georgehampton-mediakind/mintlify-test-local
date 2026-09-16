@@ -1,0 +1,44 @@
+---
+title: Registering an OAuth client application
+robots: noindex, nofollow
+---
+
+Register an application to generate a key for third-party access to the VOS360. Authorization Code and Client Credentials grant types are supported.
+
+<Note>
+  **Note:&#x20;**&#x53;aaS admins have permission to register OAuth applications.
+</Note>
+
+1. From the System app, click **Settings**.
+
+2. Select the **Client Apps** tab, and then click **+Add client** to open the **Add new key** dialog.
+
+3. For **Grant Type**, select the method that will be used to obtain the access token:
+
+   * **Authorization code**: Used by confidential and public clients to exchange an authorization code for an access token. After the user returns to the client via the redirect URL, the application will get the authorization code from the URL and use it to request an access token.
+
+   * **Client credential**: Used by clients to obtain an access token outside of the context of a user. Select this option to obtain an access key that may be used for CloudLink registration.
+
+     <Note>
+       **Info:** You may select both grant types. A single client secret will be generated for use in both flows.
+     </Note>
+
+4. Optionally, add a description of the OAuth client app that users will see.
+
+5. Optionally, provide a **Redirect URI** where users will be sent after authorization.
+
+   <Note>
+     **Note:&#x20;**&#x46;or security purposes, Harmonic recommends that you register a redirect URI. The URI must begin with "https".
+   </Note>
+
+   If the client app will be used for CloudLink registration, you can type  https\://localhost/vos-api/cloudlink/v1/callback  for the redirect URI.
+
+6. Click **Add**.\
+   Result: VOS generates a **Client App ID** and **Client Secret**.
+
+   <Note>
+     **Note:&#x20;**&#x46;or security purposes, the system does not store the **Client Secret**. Harmonic recommends that you immediately copy and store this information in a secure place.
+   </Note>
+
+7. To copy the full client object (recommended), click **Copy**. Or, to copy only the client secret, click the button to the right of the **Client Secret** string.\
+   If necessary, you may generate a new **Client Secret** for an existing application from the **Client Apps** page.

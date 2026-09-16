@@ -1,0 +1,1811 @@
+{
+  "components": {
+    "schemas": {
+      "DefaultMetadata": {
+        "properties": {
+          "displayName": {
+            "description": "A human-readable name for the resource.",
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A dictionary of labels associated with the resource.\n                     Maximum number of labels: 32.\n                     Maximum length of a label or value: 256 characters.\n                     Label: alphanumeric, hyphens and underscores.\n                     Value: alphanumeric, hyphens, underscores and spaces.",
+            "maxProperties": 32,
+            "type": "object"
+          }
+        },
+        "required": [
+          "displayName"
+        ],
+        "title": "DefaultMetadata",
+        "type": "object"
+      },
+      "DefaultPatchMetadata": {
+        "properties": {
+          "displayName": {
+            "description": "A human-readable name for the resource.",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A dictionary of labels associated with the resource.\n                     Maximum number of labels: 32.\n                     Maximum length of a label or value: 256 characters.\n                     Label: alphanumeric, hyphens and underscores.\n                     Value: alphanumeric, hyphens, underscores and spaces.",
+            "maxProperties": 32,
+            "type": "object"
+          }
+        },
+        "title": "DefaultPatchMetadata",
+        "type": "object"
+      },
+      "DefaultTransport": {
+        "properties": {
+          "cidr": {
+            "default": "",
+            "description": "The IP address range to choose from when the system automatically creates transport settings for sending content from one flow to another. If a specific IP/URL (such as a public cloud IP or a fleet device IP) is required to send content between flows, then this setting will be ignored.",
+            "example": "239.0.0.1/24",
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of <<glossary:transport>> to use for sending content from one flow to another flow.",
+            "enum": [
+              "Auto",
+              "SRTListener",
+              "SRTCaller",
+              "UDP",
+              "RISTListener"
+            ],
+            "example": "UDP",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "DefaultTransport",
+        "type": "object"
+      },
+      "EmptyObjectSchema": {
+        "properties": {},
+        "title": "EmptyObjectSchema",
+        "type": "object"
+      },
+      "Error": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail",
+            "description": "Pertinent information about the error"
+          },
+          "ref": {
+            "description": "A reference to the request that caused the error.",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP status code",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "error",
+          "status",
+          "ref"
+        ],
+        "title": "Error",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "description": "The error code.",
+            "type": "string"
+          },
+          "detail": {
+            "description": "The error message.",
+            "type": "string"
+          },
+          "extraDetail": {
+            "additionalProperties": {},
+            "description": "Extra information regarding this error.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "detail"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "GeolocationFragment": {
+        "properties": {
+          "coordinates": {
+            "description": "Co-ordinates that describe the geolocation (ISO 6709), an array of two floating point numbers [latitude(North - South), longitude(East - West)]. Set an empty array to clear the geolocation.",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 2,
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "coordinates"
+        ],
+        "title": "GeolocationFragment",
+        "type": "object"
+      },
+      "ListResponseSupplementalSchema": {
+        "properties": {
+          "count": {
+            "description": "Number of items returned",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "kind": {
+            "description": "Type of items in the list",
+            "readOnly": true,
+            "type": "string"
+          },
+          "operation": {
+            "description": "Operation type. Should always say 'list'",
+            "readOnly": true,
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfoSchema",
+            "description": "Pagination info",
+            "readOnly": true
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/ProjectInfoSchema",
+            "description": "Project info",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "kind",
+          "count",
+          "operation",
+          "pagination"
+        ],
+        "title": "ListResponseSupplementalSchema",
+        "type": "object"
+      },
+      "MetadataSchema": {
+        "properties": {
+          "created": {
+            "description": "The time when the resource was created",
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdBy": {
+            "description": "ID of the user who created the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "createdByEmail": {
+            "description": "Email of the user who created the resource",
+            "type": "string"
+          },
+          "displayName": {
+            "description": "The display name of the resource",
+            "type": "string"
+          },
+          "id": {
+            "description": "The ID of the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A dictionary of labels associated with the resource",
+            "example": {
+              "label1": "value1",
+              "label2": "value2"
+            },
+            "type": "object"
+          },
+          "name": {
+            "description": "The name of the resource",
+            "type": "string"
+          },
+          "updated": {
+            "description": "The time when the resource was last updated",
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedBy": {
+            "description": "ID of the user who last updated the resource",
+            "format": "uuid",
+            "type": "string"
+          },
+          "updatedByEmail": {
+            "description": "Email of the user who last updated the resource",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "MetadataSchema",
+        "type": "object"
+      },
+      "NetworkBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/NetworkBodySpec",
+            "description": "Network specification."
+          }
+        },
+        "required": [
+          "metadata",
+          "spec"
+        ],
+        "title": "NetworkBody",
+        "type": "object"
+      },
+      "NetworkBodySpec": {
+        "properties": {},
+        "title": "NetworkBodySpec",
+        "type": "object"
+      },
+      "NetworkBodyStatus": {
+        "properties": {
+          "owner": {
+            "description": "Indicates whether the network was automatically created by the system. System owned networks cannot be deleted, but they can be modified. To learn more, read [System owned networks](ref:infrastructure-api#system-owned-networks).",
+            "enum": [
+              "User",
+              "System"
+            ],
+            "example": "User",
+            "type": "string"
+          },
+          "scope": {
+            "description": "Indicates whether the network is a local network within a site. Local networks are always system owned and therefore cannot be deleted, however they can be modified.",
+            "enum": [
+              "Connecting",
+              "Local"
+            ],
+            "example": "Connecting",
+            "type": "string"
+          }
+        },
+        "required": [
+          "owner",
+          "scope"
+        ],
+        "title": "NetworkBodyStatus",
+        "type": "object"
+      },
+      "NetworkGetSchema": {
+        "properties": {
+          "kind": {
+            "description": "The kind of record.",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataSchema",
+            "description": "Network metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/NetworkBodySpec",
+            "description": "Network specification."
+          },
+          "status": {
+            "$ref": "#/components/schemas/NetworkBodyStatus",
+            "description": "Network status."
+          }
+        },
+        "required": [
+          "kind",
+          "spec",
+          "metadata",
+          "status"
+        ],
+        "title": "NetworkGetSchema",
+        "type": "object"
+      },
+      "NetworkListResponseSchema": {
+        "properties": {
+          "@odata.nextLink": {
+            "description": "@odata.nextLink URL if the page length and number of items match.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "supplemental": {
+            "$ref": "#/components/schemas/ListResponseSupplementalSchema",
+            "description": "Supplemental info",
+            "readOnly": true
+          },
+          "value": {
+            "description": "A list of networks.",
+            "items": {
+              "$ref": "#/components/schemas/NetworkGetSchema"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "supplemental",
+          "value"
+        ],
+        "title": "NetworkListResponseSchema",
+        "type": "object"
+      },
+      "NetworkPatchBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultPatchMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/EmptyObjectSchema",
+            "description": "Network specification."
+          }
+        },
+        "title": "NetworkPatchBody",
+        "type": "object"
+      },
+      "PaginationInfoSchema": {
+        "properties": {
+          "end": {
+            "description": "Position of the last item in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "records": {
+            "description": "Total number of items returned in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "start": {
+            "description": "Position of the first item in the list",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "total": {
+            "description": "Total number of items in the project",
+            "readOnly": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "records",
+          "total"
+        ],
+        "title": "PaginationInfoSchema",
+        "type": "object"
+      },
+      "ProjectInfoSchema": {
+        "properties": {
+          "id": {
+            "description": "Project ID",
+            "readOnly": true,
+            "type": "string"
+          },
+          "name": {
+            "description": "Project name",
+            "readOnly": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ProjectInfoSchema",
+        "type": "object"
+      },
+      "RouteJsonFragment": {
+        "properties": {
+          "defaultTransport": {
+            "$ref": "#/components/schemas/DefaultTransport",
+            "description": "Settings used to influence the <<glossary:transport>> that the system will automatically select when it needs to send <<glossary:content>> from one <<glossary:flow>> to another flow. The default transport settings from the route on which the content enters the network are used to select and configure the transport for the content. Read [Default transports](ref:infrastructure-api#default-transports) to learn more."
+          },
+          "networkName": {
+            "description": "The name of the <<glossary:network>> connected to the site by this route.",
+            "example": "internet",
+            "pattern": "^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "networkName"
+        ],
+        "title": "RouteJsonFragment",
+        "type": "object"
+      },
+      "SiteBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/SiteBodySpec",
+            "description": "Site specification."
+          }
+        },
+        "required": [
+          "metadata"
+        ],
+        "title": "SiteBody",
+        "type": "object"
+      },
+      "SiteBodySpec": {
+        "properties": {
+          "geolocation": {
+            "$ref": "#/components/schemas/GeolocationFragment",
+            "description": "Optional geolocation data for the site."
+          },
+          "routes": {
+            "description": "The routes that connect the network to <<glossary:site>>s.",
+            "items": {
+              "$ref": "#/components/schemas/RouteJsonFragment"
+            },
+            "type": "array"
+          }
+        },
+        "title": "SiteBodySpec",
+        "type": "object"
+      },
+      "SiteBodyStatus": {
+        "properties": {
+          "locationDisplayName": {
+            "description": "Display name of the location of this site. This field is only relevant for <<glossary:SaaS site>>s. To learn more, read [Sites](ref:infrastructure-api#site-concept).",
+            "maxLength": 255,
+            "type": "string"
+          },
+          "locationName": {
+            "description": "Name of the location of this site. This field is only relevant for <<glossary:SaaS site>>s. To learn more, read [Sites](ref:infrastructure-api#site-concept).",
+            "pattern": "^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$",
+            "type": "string"
+          },
+          "owner": {
+            "description": "Indicates whether the site was automatically created by the system. System owned sites cannot be deleted, but they can be modified. To learn more, read [System owned sites](ref:infrastructure-api#system-owned-sites).",
+            "enum": [
+              "User",
+              "System"
+            ],
+            "example": "User",
+            "type": "string"
+          }
+        },
+        "required": [
+          "owner"
+        ],
+        "title": "SiteBodyStatus",
+        "type": "object"
+      },
+      "SiteGetSchema": {
+        "properties": {
+          "kind": {
+            "description": "The kind of record.",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataSchema",
+            "description": "Site metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/SiteBodySpec",
+            "description": "Site specification."
+          },
+          "status": {
+            "$ref": "#/components/schemas/SiteBodyStatus",
+            "description": "Site status."
+          }
+        },
+        "required": [
+          "kind",
+          "spec",
+          "metadata",
+          "status"
+        ],
+        "title": "SiteGetSchema",
+        "type": "object"
+      },
+      "SiteListResponseSchema": {
+        "properties": {
+          "@odata.nextLink": {
+            "description": "@odata.nextLink URL if the page length and number of items match.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "supplemental": {
+            "$ref": "#/components/schemas/ListResponseSupplementalSchema",
+            "description": "Supplemental info",
+            "readOnly": true
+          },
+          "value": {
+            "description": "A list of sites.",
+            "items": {
+              "$ref": "#/components/schemas/SiteGetSchema"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "supplemental",
+          "value"
+        ],
+        "title": "SiteListResponseSchema",
+        "type": "object"
+      },
+      "SitePatchBody": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DefaultPatchMetadata",
+            "description": "Resource metadata."
+          },
+          "spec": {
+            "$ref": "#/components/schemas/SitePatchBodySpec",
+            "description": "Site specification."
+          }
+        },
+        "title": "SitePatchBody",
+        "type": "object"
+      },
+      "SitePatchBodySpec": {
+        "properties": {
+          "geolocation": {
+            "$ref": "#/components/schemas/GeolocationFragment",
+            "description": "Optional geolocation data for the site."
+          },
+          "routes": {
+            "description": "The routes that connect the network to <<glossary:site>>s.",
+            "items": {
+              "$ref": "#/components/schemas/RouteJsonFragment"
+            },
+            "type": "array"
+          }
+        },
+        "title": "SitePatchBodySpec",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "## Overview\nThe MK.IO Infrastructure API is the project-level REST API for infrastructure configuration in MK.IO. It focuses on network and site management for operations workflows where infrastructure resources are created, queried, updated, and retired.\n\n## Authentication\nAll endpoints require a bearer token in the `Authorization` header:\n`Authorization: Bearer <your_token>`\n\nYou can create and manage your tokens in your [profile settings](https://app.mk.io/user/profile) under **Your personal API tokens**. Follow the [API tokens guide](https://docs.mediakind.com/mkio/how-to/managing-your-organization/api-tokens) for more information.\n\n## Usage\nBase URL: `https://app.mk.io`\n\nTypical usage pattern:\n- Create and maintain network and site resources.\n- Update or remove resources as requirements change.\n",
+    "title": "MK.IO Infrastructure API",
+    "version": "1.1.4"
+  },
+  "openapi": "3.0.2",
+  "paths": {
+    "/api/v1/projects/{project_name}/infra/networks": {
+      "get": {
+        "description": "List networks on the specified project. To learn more about networks, read [Network Concept](ref:infrastructure-api#network-concept).\n\n## Listing, Sorting and Filtering Networks\n\nThis endpoint returns the list of networks in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `createdBy`, `displayName`, `id`, `labels`, `metadata/name`, `name`, `status/owner`, `status/scope`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned networks from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for networks to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `displayName`, `id`, `labels`, `metadata/name`, `name`, `status/owner`, `status/scope`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying networks based on their labels. Labels are a set of key-value pairs that can be used to identify networks with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of networks.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 networks from the list.\n\n`?$orderby=name desc` - Sorts networks by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns networks that match the provided name.\n\n\n`?$orderby=created desc` - Sorts networks by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns networks created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns networks with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns networks with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns networks with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `infra.network.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/infra/networks",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkListResponseSchema"
+                }
+              }
+            },
+            "description": "List of networks."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List Networks",
+        "tags": [
+          "Networks"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/infra/networks/{name}": {
+      "delete": {
+        "description": "Delete a network. If the network does not exist, this API will return a 204. To learn more about networks, read [Network Concept](ref:infrastructure-api#network-concept).\n\nRBAC Capability Required: `infra.network.delete`",
+        "operationId": "[delete]_/api/v1/projects/{project_name}/infra/networks/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Network deleted."
+          },
+          "204": {
+            "description": "Nothing to delete."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Network is referenced by existing available network, destination or content source."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete Network",
+        "tags": [
+          "Networks"
+        ]
+      },
+      "get": {
+        "description": "Get a network by name. To learn more about networks, read [Network Concept](ref:infrastructure-api#network-concept).\n\nRBAC Capability Required: `infra.network.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/infra/networks/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkGetSchema"
+                }
+              }
+            },
+            "description": "A single Network"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get Network",
+        "tags": [
+          "Networks"
+        ]
+      },
+      "patch": {
+        "description": "Update a network. To learn more about networks, read [Network Concept](ref:infrastructure-api#network-concept)..\n\nRBAC Capability Required: `infra.network.update`",
+        "operationId": "[patch]_/api/v1/projects/{project_name}/infra/networks/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NetworkPatchBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkGetSchema"
+                }
+              }
+            },
+            "description": "The updated network"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Update Network",
+        "tags": [
+          "Networks"
+        ]
+      },
+      "put": {
+        "description": "Create a network. To learn more about networks, read [Network Concept](ref:infrastructure-api#network-concept).\n\nRBAC Capability Required: `infra.network.create`",
+        "operationId": "[put]_/api/v1/projects/{project_name}/infra/networks/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NetworkBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkGetSchema"
+                }
+              }
+            },
+            "description": "The created network"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Create Network",
+        "tags": [
+          "Networks"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/infra/sites": {
+      "get": {
+        "description": "List sites on the specified project. To learn more about sites, read [Site Concept](ref:infrastructure-api#site-concept).\n\n## Listing, Sorting and Filtering Sites\n\nThis endpoint returns the list of sites in the specified project.\n\n### Sorting\n\nThe results from this endpoint can be ordered using the `$orderby` query parameter. Specify a list of field names, separated by commas\nwhere each one can optionally specify `asc` or `desc`.\n\nSorting is valid on the following fields: `created`, `createdBy`, `displayName`, `id`, `labels`, `metadata/name`, `name`, `status/owner`, `updated`, `updatedBy`\n\n### Filtering\n\n\nThere are two ways to filter the set of returned sites from this endpoint - the first is to use the `$filter` query parameter, the second is to use the\n`$label_key` and `$label` query parameters.\n\n\nThe `$filter` query parameter allows for sites to be filtered on the basis of fields in the schema using OData query syntax.\nSee [this document](https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview#filter) for more details on the syntax used.\n\nFilters are valid on the following fields: `created`, `createdBy`, `createdByEmail`, `createdByName`, `displayName`, `id`, `labels`, `metadata/name`, `name`, `status/locationName`, `status/owner`, `updated`, `updatedBy`, `updatedByEmail`, `updatedByName`\n\n`$label_key` and `$label` are specific to querying sites based on their labels. Labels are a set of key-value pairs that can be used to identify sites with\nany arbitrary metadata you want, specifically for the purpose of retrieving relevant subsets of sites.\n\n### Examples:\n\n`?$top=10` - Returns only the first 10 sites from the list.\n\n`?$orderby=name desc` - Sorts sites by name in descending order.\n\n`?$filter=name eq 'descriptive name'` - Returns sites that match the provided name.\n\n\n`?$orderby=created desc` - Sorts sites by creation date in descending order.\n\n`?$filter=created ge 2021-01-01T00:00:00Z` - Returns sites created after January 1, 2021.\n\n\n`?$label=studio=paravalley` - Returns sites with the label `studio` set to `paravalley`.\n\n`?$label=release-date~2023` - Returns sites with the label `release-date` set to a value that contains `2023`.\n\n`?$label_key=studio&label_key=release-date` - Returns sites with any value set for the `studio` label and the `release-date` label.\n\nRBAC Capability Required: `infra.site.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/infra/sites",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies the key by which the result collection should be ordered.",
+            "in": "query",
+            "name": "$orderby",
+            "required": false,
+            "schema": {
+              "title": "$Orderby",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Restricts the set of items returned.",
+            "in": "query",
+            "name": "$filter",
+            "required": false,
+            "schema": {
+              "title": "$Filter",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a non-negative integer `n` that limits the number of items returned from a collection.\nThe service returns the number of available items up to but not greater than the specified value `n`.",
+            "in": "query",
+            "name": "$top",
+            "required": false,
+            "schema": {
+              "title": "$Top",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Specifies a start offset to support paginated results.\nUse `@odata.nextLink` in the result object to enumerate the collection -\nit will be present only if there's more than one page of entities.",
+            "in": "query",
+            "name": "$skiptoken",
+            "required": false,
+            "schema": {
+              "title": "$Skiptoken",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key.\nIf multiple $label_keys are specified, matching items must have all labels.",
+            "in": "query",
+            "name": "$label_key",
+            "required": false,
+            "schema": {
+              "title": "$Label_Key",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filters the set to the specified label key/value pair.\nSupports equality, inequality, and inexact matching. If multiple values are provided for the same key, items matching either value will be returned.",
+            "in": "query",
+            "name": "$label",
+            "required": false,
+            "schema": {
+              "title": "$Label",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteListResponseSchema"
+                }
+              }
+            },
+            "description": "A list of sites"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "List Sites",
+        "tags": [
+          "Sites"
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/infra/sites/{name}": {
+      "delete": {
+        "description": "Delete a site. If the site does not exist, this API will return a 204. To learn more about sites, read [Site Concept](ref:infrastructure-api#site-concept).\n\nRBAC Capability Required: `infra.site.delete`",
+        "operationId": "[delete]_/api/v1/projects/{project_name}/infra/sites/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Site deleted."
+          },
+          "204": {
+            "description": "Nothing to delete."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Site is referenced by existing flows or devices."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete Site",
+        "tags": [
+          "Sites"
+        ]
+      },
+      "get": {
+        "description": "Get a site by name. To learn more about sites, read [Site Concept](ref:infrastructure-api#site-concept).\n\nRBAC Capability Required: `infra.site.get`",
+        "operationId": "[get]_/api/v1/projects/{project_name}/infra/sites/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteGetSchema"
+                }
+              }
+            },
+            "description": "A single site"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Get Site",
+        "tags": [
+          "Sites"
+        ]
+      },
+      "patch": {
+        "description": "Update a site. To learn more about sites, read [Site Concept](ref:infrastructure-api#site-concept).\n\nRBAC Capability Required: `infra.site.update`",
+        "operationId": "[patch]_/api/v1/projects/{project_name}/infra/sites/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SitePatchBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteGetSchema"
+                }
+              }
+            },
+            "description": "The updated site"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Update Site",
+        "tags": [
+          "Sites"
+        ]
+      },
+      "put": {
+        "description": "Create a site. To learn more about sites, read [Site Concept](ref:infrastructure-api#site-concept).\n\nRBAC Capability Required: `infra.site.create`",
+        "operationId": "[put]_/api/v1/projects/{project_name}/infra/sites/{name}",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "project_name",
+            "required": true,
+            "schema": {
+              "title": "Project_Name",
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteGetSchema"
+                }
+              }
+            },
+            "description": "The created site"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Create Site",
+        "tags": [
+          "Sites"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "servers": [
+    {
+      "description": "MK.IO API Server",
+      "url": "https://app.mk.io/"
+    }
+  ],
+  "tags": [
+    {
+      "description": "",
+      "name": "Networks"
+    },
+    {
+      "description": "",
+      "name": "Sites"
+    }
+  ]
+}

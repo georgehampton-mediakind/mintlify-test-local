@@ -1,0 +1,63 @@
+---
+title: Configuring Availability Zone (AZ) support for transcode and mux 1:1 redundancy
+robots: noindex, nofollow
+---
+
+Availability Zones (AZ) are usually physically isolated sets of resources. A kubernetes cluster can be deployed across multiple AZ to achieve a high level of resilience against hardware failure or planned maintenance event. In VOS, 1+1 service redundancy already supports running on different nodes.
+
+1. Deploy the cluster with multi-zone. Enable the **Multiple Zone** option on the HUB page.
+
+2. Set Cluster Node Size to at least two.
+
+   ![](/images/vos360/162f448d273f174dd75975fb.png)
+
+3. Once deployed, check to make sure that the nodes have proper [topology.kubernetes.io/zone](http://topology.kubernetes.io/zone) labels.
+
+   **Use kubectl to check node labels**
+
+   ```bash
+   $ kubectl get node <node-name> -o json | jq '.metadata.labels'
+   {
+       "agentpool": "generic",
+       "beta.kubernetes.io/arch": "amd64",
+       "beta.kubernetes.io/instance-type": "Standard_F16s_v2",
+       "beta.kubernetes.io/os": "linux",
+       "failure-domain.beta.kubernetes.io/region": "westus2",
+       "failure-domain.beta.kubernetes.io/zone": "westus2-1",
+       "kubernetes.azure.com/cluster": "saas-vos360-dev-genx-genx-01-node",
+       "kubernetes.azure.com/mode": "system",
+       "kubernetes.azure.com/node-image-version": "AKSUbuntu-1804containerd-2021.01.06",
+       "kubernetes.azure.com/role": "agent",
+       "kubernetes.io/arch": "amd64",
+       "kubernetes.io/hostname": "aks-generic-20974417-vmss000000",
+       "kubernetes.io/os": "linux",
+       "kubernetes.io/role": "agent",
+       "node-role.kubernetes.io/agent": "",
+       "node-role.vos/controller": "true",
+       "node-role.vos/egress": "true",
+       "node-role.vos/live_ingest": "true",
+       "node.kubernetes.io/instance-type": "Standard_F16s_v2",
+       "topology.kubernetes.io/region": "westus2",
+       "topology.kubernetes.io/zone": "westus2-1"
+   }
+    
+   # Or get all labels from all nodes
+   $ kubectl get node -o json | jq '.items[].metadata.labels'
+   ```
+
+4. Create the SSPE service with service redundancy.
+
+   <Note>
+     **Note:** Transcoding service and Mux service are two different types of service. They do not run in the same single service. Therefore, transcoding or mux services run individually.
+
+     The configuration for service redundancy of transcoding service or mux service are identical.
+   </Note>
+
+5. Before starting the service, enable the **Redundancy** toggle to trigger service redundancy.
+
+   ![](/images/vos360/e9fbf162d3e68c1cb2627b34.png)
+
+6. For a mux service, use the DiviTrack Pool as a source and MPTS destination. Enable the **Redundancy** toggle for this Service Redundancy feature.\
+   \
+   ![](/images/vos360/6e9333a706726fab910cf0a8.png)\
+   After the service is activated, two SSPE pods are created and deployed on nodes in different zones.

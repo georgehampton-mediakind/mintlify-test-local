@@ -1,0 +1,118 @@
+---
+title: Build with the Media API
+description: Understand the Media API resource model and use it to build VOD, live, publishing, and content-protection workflows in MK.IO.
+sidebarTitle: Media API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Media API is the operational API for media processing and delivery in MK.IO. Use it when you need to register storage, create assets, run transforms and jobs, manage live events, publish content with streaming locators, or protect playback with streaming and content key policies.
+
+## API overview
+
+| Detail    | Value                                           |
+| --------- | ----------------------------------------------- |
+| Base path | `/api/v1/projects/{project_name}/media/`        |
+| Scope     | Project                                         |
+| Reference | [Media API reference](/api-reference/media-api) |
+
+## How the core resources connect
+
+The Media API becomes much easier to use once you understand the sequence:
+
+1. A **storage** instance tells MK.IO how to reach cloud storage.
+2. An **asset** points to content in that storage.
+3. A **transform** defines processing instructions.
+4. A **job** applies the transform to the asset and creates output assets.
+5. A **streaming locator** publishes an asset by linking it to a **streaming policy**.
+6. A **streaming endpoint** provides the delivery domain for the playback paths returned by `listPaths`.
+7. A **content key policy** becomes part of the chain when you need DRM or token-based key delivery.
+
+That resource model supports both VOD and live workflows. The difference is whether the asset is created from existing stored content or continuously written by a live output.
+
+<Warning>
+  **Two live APIs**
+
+  `/media/liveEvents` and `/live/liveEvents` are separate resource models. A resource created through one API is invisible to the other. Use the Live API workflow for template-based encoding and multiview.
+</Warning>
+
+## Common workflow patterns
+
+### VOD workflow
+
+1. [Register storage](/api-guides/how-to/media/storage).
+2. [Create a source asset](/api-guides/how-to/media/assets).
+3. [Run a transform job](/api-guides/how-to/media/transforms-and-jobs).
+4. [Publish with a streaming locator](/api-guides/how-to/media/publishing).
+
+### Media API live event
+
+1. [Register storage](/api-guides/how-to/media/storage).
+2. [Create and start a live event](/api-guides/how-to/media/live-streaming).
+3. [Create a live output to archive the stream](/api-guides/how-to/media/live-streaming).
+4. [Publish with a streaming locator](/api-guides/how-to/media/publishing).
+
+### Live API template-based workflow
+
+1. [Create a source and asset](/api-guides/how-to/media/content-and-sources).
+2. [Create a config from a preset](/api-guides/how-to/templates/manage-templates).
+3. [Create and start the Live API event](/api-guides/how-to/live/walkthrough).
+4. [Publish the output asset](/api-guides/how-to/media/publishing).
+
+### Protected playback
+
+1. [Publish with a DRM-capable streaming policy](/api-guides/how-to/media/publishing).
+2. [Create a content key policy](/api-guides/how-to/media/content-protection).
+3. [Create a streaming locator referencing both](/api-guides/how-to/media/publishing).
+
+## Guides
+
+<CardGroup cols={2}>
+  <Card title="Storage" href="/api-guides/how-to/media/storage">
+    Register Azure, AWS, or Google storage and manage the credentials MK.IO uses to access it.
+  </Card>
+
+  <Card title="Assets" href="/api-guides/how-to/media/assets">
+    Create assets, inspect tracks, request file access information, organize content with labels, and apply filters.
+  </Card>
+
+  <Card title="Download asset files" href="/api-guides/how-to/media/download-asset-files">
+    Retrieve one file from an asset by requesting access information, then using the returned access URL and JWT.
+  </Card>
+
+  <Card title="Playback filters" href="/api-guides/how-to/media/playback-filters">
+    Create asset or account filters for time ranges, track selection, and startup quality, then apply them through locators.
+  </Card>
+
+  <Card title="Transforms and jobs" href="/api-guides/how-to/media/transforms-and-jobs">
+    Define reusable processing profiles and run them against assets.
+  </Card>
+
+  <Card title="Live streaming" href="/api-guides/how-to/media/live-streaming">
+    Create Media API live events, connect encoders, archive with live outputs, and publish live playback.
+  </Card>
+
+  <Card title="Live API walkthrough" href="/api-guides/how-to/live/walkthrough">
+    Build a template-based Live API event. Use this workflow for multiview and reusable encoding configs.
+  </Card>
+
+  <Card title="Streaming and publishing" href="/api-guides/how-to/media/publishing">
+    Create streaming endpoints, locators, and policies, then retrieve playback URLs.
+  </Card>
+
+  <Card title="Content protection" href="/api-guides/how-to/media/content-protection">
+    Add DRM and key-delivery configuration to published assets.
+  </Card>
+
+  <Card title="Content, sources, and destinations" href="/api-guides/how-to/media/content-and-sources">
+    Create content identifiers, ingest sources, and egress destinations for use with the Live API.
+  </Card>
+</CardGroup>
+
+## Workflow guide
+
+<CardGroup cols={1}>
+  <Card title="Automate a VOD pipeline" href="/api-guides/how-to/media/vod-pipeline">
+    Follow an end-to-end flow from source asset through transform job to published playback.
+  </Card>
+</CardGroup>

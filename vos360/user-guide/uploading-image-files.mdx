@@ -1,0 +1,28 @@
+---
+title: Uploading image files
+robots: noindex, nofollow
+---
+
+You can upload channel logo and blackout slate image files when you configure services in the Configure Channels app. You can also upload image files using the Public API app.
+
+![uploading\_image\_files.png](/images/vos360/4a1c0b06764a23f7259a0a5d.png)
+
+To upload a slate image file, do one of the following:
+
+* Navigate to the Configure Channels app and create a new source. A backup signal loss source is added by default. Click the **Edit** icon to open the **Choose image file** dialog and upload the desired image file.
+
+* Navigate to the **Public API**, click POST /configure/v1/images, supply the necessary parameters and click **Try it out!**.
+
+<Note>
+  **Info:** The following REST API can be used to configure a source: POST /configure/v1/sources. Specify the image UUID for the imageID parameter to configure a slate image.
+</Note>
+
+To upload a logo image file, do one of the following:
+
+* Navigate to the Configure Channels app. If necessary, create the service source and destination, and then configure the service. On the **Commit** tab, select **Add-ons** and enable the **Logo** add-on. Click the **Edit** icon to open the **Choose image file** dialog and upload the desired file.
+
+* Navigate to the **Public API**, click POST /configure/v1/images, supply the necessary parameters and click **Try it out!**.
+
+<Note>
+  **Info:** The following REST API can be used to configure a service: POST /configure/v1/services. Specify the image UUID for the imageID parameter to configure the channel logo.
+</Note>

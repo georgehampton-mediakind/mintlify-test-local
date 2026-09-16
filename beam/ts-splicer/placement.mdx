@@ -1,0 +1,126 @@
+---
+title: Configuring content substitution and processing
+sidebarTitle: Placement
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+For each output group created, content substitution and processing can be associated to enable use cases such as:
+
+* Managing alternate content & blackout
+* Implementing linear ad replacement
+* Controlling SCTE-35 placement (upcoming feature)
+
+TS Splicer implements industry-standard communication protocols towards content decisioning services such as POIS services (for Alternate Content & Blackout, using MK.IO Beam POIS Control or any 3PP POIS) and Ad decision servers.
+
+<span id="using-ts-splicer-for-blackout--alternate-content" className="mk-legacy-anchor" />
+
+## Using TS Splicer for Blackout & Alternate Content
+
+TS Splicer uses CableLabs ESAM (2013 version) for handling linear stream switching:
+
+* On detecting an SCTE-35 input signal, TS Splicer sends the signal to a POIS entity. It then decides on the switching strategy based on the scheduled provisions and SCTE-35 matching criteria.
+
+* Out-of-band switching (also known as time-based switching) is also supported. Here, a POIS instructs TS Splicer to shift to alternate content, even if no SCTE-35 signal was received.
+
+To configure ESAM for blackout & alternate content switching:
+
+1. Go to the **Placement** tab and find the desired output group.
+2. Click **+Add placement rule.**
+3. Fill in the necessary parameters:
+
+* **Name**: Unique name for the placement.
+* **Type**: Select ESAM (standard) for blackout & alternate content switching.
+* **URL**: The endpoint where TS Splicer submits SCTE-35 signals and retrieves status. (ESAM SPE and PSN messages)
+* **Network name:** Correlates with the AcquisitionPointIdentity in the CableLabs ESAM specifications, and identifies TS Splicer at a specific site on a specific channel/network feed.
+* **Zone identity:** Corresponds to the Zone Identity defined in the ESAM specification: a string that represents the location of this stream. Examples may include VIRD (Virtal IRD identifier).
+* **Start in black/silence:** If enabled, the output will start in blackout until configured timeout, or upon alternate content switching response/request from a POIS
+* **Black/silence timeout:** Sets the maximum time TS Splicer output will stay in black/silence. A value of 0 seconds sets it to infinite. Only alternate content switching can disengage black/silense output.
+
+Under the **Asset** tab, few settings are configured:
+
+* **Source location:** this note explains the mapping between the alternate content ID returned by the POIS entity and the
+  actual content is retrieved from *Alternate Content sources*
+* **Asset loop:** Traditionally, blackout has been managed for broadcast by switching to an alternate live input feed. TS Splicer provides the ability to switch to a file that will be played out in loop. This file shall be configured under
+  **Settings > Alternate content sources**.
+
+Under the **Routing** tab:
+
+* **Filters:** Configure the conditions for TS Splicer to submit SCTE-35 signals to the POIS entity.To ensure proper
+  communication with specific placements, such as one for linear advertising or another for blackout, it is necessary to
+  set up SCTE-35 conditions accordingly.
+
+  ![SCTE-35 routing](/_machine-assets/ce09da0d52c29293a52498252ef430c157ff5b0ada52280781121ccd46e0af25.png)
+
+Upon statup, TS Splicer sends an SSR (Signal State Request) request to the configured POIS to determine in which
+state it should start its output processing. Upon failover for instance, TS Splicer will start in blackout if the
+primary system was in blackout.
+
+For Out-of-band notification, the POIS needs to know which URL to contact. For TS Splicer, the URL is: `http://<hostname>:<port>/api/esam/TsSplicer/<network_name>`
+
+## Using TS Splicer for Linear advertising
+
+TS Splicer enables linear ad insertion based on SCTE-35 signal. Upon SCTE-35 reception, each output group sends
+a placement request to a well-defined endpoint. This endpoint can be:
+
+* **SCTE-30 Ad Server:** This is the legacy way of managing linear ad insertion. In this architecture, the
+  SCTE-30 compatible Ad Server initiates a communication with TS Splicer via port 5168. Once the communication is established, upon ad break SCTE-35 signal, TS Splicer will exchange SCTE-30 messages with the Ad server that will respond by instructing TS Splicer to switch to an ad multicast at the designated SCTE-35 splice point.
+* **VAST**: TS Splicer implements a very innovative way of managing linear ad insertion over multicast using VAST. Upon detection of SCTE-35 ad break signal, a VAST HTTP request is sent to an Ad Server that will respond with a VAST document. This VAST document will contain a list of ads (creatives), and the access to each creative via a  element. Creatives shall be available as HLS ad assets.
+* **ESAM (Extended)**: This mode is MediaKind-proprietary. ESAM protocol has been extended to manage playlist of content (ads). It requires POIS Control acting as an ad server: POIS ingests linear ad schedule per zone (output group) in a certain format (CCMS, CSV, STE-224). Upon reception of a SCTE-35 signal, each TS Splicer output group submits an ESAM request, and POIS
+  responds with a list of creatives using extended fields of the ESAM response.
+
+### SCTE-30
+
+To configure linear ad replacement using SCTE-30 protocol, follow these steps:
+
+* Under **Placement** tab, locate the output group you want to configure with linear ad insertion.
+* Click **+Add placement rule.**
+
+Fill in:
+
+* **Name:** Name of the placement. It shall be unique per placement configured.
+* **Type:** Select SCTE-30 for linear ad insertion based on SCTE-30 protocol
+* **Channel name:** Name given to the output (group) channel. This setting is also used to verify the correct API connection
+  when TS Splicer responds to the Ad Server.
+* **Network interface:** Name of the interface used to exchange SCTE-30 messages.
+
+Under **routing** tab:
+
+* **Filters:** Configure the conditions for TS Splicer to submit SCTE-35 signals to Ad Servery. For blackout, segmentation
+  type id may be set to program start for instance. For advertising, splice insert or time signal descriptor filtering can be configured
+  as shown below.
+
+### VAST
+
+To configure linear ad replacement using SCTE-30 protocol, follow these steps:
+
+* Under **Placement** tab, locate the output group you want to configure with linear ad insertion.
+* Click **+Add placement rule.**
+
+Fill in:
+
+* **Name:** Name of the placement. it shall be unique per placement configured.
+* **Type:** select VAST for linear ad insertion based on VAST (Video Ad Serving Template) communication
+* **Decision server URL:** URL of the Ad server. it may contain hardcoded query parameters
+* **Audience server type:** ad-hoc integration enabling retrieval of audience information to be passed as query param dynamically. Current integration has been done against AM Lite audience server. for more information, or new audience server connection, please contact us.
+
+Under the **Routing** tab, fill in:
+
+* **Filters:** Configure the SCTE-35 matching criteria for TS Splicer to submit HTTP placement request to the Ad Server.
+
+Current implementation does not show any **Asset** tab. Path to the different creatives is automatically derived from  elements of the VAST response (one  element per creative). Only Creatives/ad assets in HLS format is supported today.
+
+### ESAM (MK proprietary)
+
+* Under the **Placement** tab, locate the output group you want to configure with linear ad insertion.
+* Click **+Add placement rule.**
+
+Fill in:
+
+* **Name:** Name of the placement. It shall be unique per placement configured.
+* **Type:** Select ESAM (MK proprietary) for linear ad insertion based on CableLabs ESAM MK proprietary extension.
+* **URL:** The URL to which TS Splicer submits SCTE-35 signals and returns status (ESAM SPE and PSN messages).
+* **Network name:** This parameter corresponds to the *AcquisitionPointIdentity* parameter defined in CableLabs ESAM specifications and identifies TS Splicer at a specific site on a specific channel/network feed.
+* **Zone identity:** Corresponds to the *Zone Identity* defined in the ESAM specification: a string that represents the location of this stream. Examples may include VIRD (Virtal IRD identifier).
+* **Start in black/silence:** When enabled, TS Splicer will start in blackout until configured timeout, or upon alternate content switching response/request from a POIS.
+* **Black/silence timeout:** This parameter sets the maximum time TS Splicer output will stay in black/silence. Value of 0 sets it to infinite. Only alternate content switching can disengage black/silense output.

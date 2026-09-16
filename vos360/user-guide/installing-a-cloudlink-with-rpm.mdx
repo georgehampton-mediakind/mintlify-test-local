@@ -1,0 +1,124 @@
+---
+title: Installing a CloudLink with RPM
+robots: noindex, nofollow
+---
+
+## Prerequisites
+
+* Host with the following or better hardware configuration:
+
+  * 4 CPU
+
+  * 32 GB memory
+
+  * 200 GB free storage
+
+* CentOS 7.4 (1708) minimal install
+
+* Networking:
+
+  * SSH access to the host
+
+  * Internet access from the host
+
+* Firewall:
+
+  * The following firewall rules are configured on the host on CloudLink start by default.
+
+    ```text
+    iptables -A INPUT -i lo -j ACCEPT                                  # Allow all traffic from localhost
+    iptables -A INPUT -s 127.0.0.1-j ACCEPT                           # Ditto
+    iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT   # Allow any established connections
+    iptables -A INPUT -p tcp --dport 22-j ACCEPT                      # Allow SSH
+    iptables -A INPUT -p udp -j ACCEPT                                 # Allow stream traffic
+    iptables -P INPUT DROP                                             # Drop other traffic
+    ip6tables -P INPUT DROP
+    ```
+
+* Network configuration:
+
+  * Configure the management and multicast interface on the host. You can configure the interface in /etc/sysconfig/network-scripts\
+    Example: enp4s0f0 (management), ens801f1 (ingest)
+
+    ```text
+    [root@vos2300-06~]# ifconfig
+    enp4s0f0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet 10.50.103.xxx  netmask 255.255.255.0broadcast 10.50.103.255
+            inet6 fe80::21e:67ff:fed8:be6d  prefixlen 64scopeid 0x20<link>
+            ether 00:1e:67:d8:be:6d  txqueuelen 1000(Ethernet)
+            RX packets 2272623bytes 191454868(182.5MiB)
+            RX errors 0dropped 10overruns 0frame 0
+            TX packets 4529082bytes 5187872443(4.8GiB)
+            TX errors 0dropped 0overruns 0carrier 0collisions 0
+            device memory 0x91d20000-91d3ffff
+     
+    ens801f1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet 192.168.xxx.xxx  netmask 255.255.255.0broadcast 192.168.10.255
+            inet6 fe80::2e0:edff:fe35:d969  prefixlen 64scopeid 0x20<link>
+            ether 00:e0:ed:35:d9:69txqueuelen 1000(Ethernet)
+            RX packets 1702568393bytes 2310623515493(2.1TiB)
+            RX errors 71284dropped 23overruns 0frame 71284
+            TX packets 24bytes 1476(1.4KiB)
+            TX errors 0dropped 0overruns 0carrier 0collisions 0
+     
+    lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+            inet 127.0.0.1netmask 255.0.0.0
+            inet6 ::1prefixlen 128scopeid 0x10<host>
+            loop  txqueuelen 1000(Local Loopback)
+            RX packets 222642843bytes 266057696613(247.7GiB)
+            RX errors 0dropped 0overruns 0frame 0
+            TX packets 222642843bytes 266057696613(247.7GiB)
+            TX errors 0dropped 0overruns 0carrier 0collisions 0
+     
+    veth55d9391: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet6 fe80::607d:e4ff:fe2c:f1e0  prefixlen 64scopeid 0x20<link>
+            ether 62:7d:e4:2c:f1:e0  txqueuelen 0(Ethernet)
+            RX packets 232582bytes 10459198(9.9MiB)
+            RX errors 0dropped 0overruns 0frame 0
+            TX packets 10517bytes 1003387(979.8KiB)
+            TX errors 0dropped 0overruns 0carrier 0collisions 0
+     
+    veth59fa09b: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet6 fe80::54b5:54ff:fe7f:c016  prefixlen 64scopeid 0x20<link>
+            ether 56:b5:54:7f:c0:16txqueuelen 0(Ethernet)
+            RX packets 14428bytes 911918(890.5KiB)
+            RX errors 0dropped 0overruns 0frame 0
+            TX packets 14278bytes 1048270(1023.7KiB)
+            TX errors 0dropped 0overruns 0carrier 0collisions 0
+     
+    vethc772330: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet6 fe80::4432:8ff:fe9c:62a1  prefixlen 64scopeid 0x20<link>
+            ether 46:32:08:9c:62:a1  txqueuelen 0(Ethernet)
+            RX packets 27287bytes 1298462(1.2MiB)
+            RX errors 0dropped 0overruns 0frame 0
+            TX packets 7028bytes 453120(442.5KiB)
+            TX errors 0dropped 0overruns 0carrier 0collisions 0
+    ```
+
+    <Note>
+      **Note:** Your network should be pre-configured on the host. No additional network configuration is needed on CloudLink application.
+    </Note>
+
+1. Configure the management and multicast interface on the host. You can configure the interface in /etc/sysconfig/network-scripts.
+
+2. Make sure you have received the .rpm file from Harmonic.
+
+3. Upload the RPM to the target host.
+
+4. Deploy CloudLink with RPM by entering the following command:
+
+   ```text
+   sudo rpm -ivh vos-cloudlink.rpm
+   ```
+
+5. Enter the following command to start CloudLink. It might take 5 minutes to initialize the CloudLink application.
+
+   ```text
+   sudo vosctl start
+   ```
+
+6. Access Cloudlink by entering the following command:
+
+   ```text
+   sudo vosctl sh
+   ```

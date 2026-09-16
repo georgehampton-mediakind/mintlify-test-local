@@ -1,0 +1,54 @@
+---
+title: Supported alarms
+robots: noindex, nofollow
+---
+
+VOS warns the operator of certain errors, such as timing errors, in the Playout Monitor interface.
+
+## &#x20;Timing errors
+
+### Primary events
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Gap</p></td><td colSpan="1" rowSpan="1"><p>There is a gap between two consecutive primary events. The gap error indicates the amount of the gap in timecode or milliseconds.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Overlap</p></td><td colSpan="1" rowSpan="1"><p>A primary event is scheduled to start before the previous event ends. The overlap error indicates the amount of overlap in timecode or milliseconds. When an overlap error is present, the event with the later start time is played while the event with the earlier start time is preempted.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Asset duration</p></td><td colSpan="1" rowSpan="1"><p>The asset duration is shorter than the primary event duration plus the SOM. In this case, a <strong>Fix</strong> button is provided, allowing the operator to automatically update the event duration to match the asset duration. Note that Edit mode must be activated in order to correct the error.</p></td></tr></tbody>
+  </table>
+</div>
+
+**Timing error with Fix button**\
+![](/images/vos360/6a68c7cd16ece66cf8fdeee2.png)
+
+### Secondary events
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Start/End timing error</p></td><td colSpan="1" rowSpan="1"><p>A secondary event is flagged with a timing error when its end time is before its start time. Such events are not played.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Overlap</p></td><td colSpan="1" rowSpan="1"><p>A secondary event is flagged with an overlap error when its layer is used by another secondary event at the same time. When an overlap error is present, the event with the later start time is played while the event with the earlier start time is preempted.</p></td></tr></tbody>
+  </table>
+</div>
+
+## Asset errors
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Missing asset</p></td><td colSpan="1" rowSpan="1"><p>A video clip or graphic template is missing and it is scheduled to air within 24 hours. A system notification is also generated.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Invalid asset</p></td><td colSpan="1" rowSpan="1"><p>An asset is not valid (frame rate variable, truncated asset, etc.) and it is scheduled to air within 24 hours. A system notification is also generated.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Frame rate error</p></td><td colSpan="1" rowSpan="1"><p>An asset has a frame rate that is not compatible with the playout source and is schedule to air within 24 hours. A system notification is also generated.</p></td></tr></tbody>
+  </table>
+</div>
+
+**Missing asset error**\
+![](/images/vos360/fba1055075985a1299d45088.png)
+
+## Live event errors
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="1"><p>Invalid format</p></td><td colSpan="1" rowSpan="1"><p>Video resolution and frame-rate of the input source are not identical to the resolution and frame rate defined in the playout source.</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>Missing source</p></td><td colSpan="1" rowSpan="1"><p>The CloudLink input source has not been configured in the Channels app.</p></td></tr></tbody>
+  </table>
+</div>

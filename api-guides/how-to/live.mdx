@@ -1,0 +1,120 @@
+---
+title: Live API
+description: Understand what the Live API is, when to use it, and how it fits into your MK.IO live streaming workflows.
+sidebarTitle: Live API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Live API manages live encoding and multiview composition in MK.IO. It gives you programmatic control over the full lifecycle of a live stream: from accepting ingest, through encoding or composing, to writing output into an asset and optionally delivering it to a downstream system.
+
+To see the API working before reading the full model, start with the [walkthrough](/api-guides/how-to/live/walkthrough). It builds a complete `liveEvent` and links back to the relevant concepts.
+
+## What this API does
+
+The Live API sits between your ingest sources and your published streams. You use it to define what the platform should do when a live feed arrives and where the result should go. With the Live API you can:
+
+* Accept live feeds from sources configured in the Media API (SRT, UDP, SDI, or HLS)
+* Encode live video according to a versioned template you define
+* Compose multiple live feeds into a single tiled multiview output
+* Write encoded output to an MK.IO asset for recording and live-to-VOD
+* Push live output to downstream destinations over SRT or RTMP
+* Schedule automatic start and stop windows for any live resource
+* Monitor running resources through sampled state, metrics, and thumbnail URLs
+
+## When to use the Live API
+
+Use the Live API when you need to encode or compose a live stream programmatically. It is the right API for:
+
+* **Continuous live channels**: A 24/7 broadcast feed that is always encoding
+* **Scheduled live events**: A broadcast that starts and stops at defined times, billed per minute
+* **Multiview production**: Taking multiple camera feeds and composing them side by side in a single output.
+* **Automated live workflows**: Integrations that create, start, stop, and monitor live resources without manual steps
+
+## How it differs from Media API live events
+
+The Media API has its own, separate `liveEvents` resource for ingest and packaging. It is not the same resource as the Live API's `liveEvents`. They live under different base paths (`/media/liveEvents` vs. `/live/liveEvents`), and a resource created in one is invisible to the other.
+
+### Media API workflow
+
+The Media API sets `encodingType` directly on a `liveEvents` resource, for example `PassthroughBasic` or `Premium1080p`. Recording uses a nested live output and an asset, and playback uses a streaming locator and streaming endpoint. It does not require a Templates API config.
+
+### Live API workflow
+
+The Live API's `liveChannels` and `liveEvents` reference a source or content resource from the Media API, an `encodingLive` config from the Templates API, and an output asset. This separates input connections from reusable encoding settings and the processing lifecycle.
+
+If you only need basic live ingest and packaging with no separate template to manage, start with the [Media API live streaming guide](/api-guides/how-to/media/live-streaming). If you need custom, reusable encoding templates, multiview, scheduled automation, or sampled monitoring of the encoding pipeline, use the Live API described on this page.
+
+## Resource types
+
+The Live API provides four resource types. All four share the same structure and lifecycle; the difference is in what they do and how they are billed.
+
+| Resource                  | Billing          | Purpose                                 |
+| ------------------------- | ---------------- | --------------------------------------- |
+| `liveChannels`            | Monthly flat fee | Continuous 24/7 live encoding           |
+| `liveEvents`              | Per-minute       | Time-bounded live encoding              |
+| `staticMultiviewChannels` | Monthly flat fee | Continuous 24/7 multi-input composition |
+| `staticMultiviewEvents`   | Per-minute       | Time-bounded multi-input composition    |
+
+The Channel variants run until you stop them and are billed at a flat monthly rate the moment they start. The Event variants are ideal for scheduled broadcasts because they use per-minute billing.
+
+## What the Live API depends on
+
+The Live API does not work in isolation. Before you create a live resource, you need resources from two other APIs:
+
+### Media API resources
+
+The Media API manages your connections to the outside world. Your camera feeds, the storage container for your recordings, and any downstream systems you push output to are all defined here. The Live API references them by name but does not create or manage them.
+
+* **Sources**: define how each live feed physically arrives at the platform, including the transport protocol, network, and connection settings. Create a source for each camera or ingest point before creating a live resource.
+* **Assets**: live resources write encoded output into an MK.IO asset. You create the asset first, then name it in the live resource spec. This is also where recordings end up for playback and live-to-VOD.
+* **Destinations**: optional. If you want to push output to a downstream system (an RTMP or SRT endpoint), define a destination in the Media API and reference it from your live resource output.
+
+### Templates API resources
+
+The platform needs to know how to encode your live feed: codec, bitrate, resolution, frame rate, and more. Rather than embed all of that complexity into every live resource you create, you upload these settings once as a template, give it a name, and reference it. This means you can share the same encoding settings across many resources without repeating them.
+
+* **encodingLive template**: required for every live resource. Holds the encoding parameters: how the platform compresses and packages your output.
+* **multiviewComposing template**: optional, multiview only. Defines the composition layout (how multiple camera feeds are arranged on screen), separately from the encoding settings. Useful when different events need different layouts but the same encoding configuration.
+
+## Start an SRT listener input
+
+For SRT listener inputs, prepare the encoder with the source URL and connection settings. Request `Running`, begin contribution, and poll until startup completes. A resolved input or `Active` source confirms assignment or use. Verify the expected video and audio through playback as well.
+
+## API overview
+
+| Detail    | Value                                         |
+| --------- | --------------------------------------------- |
+| Base path | `/api/v1/projects/{project_name}/live/`       |
+| Scope     | Project                                       |
+| Reference | [Live API reference](/api-reference/live-api) |
+
+## Guides
+
+New to the Live API? Start with the walkthrough for a hands-on introduction, then read Core concepts for the full model.
+
+<CardGroup cols={2}>
+  <Card title="Live event walkthrough" href="/api-guides/how-to/live/walkthrough">
+    A complete, hands-on example: source, asset, and template through to a running, playable liveEvent.
+  </Card>
+
+  <Card title="Core concepts" href="/api-guides/how-to/live/core-concepts">
+    Resource types, billing models, inputs and outputs, transform types, and how templates connect to live resources.
+  </Card>
+
+  <Card title="Manage live channels and events" href="/api-guides/how-to/live/manage-live">
+    Create, start, stop, and delete liveChannels and liveEvents with context for each step.
+  </Card>
+
+  <Card title="Multiview" href="/api-guides/how-to/live/multiview">
+    Compose multiple live inputs into a single output. Covers concepts, both composition modes, and end-to-end setup.
+  </Card>
+
+  <Card title="Scheduled operations" href="/api-guides/how-to/live/scheduled-operations">
+    Automate start and stop times for any live resource without manual intervention.
+  </Card>
+
+  <Card title="Monitor live resources" href="/api-guides/how-to/live/monitor-live">
+    Check resource state, read metrics, and access thumbnail and metadata monitoring URLs.
+  </Card>
+</CardGroup>

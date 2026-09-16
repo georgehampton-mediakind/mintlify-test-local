@@ -1,0 +1,109 @@
+---
+title: Configuring DRM using Harmonic CPIX
+robots: noindex, nofollow
+---
+
+You can configure a service with encryption using the "Harmonic CPIX" KMS API for live, start-over, catch-up, long lasting catch-up (LLCU) and VOD services.
+
+1. Navigate to the **Scrambling** app > **DRM** tab > **System** tab.
+
+2. Click **+System** to create a new DRM system.
+
+   ![harmonic\_cpix\_1.png](/images/vos360/0d82808f7931bb6a955428d4.png)
+
+3. Configure the DRM system settings:
+
+   * **DRM System Name**
+
+   * **Encryption Interface**: Select the "Harmonic CPIX".
+
+   * **Custom Header (Option):&#x20;**&#x43;onfigure a custom HTTP header (header name + value) that will be added to the CPIX key requests sent to the KMS (It can be used for instance for providing an authentication token to the KMS).
+
+   * **CENC Setting**: Configure the DRM systems that are used for CENC encryption in HLS, DASH or CMAF. (The selected DRM systems will be converted into the corresponding 'DRMSystem\@systemId' in the CPIX key requests.)
+
+     ![harmonic\_cpix\_2.png](/images/vos360/d4cf11caf90f91feb26b43dd.png)
+
+     **Note:** DRM type for HSS/MSS cannot be configured, as PlayReady is the only DRM format supported for Smooth-Streaming packaging type.\
+     **Info:** The Clear Key DRM system applies to Live, Start-over, Catch-up, VOD, Long-Lasting Catch-up, and Merge-live use cases. Since "Clear Key" is not a highly secure solution, it is not recommended to use the Clear Key DRM system with other DRM systems simultaneously.
+
+4. Click the **Add** **Resource** button to add resources.
+
+   * **Content ID/Resource ID**: The "Content ID/Resource ID" values correspond to the Content Identifiers (CPIX\@contentId) that are included in the CPIX key requests.
+
+   * **DRM Track Filter**: For HLS/DASH packaging types, different encryption keys can be created for different track types based on the DRM Track Filtering Profiles defined from **Lab Wizard** app > **OTT Filters.**
+
+     ![harmonic\_cpix\_3.png](/images/vos360/7e904b13eb590a47c561bab0.png)
+
+5. Configure the **General Settings&#x20;**&#x74;ab.
+
+   * **KMS URL**: Enter the URL of the CPIX compliant endpoint offered by the Key Management Server for key request. It is recommended to use only HTTPS protocol for production systems.\
+     **Note:**  To use HTTP basic authentication, the credentials must be included in the URL by prepending "*username:password@*" to the hostname (e.g. [*<u>https://username:password@kmsHostname/cpixEndPoint</u>*](https://username:password@kmshostname/cpixEndPoint)).
+
+   * **HTTPS Certificate Validation**: If activated, VOS will validate that the certificate used by the KMS is valid (i.e. it authenticates the remote server) before completing the HTTPS connection establishment. \
+     **Note:** Before using this feature, the publicly trusted certificate of the KMS must first have been uploaded to VOS using the REST API. It is expected that the KMS server will perform the same validation using the public VOS trusted certificate (you must have uploaded the corresponding private certificate in VOS), so that both parties can trust each other. This is what is usually called HTTPS mutual authentication.
+
+   * **HTTP Method**: It allows selecting the way you want the key request to be done. The usual and recommended setting is "POST".
+
+     * When selecting HTTP POST, for each key request VOS sends a CPIX document to the KMS, this document including all the parameters (contentId, requested DRM format, key period, etc.) is needed by the KMS to process the request.
+
+     * When selecting HTTP GET, for each key request VOS sends no CPIX document to the KMS, but sends only the "content identifier"(contentId) directly in the key request KML URL.
+
+       * The following template must be used in KMS URL field when using "HTTP GET": https\://hostname/path/\{contentId}?staticParameter=staticValue (e.g. [<u>https://KmsHostname/configuration/df23-add2-hghh-e453?keyIdFormat=UUID</u>](https://drm-cks-client-int.dev.cosmic.sky/configuration/df23-add2-hghh-e453?keyIdFormat=UUID)).
+
+       * For each key request, \{contentId} is replaced automatically by the "Content ID/Resource ID" configured in the "DRM Resources" section and that has been associated to the specific content (live service, VoD asset, etc.)
+
+   * **CPIX Document Version**: Select the version for the CPIX document that is supported for the DRM encryption with the Harmonic CPIX KMS. The supported versions are 2.2 (no explicit 'version' in the CPIX documents) and 2.3 (explicit 'version' and use of 'ContentKey\@commonEncryptionScheme' in the CPIX documents).
+
+   * **Common encryption scheme for HLS-TS:** Allows to force a specific 'encryption scheme' when sending CPIX 2.3 (or later version) key requests to a KMS. (Even if "encryption scheme" is not applicable for content protection of HLS-sTS streams, some DRM/KMS solutions might require a value to be provided.)
+
+     * If parameter is set to "cbc1" or "cbcs", CPIX key requests sent to KMS will contain the corresponding encryption scheme;
+
+     * If parameter is set to "none" (default setting), CPIX key requests sent to KMS will not contain any encryption scheme.
+
+   * **Sign Key Requests**: It forces VOS to sign the CPIX document that is included in the key request. \
+     **Note:** Before using this feature, you must first upload a private certificate in VOS and have the corresponding public certificate configured in the KMS, so that the KMS can validate the digital signature. When uploading the CPIX private certificate in VOS, the "Sign Key Requests" option is automatically activated (you can then deactivate it manually).
+
+   * **Validate Key Responses Signature**: It forces VOS to check that the key response CPIX document received from the KMS is signed and to validate the digital signature. \
+     **Note:&#x20;**&#x42;efore using this feature, you must first upload the public certificate of the KMS to VOS. When uploading the KMS public certificate to VOS, the "Validate Key Responses Signature" option is automatically activated (you can then deactivate it manually).
+
+6. Configure the **Key Rotation Settings** tab.
+
+   * **Content Key Period Mode**: This is used to define what ContentKeyPeriod attribute will be used in a CPIX request/response.
+
+     * Start End: If selected, the ContentKeyPeriod\@start/end attribute will be used. Note that this is supported for Live, Start-Over, and Catch-Up services.
+
+     * Index: If selected, the ContentKeyPeriod\@index attribute will be used. Note that this is recommended for Long-Lasting Catch-Up and VOD services, but it is also supported for Live, Start-Over, and Catch-Up services.
+
+   * **In case "Start End" is selected, then the following additional parameters are available.**
+
+     * **Number of Key Periods Per Request**: Define the number of consecutive key periods to be added in advance to a single CPIX key request.
+
+     * **Key Pre-Request Time (In %)**: Define the moment relative to the end of the last period to request a new key. This refers to the time point in percentage after the start of the first (current) period when new content keys are pre-requested.\
+       For example, for 3 periods (300% total):
+
+       &#x20;270% means key renewal at 30% of the time before the end of 3rd period;
+
+       &#x20;250% means key renewal at half of the 3rd period. \
+       **Notes**
+
+       * Max value = **number** \* 100. The default value is 80%.
+
+       * If the Key Pre-Request Time > **number** \* 100, or Key Pre-Request Time \< 30, an error will be displayed when creating/updating the DRM system.
+
+     * **Time Range Management**: Define what entity controls the time range values for key periods.
+
+   * KMS: If KMS is selected, VOS sends key requests with time range values, but it actually uses time range values included in the key responses (i.e. the KMS can change them).
+
+   * VOS: If VOS is selected, KMS is required to use time range values provided by VOS in the key requests.
+
+7. Configure the corresponding destination profile to use the appropriate encryption method according to the table at the bottom of this page.
+
+8. During the creation of the service enable **Add-ons.&#x20;**&#x54;urn on **DRM** and choose resources from your DRM system for corresponding OTT packaging outputs.
+
+<div className="vos-table-scroll">
+  <table className="vos-source-table">
+    <colgroup span="1"><col span="1" /><col span="1" /><col span="1" /><col span="1" /></colgroup>
+
+    <tbody><tr><td colSpan="1" rowSpan="7"><p /><p><strong>DASH</strong></p></td><td colSpan="1" rowSpan="1"><p>PlayReady</p></td><td colSpan="1" rowSpan="7"><p /><p /><p>Common Encryption</p></td><td colSpan="1" rowSpan="7"><p /></td></tr><tr><th colSpan="1" rowSpan="1"><p>Widevine</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Marlin</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Clear Key</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Nagra PRM</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Verimatrix VCAS</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Nagra 1-Way</p></th></tr><tr><td colSpan="1" rowSpan="6"><p /><p><strong>HLS sTS</strong></p><p /></td><th colSpan="1" rowSpan="1"><p>FairPlay</p></th><th colSpan="1" rowSpan="1"><p>Fairplay</p></th><th colSpan="1" rowSpan="6"><p /></th></tr><tr><th colSpan="1" rowSpan="2"><p>Clear Key<br /></p></th><th colSpan="1" rowSpan="1"><p>SAMPLE-AES</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>AES-128</p></th></tr><tr><th colSpan="1" rowSpan="3"><p>Verimatrix VCAS</p></th><th colSpan="1" rowSpan="1"><p>SAMPLE-AES</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>AES-128</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Common Encryption</p></th></tr><tr><td colSpan="1" rowSpan="8"><p /><p /><p /><p><strong>HLS fMP4</strong></p><p /></td><th colSpan="1" rowSpan="1"><p>FairPlay</p></th><th colSpan="1" rowSpan="6"><p /><p /><p>Common Encryption</p></th><th colSpan="1" rowSpan="8"><p /><p /><p>For HLS packaging type, set "Package in fMP4" to True to enable "fMP4" segment generation.</p><p>(CMAF-HLS always generates fMP4 segments)</p><p /></th></tr><tr><th colSpan="1" rowSpan="1"><p>PlayReady</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Widevine</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Marlin</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Verimatrix VCAS</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Nagra 1-Way</p></th></tr><tr><th colSpan="1" rowSpan="2"><p /><p>Clear Key</p></th><th colSpan="1" rowSpan="1"><p>Common Encryption</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>AES-128</p></th></tr><tr><td colSpan="1" rowSpan="5"><p /><p /><p><strong>CMAF-DASH</strong></p><p /><p /></td><th colSpan="1" rowSpan="1"><p>PlayReady</p></th><th colSpan="1" rowSpan="5"><p /><p /><p>Common Encryption</p></th><th colSpan="1" rowSpan="5"><p /><p /><p /><p /><p /></th></tr><tr><th colSpan="1" rowSpan="1"><p>Widevine</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Marlin</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Clear Key</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Nagra 1-Way</p></th></tr><tr><td colSpan="1" rowSpan="6"><p /><p /><p><strong>CMAF-HLS</strong></p><p /><p /></td><th colSpan="1" rowSpan="1"><p>FairPlay</p></th><th colSpan="1" rowSpan="6"><p /><p /><p>Common Encryption</p><p /><p /></th><th colSpan="1" rowSpan="6"><p /><p /><p /><p /><p /></th></tr><tr><th colSpan="1" rowSpan="1"><p>PlayReady</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Widevine</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Marlin</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Clear Key</p></th></tr><tr><th colSpan="1" rowSpan="1"><p>Nagra 1-Way</p></th></tr><tr><td colSpan="1" rowSpan="1"><p><strong>MSS / HSS</strong></p></td><th colSpan="1" rowSpan="1"><p>PlayReady</p></th><th colSpan="1" rowSpan="1"><p>PlayReady</p></th><th colSpan="1" rowSpan="1"><p /></th></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Package type</strong></p></td><th colSpan="1" rowSpan="1"><p>DRM System to select in the Scrambling app</p></th><th colSpan="1" rowSpan="1"><p>Encryption method (in the destination profile)</p></th><th colSpan="1" rowSpan="1"><p>Additional parameters in the destination profile</p></th></tr></tbody>
+  </table>
+</div>

@@ -1,0 +1,46 @@
+---
+title: Core concepts
+description: Understand the resource types, billing models, inputs, outputs, templates, and how everything connects before you build your first live workflow.
+sidebarTitle: Core concepts
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Live API is built around a small set of ideas that appear in every resource you create. If you'd rather start hands-on, the [live event walkthrough](/api-guides/how-to/live/walkthrough) covers the same concepts in the context of a working example, and links back here wherever more depth is useful.
+
+## Guides
+
+<CardGroup cols={2}>
+  <Card title="Resource types and lifecycle" href="/api-guides/how-to/live/core-concepts/resource-types">
+    The four resource types, billing models, the desired state model, and sites.
+  </Card>
+
+  <Card title="Inputs" href="/api-guides/how-to/live/core-concepts/inputs">
+    Connecting a live resource to a stream: `sourceName`, `contentName`, `flowName`, refiners, and transform pins.
+  </Card>
+
+  <Card title="Outputs" href="/api-guides/how-to/live/core-concepts/outputs">
+    Where encoded output goes: destinations, internal outputs, and the archive asset.
+  </Card>
+
+  <Card title="Templates" href="/api-guides/how-to/live/core-concepts/templates">
+    How encoding templates connect to live resources, and the `configValues`/`configOverrides` model.
+  </Card>
+
+  <Card title="Resource states" href="/api-guides/how-to/live/core-concepts/resource-states">
+    `spec.state` vs. `status.state`, and what the 13 reported values mean.
+  </Card>
+</CardGroup>
+
+## What the Live API depends on
+
+The Live API references two other APIs by name but doesn't manage them directly:
+
+* **Media API**: sources, content, destinations, and assets. See [Content, sources, and destinations](/api-guides/how-to/media/content-and-sources).
+* **Templates API**: the encoding and composition templates referenced from your live resources. See [Build with the Templates API](/api-guides/how-to/templates).
+
+## What comes next
+
+* [Live event walkthrough](/api-guides/how-to/live/walkthrough): a complete end-to-end example.
+* [Manage live channels and events](/api-guides/how-to/live/manage-live): create and operate liveChannels and liveEvents.
+* [Multiview](/api-guides/how-to/live/multiview): compose multiple live inputs into a single output.

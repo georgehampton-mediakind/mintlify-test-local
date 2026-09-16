@@ -1,0 +1,124 @@
+---
+title: Configure a Live Event
+description: Create and configure a live streaming event in MK.IO, including event type, input protocol, and recording settings.
+sidebarTitle: Configure a Live Event
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A live event in MK.IO is the component that receives an inbound video stream (via RTMP or SRT), processes it, and packages it for delivery to viewers. Once created and started, it generates an ingest URL that your encoder sends video to.
+
+Live content is recorded to your connected cloud storage as an asset, which you can use for VOD playback after the event ends.
+
+For a step-by-step walkthrough of the complete live streaming workflow including OBS setup and viewer delivery, see [Live streaming workflows](/mkio/getting-started/live-streaming-workflows).
+
+## Event type
+
+The first decision when creating a live event is whether to use **passthrough** or **encoding** mode. This determines what happens to your stream inside MK.IO.
+
+| Mode                                 | What MK.IO does                                                                             | Best for                                              |
+| ------------------------------------ | ------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Live passthrough (up to 5 Mbps)**  | Passes the stream through without modification. Your encoder must produce the final output. | Low-bandwidth streams already encoded at source       |
+| **Live passthrough (up to 60 Mbps)** | Same as above with a higher bandwidth ceiling.                                              | High-bitrate professional sources                     |
+| **Live encoding (720p)**             | Ingests your stream and produces adaptive bitrate output at 720p and lower.                 | Most use cases where MK.IO handles quality adaptation |
+| **Live encoding (1080p)**            | Ingests and produces ABR output up to 1080p.                                                | High-quality productions                              |
+
+<Info>
+  Live encoding mode is recommended for most users. It lets MK.IO automatically generate multiple bitrate levels so viewers on different network connections all get a smooth experience. Passthrough requires your encoder to produce the quality levels you want.
+</Info>
+
+## Configure a live event
+
+<Steps>
+  <Step title="Create the live event">
+    <span id="create-the-live-event" className="mk-legacy-anchor" />
+
+    Go to **Live Events** in the left navigation and click **+ Create Live Event**.
+  </Step>
+
+  <Step title="Basic settings">
+    <span id="basic-settings" className="mk-legacy-anchor" />
+
+    * **Name**: A unique identifier for this event (for example, `weekly-show-ep12`). Names cannot be reused within a project once a live event is deleted.
+    * **Description**: Optional. Useful for identifying events in a busy project.
+  </Step>
+
+  <Step title="Select the event type">
+    <span id="select-the-event-type" className="mk-legacy-anchor" />
+
+    Choose one of the four modes described above. If you are unsure, **Live encoding (720p)** is a good default.
+
+    <Note>
+      Low-latency streaming is available. Contact the MK.IO sales team for details.
+    </Note>
+  </Step>
+
+  <Step title="Select the input protocol">
+    <span id="select-the-input-protocol" className="mk-legacy-anchor" />
+
+    Choose how your encoder sends video to MK.IO:
+
+    * **RTMP**: The most widely supported streaming protocol. Used by OBS, Wirecast, and most hardware encoders.
+    * **RTMPS**: Encrypted RTMP. Use this when your network requires encrypted ingest.
+    * **SRT**: Secure Reliable Transport. Better reliability over unpredictable networks. Requires live encoding mode.
+  </Step>
+
+  <Step title="Configure output settings">
+    <span id="configure-output-settings" className="mk-legacy-anchor" />
+
+    * **Archive window length**: How long MK.IO retains the live stream recording, from 1 minute up to 7 days. When you stop the event, the full recording is stored as an asset in your cloud storage. When the archive window exceeds 25 hours, the manifest shows only the most recent 25-hour window for viewers. The full recording is still stored. See [Extended archive window](/mkio/how-to/live-streaming/extended-archive-window).
+    * **Storage account**: The connected storage account where the live recording is saved.
+  </Step>
+
+  <Step title="Configure advanced settings (optional)">
+    <span id="configure-advanced-settings-optional" className="mk-legacy-anchor" />
+
+    * **Input key frame interval** (passthrough only): The key frame interval your encoder sends. Should match your encoder's GOP setting.
+    * **Image fitting** (encoding only): How MK.IO handles source resolutions that do not match the output aspect ratio.
+    * **AI pipeline** (encoding only): Enable real-time transcription. Select `Predefined_ACSLiveTranscription` and specify the source audio language code (for example, `en-US`). See [Transcription transform](/mkio/reference/encoding-transform-presets/audio-speech-transcription#source-language) for source language guidance.
+  </Step>
+
+  <Step title="Review and create">
+    <span id="review-and-create" className="mk-legacy-anchor" />
+
+    Click **Review** to confirm all settings, then click **Submit** to create the live event.
+  </Step>
+</Steps>
+
+## Live transcription
+
+Live transcription is available for live encoding events. It generates Web Video Text Tracks (WebVTT) subtitles for HTTP Live Streaming (HLS) output and Timed Text Markup Language (TTML) subtitles for Dynamic Adaptive Streaming over HTTP (DASH) output.
+
+Set the source audio language with a BCP-47 language tag. You can also provide expected words or phrases to improve recognition of names and specialist terms. Live transcription adds less than five seconds to the event latency and is billed for each minute the live event runs. See [MK.IO pricing](https://mediakind.com/mkio/pricing/) for current rates.
+
+## Start streaming
+
+After the live event is created, you still need to set up streaming infrastructure before viewers can watch. This requires a streaming endpoint and a streaming locator. See [Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content).
+
+Once those are in place, click **Start** on the live event. MK.IO generates an **Input URL**: copy this and enter it in your encoder.
+
+Set up your encoder with one of these guides:
+
+* [OBS Studio](/mkio/how-to/live-streaming/set-up-the-source-stream-using-obs)
+* [FFmpeg](/mkio/how-to/live-streaming/set-up-the-source-stream-using-ffmpeg)
+* [GStreamer](/mkio/how-to/live-streaming/set-up-the-source-stream-using-gstreamer)
+
+## Connection timeout
+
+If MK.IO receives no data on an RTMP or RTMPS connection for 10 seconds, it drops the connection automatically. This timeout is fixed and cannot be configured.
+
+If your stream stops unexpectedly, check whether your encoder or network stopped sending data for more than 10 seconds. Common causes include:
+
+* Network instability or packet loss
+* Encoder pauses between scenes
+* Video conferencing software that halts transmission when a participant is idle
+
+Your encoder must reconnect and resume sending data to restore the stream.
+
+<Warning>
+  When your event ends, stop the **live event** and the **streaming endpoint** in MK.IO. Both incur costs while running, even if no one is watching. If you do not need the recording, also delete the output asset to avoid ongoing storage charges.
+</Warning>
+
+## Automate live events
+
+Use the [Live streaming API Guide](/api-guides/how-to/media/live-streaming) to create and control live events and outputs through the Media API.

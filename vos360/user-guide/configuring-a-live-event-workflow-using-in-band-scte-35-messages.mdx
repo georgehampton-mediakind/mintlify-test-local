@@ -1,0 +1,104 @@
+---
+title: Configuring a Live Event Workflow using in-band SCTE-35 messages
+robots: noindex, nofollow
+---
+
+You can set a service to go live (become available to the audience and start recording) and end live (stop availability and recording, then switch to replay mode) automatically. The system uses configured SCTE-35 messages in the source stream to trigger these actions. The scheduled start and stop times will be used if no SCTE-35 trigger is received.
+
+## Prerequisites
+
+Your VOS instance must have an Event Signaling and Management (ESAM) translator to respond to inbound SCTE-35 messages. \
+An ESAM policy defines:
+
+* **START THE EVENT:** Match the `vosapi:liveeventgolive` action to the chosen SCTE-35 message.
+
+* **END THE EVENT**: Match the `vosapi:liveeventendlive` action to the chosen SCTE-35 message.
+
+Here is a sample ESAM policy:
+
+```text
+{
+    "id": "TRY-OUT",
+    "name": "try-out-policy",
+    "description": "try out policy",
+    "rules": [
+      {
+        "matchSignal": {
+          "match": "ANY",
+          "asserts": [
+            "/SpliceInfoSection/SegmentationDescriptor[@segmentationTypeId='48']"
+          ]
+        },
+        "action": {
+          "signalTemplate": "vosapi:liveeventgolive"
+        },
+        "chain": null
+      },
+      {
+        "matchSignal": {
+          "match": "ANY",
+          "asserts": [
+            "/SpliceInfoSection/SegmentationDescriptor[@segmentationTypeId='49']"
+          ]
+        },
+        "action": {
+          "signalTemplate": "vosapi:liveeventendlive"
+        }
+      }
+    ]
+  }
+```
+
+## Enabling automatic start and end times
+
+<Note>
+  **Notes**
+
+  * The service must be online at least one hour before the earliest possible start of the event. This feature does not work on an offline service, or before the service is operational.
+
+  * Set a scheduled start time matching the expected time for the event to start.
+
+  * Set an scheduled end time matching the expected time for the event to end.
+</Note>
+
+By default, all SCTE-35 related actions are disabled for Live Event Workflow services. You need to enable the SCTE-35 related actions either globally or for each Live Event Workflow Service. Harmonic recommends to activate the feature globally if you wish to use it. This can only be done using the **VOS API.**
+
+1. Find the configuration of your cluster using the Monitor Events / GET basic-settings API:
+
+   ![vos\_get\_live\_events\_basic\_settings.png](/images/vos360/a8755554ad205194136f74bc.png)
+
+2. Ensure **esamTranslatorActions/ enabled** is set to **true**. If not, the feature won’t work. Change this value using the **Monitor Events / PATCH basic-settings** API.
+
+3. Create an SCTE-35 service and:
+
+   1. Allow Live Event Workflow to set its **AcquisitionPointId&#x20;**&#x61;utomatically by doing the following:
+
+      1. Use the Configure Service API to create or update a service with a POST command.
+
+      2. Set **autoGenerateAcquisitionPointId** inside the Live Event Addon to **true**.\
+         Note: You can set this to **true** only if the **VideoInsertionAddon**.**AcquisitionPointId&#x20;**&#x69;s:
+
+         * not defined (null or addon not set)
+
+         * matches the value of **EAPID-*****\<serviceId>***
+
+         Other values cause validation failure.
+
+   2. Tie the service to the ESAM Policy through an **ESAM Channel.**\
+      Link the service to an ESAM policy via an ESAM channel using the VOS API. Use **ESAM POIS Translation / POST /esam-pois/v1/channels&#x20;**&#x74;o create or update the ESAM channel.
+
+      ```text
+      {
+        "acquisitionPointId": "EAPID-<serviceId>", #This is the enforced service AcquisitionPointId by Live Event Workflow
+        "applyPolicy": "policy", #This is the ID of the ESAM Policy created during the Configuration step
+        "id": "CHANNEL-<serviceId>", #Not critical - it is recommended to use a static value with the ServiceID for proper logging
+        "name": "CHANNEL-<serviceId>" #Not critical - it is recommended to use a static value with the ServiceID for proper logging
+      }
+      ```
+
+      ![vos\_post\_esam-pois\_channels.png](/images/vos360/bcf05a08a50ebe64941f9e43.png)
+
+4. Once complete, the service can be piloted using the SCTE-35 events defined in your ESAM policy.
+
+5. To maintain system stability, delete the ESAM POIS Channel when deleting the service. \
+   Use the **ESAM POIS Translation / DELETE /esam-pois/v1/channels/\{id}&#x20;**&#x41;PI call with the ID set during the channel creation (recommended as *CHANNEL-\<serviceId>*).

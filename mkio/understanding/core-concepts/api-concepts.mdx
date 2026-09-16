@@ -1,0 +1,59 @@
+---
+title: API Concepts
+description: Understand MK.IO API concepts, resource URLs, data models, and authentication.
+sidebarTitle: API Concepts
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use these API concepts and data models when building MK.IO video workflows.
+
+<div className="flex flex-col items-center my-8">
+  <img src="/images/apicon1.png" alt="Four building blocks of the API" />
+
+  <p className="text-sm text-slate-500 mt-2 italic">Four building blocks of the API</p>
+</div>
+
+The **MK.IO** API is conceptually broken into four main parts: **Inputs**, **Assets**, **Streaming Locators**, and **Streaming Endpoints**.
+
+## Explore the API
+
+### Input
+
+Inputs are the methods used to bring content into the system.
+
+* Content is **transformed** into an Asset upon entry.
+* **Static content** is uploaded to cloud storage and processed using a **Job**.
+* **Live content** is ingested via a **Live Event**, with a time-shift buffer defined by a **Live Output**.
+
+### Storage
+
+**Assets** represent the location where content is stored in your cloud storage. They are decoupled from inputs, allowing the content to be managed and accessed at any point in the future.
+
+### Content protection and rewrites
+
+**Streaming Locators** connect DRM policies and filters to an asset, allowing a dynamic packager (JITP) to process the content. Locators handle DRM and manifest rewrites; you can create several locators for a single asset to support different business rules.
+
+### Publishing
+
+**Streaming Endpoints** define the domain name for your content and provide options for integrating with CDNs. Streaming Endpoints are used for scaling your output and delivering content to global audiences.
+
+<Info>
+  Every Streaming Locator you create is available at every Streaming Endpoint within your project.
+</Info>
+
+## Authentication
+
+Every MK.IO API request must be authenticated with an API token. See [API tokens](/mkio/how-to/managing-your-organization/api-tokens) to create and manage tokens, and the [Tokens API Guide](/api-guides/how-to/management/tokens) for the authentication header format and token endpoints.
+
+## Data model
+
+Everything within **MK.IO** revolves around an **Asset**. File-based and live inputs are treated as assets on the output side.
+
+Assets have policies attached to them via a [Streaming Locator](/mkio/understanding/core-concepts/locators), which are then bound to a [Streaming Endpoint](/mkio/understanding/core-concepts/endpoints) for delivery.
+
+<div className="flex flex-col items-center my-8">
+  <img src="/images/apicon2.png" alt="Data Model" />
+
+  <p className="text-sm text-slate-500 mt-2 italic">MK.IO Data Model Overview</p>
+</div>

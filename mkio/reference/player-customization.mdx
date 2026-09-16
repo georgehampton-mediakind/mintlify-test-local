@@ -1,0 +1,48 @@
+---
+title: MKPlayer customization
+description: Build and customize MKPlayer playback interfaces with the MKCustomUI plugin.
+sidebarTitle: Overview
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The `@mediakind/mkplayer-customui-plugin` lets you build and customize playback interfaces on top of Bitmovin Player UI V3.
+
+Previously, MKPlayer supported a basic `ui: true | false` flag to show or hide the default playback UI. The MKCustomUI plugin extends this by enabling full layout, control, behavior, and styling customization.
+
+## What you can do
+
+* Build MKPlayer's default-style UI
+* Create fully custom playback UIs
+* Configure UI behavior through `uiConfig`
+* Use responsive UI variants for mobile and browser layouts
+* Style playback controls using CSS class overrides
+* Apply UI updates dynamically at runtime based on screen size, app state, and user context
+
+## In this section
+
+<CardGroup cols={2}>
+  <Card title="Install and initialize" href="/mkio/reference/player-customization/installation-and-initialization" icon="download">
+    Install the plugin, disable the default UI, and initialize MKPlayer and MKCustomUI.
+  </Card>
+
+  <Card title="UI configuration and variants" href="/mkio/reference/player-customization/ui-configuration-and-variants" icon="sliders">
+    Configure `uiConfig`, build responsive layouts, and use lifecycle events.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="MKCustomUI API" href="/mkio/reference/player-customization/mkcustomui-api" icon="code">
+    Reference list of constructors and UI factory methods.
+  </Card>
+
+  <Card title="CSS customization" href="/mkio/reference/player-customization/css-customization" icon="palette">
+    Apply CSS overrides for seekbars, typography, and branded visual styling.
+  </Card>
+</CardGroup>
+
+## External references
+
+* NPM package: [@mediakind/mkplayer-customui-plugin](https://www.npmjs.com/package/@mediakind/mkplayer-customui-plugin)
+* API docs: [MKCustomUI API reference](https://mkplayer.azureedge.net/$web/websdk/plugins/customui/latest/docs/index.html)
+* Sample code: [MKPlayerSamples custom UI example](https://github.com/mediakind-video/MKPlayerSamples/blob/main/Web/index_customUI.html)

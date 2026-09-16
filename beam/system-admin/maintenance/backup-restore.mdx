@@ -1,0 +1,146 @@
+---
+title: Backup and restore
+sidebarTitle: Backup and Restore
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Backups include services, templates,failover groups,server definitions and locally defined users. You can back up your configurations to restore a previous configuration (for upgrades or rollbacks or after a server crash, etc.)
+
+<Info>
+  The access to configurations is blocked while a backup or restore is in progress. Up to 30 backup files are supported for local backups. The oldest backup is deleted once 30 backups are detected.
+</Info>
+
+<Warning>
+  The database backup operation is supported; but copying the exported database and restoring it onto another MK.IO Beam server is not supported.
+</Warning>
+
+## Backup database configurations
+
+Create a backup of MediaKind configurations to save a version locally or on a remote server.
+
+### Display backup MediaKind database options
+
+Back up the MediaKind configuration to a local or remote server. Backups include services, servers, templates and users. Backups are time-stamped.
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> in the upper-right corner of the screen. The **System Center** menu displays.
+2. Select **Backup**. The Backup Controller Database options display.
+
+### Create a local backup
+
+Local backups of MediaKind settings are still accessible even when no remote access is possible. Backups only include the list of servers, services, templates and user configurations.
+
+1. [Display backup options](/beam/system-admin/maintenance/backup-restore#display-backup-mediakind-database-options). **Local Backup** is selected by default.
+
+   ![view backup db remote mfvp controller](/_machine-assets/7e170c8e6a74d2b09228b97fe3790984671b2be9bf44b2b8370d56653d9b9834.png)
+
+<Info>
+  The **Host**, **Port** and **Path** are only required for a [remote backup](/beam/system-admin/maintenance/backup-restore#restore-configurations-from-a-remote-backup). FTPS is also authorized.
+</Info>
+
+2. Click **Backup now**. The backup is stored on the local drive.
+
+### Create a remote backup
+
+Create remote backups to restore MediaKind settings from a remote server using FTP or FTPS.
+
+1. [Display backup options](/beam/system-admin/maintenance/backup-restore#display-backup-mediakind-database-options).
+2. Select **Remote backup**. [Required fields](/beam/system-admin/maintenance/parameters#backup-parameters) are highlighted.
+3. Enter the required remote backup settings information.
+
+<Info>
+  FTPS is also authorized.
+</Info>
+
+![view backup db remote mfvp controller](/_machine-assets/7e170c8e6a74d2b09228b97fe3790984671b2be9bf44b2b8370d56653d9b9834.png)
+
+<Warning>
+  Editing the backup file storage location impacts scheduled backups.
+</Warning>
+
+4. Click **Backup Now**.
+5. Click **Save and exit** to save your changes.
+
+### Schedule an automatic backup (periodic)
+
+Set a schedule to back up the MediaKind database on a regular basis: weekly, daily or hourly. Backup guard times may impact backup availability.
+
+1. [Display backup options](/beam/system-admin/maintenance/backup-restore#display-backup-mediakind-database-options).
+2. Select the **Scheduled Backup** tab to define the scheduled backup.
+3. Select the **Enable scheduled backup** checkbox.
+4. Select the backup schedule time (hourly, weekly, daily and so on).
+
+<Info>
+  The time stamp is based on the current time on the Controller server.
+</Info>
+
+![view scheduled backup db remote mfvp controller](/_machine-assets/58d03c13c73401d95bd2ed1cc71daae55232edf01543bb0e381a80874cca0eec.png)
+
+5. Open the **Backup Location** tab to set the backup file storage settings, if they are not currently configured.
+6. Click **Save and exit** to save your changes.
+
+### Download the Controller database file
+
+This tab enables users to download the Controller database file. This file includes Services, Servers, Templates, Failover Groups and Users and indicates the backup of the Controller database at the time stamped date.
+
+1. [Display backup options](/beam/system-admin/maintenance/backup-restore#display-backup-mediakind-database-options).
+2. Select the **Download File** tab to download the Controller database file.
+3. Select **Local Backup** to download the locally backed up database.
+
+<Info>
+  Downloading remote backups is not currently available.
+</Info>
+
+4. Use the **Year/Month/Backup** drop down lists to select the backup instances to download, as follows:
+
+   1. From the **Year** drop down list, select the year when the required backup was created.
+   2. From the **Month** drop down list, select the month when the required backup was created.
+   3. From the **Backup** drop down list, select the required backup which includes the time stamp with the time and date.
+      ![view download file db remote mfvp controller](/_machine-assets/905f5ca52b30f55cc83d238e99dc444942de978db3626ba307080c3e721ddc8b.png)
+
+5. Click **Download Now** to begin downloading the file locally.
+
+6. Click **Save and exit** to save your changes.
+
+## Restore configurations
+
+Restore configurations for recovery or troubleshooting. You must have already created a local or remote backup in order to restore. Backups are selected based on the backup time stamp.
+
+<Warning>
+  The Database is inaccessible until the restore completes. Only one restore can be launched at a time. Alarms and statistical data are not restored because they are dynamic. The alarms banner is not displayed until the restore completes.
+</Warning>
+
+### Display restore options
+
+You can restore the MediaKind database configuration from existing local or remote backups.
+
+1. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> in the upper-right corner of the screen. The **System Center** menu displays.
+2. Select **Restore**. The Restore Controller Database page displays.
+
+### Restore configurations from a remote backup
+
+1. [Display restore options](/beam/system-admin/maintenance/backup-restore#display-restore-options).
+2. Select **Remote Backup**.
+3. Select a **Year** > **Month** > **Backup**.
+
+<Info>
+  Available backups are time-stamped. Be aware of backup guard time configurations to ensure availability.
+</Info>
+
+![view restore mfvp controller](/_machine-assets/d33f764b3a162f4f201dcff6656f23d9ad56acf84e70a229b201a540d35388a5.png)
+
+4. Click **Restore**. The Controller is unavailable to all users until the restore completes.
+
+### Restore configurations from a local backup
+
+1. [Display restore options](/beam/system-admin/maintenance/backup-restore#display-restore-options). **Local Backup** is selected by default.
+
+   ![view restore mfvp controller](/_machine-assets/d33f764b3a162f4f201dcff6656f23d9ad56acf84e70a229b201a540d35388a5.png)
+
+2. Expand the **Backup** drop-down list to display available backups, then select a backup to restore.
+
+<Info>
+  Available backups are time-stamped. Be aware of backup guard time configurations to ensure availability.
+</Info>
+
+3. Click **Restore**. All users are temporarily assigned to the [Monitoring user group](/beam/system-admin/security/user-management#user-group-permissions) until the restore completes or is terminated.

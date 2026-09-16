@@ -1,0 +1,44 @@
+---
+title: Creating an ATS destination profile
+robots: noindex, nofollow
+---
+
+You can modify the Harmonic default profile to meet your ATS output requirements.
+
+1. Navigate to the **Lab Wizard** app > **Profiles** tab and click **Destination** to display only destination profiles.
+
+2. Click the desired ATS profile to open the **Profile Editor**.
+
+3. Optionally, type a new **Profile Name**.
+
+4. If audio is present, ensure that **Audio Carried with Video&#x20;**&#x69;s set to **All**. \
+   The ATS carries all audio streams intended to be used with the video representation. This is the only option supported at this time.
+
+5. If data is present, ensure that **Data Carried with Video** is set to **All**.\
+   The ATS carries all data streams intended to be used with the video representation. This is the only option supported at this time.
+
+6. To enable **Mute Output On Signal Loss**, toggle the selector to the **On** position.
+
+7. Configure the **Nielsen RTVOD Flag,&#x20;**&#x77;hich will be inserted into existing Nielsen watermarks of the stream as an additional measurement point.
+
+8. Configure the **EyeQ Encapsulation&#x20;**&#x74;o automatically generate null packets in the ATS output when the EyeQ mode is enabled.
+
+9. Define the list of **Excluded Descriptor Tags** to be performed from the output PMT for the ATS output. Note that the input value should be within the range of 1 to 254, inclusive.
+
+10. Select the protocol to be used for **Encapsulation Mode**.\
+    UDP and RTP are supported. RTP is required for Forward Error Correction (FEC) support.
+
+11. If you selected RTP in the previous step, then, optionally, enable and configure FEC settings.
+
+    * **FEC Row**: Valid numbers are 4 through 20.
+
+    * **FEC Column**: Valid numbers are 1 through 20.\
+      Note that the number of rows \* number of columns cannot exceed 100.
+
+12. Enter a brief description of the profile changes, and then click **Save as Version**.\
+    After a profile has been updated, you cannot revert your changes.
+
+    **Result**: On the **Profile panel**, the **Customer Version Number** increases by 1.
+
+&#x20;**What to do next**\
+You must validate the new profile before you can apply it to a destination.

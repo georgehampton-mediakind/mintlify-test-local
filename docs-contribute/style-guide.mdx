@@ -1,0 +1,402 @@
+---
+title: Style Guide
+description: Writing style, tone, grammar, and formatting conventions for all MK.IO and Beam documentation.
+sidebarTitle: Style Guide
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This guide defines the editorial standards for all content on `docs.mediakind.com`. It is the source of truth for contributors, reviewers, and AI assistants.
+
+## Voice and Tone
+
+The target voice is **Stripe Docs, Mux Docs, Cloudflare Docs**: clear, direct, confident, and human. Every sentence should feel like it was written by a knowledgeable engineer who respects the reader's time.
+
+Not marketing copy. Not chatty. Not a wall of robotic bullet points either.
+
+Write for the reader who is trying to get something done. They do not want to be impressed. They want the answer.
+
+### Person and tense
+
+Write in **second person** and **present tense** for instructions.
+
+| Do                                         | Do not                                                |
+| :----------------------------------------- | :---------------------------------------------------- |
+| "You create an asset."                     | "The user creates an asset."                          |
+| "MK.IO generates the locator."             | "MK.IO will generate the locator."                    |
+| "Configure the endpoint before streaming." | "The endpoint should be configured before streaming." |
+
+Use natural future tense when it reads correctly: "You will receive a confirmation email" is fine. Do not strip "will" from every sentence: over-correcting sounds robotic.
+
+### When second person is wrong
+
+Not every sentence is an instruction. When a sentence describes system behaviour, or something that belongs to a role rather than "the reader right now", neutral phrasing is correct.
+
+**Do not change:**
+
+> "The personal token contains the identity of the user, the token type, and the expiration date."
+
+This describes what a token contains in general. Rewriting to "your token" narrows the meaning incorrectly: the reader might be inspecting someone else's token.
+
+**Do change:**
+
+> "The user must configure the streaming endpoint before playback begins."
+> → "Configure the streaming endpoint before playback begins."
+
+**The test:** Is this an instruction the reader should follow, or a description of how something works? Instructions get second person. Descriptions get neutral phrasing.
+
+### Active voice
+
+Active voice is shorter, clearer, and puts the subject first.
+
+| Active (use)               | Passive (avoid)                      |
+| :------------------------- | :----------------------------------- |
+| "MK.IO creates the asset." | "The asset is created by MK.IO."     |
+| "The job failed."          | "The job was failed by the encoder." |
+| "Configure the endpoint."  | "The endpoint should be configured." |
+
+Passive voice is acceptable when the actor is unknown or irrelevant: "The file was corrupted" is fine if you do not know what corrupted it.
+
+## Plain Language
+
+Plain language is not dumbed-down language. It is precise language that the reader does not have to decode.
+
+### Sentence length
+
+Aim for 10–20 words. One idea per sentence. When a sentence needs a comma and a conjunction to hold two ideas together, consider splitting it.
+
+**Before:**
+
+> "After the encoding job completes and the asset state changes to ready, you can create a streaming locator, which generates the URLs required for playback."
+
+**After:**
+
+> "When the encoding job completes, the asset state changes to `ready`. You can then create a streaming locator to generate playback URLs."
+
+### Word choice
+
+Prefer the simpler word when two options mean the same thing:
+
+| Use             | Not                       |
+| :-------------- | :------------------------ |
+| use             | utilize                   |
+| start           | initiate                  |
+| end / stop      | terminate                 |
+| through / using | via                       |
+| make sure       | ensure                    |
+| find out        | ascertain                 |
+| need            | require (in instructions) |
+| before          | prior to                  |
+| after           | subsequent to             |
+
+### Filler words
+
+Remove words that add length without adding meaning:
+
+* "simply": remove it. If a step is simple, it does not need to be announced.
+* "just": same as above.
+* "easily": condescending. Readers who find it hard will feel dismissed.
+* "please": removes from instructions. "Select **Save**" not "Please select **Save**".
+* "obviously", "of course", "clearly": assume knowledge the reader may not have.
+* "note that": use a Starlight aside if the information is important, or integrate it into the prose.
+
+### Contractions
+
+Do not use contractions. Write "do not" not "don't". Write "it is" not "it's". Write "you will" not "you'll". This makes the docs easier to translate and easier to read for non-native English speakers.
+
+### Acronyms
+
+Expand every acronym on its first use on every page. Write the expanded form first, then the acronym in parentheses:
+
+> "Video on Demand (VOD)"
+
+Do not assume the reader knows an acronym because it was expanded on another page. Every page may be someone's first.
+
+Common acronyms used in MediaKind docs:
+
+| Acronym | Full form                            |
+| :------ | :----------------------------------- |
+| VOD     | Video on Demand                      |
+| DRM     | Digital Rights Management            |
+| HLS     | HTTP Live Streaming                  |
+| DASH    | Dynamic Adaptive Streaming over HTTP |
+| SRT     | Secure Reliable Transport            |
+| CDN     | Content Delivery Network             |
+| API     | Application Programming Interface    |
+| SDK     | Software Development Kit             |
+
+## Grammar and Mechanics
+
+### Capitalisation
+
+**Product names:** Always use the exact name. Do not abbreviate or vary capitalisation.
+
+| Correct    | Incorrect             |
+| :--------- | :-------------------- |
+| MK.IO      | mk.io, MKIO, Mk.IO    |
+| MK.IO Beam | Beam, mk.io beam      |
+| MediaKind  | Mediakind, Media Kind |
+
+**Feature names:** Use lowercase in prose unless the feature name is a proper noun or UI label. "Streaming endpoints" in prose. **Streaming endpoints** only when pointing to a specific UI element.
+
+**UI labels:** Reproduce exactly as they appear in the product, in bold. If the UI shows "Create asset", write **Create asset**: not **Create Asset** unless the UI uses title case.
+
+**Headings:** Sentence case. Capitalise only the first word and proper nouns. "Configure a streaming endpoint" not "Configure A Streaming Endpoint".
+
+**Titles in tables and lists:** Sentence case.
+
+### Punctuation
+
+**Oxford comma:** Always use it. "Assets, transforms, and jobs": not "assets, transforms and jobs". The Oxford comma prevents ambiguity.
+
+**Em dashes:** Never use them. Use a hyphen, a colon, or two sentences.
+
+For a sequence, write two sentences: "Configure the endpoint. Then start streaming." For an explanation, use a colon or a separate sentence.
+
+**Hyphens in compound modifiers:** Hyphenate compound modifiers before a noun:
+
+* "multi-language support"
+* "on-premises hardware"
+* "first-time user"
+
+Do not hyphenate when the modifier follows the noun: "the hardware is on premises".
+
+**Colons:** Use to introduce a list or a definition. The sentence before a colon must be a complete sentence.
+
+**Semicolons:** Avoid. If you need a semicolon, split the sentence.
+
+### Numbers
+
+* Spell out one through nine in prose: "three assets", "nine jobs".
+* Use numerals for 10 and above: "12 encoding jobs".
+* Always use numerals for measurements, percentages, and version numbers: "2 GB", "99.9%", "version 3".
+* Use numerals in step numbers and tables regardless of value.
+
+### Dates and times
+
+* ISO 8601 format for timestamps in prose and code examples: `2024-01-15T09:30:00Z`.
+* Do not use ambiguous formats like `01/15/24` or `15/01/24`.
+* Specify UTC when mentioning time zones: "The event starts at 09:30 UTC."
+
+## Formatting
+
+### Headings
+
+| Level     | Use                                                                    |
+| :-------- | :--------------------------------------------------------------------- |
+| `# H1`    | One per page. Must match the frontmatter `title` exactly.              |
+| `## H2`   | Major sections.                                                        |
+| `### H3`  | Sub-sections within an H2.                                             |
+| `#### H4` | Use sparingly. If you frequently need H4, the page may need splitting. |
+
+* Never skip heading levels (H2 to H4 with no H3 between them).
+* Maximum 7 words.
+* Sentence case. No em dashes.
+* Always leave a blank line before and after every heading.
+* Name headings by what the reader will do or understand: not by content type ("Step 2" is a bad heading, "Create the locator" is a good one).
+
+### Bold, italic, and backticks
+
+| Element                                            | Format     | Example                                     |
+| :------------------------------------------------- | :--------- | :------------------------------------------ |
+| UI labels                                          | **Bold**   | Select **Create asset**.                    |
+| Key terms on first use                             | *Italic*   | *Transforms* define how media is processed. |
+| Code, file names, identifiers, values, field names | `backtick` | Set `language_code` to `en`.                |
+| Buttons and menu items                             | **Bold**   | Select **Save**, then **Confirm**.          |
+
+Bold sparingly. If everything is bold, nothing is. Never use ALL CAPS for emphasis.
+
+### Lists
+
+**Numbered lists** for sequential steps: when order matters and the reader must complete items in sequence.
+
+**Bullet lists** for unordered items: features, options, examples, non-sequential notes.
+
+Rules for both:
+
+* Keep items parallel. If one item starts with a verb, all items start with a verb.
+* Avoid nesting beyond one level. If your list needs two levels of bullets, consider a table or a Starlight `<Steps>` block.
+* Do not put a Starlight aside inside a list item.
+* End list items consistently: either all with periods or none with periods.
+
+### Tables
+
+Use tables for structured lookup content: API fields, configuration options, parameter lists, comparison of alternatives.
+
+Do not use tables for sequential steps or for content that reads naturally as prose.
+
+```md
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `name` | string | Yes | A human-readable name for the asset. |
+| `description` | string | No | Optional description. |
+```
+
+Left-align column headers with `:---`. Keep column headers short.
+
+### Code blocks
+
+Always specify a language tag:
+
+| Language                   | Tag          |
+| :------------------------- | :----------- |
+| Shell commands             | `bash`       |
+| JSON                       | `json`       |
+| HTTP requests with headers | `http`       |
+| YAML                       | `yaml`       |
+| Python                     | `python`     |
+| JavaScript / TypeScript    | `javascript` |
+| Plain text output          | `text`       |
+
+Never prefix terminal commands with `$` or `>`. These characters break copy-paste.
+
+Every code block requires prose before it (what the request does) and prose after it (non-obvious fields, constraints, optional parameters, expected response). See [the contributor prompt library](/docs-contribute/prompt-library) for examples.
+
+Use `<PLACEHOLDER_NAME>` for values the reader must supply. Explain every placeholder.
+
+### Links
+
+* Root-relative for internal links: `/mkio/getting-started`.
+* No `.mdx` extension.
+* Lowercase with hyphens for section anchors: `#configure-the-endpoint`.
+* Link text must describe the destination. "Click here" and "Read more" are not acceptable.
+
+| Do                                       | Do not                              |
+| :--------------------------------------- | :---------------------------------- |
+| `[Create an asset](/mkio/assets/create)` | `[Click here](/mkio/assets/create)` |
+| `[Configure DRM protection](/mkio/drm)`  | `[this page](/mkio/drm)`            |
+
+## Images
+
+Keep images to a minimum. A screenshot earns its place only when text alone cannot adequately explain a UI interaction, or when the visual layout is essential.
+
+**Include** a screenshot when:
+
+* The UI is non-obvious and a screenshot meaningfully reduces the chance of error.
+* A diagram shows structural or spatial relationships that prose cannot efficiently convey.
+
+**Do not include** a screenshot when:
+
+* The action is straightforward: "Select **Create asset**" does not need a screenshot.
+* The screenshot contains only text, a table, or a code block: extract the content into markdown instead.
+* The UI changes frequently and the screenshot will quickly become outdated.
+
+### Alt text
+
+Every image must have meaningful alt text. Describe what the image shows, not what it means.
+
+```md
+![The MK.IO asset list showing three assets in the ready state.](/images/asset-list.png)
+```
+
+Rules:
+
+* Describe the content, not the purpose ("Screenshot of..." is redundant: screen readers announce images).
+* Under 125 characters where possible.
+* For architecture diagrams, add a plain-prose description in the surrounding text.
+
+### Storage
+
+Store images next to the page file in a folder named after the page, or in `/public/images/`. Use lowercase hyphenated file names: `asset-list-ready-state.png`.
+
+## Page Titles and Descriptions
+
+### Titles
+
+Titles must be clear, concise, and tell the reader what the page helps them do or understand.
+
+* **How-to pages:** imperative verb phrase: "Create an asset", "Configure a transform", "Stream content".
+* **Reference and concept pages:** noun phrase: "Encoding transform presets", "Asset filters", "Streaming endpoints".
+* 7 words maximum.
+* Sentence case. No em dashes or hyphens.
+
+### Descriptions (frontmatter)
+
+The `description` field appears in search engine results and social previews. Write it as one sentence for the reader who has not yet visited the page.
+
+**Good descriptions:**
+
+> "Add multiple audio tracks to a video asset for multi-language support and accessibility."
+> "Reference for all encoding transform presets available in MK.IO, including codec options and quality settings."
+
+**Poor descriptions:**
+
+> "This page covers audio tracks."
+> "Learn about transforms."
+
+Descriptions must be specific, not generic. If a reader sees only the title and description in a search result, they should know exactly what they will find.
+
+## Inclusive Language
+
+* **Gender-neutral**: use "they/them" for hypothetical users, not "he/she" or "he or she".
+* **Avoid ableist terms**: "validation" not "sanity check"; "limited" not "crippled"; "allowlist/denylist" not "whitelist/blacklist".
+* **Avoid culturally specific idioms** that may not translate: "ballpark figure", "circle back", "boil the ocean".
+* **Avoid assuming expertise level**: do not write "as you know" or "obviously". A reader arriving from search may be encountering this concept for the first time.
+
+## Accessibility
+
+* Heading hierarchy must be logical and never skip levels. Screen readers use headings for navigation.
+* Link text must be descriptive out of context: a screen reader user may navigate a list of links with no surrounding prose.
+* Every image must have alt text. Decorative images that add no information should use `alt=""`.
+* Tables must have header rows. Do not use tables for layout.
+* Do not use colour alone to convey meaning (for example, "the fields marked in red are required").
+
+## What Not to Write
+
+### Anti-patterns with examples
+
+**The wall of text procedure:**
+
+> "First you need to go to the Assets section and then click on Create, after that you fill in the name field which is required, you can also add a description if you want, and then once you've done that you hit Save and the asset will be created."
+
+Fix: convert to numbered steps. See the [AGENTS.md](https://github.com/mediakind-labs/mk-online-doc/blob/main/AGENTS.MD) guide for conversion rules.
+
+***
+
+**The orphaned code block:**
+
+> Here is the request:
+>
+> ```json
+> { "name": "my-asset" }
+> ```
+
+Fix: add prose before (what the request does) and after (field explanations, constraints).
+
+***
+
+**The decorative callout:**
+
+```md
+:::note
+MK.IO supports multiple audio tracks.
+:::
+```
+
+Fix: if the information belongs in the page, integrate it into the prose. Starlight asides are for things the reader might genuinely skip past and regret missing.
+
+***
+
+**The forward-reference intro:**
+
+> "This page will explain what transforms are and how to use them."
+
+Fix: describe what the reader will be able to do, not what the page will cover.
+→ "Transforms define how MK.IO processes your media. Use a transform to specify output formats, codecs, and quality settings for encoding jobs."
+
+***
+
+**Thin content:**
+
+If a page lists API fields without explaining when or why to use them, or describes a procedure without the context a reader needs, flag it. Do not pad thin content with filler. Identify the specific gap and ask the contributor to fill it.
+
+> "This page explains how to create a transform but does not explain what a transform is or when you would use one. Could you provide 2–3 sentences of context?"
+
+## Further Reading
+
+* [Page Structure](/docs-contribute/page-structure): templates and content types
+* [Component Reference](/docs-contribute/components): all components with live examples
+* [Markdown Reference](/docs-contribute/markdown-reference): quick syntax cheat sheet
+* [Prompt Library](/docs-contribute/prompt-library): ready-to-use AI prompts for common writing tasks
+* [How to Contribute](/docs-contribute/contribute): branching, PRs, and the publishing workflow

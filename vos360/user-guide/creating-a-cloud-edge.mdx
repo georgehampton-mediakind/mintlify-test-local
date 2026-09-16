@@ -1,0 +1,50 @@
+---
+title: Creating a Cloud Edge
+robots: noindex, nofollow
+---
+
+To create a Cloud Edge, do the following:
+
+1. Click **+Cloud Edge&#x20;**&#x69;n the top-right of the tab.
+
+2. Enter the following information:
+
+   * From Cloud Source.
+
+     * Choose the Cloud Source you want to consume from the drop-down menu based on SPTS/MPTS and MBTS input. Or, you can input filter text to reduce the displayed list.
+
+   * (Optional) Backup Cloud Source.
+
+     * Use this to enable redundancy by choosing the backup Cloud Source.
+
+   * Cloud Edge name.
+
+   * Region.
+
+     <Note>
+       **Note:&#x20;**&#x4D;ultiple Cloud Edges can connect to the same Cloud Source to pull the same channel. If the Cloud Edge endpoint is created in the same region with the VOS360 deployment, the endpoint will be available when adding a channel with the Cloud (Live Routing) input.
+     </Note>
+
+     <Note>
+       **Note:** Choose the location with the best network connection quality.
+     </Note>
+
+   * Input protocol.
+
+     <Note>
+       **Note:** Only SRT is supported.
+     </Note>
+
+   * Encryption method (choose from NONE, AES\_128, AES\_192, or AES\_256).
+
+     <Note>
+       **Note:** If you choose none, you must enter a passphrase that is at least 10 characters long.
+     </Note>
+
+   * (Optional) Add any custom labels.
+
+3. Click **Create.**
+
+4. Wait for a while, the endpoint should be ready within a minute.
+
+5. Once a cloud edge is created, a Cloud Edge Egress Endpoint is assigned. Click **Copy URL** to copy this information.

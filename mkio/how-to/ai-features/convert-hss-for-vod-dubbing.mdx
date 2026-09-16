@@ -1,0 +1,72 @@
+---
+title: Convert HSS assets for VOD dubbing
+description: Identify whether your legacy HSS asset needs conversion to the MP4v4 format before running VOD dubbing, and convert it using the appropriate asset conversion preset.
+sidebarTitle: Convert assets to MP4v4
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+VOD dubbing requires assets in the MP4v4 format, which produces a `.mpd` DASH manifest. Assets encoded using older presets, including those from Azure Media Services (AMS) or any source that produces a `.ismc` manifest, are **not compatible**. This guide helps you identify your asset's format and convert it before proceeding to the [Multi-language VOD Dubbing Guide](/mkio/how-to/ai-features/multi-language-vod-dubbing).
+
+## Check your asset format
+
+1. In MK.IO, navigate to **Assets** and select your asset.
+2. Open the **Files** tab to view the files in the asset's storage container.
+3. Identify the manifest file type:
+
+| Manifest file | Format       | Compatible with VOD dubbing?       |
+| :------------ | :----------- | :--------------------------------- |
+| `.mpd`        | MP4v4        | Yes: no conversion needed          |
+| `.ismc`       | HSS (legacy) | No: convert first using this guide |
+
+If your asset contains a `.mpd` file, it is already in the correct format. To dub your assets, follow the [Multi-language VOD Dubbing Guide](/mkio/how-to/ai-features/multi-language-vod-dubbing). If your asset contains a `.ismc` file, continue with this guide.
+
+## Choose a conversion preset
+
+The preset you choose depends on whether each video rendition file in your asset contains audio, or whether audio is stored in completely separate files.
+
+| Source structure                                            | Preset to use                   |
+| :---------------------------------------------------------- | :------------------------------ |
+| Each video rendition file contains audio                    | `CopyAllBitratesInterleaved`    |
+| Video rendition files contain video only, audio is separate | `CopyAllBitratesNonInterleaved` |
+
+**How to check your asset's structure:**
+
+Open the **Files** tab of your asset and look at the file listing. You are trying to find if the video rendition files contain audio, or not.
+
+* **Count distinct file types.** If all your MP4 files appear to be video renditions at different resolutions or bitrates, with no separate audio-only file, audio is likely interleaved in each. If you can see one or more files that have no resolution dimension in the name and appear to represent audio only, those are separate audio tracks.
+* **Check the file naming.** Encoding tools often include the codec or track type in the filename. A video rendition file that includes an audio codec name (such as `AAC`) alongside a video resolution is a strong sign that audio is interleaved. A file with only an audio bitrate and no resolution is likely audio-only.
+* **When in doubt, use `CopyAllBitratesInterleaved`.** Most assets from AMS or older encoding pipelines have audio interleaved in each video rendition. If you are unsure, this is the correct choice for the majority of legacy HSS assets.
+
+<Info>
+  A standalone audio file alongside your video renditions does not mean audio is non-interleaved. The deciding factor is whether the video rendition files themselves contain audio. If they do, use `CopyAllBitratesInterleaved` regardless of whether a separate audio file also exists.
+</Info>
+
+## Step 1: Create an asset conversion transform
+
+1. Navigate to **Video Processing** → **Transforms** → **+ Create Transform**.
+2. Configure the transform:
+   * **Name:** give it a descriptive name, for example `hss-to-mp4-interleaved`.
+   * **Type:** select **Asset conversion**.
+   * **Built-in preset:** select the preset you identified above: `CopyAllBitratesInterleaved` or `CopyAllBitratesNonInterleaved`.
+3. Select **Create**.
+
+## Step 2: Run the conversion job
+
+1. Navigate to **Video Processing** → **Jobs** → **+ Create Job**.
+2. Configure the job:
+   * **Job name:** provide a unique name for this conversion, for example `convert-hss-asset`.
+   * **Transform:** select the transform you created in Step 1.
+   * **Select input:** select **Existing asset** and choose your legacy HSS asset.
+   * **Output asset name:** provide a name for the converted asset, for example `my-asset-mp4v4`.
+3. Select **Create**.
+
+MK.IO automatically identifies the source files: you do not need to select a specific input file.
+
+**Monitor progress:** Navigate to **Video Processing** → **Jobs** and wait for the job status to show **Finished**.
+
+**Verify the output:** Open the new converted asset and confirm that a `.mpd` file is present in the **Files** tab. This confirms the asset is in MP4v4 format.
+
+## Next steps
+
+Your converted asset is now ready for VOD dubbing. Return to the [Multi-language VOD Dubbing Guide](/mkio/how-to/ai-features/multi-language-vod-dubbing) and use the converted asset as your source.

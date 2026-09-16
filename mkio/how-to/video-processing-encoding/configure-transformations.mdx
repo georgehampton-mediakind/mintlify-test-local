@@ -1,0 +1,67 @@
+---
+title: Configure VOD transforms
+description: Create transform templates in MK.IO to define how your video content is encoded, transcribed, or converted.
+sidebarTitle: Configure VOD transforms
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A *transform* is a reusable template that defines how MK.IO should process a piece of content. You create a transform once with a specific type and preset, then apply it to assets by running jobs. This means you can encode hundreds of assets consistently without reconfiguring the settings each time.
+
+## Transform types
+
+Three transform types are available in the MK.IO portal:
+
+| Type                 | What it does                                                                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Encoding**         | Re-encodes video into streaming-optimised formats (HLS/DASH). Supports adaptive bitrate with multiple resolution tracks. This is the most common type for VOD streaming. |
+| **AI**               | Generates transcriptions or translations from audio. Output is a subtitle file (WebVTT or TTML) attached to the asset.                                                   |
+| **Asset conversion** | Converts between container formats or extracts audio without full re-encoding.                                                                                           |
+
+<Info>
+  Additional transform types (for example, thumbnail generation and track insertion) are available through the [MK.IO API](/api-reference/media-api) but not in the portal. See [Reference: transform presets](/mkio/reference/encoding-transform-presets/encoding-transform) for the full list.
+</Info>
+
+## Create a transform
+
+<Steps>
+  <Step title="Open Transforms">
+    <span id="open-transforms" className="mk-legacy-anchor" />
+
+    Go to **Video Processing** > **Transforms** in the left navigation and click **+ Create Transform**.
+  </Step>
+
+  <Step title="Name the transform">
+    <span id="name-the-transform" className="mk-legacy-anchor" />
+
+    Give it a descriptive name (for example, `streaming-720p` or `transcription-english`). You reference this name when creating jobs. Avoid spaces: use hyphens or underscores.
+  </Step>
+
+  <Step title="Select the type and preset">
+    <span id="select-the-type-and-preset" className="mk-legacy-anchor" />
+
+    * **For Encoding**: Select **Encoding** as the type, then choose a preset. The preset defines the output resolutions, codecs, and bitrates. Common presets:
+
+      * `H264MultipleBitrate1080p`: Adaptive bitrate 1080p, good for general streaming
+      * `H264MultipleBitrate720p`: Adaptive bitrate 720p, lower cost
+      * `H264SingleBitrate1080p`: Fixed quality single output
+
+      See [Encoding transform presets](/mkio/reference/encoding-transform-presets/encoding-transform) for the complete list with bitrate specifications.
+
+    * **For AI**: Select **AI** as the type, then choose the pipeline (for example, speech transcription). Specify the source audio language code (for example, `en-US` for English). See [AI workflows](/mkio/reference/encoding-transform-presets/audio-speech-transcription) for supported languages.
+
+    * **For Asset conversion**: Select **Asset conversion**, then choose the conversion preset.
+  </Step>
+
+  <Step title="Create">
+    <span id="create" className="mk-legacy-anchor" />
+
+    Click **Submit**. The transform appears in your Transforms list and is ready to use.
+  </Step>
+</Steps>
+
+## Run the transform
+
+A transform on its own does nothing: you apply it to an asset by creating a job. See [Run VOD processing jobs](/mkio/how-to/video-processing-encoding/run-vod-transcode-jobs) for how to create and monitor jobs.
+
+Use the [Transforms and jobs API Guide](/api-guides/how-to/media/transforms-and-jobs) to create and manage transforms through the Media API.

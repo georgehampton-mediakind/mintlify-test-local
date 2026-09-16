@@ -1,0 +1,148 @@
+---
+title: Configuring the SMPTE 2110 source input
+robots: noindex, nofollow
+---
+
+SMTPE 2110 sources are supported as baseband input. In addition, input redundancy can be enabled that two input streams (Primary/Backup) can be generated from the same SMPTE 2110 source when SMPTE 2022-7 redundancy is activated.
+
+<Note>
+  **Note:&#x20;**&#x45;nsure that the multicast IP and port do not conflict with other network services and that your network is correctly configured (IGMP querier).
+</Note>
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+ Source**.\
+   ![](/images/vos360/81f352967f7ec1f5cbe8489f.png)
+
+2. In the **Input Source Name** field, enter the name of the new source.
+
+3. If you wish to be able to filter by user-defined labels, enter a label in the **Labels** field.
+
+4. Below **Inputs**, configure the **Signal Loss** input by doing one of the following (refer to [Configuring a signal loss slate for a source input](https://confluence360.harmonicinc.com/display/VOS360DOC/.Configuring+a+signal+loss+slate+for+a+source+input+v1.25) for details):
+
+   * Select the desired **Signal lost image**.
+
+   * Click the **Display a black screen** toggle to display a black screen during signal loss.
+
+   * Click the **Display a video slate&#x20;**&#x74;oggle to select the WebM file you have uploaded.
+
+   * Click **Remove** to delete the input if it is not required.
+
+   Note that signal loss is only supported in workflows that include transcoding.
+
+5. Click the **+Input** icon, and then select **Baseband Type&#x20;**&#x61;s SMPTE 2110.
+
+6. Configure the following parameters:
+
+   * **Maximum Supported Delay**: This is used for the maximum supported delay between the SMPTE 2110 streams. The maximum value is 2000.
+
+   * **Rank**: This is used if multiple outputs are configured.
+
+   * **Audio-Only**: Turn on this toggle if Video Stream is excluded from the SMPTE 2110 source input.
+
+7. Under **Video Stream**, configure the following:
+
+   * Enter the multicast source IP address.\
+     **Result**: The **Network** field appears, allowing you to select the subnet from which you expect to receive the multicast source.
+
+   * Enter the multicast source **Port** number.
+
+   * Optionally, add a source-specific multicast IP address in the **SSM** field.
+
+   * Optionally, turn on SMPTE **2022-7** to generate two streams with the same data using different routes to the destination (use SMPTE 2022-7 redundancy to add a backup input stream).
+
+     <Note>
+       **Note:&#x20;**&#x53;MPTE 2022-7 (“Seamless Protection Switching”) specifies the reconstruction of the original stream in case packets are lost in any of the paths. Switching from one path to the other occurs without impact on the content of the stream.
+     </Note>
+
+   * Optionally, configure the following parameters:
+
+     * RTP Payload Type: The dynamic payload of the RTP streams.
+
+     * Standard: Source streams packaged over RTP comply with the standard “ST 2110-20” or “ST 2110-22 JPEG XS”.
+
+     * Generate Vitc From Rtp Timestamp: Generate VITC based on RTP timestamp on the SMPTE 2110 input.
+
+     * Frame Rate: The discovered frame rate of the input video.
+
+     * Resolution: The discovered resolution of the input video.
+
+     * Frame Mode: The input video standard.
+
+     * Active Region Source: The action region with the SMPTE 2016 standard.
+
+     * AFD Fallback: Fallback if there is no ADF signal at all or AFD is lost.
+
+     * Image Compression: The image compression format for the input video.
+
+     * Noise Reduction: Reduce the noise from the source video.
+
+     * WSS/AMOL Line (Killer): Remove the widescreen signaling (WSS) or automated measurement of lineups (AMOL) lines at the top of older analog video streams. These lines are normally visible as thin white lines at the top of video streams. This replaces the line with a mix of the following two lines to remove the signal.
+
+8. Optionally, under **Audio Stream**, click **+Audio Stream** to configure the following:
+
+   * Enter the multicast source IP address.\
+     **Result**: The **Network** field appears, allowing you to select the subnet from which you expect to receive the multicast source.
+
+   * Enter the multicast source **Port** number.
+
+   * Optionally, add a source-specific multicast IP address in the **SSM** field.
+
+   * Optionally, turn on SMPTE **2022-7** to generate two streams with the same data using different routes to the destination (use SMPTE 2022-7 redundancy to add a backup input stream).
+
+     <Note>
+       **Note:&#x20;**&#x53;MPTE 2022-7 (“Seamless Protection Switching”) specifies the reconstruction of the original stream in case packets are lost in any of the paths. Switching from one path to the other occurs without impact on the content of the stream.
+     </Note>
+
+   * Optionally, configure the following parameters:
+
+     * RTP Payload Type: The dynamic payload of the RTP streams.
+
+     * Num Channel: No. of audio channels in the input stream.
+
+     * 2110-31: Whether or not payload within the audio stream is SMPTE 2110-31.
+
+   * Optionally, under **Audio Tracks**, click **Create** to define the audio tracks, and then click **Save** to exit the **Audio Grooming** dialog.
+
+     * Codec: Choose the audio codec for the track.
+
+     * Delay: Specify the audio delay in milliseconds in order to synchronize the video stream. The valid range is from -500 to 500 ms.
+
+     * Languages: The language of audio in source.
+
+     * Channels: Each line corresponds to a specific set of audio.
+
+     * Group: Choose according to source definitions.
+
+     * Pair: Choose according to source definitions.
+
+     * Type: Choose the audio type according to source destinations.
+
+9. Optionally, under **Data Stream**, click **+Data Stream** to configure the following:
+
+   * Enter the multicast source IP address.\
+     **Result**: The **Network** field appears, allowing you to select the subnet from which you expect to receive the multicast source.
+
+   * Enter the multicast source **Port** number.
+
+   * Optionally, add a source-specific multicast IP address in the **SSM** field.
+
+   * Optionally, turn on SMPTE **2022-7** to generate two streams with the same data using different routes to the destination (use SMPTE 2022-7 redundancy to add a backup source).
+
+     <Note>
+       **Note:&#x20;**&#x53;MPTE 2022-7 (“Seamless Protection Switching”) specifies the reconstruction of the original stream in case packets are lost in any of the paths. Switching from one path to the other occurs without impact on the content of the stream.
+     </Note>
+
+   * Optionally, configure the following parameters:
+
+     * RTP Payload Type: The dynamic payload of the RTP streams.
+
+     * Extract AFD: Whether or not to extract AFD from the SMPTE 2110 source.
+
+       <Note>
+         **Note:&#x20;**&#x54;he Active Region Source under Video Streams needs to be configured as SMPTE 2016. Only one 2110 data stream should have “Extract AFD” set to true.
+       </Note>
+
+     * Extract CC: Whether or not to extract Closed Caption from the SMPTE 2110 source.
+
+   * &#x20;If the source contains data, such as SCTE-104, click **+Data Track** to customize downstream data processing.
+
+     * Input Line Settings: Declare the data type here which is present in the data stream. The supported data types include SCTE-104, SMPTE 2031, OP 47, OP 42, VITC, VPS, WST, and WSS.

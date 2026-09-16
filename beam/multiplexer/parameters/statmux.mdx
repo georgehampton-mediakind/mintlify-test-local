@@ -1,0 +1,45 @@
+---
+title: Statistical Multiplexing Tab
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+By default, statistical multiplexing is disabled for multiplexing services.
+
+To enable Statistical Bitrate allocation, tick the corresponding box.
+
+To add additional statistical multiplexing pools, click the *Add Pool* button.
+
+![Mux Statmux Tab](/_machine-assets/ef7e2ffe6ebeba4d1300e75ac2995184029f794109b2799a1cdbb4cd2fc88b5e.png)
+
+## Statmux Advanced Settings
+
+These settings are only for advanced configurations. Default values should be suitable for the majority of use cases.
+
+![Mux Statmux Tab advanced](/_machine-assets/ecac1bad276e9b0ef4eb2dd1dafca9bd2b2b26b3f1ad8d276eb3927d29d09d48.png)
+
+| Parameter name                      | Description                                                                                                                                                      | Possible values                         |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| Minimum bitrate multiplier          | Controls the next minimum bitrate for each statmux interval. Lower values results in faster bitrate decrease                                                     | Floating point values between 0.1 and 1 |
+| Priority rate factor                | Adjusts the strength of the priorities rate factor. Higher values result in greater differences between the allocated bitrates for different levels of priority. | Floating point values between 0.1 and 1 |
+| Show service names on statmux graph | Causes the statmux statistics page to display the encoding live service name instead of the Channel Id.                                                          | Tickbox, enabled by default             |
+
+{/* This will change at some point, once EL makes that advanced parameter default. */}
+
+<Info>
+  For encoding live service names to be showed in the statmux statistics page, tick the [**Service name in profile name**](/beam/live-encoder/parameters/encoding/video#general-parameters) parameter checkbox in the Live encoder configuration.
+</Info>
+
+## Specific Pool Settings
+
+To add pools, click the corresponding button.
+
+For each pool, the following parameters must be specified:
+
+| Parameter name              | Description                                                                                                      | Possible values             |
+| :-------------------------- | :--------------------------------------------------------------------------------------------------------------- | :-------------------------- |
+| Name                        | Unique name of the pool for this service.                                                                        | String of max 32 characters |
+| Bitrate                     | Bitrate allocated to the current pool                                                                            | 0 to 200000000 bps          |
+| Primary Network Interface   | Specifies the interface (as seen by the operating system) used to communicate with members of the statmux group. | String of max 32 characters |
+| Secondary Network Interface | (Optional) Specifies a secondary, redundant, interface used to communicate with members of the statmux group.    | String of max 32 characters |
+| Video Only                  | Specify if only Video components are to be included in the statmux pool.                                         | Dropdown menu: Off, On      |

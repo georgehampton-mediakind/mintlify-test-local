@@ -1,0 +1,52 @@
+---
+title: CSS customization
+description: Customize MKPlayer controls and overlays by overriding Bitmovin Player UI CSS classes.
+sidebarTitle: CSS customization
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Bitmovin UI renders playback controls and overlays as DOM elements with predefined CSS class names (for example, `.bmpui-seekbar` and `.bmpui-ui-uicontainer`).
+
+Using CSS overrides lets you:
+
+* Customize colors, fonts, and sizes
+* Align playback controls with your brand
+* Improve accessibility and responsive behavior
+* Change visual behavior at runtime
+
+## Example: larger seekbar and branded colors
+
+```css
+/* Big seekbar font size */
+.bmpui-seekbar.bigseek > * {
+  font-size: 3em;
+}
+
+/* Seekbar backdrop colors */
+.bmpui-seekbar-backdrop.green {
+  background-color: #034728 !important;
+}
+```
+
+This makes seekbar elements larger and changes the seekbar backdrop color.
+
+## Example: base font defaults
+
+```css
+.bmpui-ui-uicontainer {
+  font-family: "Roboto";
+  font-size: 16px;
+}
+```
+
+This sets a consistent font baseline across UI elements.
+
+You can also update label and button text styling to signal UI states such as on/off transitions.
+
+## Related references
+
+* UIConfig: [Bitmovin UIConfig interface](https://cdn.bitmovin.com/player/ui/3/docs/interfaces/UIConfig.html)
+* Bitmovin UI modules: [Bitmovin UI modules](https://cdn.bitmovin.com/player/ui/3/docs/modules.html)
+* UI factory variants: [Bitmovin UI factory docs](https://cdn.bitmovin.com/player/ui/3/docs/modules/UIFactory.html)
+* CSS class reference: [Bitmovin CSS class reference](https://developer.bitmovin.com/playback/docs/player-ui-css-class-reference#labels)

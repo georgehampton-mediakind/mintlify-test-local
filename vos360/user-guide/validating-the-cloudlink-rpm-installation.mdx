@@ -1,0 +1,30 @@
+---
+title: Validating the Cloudlink RPM installation
+robots: noindex, nofollow
+---
+
+Make sure to follow all of the following in order to validate the the Cloudlink installation and ensure that the deployment was performed correctly.
+
+* A new installation of the OS for Cloudlink has been completed by Harmonic personnel without running other software including VOS.
+
+* The OS has been updated via yum.
+
+* SSH is disabled on all public interfaces in iptables.
+
+* SSH access has been restricted to SSH key only.
+
+* Disable SSH access without PEM.
+
+* SSH key has been handed off to ProServ.
+
+* The network interfaces have been configured.
+
+* The RPM install of the CloudLink SW has been completed using the latest instructions: [Installing a CloudLink with RPM](/vos360/user-guide/installing-a-cloudlink-with-rpm).
+
+* The CloudLink application has been started.
+
+* The CloudLink has been registered to the appropriate run time.
+
+* Validate that SSH access is not possible to the CloudLink public I/F (if any).
+
+* Validate that Mesos / Marathon ports are not exposed on the public I/F (if any).

@@ -1,0 +1,61 @@
+---
+title: Install and initialize MKCustomUI
+description: Install the MKCustomUI plugin and initialize a custom MKPlayer playback interface.
+sidebarTitle: Install and initialize
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use the MKCustomUI plugin to replace the default MKPlayer playback UI with a customizable UI built on Bitmovin Player UI V3.
+
+## 1. Install the plugin
+
+Install the package in your project:
+
+```bash
+npm install @mediakind/mkplayer-customui-plugin
+```
+
+## 2. Import the plugin
+
+Import `MKCustomUI` from the plugin in your source code.
+
+## 3. Disable the default player UI
+
+Set `playerConfig.ui` to `false` when using MKCustomUI:
+
+```js
+const playerConfig = {
+  ...otherConfigs,
+  ui: false, // disable default Bitmovin UI
+};
+```
+
+## 4. Initialize MKPlayer
+
+Create the player instance with your video container and config:
+
+```js
+const player = new mkplayer.MKPlayer(videoContainer, playerConfig);
+```
+
+## 5. Initialize MKCustomUI
+
+Create `MKCustomUI` with the initialized player instance:
+
+```js
+const mkCustomizeUI = new mkplayercustomuiPlugin.MKCustomUI(player);
+```
+
+## 6. Release an existing UI manager before rebuilding
+
+If you rebuild or switch UI layouts dynamically, release the previous `uiManager` first:
+
+```js
+if (uiManager) {
+  uiManager.release();
+  uiManager = undefined;
+}
+```
+
+This avoids duplicate controls and prevents memory leaks when switching UI variants.

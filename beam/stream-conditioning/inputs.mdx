@@ -1,0 +1,396 @@
+---
+title: Configure input
+sidebarTitle: Configure Inputs
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Connect to SCTE-224 events database
+
+**Input** tab section allows **Stream Conditioning** service to connect to the list of events formatted using SCTE 224 standard (media points). In other words, **Input** section connects to a SCTE 224 database, and maps media points into video headend operations (such as switch to blackout using ESAM for instance). Mapping of media points over ESAM or SCTE-104 controls is stored in a separate database.
+
+1. Click the **Input** tab.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter       | Description                                                                                                                                                                                                                                                                                                                                                                                                         |
+   | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+   | Type            | Select **ESNI SCTE-224.**                                                                                                                                                                                                                                                                                                                                                                                           |
+   | ESNI Server     | Stream Conditioning can connect to its own database of SCTE-224 events or connect to an external database.<br />When connecting to SCTE-224 events database managed by the viewing policy manager service (one database per service), a drop-down list will list all the different events database available (one per Viewing policy manager service). This generally corresponds to a programmer (ESPN, FOX etc.). |
+   | ESNI Media ID   | From the selected SCTE-224 events database, select the Media ID containing all the different media points, viewing policies, policies and audience. Selected Media ID generally corresponds to a linear channel for instance.                                                                                                                                                                                       |
+   | Ignore metadata | Check this box if ESNI SCTE-224 metadata are not used in conditioning to improve performance.                                                                                                                                                                                                                                                                                                                       |
+   | Enable audit    | Return status of the events to the SCTE-224 database to enable SCTE-224 audit creation.                                                                                                                                                                                                                                                                                                                             |
+
+Once the connection to the SCTE-224 events database is configured, you need to configure the way media points will be converted into operations. Indeed, a Media (identified by its **Media ID**) contains a collection of Media Points.
+
+These Media points provide information about:
+
+* When the event shall be triggered (@matchTime attribute, @effective and @expire may also be used to provide validity window).
+* SCTE-35 in-band trigger conditions (via `<asset>` section).
+* The policy to apply or remove. A policy being a collection of viewing policies.
+
+## Translations: identify events using Media point filtering
+
+Events (SCTE-224 media points) must be mapped to ESAM/SCTE-104 or SCTE-30 controls.
+
+To configure media point filtering, proceed as follows:
+
+1. From the **Input** tab, go to the **Translations** section then click **Add rule**.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter        | Description                                                                                                                 |
+   | :--------------- | :-------------------------------------------------------------------------------------------------------------------------- |
+   | Name             | Name of the translation rule.                                                                                               |
+   | SCTE-224 filters | Configure filtering rules to identify a n SCTE-224 event, using filters such as Viewing Policy ID, audience ID, action etc. |
+
+## Translations: Operations
+
+Stream Conditioning implements different types of operations that may be grouped in two categories:
+
+### Standard operations
+
+Alternate content and SCTE-35. These operations are based on standard and supported by any device compatible ESAM/SCTE-104/SCTE-30.
+
+| Parameter         | Description                                                                                                         | Use case example                 | Target component      |
+| :---------------- | :------------------------------------------------------------------------------------------------------------------ | :------------------------------- | :-------------------- |
+| Alternate content | Switch-over from a live feed to another one                                                                         | Sim-subs, regional substitution. | Encoder, TS processor |
+| SCTE-35           | Configure-able SCTE-35 insertion to signal ad break, program start/end etc. Manage rewriting (Placement management) | Ad insertion, SCTE-35 rewrite    | Encoder               |
+
+### Advanced operations
+
+Image overlay, Animation, slate and video clip operations require specific functionalities only available within MediaKind portfolio (Live Encoder for instance).
+
+| Parameter     | Description                                                                                                               | Use case example      | Target component                            |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------ | :-------------------- | :------------------------------------------ |
+| Image overlay | Control the video composing of a linear feed with an image                                                                | Logo insertion        | Encoder (specific to Live Encoder solution) |
+| Animation     | Video composing control using Flash animation (Flash object are assumed stored on target component)                       | Advanced graphics     | Encoder (specific to Live Encoder solution) |
+| Slate         | Control changeover from the linear stream to a slate                                                                      | Blackout              | Encoder (specific to Live Encoder solution) |
+| Video clip    | Control the insertion of file-based assets                                                                                | Linear ad replacement | Encoder (specific to Live Encoder solution) |
+| None          | This operation has been introduced to specifically manage the deletion of a given SCTE-35 matching with matching criteria | SCTE-35 deletion      | Encoder, TS processor                       |
+
+### Operation: General parameters
+
+To configure one or more operation(s) associated with the filtering of events configured in the [previous section](/beam/stream-conditioning/inputs#translations-identify-events-using-media-point-filtering), follow these steps:
+
+1. From the **Input** tab, go to the **Operations** section then click **Add**.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+| Parameter               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| :---------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name                    | Configure a name for your operation.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Apply on                | Mandatory field indicating when the operation is launched. Possible options:<br />- **Policy begin:** operation triggered when the policy is applied (SCTE-224 `<Apply>` tag from the media point element).<br />- **Policy end:** operation triggered when the policy is removed (SCTE-224 `<remove>` tag from the media point element).                                                                                                                                                                                                                                                                                                                                                                   |
+| Scheduling mode         | Defines the criteria for launching the operations, namely:<br />- **Auto (follow SCTE-224):** This mode allows triggering an operation:<br />- based on time (if only at least one of the following attribute is present: @matchTime, @effective, @expires),<br />- based on incoming signal only (if only @matchSignal is present),<br />- or based on @matchSignal with a time-based fallback.<br />- **Time-Based:** operation can be forced to be exclusively time-based (even if the media point contains @matchSignal).<br />- **SCTE-35 Signal-based:** operation is launched only based on SCTE-35 signal (@matchSignal from the media point, with matching criteria configured in scheduling tab). |
+| Discard incoming signal | **Restriction:** Only available when selecting SCTE-35 Signal-based scheduling mode.<br />When checked, it instructs the encoder or TS processor to remove submitted SCTE-35 from its output.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+The next sections provide information regarding the configuration of the different types of operations, as well as scheduling restrictions, ESAM properties and fallback operations.
+
+### Operation: Alternate Content
+
+When selecting **Live Alternate content** type of operation, the following configuration is expected:
+
+| Parameter | Description                                                                                                                                                                                                                     |
+| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Input ID  | This ID represents the alternate content ID configured at the target device (encoder, TS processor etc.). When using ESAM type of communication, this corresponds to the altContID information passed within the ESAM response. |
+
+![Example: Live stream switch configuration](/_machine-assets/97e5290232c0bcd11cefe48fc6f7c66dadea855939504c3476a7d7c6f6fae489.png)
+
+When the **Input ID** field is left blank, this implicitly means a return to “default” asset. In the case of a live to live stream switching for instance, configuring a blank value will lead to returning to main live stream.
+
+**Scheduling**, **ESAM properties** and **Fallback operation** tabs are common to all operations. Please refer to:
+
+* [Operation (all): Scheduling configuration](/beam/stream-conditioning/inputs#operation-all-scheduling-configuration)
+* [Operation: ESAM properties](/beam/stream-conditioning/inputs#operation-esam-properties)
+* [Operation: Fallback operation](/beam/stream-conditioning/inputs#operation-fallback-operation)
+
+### Operation: SCTE-35
+
+SCTE-35 operation can be used for two main purposes:
+
+* **SCTE-35 insertion:** Stream Conditioning controls the encoder or TS processor to insert a given SCTE-35 in its output stream. In this case, **Scheduling mode** shall be set to **Time-based**. This mode is also referred to as “out-of-band”.
+* **SCTE-35 rewrite:** This operation is aimed at modifying the incoming SCTE-35 to normalize the information for instance (rewriting descriptors, translating the SCTE-35 commands from splice insert to time signal). In this case, **Scheduling mode** shall be set to **SCTE-35 Signal-based** and **Discard incoming signal** must be checked (to avoid two signals in the output stream).
+
+<Info>
+  Auto scheduling mode (following SCTE-224) can be used in either SCTE-35 insertion or SCTE-35 management use case. We do not recommend using this mode for SCTE-35 operations as it may lead to unexpected behavior.
+</Info>
+
+#### SCTE-35 Insertion
+
+To configure out-of-band (time-based) SCTE-35 insertion, follow these steps:
+
+1. Make sure **Scheduling mode** is set to **Time-based**.
+
+2. Under the **Operation** tab, set **Type** to **SCTE-35** from the list of available type of operations.
+
+3. Configure Splice info: under the **Splice info** tab, select **Splice info type** from the list of SCTE-35 command types.
+
+   ![SCTE-35 insertion configuration](/_machine-assets/b0f30937d6986b324bf3b07456da72671d83e9afecf06fb8cfd3f8fb464bdf39.png)
+
+   <Info>
+     The set of parameters to configure will depend on the selected command. Users shall be familiar with the SCTE-35 standard. The main commands used are generally the following one: **Splice Insert** and **Time Signal**.
+   </Info>
+
+   <Info>
+     Some parameters can be automatically configured (retrieved from the media point/event schedule), for instance the **Break duration** or **segmentation duration**.
+   </Info>
+
+   The figure below shows a **Splice insert** command configuration example with **Break duration** set automatically to the duration of the media point policy.
+
+   ![Splice Insert: splice info section configuration](/_machine-assets/00a761e3c8c78a0f3ed3b46cca4cdf6644cddc21af2125f1d418e138edaede08.png)
+
+   <Info>
+     Any SCTE-35 message, whether it’s a splice null, splice insert etc. contains a splice info section, as well as (optionally) a set of one or more segmentation descriptors. These segmentation descriptors are used to convey additional information and characterize the placement opportunity.
+   </Info>
+
+4. Configure segmentation descriptors:
+
+   1. Click the **Splice descriptors** tab.
+
+   2. Click the **Add descriptor** button then select **SegmentationDescriptor**.
+
+   The configuration of all the different fields is user-defined and aligned with the SCTE-35 standard. Some fields can be configured automatically based on the event it is attached to (such as **Policy Duration** for the segmentation duration).
+
+   ![Segmentation descriptor configuration](/_machine-assets/342383de1b94cdc38dfaf46be00c57f7634624d94f222ef291cc9f0b83113f9e.png)
+
+#### SCTE-35 Rewriting
+
+SCTE-35 signal submitted by an encoder or TS processor can be modified using Stream Conditioning.
+
+To configure SCTE-35 rewriting, follow these steps:
+
+1. Make sure that **Scheduling mode** is set to **SCTE-35 Signal-based**.
+
+2. Under the **Operation** tab, set **Type** to **SCTE-35** from the list of available type of operations.
+
+3. Under the **Splice info** section, check the **Use source as template** option if you want to keep the SCTE-35 as is, and just modify attached segmentation descriptors for instance. You still have the possibility to override few parameters such as event ID or break duration for splice insert type of commands as show below.
+
+   ![SCTE-35 rewriting using source as template](/_machine-assets/52457a9028b56dfc63833f7de0ff82a8cd226cc1d837914e591ffbc89e6b2ecd.png)
+
+4. Uncheck this option if you want to convert an SCTE-35 splice insert into time signal for instance (and vice versa).
+
+   1. Configure splice info: see example below where we assuming that time signal SCTE-35 are received and translated into **Splice insert** type of command.
+
+      ![SCTE-35 rewriting: command translation](/_machine-assets/4cb9ae14bb52e75d34f70916b3042abea6f00f0cd75e35d6f2b4492e856ad708.png)
+
+   2. Modify the incoming SCTE-35 descriptors: go to the **Source splice descriptors** section then click **Add modifier** then select whether you want to remove or rewrite segmentation descriptors from the SCTE-35 signal.
+
+      * If you select **Remove**, configure the filter to identify the segmentation descriptor that needs to be deleted. The figure below shows an example of SCTE-35 rewrite where Stream Conditioning deletes the segmentation descriptor of type program start.
+
+        ![Remove segmentation descriptor](/_machine-assets/908c600f65fb2db8dea5ec1b4b334f8a01805402aab2e67c562eb1faaeb4da29.png)
+
+      * If you select **Rewrite**, configure the filter to identify the segmentation descriptor to rewrite/modify. Then, under override section, select the field to modify and configure its value.
+
+        ![SCTE-35 rewrite](/_machine-assets/33447e5c7c0469df6ad2f792a55e0bdb92d199d530ca0dd3854265bf426a614f.png)
+
+   3. To add segmentation descriptors to the SCTE-35 submitted to Stream Conditioning: go to **Additional splice descriptors** section, click on **Add descriptor** then select **SegmentationDescriptor** and configure the segmentation descriptor, either manually, or leveraging pre-defined value (such as splice duration or segmentation duration for instance).
+
+      ![Adding a segmentation descriptor](/_machine-assets/12b69514e22e9df41db40804fb4d919c441432f8db14d90b4cb3ebd132096875.png)
+
+### Advanced Operation: image overlay
+
+Image overlay operation is used for use cases such as logo insertion. It allows controlling the insertion of an image on top of ongoing video. Parameters such as width, height, and X-Y coordinate must be configured to determine size and position of the image overlay.
+
+To configure image overlay operation, follow these steps:
+
+1. From the **Operation** tab set the **Type** to **Image overlay**.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter   | Description                                                                                                                                                                         |
+   | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Duration    | Can be manually configured, or automatically configured with **Policy duration** when selecting trigger point with value **At the beginning**.                                      |
+   | Material ID | ID of the image on the target device (can be a name like logo.jpg for instance)                                                                                                     |
+   | Width       | image width, in pixels                                                                                                                                                              |
+   | Height      | Image height, in pixels                                                                                                                                                             |
+   | X           | X-horizontal coordinate                                                                                                                                                             |
+   | Y           | Y-vertical coordinate                                                                                                                                                               |
+   | Layer       | Specify which layer the image will be positioned on.<br />Up to 8 layers can be managed (7 images overlaying).<br />Elements with higher layers will be displayed on top of others. |
+
+3. Click **Ok** to validate.
+
+   The new operation is added to the list of operations.
+
+### Advanced Operation: Animation
+
+When combining Stream Conditioning with MediaKind Encoding Live, linear transcoded channel can be combined with Flash animation. Encoding Live embeds a Flash decoding module, enabling composing of Flash animation with the video. Flash animation can be used for:
+
+* Providing crawling functionality (for Emergency Alert System (EAS) application).
+* Promoting a service, while keeping the live channel (stretch video, and use space for advertising or promo).
+
+To configure animation type of operation, follow these steps:
+
+1. From the **Operation** tab set the **Type** to **Animation**.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter   | Description                                                                                                                                                               |
+   | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+   | Duration    | Can be manually configured, or automatically configured with **Policy duration** when selecting trigger point with value **at the beginning**                             |
+   | Material ID | ID of the Flash SWF object on Encoding Live.                                                                                                                              |
+   | Layer       | Specify which layer the image will be positioned on. Up to 8 layers can be managed (7 images overlaying). Elements with higher layers will be displayed on top of others. |
+   | Fields      | Name/value that are MediaKind-specific. A description of the options is given in the table below.                                                                         |
+
+   | Parameter        | Description                                                                                                                                                                     |
+   | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+   | `SWF_TEXT_01`    | Crawling text that will be passed as a variable by Stream Conditioning when controlling Encoding Live to trigger crawling insertion.<br />Example: **This is my crawling text** |
+   | `SWF_SPEED`      | Crawling speed. Configured value ranges from 1 to n (number of point per frame).<br />Default value is **4**.                                                                   |
+   | `SWF_BACK_ALPHA` | Background transparency. Value range: \[0..1].<br />Default value is **0.6**.                                                                                                   |
+   | `SWF_COLOR_BACK` | Background color of the crawler, using RGB color system. *Example*: **55A9B0**.<br />Default value is **no background**.                                                        |
+   | `SWF_COLOR`      | Text color using RBG system. *Example*: **55A9B0**.<br />Default value is **FFFFFF**.                                                                                           |
+
+   ![Animation configuration](/_machine-assets/c97048dffe74b2ba9a9195df821fd058ecb14c8e955e4e6ac15c2cfd7de90c00.png)
+
+3. Click **Ok** to validate.
+
+   The new operation is added to the list of operations.
+
+### Advanced Operation: Slate
+
+Stream Conditioning can control a target device to enable slate insertion. An obvious use case being global blackout at the encoder, or TS processing component level. Contrary to Image overlay, the underlying live channel is entirely replaced by the slate, either rat the baseband level, or TS level for instance.
+
+To configure slate insertion, follow these steps:
+
+1. From the **Operation** tab set the **Type** to **Slate**.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter   | Description                                                                                                                                   |
+   | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Duration    | Can be manually configured, or automatically configured with **Policy duration** when selecting trigger point with value **at the beginning** |
+   | Material ID | ID of the Flash SWF object on Encoding Live.                                                                                                  |
+
+   ![slate insertion configuration](/_machine-assets/dd73751191dc478537213500cf5502326949e73e80d7ff0ee95bc126ae35eb21.png)
+
+3. Click **Ok** to validate.
+
+   The new operation is added to the list of operations.
+
+### Advanced Operation: Video clip
+
+Stream Conditioning can control live to file and file to live video switching using operation type “Video clip”. This operation, like “Image overlay” or “Animation” requires support of such behavior at the target device level.
+
+<Info>
+  Integration with MediaKind Live Encoder only supports video clip file in MPEG-TS file format.
+</Info>
+
+To configure video clip, follow these steps:
+
+1. From the **Operation** tab set the **Type** to **Video clip**.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter    | Description                                                                                                                                   |
+   | :----------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Clip         | Set to **Custom** to manually configure the video clip or set to **Auto (following SCTE-224)** to use material from SCTE-224 viewing policy.  |
+   | Duration     | Can be manually configured, or automatically configured with **Policy duration** when selecting trigger point with value **at the beginning** |
+   | Material ID  | ID of the Flash SWF object on Encoding Live.                                                                                                  |
+   | Start offset | Offset in seconds the video clip will start playing at.<br />Default value is **0**, meaning the video clip will start from the beginning.    |
+
+   ![Prisma sc op clip](/_machine-assets/8b66eca5430771cb2768097dbd251d509b6dc09fb971c160afe872a76aa06508.png)
+
+3. Click **Ok** to validate.
+
+   The new operation is added to the list of operations.
+
+<span id="scheduling-esam-properties--fallback" className="mk-legacy-anchor" />
+
+### Scheduling, ESAM properties & Fallback
+
+**Scheduling**, **ESAM properties** and **Fallback operation** tabs are common to all operations.
+
+Please refer to:
+
+* [Operation (all): Scheduling configuration](/beam/stream-conditioning/inputs#operation-all-scheduling-configuration)
+* [Operation: ESAM properties](/beam/stream-conditioning/inputs#operation-esam-properties)
+* [Operation: Fallback operation](/beam/stream-conditioning/inputs#operation-fallback-operation)
+
+<span id="operation-all-scheduling-configuration" className="mk-legacy-anchor" />
+
+### Operation (all): Scheduling configuration
+
+As explained in [Translations: Operations](/beam/stream-conditioning/inputs#translations-operations), scheduling mode can be automatically set based on media point configuration (using either @matchTime and or @matchSignal attributes), or forced to be time-based or signal-based. In such a case, the **Scheduling** tab will not appear.
+
+When forcing to **Time-based** or **SCTE-35 signal-based**, a **Scheduling** tab appears to adjust the timing or validity window and matching criteria respectively.
+
+#### SCTE-35 time-based scheduling mode
+
+To configure **Scheduling** tab when **Scheduling mode** is set to **Time-based**, follow these steps:
+
+1. Configure **Time:** select among the list of available options:
+
+   * **Auto (follow SCTE-224):** based on ingested schedule (@matchTime, @effective or @expire attribute of the media point)
+   * **Match time:** force to @matchTime attribute of the media point
+   * **Effective:** force to @effective attribute of the media point
+   * **Expires:** force to @expires attribute of the media point Timing can be adjusted in seconds (positive or negative, for example-30) to launch the operation before or after the time configured in the media point.
+
+#### SCTE-35 signal-based scheduling mode
+
+When launching operations based on SCTE-35 (submitted by an encoder for instance), a validity window must be configured:
+
+* if the SCTE-35 falls within the window, the operation will be launched,
+* otherwise, the operation will be canceled.
+
+To configure the **Scheduling** tab when **Scheduling mode** is set to **SCTE-35 Signal-based**, follow these steps:
+
+1. Go to the **Scheduling** tab.
+
+2. Activate and select the appropriate value for each parameter.
+
+   | Parameter                   | Description                                                                                                                                                                                                                                                                                                                    |
+   | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Create on alternate service | Stream Conditioning allows launching the operation on another service at the same time.<br />**Note:** This configuration is optional, and reserved for advanced workflow.                                                                                                                                                     |
+   | Define stop condition       | Define the condition for canceling the ongoing operation (started by startcondition).<br />**Restriction:** This parameter is only displayed is you selected an **ESAM (advanced)** operation (see [advanced operations table](/beam/stream-conditioning/inputs#advanced-operations)).                                         |
+   | Enable priority             | Define the priority at which the signal-based operations should be applied:<br />- If matching criteria are met for one or more signal-based operations, only those with the highest priority will be triggered, **0** being the highest.<br />- If no priority is set all matching signal-based operations will be triggered. |
+
+3. Locate the **Condition** section.
+
+4. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+   | :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Validity period begin | This setting determines the lower boundary of the validity window period. It can be automatically set based on the mediaPoint configuration (Auto (follow SCTE-224) i.e. equal to @effective if present else @matchTime) or forced to @matchTime, @effective or @expires.<br />Timing can be adjusted in seconds (positive or negative value).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+   | Validity period end   | This setting determines the upper boundary of the validity window. It can be automatically set based on the mediaPoint configuration (Auto (follow SCTE-224) i.e equal to @matchTime + @signalTolerance is present else @expires) or forced to @matchTime or @expires.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+   | Occurrence            | This setting controls the occurrence of the submitted SCTE-35.Possible values:<br />- **Auto (follow SCTE-224):** Occurrence based on the media point configuration. When @matchTime contains reusable attribute, this means that multiple occurrences are allowed. If not, this is equivalent to enabling occurrence to once. If @matchTime and @matchSignal are configured, this is equivalent to “once with time-based fallback”.<br />- **Multiple:** allows multiple SCTE-35 occurrence. In other words, if more than one SCTE-35 with matching criteria is received within the validity window, the operation will be launched as many times as there are matching SCTE-35 signals.<br />- **Once:** this mode allows launching the operation once, and de-activate it. Should other SCTE-35 signal be received within the validity window with matching criteria, the operation will not be triggered.<br />- **Once with time-based fallback:** launch the operation upon SCTE-35 with matching criteria within the validity window. If no signal is received, the operation will be launched based on time (timing linked to validity period end configuration).<br />- **Time-based fallback only:** this special mode enables to de-activate the operation when a SCTE-35 signal with matching criteria within the validity period is received. If no signal is received, the operation is forced time-based.<br />**Note:** When configuring occurrence with **Time-based fallback only** or **Once with time-based fallback**, the fallback operation must be configured. This configuration is detailed in [Operation: Fallback operation](/beam/stream-conditioning/inputs#operation-fallback-operation). |
+   | SCTE-35 matching      | When the media point configuration contains @matchSignal, SCTE-35 matching can be automatically managed using **Auto** (follow SCTE-224). This is the case for SCTE-224 ingest, or Disney PCC type of ingest. For other types of ingest like ESNI-I02, no matching criteria are conveyed as part of the schedule. They must then be configured by selecting **Custom**.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+   An example of signal-based scheduling configuration is given in the figure below, where a validity period of 60 seconds surrounding @matchTime is configured, with an **Occurrence** set to **Once**, and **Custom** **SCTE-35 matching** criteria: only match if time signal and segmentation type ID is set to **Program start**.
+
+### Operation: ESAM properties
+
+When selecting **ESAM** communication at the **Connection** tab level, ESAM properties can be configured when configuring the operation.
+
+To configure ESAM properties, follow these steps:
+
+1. Go to the **ESAM properties** tab.
+
+2. Enter and/or select the appropriate value for each parameter:
+
+   | Parameter                | Description                                                                                                                                                             |
+   | :----------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Enable conditioning info | Stream Conditioning supports enabling/disabling conditioning info.                                                                                                      |
+   | Enable event schedule    | Enable repetition of a signal using EventSchedule element in ESAM response.                                                                                             |
+   | Type                     | EventSchedule supports a choice of two scheduling models:<br />- **Absolute** start and end UTC times,<br />- **Relative** (to signal time) start and end offsets       |
+   | Interval                 | Specifies a desired repetition interval for the scheduled signal.                                                                                                       |
+   | Start UTC                | **Note:** Available when scheduling type is set to **Absolute**.<br />Specifies the time to start broadcasting the data as a UTC date and time.                         |
+   | End UTC                  | **Note:** Available when scheduling type is set to **Absolute**.<br />Optional time to stop broadcasting the data as a UTC date and time.                               |
+   | Start offset             | **Note:** Available when scheduling type is set to **Relative**.<br />Specify the time to start broadcasting the data as a duration from the associated/related signal. |
+   | End offset               | **Note:** Available when scheduling type is set to **Relative**.<br />Optional time to stop broadcasting the data as a duration from the associated/related signal.     |
+
+   ![ESAM Properties](/_machine-assets/f50508bf48ab1af8cba288fe7c6c8344a4467a1be27acca4cd5a07480415999c.png)
+
+### Operation: Fallback operation
+
+For Signal-based operation, a fallback may need to be configured in case the SCTE-35 signal is not received during the window validity period.
+
+This is crucial for use cases like blackout, where the switch-over is generally done based on SCTE-35. In case this signal does not show up, a fallback mechanism must be put in place to make sure the restriction is being handled properly.
+
+To configure fallback operation, set the following parameters:
+
+1. **Define fallback operation:** enable or disable operation fallback configuration:
+
+   1. Click the **Copy initial operation** button to copy the settings from the **Operation** tab.
+
+   2. If you want to configure a different operation from the one in **Operation** tab, configuration is fully customizable, providing the user with all the different operations to be triggered as fallback.
+
+      ![fallback operation configuration](/_machine-assets/369510d6587a2f6124fe7b711a281925d0b156083f5ea7effe8bf54fb24e462f.png)

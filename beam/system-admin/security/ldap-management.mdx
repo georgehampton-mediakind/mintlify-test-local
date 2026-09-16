@@ -1,0 +1,94 @@
+---
+title: LDAP management
+sidebarTitle: LDAP Management
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## LDAP configuration
+
+By default, accessing the Controller user interface is restricted to people that have a user account defined through the MediaKind system center. You can also configure the user access by retrieving user credentials from an existing LDAP server directory.
+
+1. Log in as a user with Administrative privileges.
+2. Click <img src="/icons/ui/gear.svg" alt="Gear" className="mk-ui-icon" width="16" height="16" /> in the upper right corner of the window.
+3. Select **Settings**. The Settings page displays 5 tabs:
+4. In the **LDAP** tab, configure the LDAP settings to integrate with the local LDAP server.
+
+   ![menu system settings ldap](/_machine-assets/ca078088f8859bf5be5a7b8648e364d97b82b8e14fe311ca293e6876ba89af6f.png)
+
+<Warning>
+  After changing the LDAP settings, for changes to take affect, the authentication service must be restarted. Either restart the Controller, or consult MediaKind Services for guidance on restarting the correct services for your deployment.
+</Warning>
+
+## Loading LDAP certificates
+
+If LDAP certificates are being loaded, configure LDAP on the settings page, then load the certificates.
+
+<Info>
+  For HA deployment, the following procedures must be done on both controller servers.
+</Info>
+
+1. On the controller server, place the LDAPS certificates in /etc/pki/ca-trust/source/anchors/
+
+2. Run the following command:
+
+   ```
+   update-ca-trust extract
+   ```
+
+   This will extract it to the standard OS trust store location (default path used in the controller UI):
+
+   ```
+   /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+   ```
+
+3. Edit the config file to set the right values:
+
+   ```
+   /opt/mediakind/utility/bin/controller/ldaps.conf
+   ```
+
+   The conf file must contain the fully qualified domain name for the LDAP server (same as in the certificate) and the IP address of that server.
+
+   ```
+   ###############################################################################
+   #                                                                             #
+   # Config file used by add-ldaps-certs.sh                                      #
+   # Needs to be populated by the customer specific parameters                   #
+   #                                                                             #
+   ###############################################################################
+
+   # newLDAPServerName must be fully resolvable
+   # FQDN that matches the provided root CA
+   newLDAPServerName=ldaps.sou.new
+   newLDAPServerIP=10.1.1.1
+   deployment=unified-ui
+   ```
+
+   | LDAP Field            | Description                                                                                                                                                                                                                                                                                                                      | Example value                                                                                           |                    |
+   | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------ |
+   | `server`              | Address of the LDAP server to communicate with.                                                                                                                                                                                                                                                                                  | `ldap://fr-my.companydomain.com:389`                                                                    |                    |
+   | `Bind DN`             | Distinguished name to use when binding to the LDAP server; leave empty (default) for an anonymous bind.                                                                                                                                                                                                                          | `CN=apache, OU=COM, OU=Sites, DC=companydomain, DC=com`                                                 |                    |
+   | `Bind password`       | Password to use for binding with protected binding; leave empty (default) for anonymous binding.                                                                                                                                                                                                                                 | `Password123`                                                                                           |                    |
+   | `Search base DN`      | DN to use when binding to the server in order to perform searches. Leave empty for anonymous binding.                                                                                                                                                                                                                            | `OU=COM, OU=Sites, DC=companydomain, DC=com`                                                            |                    |
+   | `Username field`      | Name of the field to use in the LDAP search, for username matching (against LDAP attributes).                                                                                                                                                                                                                                    | `sAMAccountName`                                                                                        |                    |
+   | `Firstname field`     | Name of the field (from LDAP attributes) holding the user’s first name.                                                                                                                                                                                                                                                          | `givenName`                                                                                             |                    |
+   | `Lastname field`      | Name of the field (from LDAP attributes) holding the user’s last name.  `firstname_field` & `lastname_field` shall be used together, or they will be ignored. `firstname_field` & `lastname_field` can be used to retrieve the user’s full name. This will then be displayed instead of the username once the user is logged in. | `sn`                                                                                                    |                    |
+   | `CA certificate file` | Location of the CA certificate file used to verify the LDAP server’s certificate when using TLS or LDAPS.                                                                                                                                                                                                                        | `/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem`                                                     |                    |
+   | `Cipher suite`        | Open SSL-format string defining the list of ciphers to use for TLS communication.                                                                                                                                                                                                                                                | `kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES:-SSLv2:-SSLv3:-TLSv1:-TLSv1.1`                         |                    |
+   | `Required group`      | The LDAP group required for a user to be able to log in.                                                                                                                                                                                                                                                                         | `cn=lcl.cnt.dfw.di.mediakind.allowlogon, ou=Resources,ou=Groups, ou=MediaKind,ou=CP, dc=example,dc=org` |                    |
+   | `Group search`        | The filter used to search for required group.                                                                                                                                                                                                                                                                                    | `dc=example, dc=org`                                                                                    |                    |
+   | `Default group`       | A Controller group assigned to a user that has logged in via LDAP. Mutually exclusive with `ldap_group_mappings` section.                                                                                                                                                                                                        | `Monitoring`                                                                                            |                    |
+   | `Group type`          | The type of group used to search through LDAP. `NestedActiveDirectoryGroupType` and `GroupOfNames` are supported if anything other than `NestedActiveDirectoryGroupType` it will default to `GroupOfNames`                                                                                                                       | `NestedActiveDirectoryGroupType`                                                                        |                    |
+   | `LDAP group mappings` | A section that can be used to control authorisation through LDAP groups. Configure `group_search` (and don’t use `default group`). In the example, any user that belongs to the LDAP group `MK_Configuration` will be given the privileges for the Controller group `Configuration`.                                             | `LDAP group`                                                                                            | `Controller group` |
+   | `MK_Admin`            | `Admin`                                                                                                                                                                                                                                                                                                                          |                                                                                                         |                    |
+   | `MK_Configuration`    | `Configuration`                                                                                                                                                                                                                                                                                                                  |                                                                                                         |                    |
+   | `MK_Monitoring`       | `Monitoring`                                                                                                                                                                                                                                                                                                                     |                                                                                                         |                    |
+
+4. Run the script:
+
+   ```
+   /opt/mediakind/utility/bin/controller/add-ldaps-server.sh
+   ```
+
+Running the script will restart the required containers.

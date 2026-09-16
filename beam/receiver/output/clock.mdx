@@ -1,0 +1,57 @@
+---
+title: Clock reference
+sidebarTitle: Clock reference
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Prerequisites for using an External sync
+
+* The studio feed must be of the same frequency as the video service being decoded by the receiver.
+* If multiple services are being decoded they must all be of the same frequency:
+  * 50 Hz (field timing for interlaced or frame timing for progressive)
+  * 59.94 Hz (field timing for interlaced or frame timing for progressive)
+
+## Contribution decoder
+
+The Beam server supports an external sync input BNC (located on the rear of the unit).
+This allows you to select one of the following options:
+
+* **Free running:** uses an internally generated reference clock.
+* **External sync:** synchronize the unit to either a reference 10MHz studio reference clock so that the output video (either in UHD, HD or SD) aligns with the studio feed.
+
+<Warning>
+  The Beam server automatically detects the type of external-sync applied and attempts to lock the SDI output to the external reference supplied. **If the unit detects a signal mismatch** then frame sync will not be acquired and the unit will continue to run using its own internal sync.
+</Warning>
+
+## Configure the clock reference
+
+To configure the clock reference, follow these steps:
+
+1. From the **Home** page, select the **RECEIVER** item from the required feed then click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" />.
+
+2. Select the **Clock reference** format required for the SDI output.\
+   Possible options:
+
+   * **Free running**
+   * **External sync** (External sync requires a specific cable installation, see Installation Guide).
+
+<Info>
+  For further information on options, see [SDI output parameters and status](/beam/receiver/parameters#sdi-output-parameters-and-status).
+</Info>
+
+## Configure the external sync offset
+
+The server has been set to **External sync** with a valid reference studio clock applied to the Sync input. The playout timing of each SDI output frame can be adjusted (advanced or delayed) in single pixel increments relative to the external frame sync.
+
+<Info>
+  **External sync** requires a specific cable installation (see Quick Start Guide).
+</Info>
+
+1. From the **Home** page, select the **RECEIVER** item from the required feed then click <img src="/icons/ui/edit.svg" alt="Edit" className="mk-ui-icon" width="16" height="16" />.
+
+2. From the **Parameters** section, select to **Output** tab.
+
+   ![view clock reference output cp rx1](/rx1-img/view_clock_reference_output_cp_rx1.png)
+
+3. Enter the offset required in pixels to be applied in the **External sync offset** field.

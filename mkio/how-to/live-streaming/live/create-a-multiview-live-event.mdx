@@ -1,0 +1,77 @@
+---
+title: Create a multiview live event
+description: Create a multiview live event by assigning sources to a layout, then configure recording, viewer window, schedule, and playback.
+sidebarTitle: Create a multiview event
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A multiview live event presents several sources in a single output. Choose a layout first, then assign a source to each tile. The event uses one encoding profile, recording location, and viewer window for the composed output.
+
+## Prerequisites
+
+* The required sources created in **Live** > **Sources**.
+* An encoding profile and storage option available in the Live interface.
+
+## Plan the layout
+
+The layout picker shows the tile arrangement before you add sources. Select a layout that gives every required source a tile, then assign the sources in the order you want them displayed. The creation page provides layouts for two, three, and four tiles.
+
+Create all the required sources before you open this page. This keeps the layout assignment step focused on choosing the right source for each tile rather than interrupting event creation to configure ingest.
+
+For API configuration of multiview inputs and composition, see [Multiview](/api-guides/how-to/live/multiview) and [Live API inputs](/api-guides/how-to/live/core-concepts/inputs).
+
+## Create the multiview event
+
+1. Go to **Live**.
+2. Select **New live**.
+3. Select **Create a multiview event**.
+4. Enter a value in **Name**.
+5. Under **Layout**, select the layout that has the tiles you need. The available layout cards show the tile arrangement before you assign a source.
+6. In each tile, select **Add source** and choose the source to assign to that tile. Before creation, select **Replace** to choose a different source or **Remove** to clear the tile.
+7. Under **Encoding profile**, select the output profile for the composed multiview stream.
+8. Under **Storage**, select where to save recorded content.
+9. Under **Window length**, select how far back viewers can watch.
+10. Optionally enable **Schedule start and stop**, then enter the event dates and times.
+11. To begin as soon as the event is created, enable **Start event immediately after creation**. Leave it disabled when you want to confirm the layout and source assignments before starting.
+12. Select **Create**.
+
+![The Create a multiview live event page with the two-tile layout selected and two SRT Listener sources assigned.](/_machine-assets/c0b37c612369d973643020a93da087298b7b2d871070923177419e558d25f08d.png)
+
+For API options that control live event resources, sources, and encoding configuration, see [Manage Live resources](/api-guides/how-to/live/manage-live) and [Live templates](/api-guides/how-to/live/core-concepts/templates).
+
+## Start and verify the event
+
+If you did not enable **Start event immediately after creation**, open the new event and select **Start**. The Live interface shows **Event is running** when it is running. On **Overview**, the source list and player show the assigned inputs and the composed multiview output.
+
+Check each assigned source in **Live** > **Sources**. **Active** means a source is in use. Verify the composed picture as well: every tile should show its expected source and update as that source changes.
+
+![A running two-camera multiview event with two sources and the composed output in the player.](/_machine-assets/a76b64332bc7afd013a77846e8fd95dd11d51bc15406cb0d5c1bd9403951aa7e.png)
+
+For API monitoring options, see [Monitor live resources](/api-guides/how-to/live/monitor-live).
+
+## Configure playback
+
+Open **Settings** > **Streaming configuration** to manage the event's **Streaming locators**. Follow [Create a streaming locator](/mkio/how-to/live-streaming/live/create-a-live-event#create-a-streaming-locator), then start the streaming endpoint before you expect playback to work.
+
+<Warning>
+  **Start the streaming endpoint**
+
+  The multiview player cannot play the output until the streaming endpoint is running.
+</Warning>
+
+[Publish content for streaming](/mkio/how-to/content-delivery-publishing/stream-content) explains streaming endpoints and locators.
+
+For locator and streaming endpoint automation, see [Publishing with the Media API](/api-guides/how-to/media/publishing).
+
+## Verify playback and finish the test
+
+Follow [Copy a playback URL and verify the stream](/mkio/how-to/live-streaming/live/create-a-live-event#copy-a-playback-url-and-verify-the-stream). Check every tile and the expected audio in the composed output. A working tile does not prove that the other sources are receiving media.
+
+When testing is complete, follow [Finish a test](/mkio/how-to/live-streaming/live/create-a-live-event#finish-a-test) to stop the event and any delivery resources dedicated to the test.
+
+## What comes next
+
+Use [Troubleshoot Live playback](/mkio/how-to/live-streaming/live/troubleshoot-live-playback) if a source is inactive or the player cannot load playback.
+
+To automate the same workflow, follow the [Multiview walkthrough](/api-guides/how-to/live/multiview/multiview-walkthrough). Use [Manage templates](/api-guides/how-to/templates/manage-templates) when you need to create or adjust the encoding and composition templates that the Live API resources reference.

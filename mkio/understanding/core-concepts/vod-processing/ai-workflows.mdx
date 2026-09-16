@@ -1,0 +1,34 @@
+---
+title: AI workflows
+description: Understand the MK.IO workflows for VOD transcription, translation, and dubbing.
+sidebarTitle: AI workflows
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO processing workflows can generate transcription, translation, and dubbed-audio outputs for on-demand media. These workflows use transforms and jobs alongside the assets in your project.
+
+## AI pipelines and models
+
+An **AI pipeline** is a collection of operations that MK.IO performs against the content. It identifies the model to run, where to write the generated output, and the arguments required by that workflow, such as a source language or expected phrases.
+
+A **model** describes a supported operation, including its input formats, output formats, and configurable arguments.
+
+## Transcription and translation
+
+Transcription and translation transforms generate subtitle outputs from an audio track. The transform defines the source language and up to 25 target languages, while a job selects the input content and output asset.
+
+* Use [VOD transcription and translation](/mkio/how-to/ai-features/vod-transcription-and-translation-transforms) for the workflow.
+* Use [Audio speech transcription](/mkio/reference/encoding-transform-presets/audio-speech-transcription) to look up supported locales and transform properties.
+
+## VOD dubbing
+
+The VOD dubbing workflow generates alternate-language audio, then uses track insertion transforms to add those files to the encoded video asset.
+
+* Use [Multi-language VOD dubbing](/mkio/how-to/ai-features/multi-language-vod-dubbing) for the end-to-end workflow.
+* If the source asset uses the legacy HSS format, first [convert the asset to MP4v4](/mkio/how-to/ai-features/convert-hss-for-vod-dubbing).
+* Use [Track insertion transforms](/mkio/reference/encoding-transform-presets/add-a-track-to-a-vod-asset) to look up track insertion behavior.
+
+## API automation
+
+The portal guides link to the relevant Media API requests where a workflow requires API configuration. For transform and job operations, also use the [Transforms and jobs API Guide](/api-guides/how-to/media/transforms-and-jobs) and the [Media API Reference](/api-reference/media-api).

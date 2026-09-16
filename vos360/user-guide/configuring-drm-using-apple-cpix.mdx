@@ -1,0 +1,27 @@
+---
+title: Configuring DRM using Apple CPIX
+robots: noindex, nofollow
+---
+
+1. Navigate to the **Scrambling** app > **DRM** tab > **System** tab.
+
+2. Click **+System** to create new system.
+
+3. Configure DRM system settings:
+
+   * **DRM System Name**
+
+   * **Encryption Interface**: Select the "Apple CPIX".
+
+   * Click the **Resources** button to add resources and select the "HLS" Packaging Type.\
+     **Important:**
+
+     * Set up one resource per each service output.
+
+     * Use the destination profile which is correctly set up for encryption.
+
+   * **KMS URL**: Use the HTTPS protocol for the Key Management Server URL.
+
+4. Use a destination profile with HLS Package selected and Encryption Method configured as "FairPlay".
+
+5. Start a service with the DRM add-on enabled and appropriate DRM settings configured.

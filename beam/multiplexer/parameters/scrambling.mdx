@@ -1,0 +1,149 @@
+---
+title: Scrambling Tab
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This tab allows to enable scrambling via external Eis.
+
+By default, scrambling via Eis is disabled for multiplexing services.
+
+![Mux Scrambling Tab](/_machine-assets/7b43af7d7dd3dfc781658ba8d4feffe63342a25c57485127ac102ffc240ffacd.png)
+
+To enable scrambling via External Eis tick the corresponding box.
+
+<Info>
+  Existing SCGs will be disabled on any output where external Eis is enabled.
+</Info>
+
+## Scrambling Group Properties
+
+These settings are only for advanced configurations. Default values should be suitable for the majority of use cases.
+
+![Mux Scrambling Tab scrambling group](/_machine-assets/2356db3109f82382c395cf089cc2dff4a8a6d5f601fca3e0d81e62033fd5bfb4.png)
+
+| Parameter name                                           | Description                                                                                                  | Possible values                                                                                                                          |
+| :------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+| Minimum bitrate modifier                                 | Controls the next minimum bitrate for each statmux interval. Lower values results in faster bitrate decrease | Floating point values between 0.1 and 1                                                                                                  |
+| Scrambling Algorithm\*                                   | Chosen Scrambling Algorithm Version. Changing it on a running service requires a service restart.            | Dropdown menu: CSA V1 48bits, CSA V2 64bits, BISS Mode1, BISS Mode2, CISSA V1 TS Level, CISSA V1 PES Level, AES-ECB, BISS CA, Director 6 |
+| Behaviour until all required ECMs for SCG first received | Choose how to output until all scrambling information is available.                                          | Dropdown menu: Component(s) in SGC not present in output TS, Component(s) in SCG in-the-clear inn output TS                              |
+
+## Scrambling Vendors Parameters
+
+To add information about a vendor, click on the corresponding **+ Add Vendor** button.
+
+![Mux Scrambling Tab scrambling vendors](/_machine-assets/6a5392e77f09bf1687cb8f680f0f85222cff61885d1c4a55ea5f6cb043a41426.png)
+
+| Parameter name | Description                                                                                                                                                                                                                         | Possible values             |
+| :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------- |
+| Name\*         | Name of the vendor. When the configuration is saved, the name will appear as title of the vendor panel. You can use the arrow on the right to collapse or expand the panel for easier management of multiple vendors configuration. | String of max 32 characters |
+
+Details about the parameters available for the different tabs in the following paragraphs.
+
+### ECMG parameters
+
+![Mux Scrambling Tab scrambling vendors ECMG](/_machine-assets/b009f2bf9598571e52ac562cc23a36a80b4f508bb5e022ce240c7349afb8c4a6.png)
+
+| Parameter name           | Description                                                                  | Possible values                   |
+| :----------------------- | :--------------------------------------------------------------------------- | :-------------------------------- |
+| Network interface        | Name of network interface used for the ECMG communications                   | String of max 32 characters       |
+| Primary address\*        | An IPv4 address for the primary ECMG                                         | IPv4 address string               |
+| Primary port\*           | Port number for the primary ECMG                                             | 0 to 65535                        |
+| Secondary address        | An IPv4 address for the optional secondary ECMG                              | IPv4 address string               |
+| Secondary port           | Port number for the optional secondary ECMG                                  | 0 to 65535                        |
+| Super CAS ID\*           | As per ETSI 103197 DVB Simulcrypt. Hexadecimal format.                       | From 0 to 4294967295              |
+| CA descriptor location\* | The location in the PMT for the CA descriptor that describes the ECM streams | Dropdown menu: Service, Component |
+
+#### ECMG Advanced Settings
+
+These settings are only for advanced configurations. Default values should be suitable for the majority of use cases.
+
+![Mux Scrambling Tab scrambling vendors ECMG advanced](/_machine-assets/5204469aa1cb3a4cd6f7f8a47bbbe4252941661090f85b673b910cf877625f13.png)
+
+| Parameter name             | Description                                                                                                                                                                     | Possible values             |
+| :------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------- |
+| EIS ECM ID To PID Mappings | Comma-separated list of ECM IDs to PIDs. The ID is the field position unless specified. Example: 200,201,3:400,5-10:500 would map ID->PID: 0->200, 1->201, 3->400, \[5,10]->500 | String of max 32 characters |
+
+### EMMG parameters
+
+![Mux Scrambling Tab scrambling vendors EMMG](/_machine-assets/83441b69878045ebae961b2358c46935ddc3d6bc95c6b58cde26b067ace8498e.png)
+
+| Parameter name         | Description                                                                               | Possible values               |
+| :--------------------- | :---------------------------------------------------------------------------------------- | :---------------------------- |
+| Network interface      | Name of network interface used for the CA communications                                  | String of max 32 characters   |
+| TCP Port\*             | TCP port for EMMG traffic                                                                 | 0 to 65535                    |
+| Destination UDP port\* | Destination UDP port for EMMG traffic                                                     | 0 to 65535                    |
+| Client ID\*            | As per ETSI 103197 DVB Simulcrypt. Hexadecimal format.                                    | From 0 to 4294967295          |
+| Automatic              | Will accept the first connection request from the EMMG regardless of Channel or Stream ID | Tick box, checked by default. |
+| Input Bitrate Limit\*  | Limit to the incoming bitrate (only present when *Automatic* is not checked)              | From 1 to 4294967295          |
+
+#### EMMG Streams Configuration Settings
+
+If the **Automatic** tickbox is unchecked the following table will appear, which will allow to add and remove EMMG streams configurations.
+
+![Mux Scrambling Tab scrambling vendors EMMG stream config](/_machine-assets/1444abb4aa03ddc448c7bbcfcfa577fab8a83f0e8b24ccb2d482e1affa0f2137.png)
+
+For each EMM stream the following parameters are available:
+
+| Parameter name      | Description                                              | Possible values             |
+| :------------------ | :------------------------------------------------------- | :-------------------------- |
+| Name                | Name of network interface used for the CA communications | String of max 32 characters |
+| Channel             | Channel identifier as per ETSI 103197 DVB Simulcrypt     | From 0 to 4294967295        |
+| Stream              | Stream ID as per ETSI 103197 DVB Simulcrypt              | From 0 to 4294967295        |
+| Input Bitrate Limit | Limit to the incoming bitrate                            | From 1 to 4294967295 ????   |
+
+#### EMMG Advanced Settings
+
+These settings are only for advanced configurations. Default values should be suitable for the majority of use cases.
+
+![Mux Scrambling Tab scrambling vendors EMMG advanced](/_machine-assets/c9969d18368c685630109045ac51cfb17f129366c09643bde6dc1c1dfb37f94b.png)
+
+| Parameter name         | Description                                                                                                           | Possible values          |
+| :--------------------- | :-------------------------------------------------------------------------------------------------------------------- | :----------------------- |
+| Ingest buffer duration | At steady state how long EMMs should sit in the ingest buffer before being played. This is for smoothing the playout. | from 0.001 to 30 seconds |
+
+### ECMG Override parameters
+
+![Mux Scrambling Tab scrambling vendors ECMG override](/_machine-assets/9e2f1587b847c6a22c5ce254208710a1878196b3e9ddf84ced111acde6ba3cf8.png)
+
+| Parameter name                 | Description                                                                                                                                                                         | Possible values               |
+| :----------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------- |
+| Override ECMG transition delay | When this tick box is enabled, the subsequent parameters **Transition delay start** and **Transition delay stop** are used to override the transition delay information in the ECMG | Tick box, disabled by default |
+| Transition delay start         | Transition delay start in ms                                                                                                                                                        | From -6000 to 6000 ms         |
+| Transition delay stop          | Transition delay stop in ms                                                                                                                                                         | From -6000 to 6000 ms         |
+| ECM delay start/stop           | When this tick box is enabled, the subsequent parameters *ECM delay start*and *ECM delay stop* are used to override the ECM delay information                                       | Tick box, disabled by default |
+| ECM delay start                | ECM delay start in ms                                                                                                                                                               | From -6000 to 6000 ms         |
+| ECM delay stop                 | ECM delay stop in ms                                                                                                                                                                | From -6000 to 6000 ms         |
+| AC delay start/stop            | When this tick box is enabled, the subsequent parameters *AC delay start*and *AC delay stop* are used to override the AC delay information                                          | Tick box, disabled by default |
+| AC delay start                 | AC delay start in ms                                                                                                                                                                | From -6000 to 6000 ms         |
+| AC delay stop                  | AC delay stop in ms                                                                                                                                                                 | From -6000 to 6000 ms         |
+| Override Max Comp Time         | When this tick box is enabled, the subsequent parameter *Max Comp Time* is used to override the value of Max Comp Time                                                              | Tick box, disabled by default |
+| Max Comp Time                  | The maximum processing time for ECM CW provisioning. If increasing ensure CP duration is still greater than the new value.                                                          | From 1 to 60000 ms            |
+
+### PDG parameters
+
+![Mux Scrambling Tab scrambling vendors PDG](/_machine-assets/d06f84de63753691db33f2799f23d86e8ccc77987bafa3200cff1d688ef5ea9f.png)
+
+| Parameter name        | Description                                                                              | Possible values               |
+| :-------------------- | :--------------------------------------------------------------------------------------- | :---------------------------- |
+| Network interface     | Name of network interface used for the PDG communications                                | String of max 32 characters   |
+| TCP Port\*            | TCP port for PDG traffic                                                                 | 0 to 65535                    |
+| UDP port\*            | Destination UDP port for PDG traffic                                                     | 0 to 65535                    |
+| Client ID\*           | As per ETSI 103197 DVB PDG. Hexadecimal format.                                          | From 0 to 4294967295          |
+| Automatic             | Will accept the first connection request from the PDG regardless of Channel or Stream ID | Tick box, checked by default. |
+| Input Bitrate Limit\* | Limit to the incoming bitrate (only present when **Automatic** is not checked)           | From 1 to 4294967295          |
+
+#### PDG Streams Configuration Settings
+
+If the **Automatic** tickbox is unchecked the following table will appear, which will allow to add and remove PDG streams configurations.
+
+![Mux Scrambling Tab scrambling vendors PDG stream config](/_machine-assets/8eeca62b03fff70097128a74f18efd5cce4c2a258f70faddbaa7767bfc8d3564.png)
+
+For each PDG stream the following parameters are available:
+
+| Parameter name      | Description                                              | Possible values             |
+| :------------------ | :------------------------------------------------------- | :-------------------------- |
+| Name                | Name of network interface used for the CA communications | String of max 32 characters |
+| Channel             | Channel identifier as per ETSI 103197 DVB PDG            | From 0 to 4294967295        |
+| Stream              | Stream ID as per ETSI 103197 DVB PDG                     | From 0 to 4294967295        |
+| Input Bitrate Limit | Limit to the incoming bitrate                            | From 1 to 4294967295        |

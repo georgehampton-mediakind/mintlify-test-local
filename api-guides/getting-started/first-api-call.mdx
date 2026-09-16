@@ -1,8 +1,10 @@
 ---
-title: "Make Your First MK.IO API Call and Verify Token Access"
-sidebarTitle: "First API Call"
-description: "Verify your API token and project access by making your first authenticated request to the MK.IO API and interpreting the response."
+title: Your first API call
+description: Call the Media API to list assets in a project and confirm that your token, project name, and base URL are correct.
+sidebarTitle: Your first API call
 ---
+
+<span id="_top" className="mk-legacy-anchor" />
 
 Before you build a larger integration, confirm your setup with one request. The goal is to make a single authenticated call against a project-scoped endpoint, inspect the response, and prove that your token and project access work.
 
@@ -10,9 +12,9 @@ Before you build a larger integration, confirm your setup with one request. The 
 
 You need:
 
-- An MK.IO account with access to at least one project.
-- A personal API token.
-- The name of the project you want to query.
+* An MK.IO account with access to at least one project.
+* A personal API token.
+* The name of the project you want to query.
 
 If you still need a token, follow [Authentication and tokens](/api-guides/getting-started/authentication).
 
@@ -48,8 +50,8 @@ curl -i -X GET "$MKIO_BASE_URL/api/v1/projects/$MKIO_PROJECT/media/assets" \
 
 A successful response is HTTP `200` with a list body. List endpoints return two top-level fields:
 
-- `value`: the returned assets.
-- `supplemental`: list metadata, including `supplemental.pagination` with the record counts.
+* `value`: the returned assets.
+* `supplemental`: list metadata, including `supplemental.pagination` with the record counts.
 
 ```json
 {
@@ -65,22 +67,22 @@ A successful response is HTTP `200` with a list body. List endpoints return two 
 }
 ```
 
-Many MK.IO list endpoints use this same shape, so it is worth recognising now. See [Pagination and filtering](/api-guides/concepts/pagination) for how to page and narrow these responses.
+Many MK.IO list endpoints use this same shape, so it is worth recognising now. See [Pagination and filtering](/api-guides/understanding/pagination) for how to page and narrow these responses.
 
 ## If the call does not succeed
 
 This endpoint returns the platform's standard error responses:
 
-| Status code | Meaning | What to check next |
-| :-- | :-- | :-- |
-| `400` | Bad Request | Recheck the URL, query parameters, and request syntax. |
-| `401` | Unauthorized | Recheck the bearer token and `Authorization` header. |
-| `403` | Forbidden | Recheck that the user has access to the target project and operation. |
-| `404` | Not Found | Recheck the project name and path. |
-| `429` | Too Many Requests | Slow down and retry later. |
-| `500` | Internal Server Error | Record the response `ref` value before retrying or contacting support. |
+| Status code | Meaning               | What to check next                                                     |
+| :---------- | :-------------------- | :--------------------------------------------------------------------- |
+| `400`       | Bad Request           | Recheck the URL, query parameters, and request syntax.                 |
+| `401`       | Unauthorized          | Recheck the bearer token and `Authorization` header.                   |
+| `403`       | Forbidden             | Recheck that the user has access to the target project and operation.  |
+| `404`       | Not Found             | Recheck the project name and path.                                     |
+| `429`       | Too Many Requests     | Slow down and retry later.                                             |
+| `500`       | Internal Server Error | Record the response `ref` value before retrying or contacting support. |
 
-The error body carries `error.code` for programmatic handling, `error.detail` for logs, and `ref` for support follow-up. See [Error handling](/api-guides/concepts/error-handling) for the full model.
+The error body carries `error.code` for programmatic handling, `error.detail` for logs, and `ref` for support follow-up. See [Error handling](/api-guides/understanding/error-handling) for the full model.
 
 ## What this confirms
 
@@ -88,14 +90,6 @@ A successful request proves that your token is valid, your base URL is correct, 
 
 ## Next steps
 
-<CardGroup cols={3}>
-  <Card title="Which API to Use" icon="map" href="/api-guides/getting-started/which-api">
-    Choose the API that owns your workflow.
-  </Card>
-  <Card title="API Overview" icon="book" href="/api-guides/concepts/overview">
-    The patterns shared across the APIs.
-  </Card>
-  <Card title="Build with the Media API" icon="film" href="/api-guides/media/overview">
-    Move into storage, assets, transforms, jobs, and publishing.
-  </Card>
-</CardGroup>
+* [Which API to use](/api-guides/getting-started/which-api): choose the API that owns your workflow.
+* [API overview](/api-guides/understanding/overview): the patterns shared across the APIs.
+* [Build with the Media API](/api-guides/how-to/media): move into storage, assets, transforms, jobs, and publishing.

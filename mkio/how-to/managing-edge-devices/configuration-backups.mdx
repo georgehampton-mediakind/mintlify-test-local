@@ -1,0 +1,101 @@
+---
+title: Configuration backups
+description: How to create, restore, and manage configuration backups for Beam devices in MK.IO.
+sidebarTitle: Configuration backups
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use configuration backups to save and restore the services configuration of a Beam device. Backup and restore only apply to services created on the device. Backups are stored as `.tar.gz` files in cloud storage and can optionally include the device's Asset Management service configuration.
+
+## Where to find it
+
+To view backups for a specific device:
+
+1. Go to **Devices**, and select a device.
+2. Click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" /> on the device.
+3. Select **Configuration backups**.
+
+To view backups across all devices, under one view
+
+1. go to **Devices**
+2. Click **All config backups** button.
+
+## Create a backup
+
+1. Open the device's **Configuration backups** page
+2. Click **Backup Now** button.
+3. The **Backup name** field is pre-filled with `{devicename}-{datetime}`. Edit it or keep it as-is.
+4. To include the device's Asset Management service configuration, check **Backup asset file**.
+   <Warning>
+     Configuration backup does not include the asset files, only the Asset Management service's configuration.
+   </Warning>
+5. Click **Create**.
+
+<Info>
+  You can create a maximum of 100 backups per project. Delete older backups before creating new ones if the limit is reached.
+</Info>
+
+<Info>
+  You can create only one backup per device at a time. A second request while one is in progress returns a 429 error.
+</Info>
+
+## Restore a backup
+
+### Restore to the current device
+
+Available only from a device-specific **Configuration backups** page.
+
+1. Open **Configuration backups** for the device
+2. **Configuration backups** page lists all backups for the device
+3. Click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" /> on the backup you want to restore
+4. Click **Restore** in the menu.
+5. To restore the Asset Management service configuration, check **Restore asset file** (only applies if the backup includes it).
+6. Click **Restore** to confirm.
+
+<Warning>
+  Restoring a backup removes all services on the device and replaces them with the backed-up configuration. This cannot be undone. Consider creating a new backup before you restore.
+</Warning>
+
+### Restore to a different device
+
+1. Open **Configuration backups** page
+2. Click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" /> on the backup row you want to restore
+3. Click **Restore to devices...**.
+4. To restore the Asset Management service configuration, check **Restore asset file**.
+5. Select one or more target devices.
+6. Click **Restore**.
+
+MK.IO restores the backup to all selected devices simultaneously. If only some devices fail, the successful restores are still applied and an error is shown for the failed ones.
+
+## Rename a backup
+
+1. On a backup row, click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" />
+2. Click **Rename backup**.
+3. Enter a new **Backup Name**.
+4. Click **Save**.
+
+## Download a backup
+
+1. On a backup row, click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" />
+2. Click **Download backup**.
+3. The `.tar.gz` file downloads to your local machine. You can re-upload downloaded backups to the same or a different project.
+
+## Upload a backup
+
+1. Go to device's **Configuration backups** page
+2. Click **Upload** button.
+3. In the **Upload backup file** drawer, drag and drop or select a `.tar.gz` backup file previously downloaded from MK.IO.
+4. Click **Upload**.
+
+MK.IO verifies the file's signature, customer ID, and metadata before accepting it. Once uploaded, the backup appears in the list and can be restored like any other.
+
+## Delete a backup
+
+1. On a backup row, click <img src="/icons/ui/ellipsis.svg" alt="Ellipsis" className="mk-ui-icon" width="16" height="16" />
+2. Click **Delete backup**.
+3. Click **Delete** to confirm.
+
+<Warning>
+  Deletion is permanent. There is no recovery mechanism.
+</Warning>

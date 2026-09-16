@@ -1,359 +1,425 @@
 ---
-title: "MK.IO Beam Reception: Full Technical Specifications"
-sidebarTitle: "Tech Specs"
-description: "Technical specifications for MK.IO Beam reception workflows — supported input formats, satellite standards, decryption systems, and hardware requirements."
+title: Tech Specs
+sidebarTitle: Reference
 ---
 
-This page lists the complete technical specifications for MK.IO Beam reception workflows, covering compressed input formats, satellite hardware, video and audio decoding, ancillary data, transcoding, compressed and uncompressed outputs, content security, ad insertion, and monitoring options.
+<span id="_top" className="mk-legacy-anchor" />
 
 ## Compressed Input
 
-### IP Input
+### IP input
 
-- **Type:** IP (IGMPv3-based redundancy and dual multicast redundancy)
-- **Protocols:** MPEG Transport Stream (SPTS, MPTS), RTP / UDP, RTMP, SMPTE ST 2022-7
-- **Bitrate:** Constant Bitrate (CBR)
-- **Error Correction:** ProMPEG FEC
+* **Type:** IP (IGMPv3-based redundancy and dual multicast redundancy)
+* **Protocols:** MPEG Transport Stream (SPTS, MPTS), RTP / UDP, RTMP, SMPTE ST 2022-7
+* **Bitrate:** Constant Bitrate (CBR)
+* **Error Correction:** ProMPEG FEC
 
-### Reliable Transport
+### Reliable transport
 
-- **Input:** IP-based
-- **Protocols:** SRT, RIST, and Zixi
+* **Input:** IP based
+* **Protocols:** SRT, RIST and Zixi
 
-**SRT and RIST input:**
-- Carriage of UDP or RTP streams over the SRT protocol
-- SRT listener or caller mode
-- RIST sender mode
-- RIST listener mode
-
-**Zixi input:**
-- Zixi sender
-- Zixi feeder or Zixi Receiver mode
-
-### Satellite Input
-
-- **Standards:** DVB-S, DVB-S2, DVB-S2X
-- **Hardware requirements:** Requires one or more of the following cards
-
-<Accordion title="2-Port Satellite Demodulator Option Card with 3G-SDI/ASI Output (Dektec DTA-2127)">
-  MediaKind marketing code: **MKP/HWO/DEMODSDI** (Dektec DTA-2127 DVB-S2X Quad Receiver with 3G-SDI/ASI Output)
-
-  The Dektec DTA-2127 option card has 2 × RF input ports. MK.IO Beam currently supports configuring one tuner/demodulator per RF input.
-
-  - **Frequency range:** L-band (950–2150 MHz)
-  - **Standards:** DVB-S, DVB-S2, DVB-S2X
-  - **Modulation schemes:** QPSK, 8PSK, 16APSK, 32APSK
-  - **Connector:** 2 × F-type 75 ohm — each connector allows 1× independent tuner/demodulator powered by a single LNB control
-  - Long FEC Frame only
+<Accordion title="SRT and RIST input">
+  - Carriage of UDP or RTP streams over the SRT protocol
+  - SRT listener or caller mode
+  - RIST sender mode
+  - RIST listener mode
 </Accordion>
 
-<Accordion title="4-Port Satellite Demodulator Option Card (Digital Devices SX8)">
-  MediaKind marketing code: **MKP/HWO/PCI/SAT/DEMOD** (Digital Devices SX8 Satellite Demod)
+<Accordion title="Zixi input">
+  * Zixi sender
+  * Zixi feeder or Zixi Receiver mode
+</Accordion>
 
-  The Digital Devices SX8 is only available as a full-height PCIe card and is therefore limited to servers such as the C-series.
+### Satellite input
 
-  - **Frequency range:** L-band (950–2150 MHz)
-  - **Standards:** DVB-S, DVB-S2, DVB-S2X
-  - **Modulation schemes:** QPSK, 8PSK, 16APSK, 32APSK, 64APSK
-  - **Connector:** 4 × F-type 75 ohm — each connector allows 2× independent tuners/demodulators that share a single LNB control
+* **Standards:** DVB-S, DVB-S2, DVB-S2X
+* **Hardware requirements:** Requires one or more of the following cards
 
+<Accordion title="2-port satellite demodulator option card with 3G-SDI/ASI output (Dektec DTA-2127)">
+  MediaKind marketing code:
+
+  * **MKP/HWO/DEMODSDI** (Dektec DTA-2127 DVB-S2X Quad Receiver with 3G-SDI/ASI Output)
+
+  <Info>
+    The Dektec DTA-2127 option card has 2 x RF input ports. Currently MK.IO Beam only supports
+    configuring one tuner/demodulator per RF input.
+  </Info>
+
+  Features:
+
+  * **Frequency range:** L-band (950 – 2150 MHz)
+  * **Standards:** DVB-S, DVB-S2, DVB-S2X
+  * **Modulation schemes:** QPSK, 8PSK, 16APSK and 32APSK
+  * **Connector:** 2 x F-type 75 ohm
+    * Each connector allows 1x independent tuner/demodulator powered by a single LNB control
+  * Long FEC Frame only
+</Accordion>
+
+<Accordion title="4-port satellite demodulator option card (Digital Devices SX8)">
+  MediaKind marketing code:
+
+  * **MKP/HWO/PCI/SAT/DEMOD** (Digital Devices SX8 Satellite Demod)
+
+  <Info>
+    The Digital Devices SX8 is only available as a full-height PCIe card and is therefore limited
+    to servers such as the C-series.
+  </Info>
+
+  Features:
+
+  * **Frequency range:** L-band (950 – 2150 MHz)
+  * **Standards:** DVB-S, DVB-S2, DVB-S2X
+  * **Modulation schemes:** QPSK, 8PSK, 16APSK, 32APSK and 64APSK
+  * **Connector:** 4 x F-type 75 ohm
+    * Each connector allows 2x independent tuners/demodulators that share a single LNB control
+</Accordion>
+
+<Warning>
   Mixing both types of satellite demodulator cards within the same server is not supported.
+</Warning>
+
+### ASI input
+
+* **Standards:** DVB-ASI
+* **Hardware requirements:** Requires one or more of the following cards
+
+<Accordion title="4-port ASI/SDI option card (Dektec DTA-2174B)">
+  MediaKind marketing code:
+
+  * **MKP/HWO/PCI/SDI/DTA** (Dektec 2174B SDI/ASI)
+
+  Features:
+
+  * **Port configurations:** 4x ASI input/output
+  * **Connector:** micro BNC 75 ohms
 </Accordion>
 
-### ASI Input
+<Accordion title="8-port ASI/SDI option card (Dektec DTA-2178)">
+  MediaKind marketing code:
 
-- **Standards:** DVB-ASI
-- **Hardware requirements:** Requires one or more of the following cards
+  * **MKP/HWO/PCI/SDI/8** (Dektec 2178 SDI/ASI)
 
-<Accordion title="4-Port ASI/SDI Option Card (Dektec DTA-2174B)">
-  MediaKind marketing code: **MKP/HWO/PCI/SDI/DTA** (Dektec 2174B SDI/ASI)
+  Features:
 
-  - **Port configurations:** 4× ASI input/output
-  - **Connector:** micro BNC 75 ohms
+  * **Port configurations:** 8x ASI input/output
+  * **Connector:** micro BNC 75 ohms
 </Accordion>
 
-<Accordion title="8-Port ASI/SDI Option Card (Dektec DTA-2178)">
-  MediaKind marketing code: **MKP/HWO/PCI/SDI/8** (Dektec 2178 SDI/ASI)
+### Input redundancy
 
-  - **Port configurations:** 8× ASI input/output
-  - **Connector:** micro BNC 75 ohms
+* **Dual source redundancy:** Active Passive (one-hit); Active Active (one-hit); Active Active
+  (switch on failure)
+  * Supported across input types e.g. Primary satellite input, Secondary (Backup) IP input
+* **IP redundancy protocols:** SMPTE ST 2022-7 Seamless protection switching
+
+## Video decoding
+
+* **Video codecs:** MPEG-2, H.264, HEVC, JPEG-XS
+* **Supported resolutions:** 480i, 576i, 720p, 1080i, 1080p, 2160p
+* **Chroma:** 4:2:0 and 4:2:2
+* **Bit depth:** 8-bit and 10-bit (codec-dependent)
+
+<Accordion title="Video formats and decoding standards" defaultOpen={true}>
+  | Resolution | Frame Rate                                    | Chroma       | MPEG-2 | H.264 | HEVC | JPEG-XS<br />(4:2:2 only) |
+  | :--------- | :-------------------------------------------- | :----------- | :----- | :---- | :--- | :------------------------ |
+  | 2160p      | 23.98, 24,<br />25, 29.97,<br />50, 59.94 fps | 4:20 / 4:2:2 |        |       | ✔    | ✔                         |
+  | 1080p      | 50, 59.94 fps                                 | 4:20 / 4:2:2 | ✔      | ✔     | ✔    | ✔                         |
+  | 1080i      | 25, 29.97 fps                                 | 4:20 / 4:2:2 | ✔      | ✔     | ✔    | ✔                         |
+  | 720p       | 50, 59.94 fps                                 | 4:20 / 4:2:2 | ✔      | ✔     | ✔    | ✔                         |
+  | 576i       | 25 fps                                        | 4:20 / 4:2:2 | ✔      | ✔     | ✔    |                           |
+  | 480i       | 29.97 fps                                     | 4:20 / 4:2:2 | ✔      | ✔     | ✔    |                           |
 </Accordion>
 
-### Input Redundancy
+<Accordion title="Full video width scaling">
+  Horizontally subsampled video is automatically rescaled to full frame width, as detailed below.
+  Supported for all video codecs listed above.
 
-- **Dual source redundancy:** Active Passive (one-hit); Active Active (one-hit); Active Active (switch on failure)
-  - Supported across input types, e.g., Primary satellite input, Secondary (Backup) IP input
-- **IP redundancy protocols:** SMPTE ST 2022-7 seamless protection switching
+  | Input resolution | Output resolution | Expected sample aspect ratio |
+  | :--------------- | :---------------- | :--------------------------- |
+  | 1440 x 1080      | 1920 x 1080       | 4:3                          |
+  | 1280 x 1080      | 1920 x 1080       | 3:2                          |
+  | 960 x 1080       | 1920 x 1080       | 2:1                          |
+  | 960 x 720        | 1280 x 720        | 4:3                          |
+  | 640 x 720        | 1280 x 720        | 2:1                          |
+</Accordion>
 
----
+<Accordion title="Video down-conversions">
+  Supported down-conversions:
 
-## Video Decoding
+  * 2160p > 1080p, 1080i, 720p
+  * 1080p > 1080i, 720p
+  * 1080i > 720p
+</Accordion>
 
-- **Video codecs:** MPEG-2, H.264, HEVC, JPEG-XS
-- **Supported resolutions:** 480i, 576i, 720p, 1080i, 1080p, 2160p
-- **Chroma:** 4:2:0 and 4:2:2
-- **Bit depth:** 8-bit and 10-bit (codec-dependent)
+<Accordion title="Video up-conversions">
+  Supported up-conversions:
 
-### Video Formats and Decoding Standards
+  * 1080i > 1080p
+  * 720p > 1080i
+</Accordion>
 
-| Resolution | Frame Rate | Chroma | MPEG-2 | H.264 | HEVC | JPEG-XS (4:2:2 only) |
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| 2160p | 23.98, 24, 25, 29.97, 50, 59.94 fps | 4:2:0 / 4:2:2 | | | ✔ | ✔ |
-| 1080p | 50, 59.94 fps | 4:2:0 / 4:2:2 | ✔ | ✔ | ✔ | ✔ |
-| 1080i | 25, 29.97 fps | 4:2:0 / 4:2:2 | ✔ | ✔ | ✔ | ✔ |
-| 720p | 50, 59.94 fps | 4:2:0 / 4:2:2 | ✔ | ✔ | ✔ | ✔ |
-| 576i | 25 fps | 4:2:0 / 4:2:2 | ✔ | ✔ | ✔ | |
-| 480i | 29.97 fps | 4:2:0 / 4:2:2 | ✔ | ✔ | ✔ | |
+<Accordion title="HDR to SDR conversions">
+  * **Supported HDR inputs:** PQ10 (HDR10), HLG10
+  * **Output:** SDR BT.709 with tone mapping
+</Accordion>
 
-### Full Video Width Scaling
+## Audio decoding
 
-Horizontally subsampled video is automatically rescaled to full frame width. Supported for all video codecs listed above.
-
-| Input Resolution | Output Resolution | Expected Sample Aspect Ratio |
-| :-- | :-- | :-- |
-| 1440 × 1080 | 1920 × 1080 | 4:3 |
-| 1280 × 1080 | 1920 × 1080 | 3:2 |
-| 960 × 1080 | 1920 × 1080 | 2:1 |
-| 960 × 720 | 1280 × 720 | 4:3 |
-| 640 × 720 | 1280 × 720 | 2:1 |
-
-### Video Down-Conversions
-
-- 2160p > 1080p, 1080i, 720p
-- 1080p > 1080i, 720p
-- 1080i > 720p
-
-### Video Up-Conversions
-
-- 1080i > 1080p
-- 720p > 1080i
-
-### HDR to SDR Conversions
-
-- **Supported HDR inputs:** PQ10 (HDR10), HLG10
-- **Output:** SDR BT.709 with tone mapping
-
----
-
-## Audio Decoding
-
-- **Audio codecs:** MP1L2, AAC, AAC 5.1, HE-AAC v1 & v2, HE-AAC 5.1, Dolby Digital (AC-3) 2.0 & 5.1, Dolby Digital Plus (E-AC-3) 2.0 & 5.1, MPEG-H
-- **Passthrough:** Linear PCM, Dolby E, Dolby ED2, Dolby Digital (AC-3), Dolby Digital Plus (E-AC-3)
-- **Audio sampling rate:** 48 kHz
-- **Audio channels:** Up to 8 stereo pairs per service
-- **Phase Aligned Audio (PAA):** Supported
-
----
+* **Audio codecs:** MP1L2, AAC, AAC 5.1, HE-AAC v1 & v2, HE-AAC 5.1, Dolby Digital (AC-3), 2.0 & 5.1,
+  Dolby Digital Plus (E-AC-3) 2.0 & 5.1, MPEG-H
+* **Passthrough:** Linear PCM, Dolby E, Dolby ED2, Dolby Digital (AC-3), Dolby Digital Plus (E-AC-3)
+* **Audio sampling rate:** 48 kHz
+* **Audio Channels:** Up to 8 stereo pairs per service
+* **Phase Aligned Audio (PAA):** Supported
 
 ## Ancillary Data
 
-- **Closed captions:** CEA-608, CEA-708
-- **Timecode:** VITC
-- **Teletext:** SMPTE 2031, OP-47
-- **Metadata:** AFD/BAR, VANC
-- **Signalling:** SCTE-35 conversion to SCTE-104
+* **Closed captions:** CEA-608, CEA-708
+* **Timecode:** VITC
+* **Teletext:** SMPTE 2031, OP-47
+* **Metadata:** AFD/BAR, VANC
+* **Signalling:** SCTE-35 conversion to SCTE-104
 
----
+## Video transcoding
 
-## Video Transcoding
+### Video encoding
 
-### Video Encoding
+* **Codecs:** MPEG-2, MPEG-4 AVC (H.264), HEVC (H.265)
+* **Chroma:** 4:2:0
+* **Conversions:**
+  * HD to HD or SD
+  * SD to SD
 
-- **Codecs:** MPEG-2, MPEG-4 AVC (H.264), HEVC (H.265)
-- **Chroma:** 4:2:0
-- **Conversions:**
-  - HD to HD or SD
-  - SD to SD
+### Audio encoding
 
-### Audio Encoding
+* **Audio codecs:** MPEG-1 Layer-II, AAC, HE-AAC, HE-AAC v2 1. Dolby Digital® 2.0 / 5.1,
+  Dolby Digital Plus® 2.0, 5.1, Dolby AC-3
+* **Audio channels:** Up to 8 stereo pairs per service.
+* **Passthrough:** Dolby E®, Dolby Digital®, Dolby Digital Plus®, Linear PCM (as SMPTE 302)
+* **Data rate:** From 4.75 kbps to 320 kbps (from 64 to 1024 kbps for DD+).
 
-- **Audio codecs:** MPEG-1 Layer-II, AAC, HE-AAC, HE-AAC v2, Dolby Digital® 2.0/5.1, Dolby Digital Plus® 2.0/5.1, Dolby AC-3
-- **Audio channels:** Up to 8 stereo pairs per service
-- **Passthrough:** Dolby E®, Dolby Digital®, Dolby Digital Plus®, Linear PCM (as SMPTE 302)
-- **Data rate:** From 4.75 kbps to 320 kbps (from 64 to 1024 kbps for DD+)
+## Compressed output
 
----
+* **Transport Stream Passthrough:** IP, ASI (requires multiplexer service), unmodified or decrypted
+* **Protocols:** IP, UDP, RTP, RTMP/RTMPS, ASI
 
-## Compressed Output
-
-- **Transport Stream Passthrough:** IP, ASI (requires multiplexer service), unmodified or decrypted
-- **Protocols:** IP, UDP, RTP, RTMP/RTMPS, ASI
-
-**SRT and RIST output:**
-- Carriage of UDP or RTP streams over the SRT protocol
-- SRT listener or caller mode
-- RIST sender mode
-- RIST listener mode
-
-**Zixi output:**
-- Zixi sender
-- Zixi feeder or Zixi Receiver mode
-
----
-
-## Uncompressed Output
-
-- **Output formats:** SDI, SMPTE ST 2022-6, SMPTE ST 2110
-
-### SDI Output
-
-- **Standards:** SDI, HD-SDI, 3G-SDI, 12G-SDI, Quad-Link 3G-SDI
-- **Video formats:** 480i, 576i, 720p, 1080i, 1080p, 2160p
-- **Hardware requirements:** Requires one or more of the following cards
-
-<Accordion title="4-Port ASI/SDI Option Card (Dektec DTA-2174B)">
-  MediaKind marketing code: **MKP/HWO/PCI/SDI/DTA** (Dektec 2174B SDI/ASI)
-
-  - **Output configurations:**
-    - 4× independent 3G-SDI/ASI input/output
-    - 12G-SDI (Single-link UHD) or Quadrant (Quad-Link 3G-SDI, ST 425-5 Annex B — Square Division) or Interleaved (Quad-Link 3G-SDI, ST 425-5 Two Sample Interleave)
-    - 12G-SDI with 3G-SDI/ASI side channel
-  - **Connector:** micro BNC 75 ohms
+<Accordion title="SRT and RIST output">
+  - Carriage of UDP or RTP streams over the SRT protocol
+  - SRT listener or caller mode
+  - RIST sender mode
+  - RIST listener mode
 </Accordion>
 
-<Accordion title="8-Port ASI/SDI Option Card (Dektec DTA-2178)">
-  MediaKind marketing code: **MKP/HWO/PCI/SDI/8** (Dektec 2178 SDI/ASI)
-
-  - **Output configurations:**
-    - 8× independent 3G-SDI/ASI input/output
-    - 2× 12G-SDI (Single-link UHD) or Quadrant or Interleaved
-    - 2× 12G-SDI with 2× 3G-SDI/ASI side channels
-  - **Connector:** micro BNC 75 ohms
+<Accordion title="Zixi output">
+  * Zixi sender
+  * Zixi feeder or Zixi Receiver mode
 </Accordion>
 
-<Accordion title="2-Port Satellite Demodulator Card with SDI Output (Dektec DTA-2127)">
-  MediaKind marketing code: **MKP/HWO/DEMODSDI** (Dektec DTA-2127 DVB-S2X Quad Receiver with 3G-SDI/ASI Output)
+## Uncompressed output
 
-  - **SDI output:** 1× SDI output supporting SD/HD/3G-SDI
-  - **Connector:** BNC 75 ohms
+* **Output formats:** SDI, SMPTE ST 2022-6, SMPTE ST 2110
+
+### SDI output
+
+* **Standards:** SDI, HD-SDI, 3G-SDI, 12G-SDI, Quad‑Link 3G‑SDI
+* **Video formats:** 480i, 576i, 720p, 1080i, 1080p, 2160p
+* **Hardware requirements:** Requires one or more of the following cards
+
+<Accordion title="4-port ASI/SDI option card (Dektec DTA-2174B)">
+  MediaKind marketing code:
+
+  * **MKP/HWO/PCI/SDI/DTA** (Dektec 2174B SDI/ASI)
+
+  Features:
+
+  * **Output configurations:**
+    * 4x independent 3G-SDI/ASI input/output
+    * 12G-SDI (Single‑link UHD) or Quadrant (Quad‑Link 3G‑SDI, ST 425‑5 Annex B — Square Division) or Interleaved (Quad‑Link 3G‑SDI, ST 425-5 Two Sample Interleave)
+    * 12G-SDI with 3G-SDI/ASI side channel
+  * **Connector:** micro BNC 75 ohms
 </Accordion>
 
-### SDI over IP (SMPTE ST 2022-6) Output
+<Accordion title="8-port ASI/SDI option card (Dektec DTA-2178)">
+  MediaKind marketing code:
 
-- **Standards:** SMPTE ST 2022-6
-- **Video formats:** 480i, 576i, 720p, 1080i, 1080p (2160p not supported)
-- **Hardware requirements:** Any network card with sufficient network bandwidth
+  * **MKP/HWO/PCI/SDI/8** (Dektec 2178 SDI/ASI)
 
-### SMPTE ST 2110 Output
+  Features:
 
-- **Standards:** SMPTE ST 2110
-  - ST 2110-20: Uncompressed video for 480i, 576i, 720p, 1080i, 1080p, 2160p
-  - ST 2110-30: PCM digital audio output
-  - ST 2110-31: AES3 audio output
-  - ST 2110-40: Ancillary data (VITC/Time code, AFD/BAR, Closed captioning, OP-47 Teletext, SMPTE 2031 Teletext)
-- **Protocols:** Supports duplicate essence streams on separate output ports to facilitate SMPTE ST 2022-7
-- **NMOS:** NMOS IS-04 and NMOS IS-05 support
-- **Hardware requirements:** Requires one of the following cards
-
-<Accordion title="NVIDIA ConnectX-6 Dx EN Adapter Card 25GbE (MCX621102AN-ADAT)">
-  MediaKind marketing code: **MKP/HWO/PCI/NIC/25G/2PORT/B**
-
-  NVIDIA Mellanox ConnectX-6 Dx EN adapter card, 25GbE, **Dual-port SFP28**, PCIe 4.0 ×8, No Crypto.
+  * **Output configurations:**
+    * 8x independent 3G-SDI/ASI input/output
+    * 2x 12G-SDI (Single‑link UHD) or Quadrant (Quad‑Link 3G‑SDI, ST 425‑5 Annex B — Square Division) or Interleaved (Quad‑Link 3G‑SDI, ST 425-5 Two Sample Interleave)
+    * 2x 12G-SDI with 2x 3G-SDI/ASI side channels
+  * **Connector:** micro BNC 75 ohms
 </Accordion>
 
-<Accordion title="NVIDIA ConnectX-6 Lx EN Adapter Card 25GbE (MCX631102AN-ADAT)">
-  MediaKind marketing code: **MKP/HWO/PCI/NIC/25G/2PORT/C**
+<Accordion title="2-port satellite demodulator option card with 3G-SDI/ASI output (Dektec DTA-2127)">
+  MediaKind marketing code:
 
-  NVIDIA Mellanox ConnectX-6 Lx EN adapter card, 25GbE, **Dual-Port SFP28**, PCIe 4.0 ×8, No Crypto.
+  * **MKP/HWO/DEMODSDI** (Dektec DTA-2127 DVB-S2X Quad Receiver with 3G-SDI/ASI Output)
+
+  Features:
+
+  * **SDI output:** 1x SDI output supporting SD/HD/3G-SDI
+  * **Connector:** BNC 75 ohms
 </Accordion>
 
-<Accordion title="NVIDIA ConnectX-6 Dx EN Adapter Card 100GbE (MCX623106AN-CDAT)">
-  MediaKind marketing code: **MKP/HWO/PCI/NIC/100G**
+### SDI over IP (SMPTE ST 2022-6) output
 
-  NVIDIA Mellanox ConnectX-6 Dx EN adapter card, 100GbE, **Dual-port QSFP56**, PCIe 4.0 ×16, No Crypto.
+* **Standards:** SMPTE ST 2022-6
+* **Video formats:** 480i, 576i, 720p, 1080i, 1080p (2160p not supported)
+* **Hardware requirements:** Any network card with sufficient network bandwidth may be used
 
-  The ConnectX-6 Dx 100GbE card enables higher output bandwidth but does not increase decoding capacity on a COTS platform.
+### SMPTE ST 2110 output
 
-  <Note>NVIDIA / Mellanox Ethernet network adapter cards must be sourced from NVIDIA rather than Dell, as OEM variants may impose restrictions on firmware upgrades.</Note>
+* **Standards:** SMPTE ST 2110
+  * ST 2110-20: Uncompressed video for 480i, 576i, 720p, 1080i, 1080p, 2160p
+  * ST 2110-30: PCM digital audio output
+  * ST 2110-31: AES3 audio output
+  * ST 2110-40: Ancillary data (VITC/Time code, AFD/BAR, Closed captioning, OP-47 Teletext, SMPTE 2031 Teletext)
+* **Protocols:** Supports duplicate essence streams on separate output ports to facilitate SMPTE ST 2022-7
+* **NMOS:** NMOS IS-04 and NMOS IS-05 support
+* **Hardware requirements:** Requires one of the following cards
+
+<Accordion title="NVIDIA ConnectX-6 Dx EN adapter card 25GbE (MCX621102AN-ADAT)">
+  MediaKind marketing code:
+
+  * **MKP/HWO/PCI/NIC/25G/2PORT/B** (MCX621102AN-ADAT)
+
+  Features:
+
+  * NVIDIA Mellanox ConnectX-6 Dx EN adapter card, 25GbE, **Dual-port SFP28**, PCIe 4.0 x8, No Crypto
 </Accordion>
 
----
+<Accordion title="NVIDIA ConnectX-6 Lx EN adapter card 25GbE (MCX631102AN-ADAT)">
+  MediaKind marketing code:
+
+  * **MKP/HWO/PCI/NIC/25G/2PORT/C** (MCX631102AN-ADAT)
+
+  Features:
+
+  * NVIDIA Mellanox ConnectX-6 Lx EN adapter Card, 25GbE, **Dual-Port SFP28**, PCIe 4.0 x8, No Crypto
+</Accordion>
+
+<Accordion title="NVIDIA ConnectX-6 Dx EN adapter card 100GbE (MCX623106AN-CDAT)">
+  MediaKind marketing code:
+
+  * **MKP/HWO/PCI/NIC/100G** (MCX623106AN-CDAT)
+
+  <Info>
+    The ConnectX-6 Dx 100GbE card enables higher output bandwidth; however, it does not increase
+    decoding capacity on a COTS platform.
+  </Info>
+
+  Features:
+
+  * NVIDIA Mellanox ConnectX-6 Dx EN adapter card, 100GbE, **Dual-port QSFP56**, PCIe 4.0 x16, No Crypto
+</Accordion>
+
+<Warning>
+  NVIDIA / Mellanox Ethernet network adapter cards must be sourced from NVIDIA rather than Dell, as OEM
+  variants may impose restrictions on firmware upgrades.
+</Warning>
 
 ## Multiplexing
 
-### Inputs and Outputs
+### Inputs and outputs
 
-- IP (UDP or RTP) input and output of MPEG Transport Streams
-- RTP re-ordering
-- IGMP V3 redundancy
-- Input bitrate monitoring and CC error detection
-- SMPTE 2022-1 FEC on input and output
+* IP (UDP or RTP) input and output of MPEG Transport Streams
+* RTP re-ordering
+* IGMP V3 redundancy
+* Input bitrate monitoring and CC error detection
+* SMPTE 2022-1 FEC on input and output
 
 ### Processing
 
-- PID filtering and PID remapping by re-multiplexing input programs
-- Real-time PSI regeneration
+* PID filtering and PID remapping by re-multiplexing input programs Real-time PSI regeneration
 
----
-
-## Content Security
+## Content security
 
 ### Decryption
 
-- **Conditional Access (CA):** BISS1, BISS2, BISS-CA, Director 6, DVB-CI
+* **Conditional Access (CA):** BISS1, BISS2, BISS-CA, Director 6, DVB-CI
+* **Hardware requirements:** A *Trusted Platform Module (TPM)* may be required or suitable option cards. See details below
 
-<Accordion title="BISS1 and BISS2">
-  **BISS version 1 (BISS1):**
-  - Modes: Mode 1 and Mode E
-  - Key length: 48-bit
-  - Standards: DVB-CSA
+<Accordion title="BISS1 & BISS2">
+  BISS version 1 (BISS1)
 
-  **BISS version 2 (BISS2):**
-  - Modes: Mode 1, Mode E, and BISS-CA
-  - Key length: 128-bit
-  - Standards: DVB-CISSA
+  * **Modes:** Mode 1 and Mode E
+  * **Key length:** 48-bit
+  * **Standards:** DVB-CSA
+
+  BISS version 2 (BISS2)
+
+  * **Modes:** Mode 1, Mode E and BISS-CA
+  * **Key length:** 128-bit
+  * **Standards:** DVB-CISSA
 </Accordion>
 
 <Accordion title="BISS-CA">
-  A Trusted Platform Module (TPM) must be installed on the server.
+  <Info>
+    A Trusted Platform Module (TPM) must be installed on the server.
+  </Info>
 
-  - Key length: 128-bit
-  - Standards: DVB-CISSA
-  - Features: Entitlement management, self-generated key pairs, injected key pairs
+  * **Key length:** 128-bit
+  * **Standards:** DVB-CISSA
+  * **Features:** Entitlement management, Self-generated key pairs, Injected key pairs
 </Accordion>
 
 <Accordion title="Director 6 CA">
-  A Trusted Platform Module (TPM) must be installed on the server.
+  <Info>
+    A Trusted Platform Module (TPM) must be installed on the server.
+  </Info>
 
-  - Key length: 128-bit
-  - Features: Entitlement management, Over Air Control (OAC)
+  * **Key length:** 128-bit
+  * **Features:** Entitlement management, Over Air Control (OAC)
 </Accordion>
 
-<Accordion title="Dual Common Interface (CI) Option Card (Digital Devices Octopus Duo CI)">
-  MediaKind marketing code: **MKP/HWO/PCI/CI/DUAL**
+<Accordion title="Dual Common Interface (CI) option card (Digital Devices Octopus Duo CI)">
+  MediaKind marketing code:
 
-  The Digital Devices Octopus Duo CI is only available as a full-height PCIe card and is limited to servers such as the C-series.
+  * **MKP/HWO/PCI/CI/DUAL** (Digital Devices Octopus Duo CI)
 
-  - DVB-CI compliant
-  - 2× CI slots for two independent CAMs per option card
-  - Capable of processing transport streams up to 96 Mbps per CAM (actual bitrate may be limited by the CAM)
-  - All major CAMs supported
-  - Multiple Dual Common Interface option cards supported
+  <Info>
+    The Digital Devices Octopus Duo CI is only available as a full-height PCIe card and is therefore limited
+    to servers such as the C-series.
+  </Info>
 
-  Some CA descramblers require a Trusted Platform Module (TPM) to be installed on the server.
+  Features:
+
+  * DVB-CI compliant
+  * 2x CI slots for two independent Conditional Access Modules (CAM) on each option card
+  * Capable of processing transport streams of up to 96 Mbps per CAM (though actual bitrate may be limted by the CAM)
+  * All major CAMs supported
+  * Multiple *Dual Common Interface (CI) option cards* supported
 </Accordion>
 
----
+<Warning>
+  Some CA descramblers will require a Trusted Platform Module (TPM) to be installed on the server.
+</Warning>
 
-## Ad Insertion
+## Ad insertion
 
-- **Ingest format:** MPEG-TS over IP (SPTS) with a video buffer of 1 second minimum; assets pre-encoded and stored locally
-- **Scheduling control:** Triggered via:
-  - **Signal-based:** Based on submitted SCTE-35 signal (with matching criteria)
-  - **Signal-based / fallback to time:** SCTE-35 expected but absent; falls back to out-of-band operations triggering
-- **Asset management:**
-  - Storage of up to 90 minutes of assets in the unit
-  - Assets and schedules fetched automatically from a central asset server
-  - Automatic housekeeping of the asset store
+* **Ingest format:**
+  * MPEG-TS over IP (SPTS), with a video buffer of 1 second minimum
+  * Assets pre-encoded and stored locally
+* **Scheduling control:** Triggered via advanced scheduling control options:
+  * **Signal-based:** based on submitted SCTE-35 signal (with matching criteria)
+  * **Signal based / fallback to time:** SCTE-35 expected, but not present, fallback to out-of-band operations triggering
+* **Asset management:**
+  * Storage of up to 90 minutes of assets in the unit
+  * Assets and schedules fetched automatically from a central asset server
+  * Automatic housekeeping of the asset store
 
----
+<span id="monitoring--control" className="mk-legacy-anchor" />
 
-## Monitoring and Control
+## Monitoring & control
 
-- **Remote control:** Via the MediaKind MK.IO portal
-- **Direct control and status monitoring:** Via web browser user interface and REST API
-- **Standard protocols:** SNMP, NTP, IGMP
+* **Remote control:** Provided via the Mediakind MK.IO portal
+* **Direct control and status monitoring:** Provided via Web browser user interface and REST API
+* **Standard protocols:** SNMP, NTP, IGMP
 
-**High Availability (HA) Controller:**
-
-- Automated (standalone) 1+1 output synchronization with PTS alignment (either SDI or ST 2110 inputs)
+<Accordion title="High Availability (HA) Controller" defaultOpen={true}>
+  - Automated (standalone) 1+1 output synchronization with PTS alignment (either SDI or ST 2110 inputs)
+</Accordion>

@@ -1,0 +1,113 @@
+---
+title: System Administration
+description: Manage MK.IO Beam platform administration including servers, security, networking, maintenance, and monitoring.
+sidebarTitle: System Administration
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+This section covers the management of the BEAM platform itself (the hardware, operating system, security, and more), rather than the media workflows running on it.
+
+<Note>
+  The majority of these tasks are performed via the **System Center** menu in the web interface (accessed via the gear icon in the top right corner).
+</Note>
+
+## Server Management
+
+Manage the physical or virtual notes in your BEAM cluster.
+
+<CardGroup cols={3}>
+  <Card title="Manage Servers" href="/beam/system-admin/servers/servers" icon="server">
+    Add, remove, or reboot nodes.
+  </Card>
+
+  <Card title="Failover Groups" href="/beam/system-admin/servers/failover" icon="arrows-rotate">
+    Configure redundancy groups for automatic failover.
+  </Card>
+</CardGroup>
+
+<span id="security--access" className="mk-legacy-anchor" />
+
+## Security & Access
+
+Configure security settings and user access controls.
+
+<CardGroup cols={3}>
+  <Card title="User Management" href="/beam/system-admin/security/user-management" icon="users">
+    Create local users and assign roles.
+  </Card>
+
+  <Card title="LDAP Configuration" href="/beam/system-admin/security/ldap-management" icon="address-book">
+    Integrate with Active Directory for centralised auth.
+  </Card>
+
+  <Card title="SSL Certificates" href="/beam/system-admin/security/ssl-certificates" icon="certificate">
+    Install customer-signed certificates for HTTPS.
+  </Card>
+</CardGroup>
+
+<span id="network--time" className="mk-legacy-anchor" />
+
+## Network & Time
+
+Configure the network settings and time synchronization.
+
+<CardGroup cols={3}>
+  <Card title="Configure Network Interfaces" href="/beam/system-admin/network/configure-nics" icon="network-wired">
+    Set IP addresses, DNS, IGMP, and firewall zones.
+  </Card>
+
+  <Card title="Control Interface Wizard" href="/beam/system-admin/network/control-interface-wizard" icon="wand-magic-sparkles">
+    Configure the Control interface, MK.IO HTTP proxy, and diagnose network issues.
+  </Card>
+
+  <Card title="Bonded Interfaces" href="/beam/system-admin/network/bonded-interfaces" icon="layer-group">
+    Configure active-backup interfaces for redundancy.
+  </Card>
+
+  <Card title="VLAN Interfaces" href="/beam/system-admin/network/vlan-interfaces" icon="tag">
+    Add and delete VLAN interfaces from the command line.
+  </Card>
+
+  <Card title="Jumbo Frames" href="/beam/system-admin/network/jumbo-frames" icon="video">
+    Set the MTU to enable jumbo frames for high data rate streams.
+  </Card>
+
+  <Card title="System Clock" href="/beam/system-admin/network/system-clock" icon="clock">
+    Synchronize time via NTP, TDT or PTP.
+  </Card>
+
+  <Card title="Router Configuration" href="/beam/system-admin/network/router-configuration" icon="diagram-project">
+    Connect to external SDI routers for input switching.
+  </Card>
+</CardGroup>
+
+<span id="maintenance--monitoring" className="mk-legacy-anchor" />
+
+## Maintenance & Monitoring
+
+Keep the system healthy and monitor its performance.
+
+<CardGroup cols={3}>
+  <Card title="Backup & Restore" href="/beam/system-admin/maintenance/backup-restore" icon="database">
+    Save and restore system configurations.
+  </Card>
+
+  <Card title="Manage Alarms" href="/beam/system-admin/maintenance/manage-alarms" icon="siren-on">
+    Configure alarm severity and SNMP traps.
+  </Card>
+
+  <Card title="Generate Support Package" href="/beam/system-admin/maintenance/generate-support-package" icon="file-zipper">
+    Create log bundles for MediaKind support.
+  </Card>
+
+  <Card title="Install the ISO" href="/beam/system-admin/iso-installation" icon="arrow-up-from-bracket">
+    How to install the beam ISO.
+  </Card>
+
+  <Card title="Processing Types" href="/beam/system-admin/maintenance/processing-types" icon="gears">
+    Enable or disable processing types to optimize performance.
+  </Card>
+</CardGroup>
+
+<br />

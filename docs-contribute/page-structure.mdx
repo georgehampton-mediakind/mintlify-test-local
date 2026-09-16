@@ -1,0 +1,273 @@
+---
+title: Page Structure
+description: How to structure pages, use frontmatter, and choose content types.
+sidebarTitle: Page Structure
+robots: noindex, follow
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use this guide to choose a source format, define page metadata, and structure documentation for reliable web and machine-readable publication.
+
+## Choose the source file
+
+All normal documentation pages live below `src/content/docs/`. The file path determines the public URL:
+
+| File path                                        | URL                          |
+| :----------------------------------------------- | :--------------------------- |
+| `src/content/docs/mkio/getting-started.md`       | `/mkio/getting-started`      |
+| `src/content/docs/beam/live-encoder/index.md`    | `/beam/live-encoder`         |
+| `src/content/docs/api-guides/authentication.mdx` | `/api-guides/authentication` |
+
+API reference pages are generated from pinned specifications and use a separate route implementation. See [Adding API Specs](/docs-contribute/adding-api-specs).
+
+### Use Markdown by default
+
+Choose the smallest source format that represents the content:
+
+| Extension | Use                                                                 |
+| :-------- | :------------------------------------------------------------------ |
+| `.md`     | Default for normal documentation.                                   |
+| `.mdx`    | Only when the page needs cards, Starlight steps, `UiIcon`, or `Fa`. |
+
+Normal content uses headings, paragraphs, links, lists, code, tables, images, Starlight asides, Starlight steps, cards, and the two supported inline icon components.
+
+Do not add arbitrary imports, executable expressions, or unlisted components. Raw HTML is limited to the static tables described below, in `.md` files. Existing advanced MDX remains buildable through a compatibility baseline while maintainers migrate it. That baseline is not an authoring menu. Do not expand it only to make validation pass.
+
+Read the [Component Reference](/docs-contribute/components) before creating an MDX file.
+
+### Preserve complex tables
+
+Use ordinary Markdown tables when cells contain inline text. When a source table needs merged cells, multiple paragraphs, lists, code, images, or nested tables, preserve its structure as a static HTML table in a `.md` file:
+
+```html
+<table>
+<thead><tr><th id="setting" scope="col">Setting</th><th id="meaning" scope="col">Meaning</th></tr></thead>
+<tbody><tr><td headers="setting">Mode</td><td headers="meaning"><p>Choose the mode.</p><ul><li>Live</li><li>File</li></ul></td></tr></tbody>
+</table>
+```
+
+Keep the table in one HTML block with no blank lines, and separate it from surrounding Markdown with blank lines. Inside it, use HTML for every cell: Markdown formatting is not parsed inside an HTML table. Encode literal `<` as `&lt;`, `&` as `&amp;`, and blank lines in preformatted code as `&#10;`.
+
+The validator accepts table sections, captions, columns, rows and cells; paragraphs, headings, lists, blockquotes, code, links, images, and static text formatting inside cells. Use quoted attribute values and explicit closing tags. Supported attributes include `rowspan`, `colspan`, `scope`, `headers`, `id`, `title`, `lang`, and `dir`; link `href`; image `src`, `alt`, `width`, and `height`; and list numbering. Each `headers` value must identify a header cell in the same table. A code language may use `class="language-json"` or the corresponding language name.
+
+Scripts, event handlers, embedded frames, styles, arbitrary classes, executable attributes, and unsafe URL schemes fail validation. FTP URLs are supported only as hyperlinks, not image sources. The same validated table structure is retained in machine-readable Markdown and AI Search input. Do not flatten a complex table merely to pass validation.
+
+### Keep source and output separate
+
+| Location            | Rule                                                                                                            |
+| :------------------ | :-------------------------------------------------------------------------------------------------------------- |
+| `src/content/docs/` | Edit documentation source here.                                                                                 |
+| `public/`           | Add authored static assets and pinned OpenAPI files here. Do not add generated Markdown or deployment metadata. |
+| `dist/`             | Treat as disposable production output. Do not edit or commit it.                                                |
+| `.generated/`       | Treat as disposable local build data. Do not edit or commit it.                                                 |
+
+The production build generates HTML, Markdown page twins, redirects, sitemaps, LLM bundles, and function routes into `dist/`. Machine-readable Markdown is derived from the semantic document tree. It is not a second source to edit.
+
+## Name files and folders
+
+* Use lowercase names.
+* Separate words with hyphens: `create-an-asset.md`.
+* Name a folder landing page `index.md` or `index.mdx`.
+* Use stable, meaningful route segments. A renamed file changes its public URL.
+* Do not include a file extension in an internal link.
+
+## Add frontmatter
+
+Every page starts with a title and description:
+
+```yaml
+---
+title: Clear page title
+description: One-sentence summary of what the page helps the reader do.
+---
+```
+
+The `title` appears in the page, browser, navigation, and search results. The `description` is also used by metadata, catalog projections, search, and machine-readable output. Write it as a durable summary, not temporary release copy.
+
+### Control navigation
+
+Use `sidebar.order` only when a page needs a deliberate position among its siblings:
+
+```yaml
+---
+title: Configure an output
+description: Configure and verify an output.
+sidebar:
+  order: 30
+  label: Configure output
+---
+```
+
+* `sidebar.order` sorts lower numbers before higher numbers.
+* `sidebar.label` changes only the navigation label.
+* `sidebar.hidden: true` removes the page from derived navigation.
+
+`sidebar.hidden` does not stop publication, search indexing, sitemap inclusion, machine-readable output, or direct access. Use publication fields for those decisions.
+
+## Declare a product root
+
+The root landing page is the product catalog record. A new product needs a folder and minimal `section` metadata:
+
+```yaml
+---
+title: Example product
+description: Operate and integrate Example product.
+section:
+  kind: product
+  label: Example product
+  order: 30
+---
+```
+
+The folder name becomes the product key and route prefix. The catalog uses the root title, description, label, and order to derive shared navigation and user-interface data.
+
+Existing products can declare `section.homepageDescription` when the established homepage marketing summary must differ from the root page description. New products normally omit it so the homepage uses the root description.
+
+The `section.kind` values `guide` and `contributor` are reserved for intentional non-product root sections. Ask the documentation-platform maintainer before creating one.
+
+### Override product navigation only when needed
+
+The file tree, titles, descriptions, and `sidebar.order` values are enough for a normal product. Optional root metadata supports deliberate exceptions:
+
+```yaml
+section:
+  kind: product
+  label: Example product
+  order: 30
+  navigation:
+    overrides:
+      - path: getting-started
+        label: Start here
+        order: 1
+    groups:
+      - key: operate
+        label: Operate
+        order: 20
+        items:
+          - monitoring
+          - recovery
+    featuredLinks:
+      - title: Install Example product
+        description: Prepare the product for its first workflow.
+        href: /example-product/getting-started/install
+        icon: server
+```
+
+Use:
+
+* `overrides` to change a derived path label or order.
+* `groups` to group known top-level pages or folders.
+* `links` for an approved external navigation destination.
+* `featuredLinks` for a small curated header list.
+* `cardLinks` for curated homepage card links.
+
+Do not duplicate the complete file tree in metadata. The catalog rejects unknown paths, duplicate keys, invalid routes, and conflicting groups.
+
+## Set publication fields
+
+Publication policy controls the rendered page and every local derivative from one decision.
+
+| Field                                    | Result                                                                                                  |
+| :--------------------------------------- | :------------------------------------------------------------------------------------------------------ |
+| No `visibility`, or `visibility: public` | Publish, index, include in the sitemap, and include in eligible machine outputs.                        |
+| `visibility: public-unindexed`           | Publish HTML, but exclude search-engine indexing, sitemaps, Markdown, LLM bundles, and AI Search input. |
+| `visibility: restricted`                 | Fail the public build. This is a safety boundary, not private hosting.                                  |
+| `draft: true`                            | Keep the page available for development but omit it from production.                                    |
+| `llm_ignore: true`                       | Exclude Markdown, LLM bundles, and AI Search input.                                                     |
+| `llm_optional: true`                     | Exclude the page from the concise LLM index but retain it in the full bundle.                           |
+| `llm_priority: high`, `normal`, or `low` | Control ordering within an LLM index.                                                                   |
+
+An explicit `robots` or `metadata.robots` value containing `noindex` also excludes the page from sitemap and machine-output channels. Prefer `visibility` for new pages because its intent is clearer.
+
+Unknown `visibility` values fail closed. A misspelling cannot accidentally publish restricted content.
+
+Use these fields only for public-site policy. Do not commit confidential content and expect frontmatter to provide access control.
+
+## Add images and assets
+
+Choose the location based on ownership:
+
+* Put a page-specific image beside its source file and use a relative Markdown image path. Astro can optimise this form.
+* Put an asset shared by several pages below `public/images/` and use a root-relative path.
+* Put pinned OpenAPI documents below `public/openapi/`. Use the explicit API update workflow rather than a normal build to refresh them.
+
+Always include descriptive alternative text:
+
+```md
+![Output status and bitrate columns in the monitoring table.](./monitor-output.png)
+```
+
+Use lowercase, hyphenated names. Keep any `public/` asset path under 100 characters, including the leading slash. Cloudflare Pages creates routing rules for static assets and rejects longer paths in this deployment.
+
+Optimise images before committing them. Prefer SVG for diagrams when the source is trustworthy and accessible, PNG for interface captures, and JPEG for photographs.
+
+## Structure the page
+
+Use one level-one heading that matches the frontmatter title. The build removes the duplicate rendered title but retains the source heading for portable Markdown output.
+
+Use level-two headings for major sections and level-three headings within them. Do not skip heading levels.
+
+Start a task page with this structure:
+
+```md
+---
+title: Configure an output
+description: Configure and verify an output for Example product.
+---
+
+# Configure an output
+
+Use this procedure to configure an output for a prepared service.
+
+## Prerequisites
+
+- A verified source.
+- Permission to edit the service.
+
+## Configure the output
+
+1. Open the service.
+2. Enter the sourced output settings.
+3. Save the configuration.
+
+## Verify the output
+
+Confirm that the service reports the documented running state.
+```
+
+Use Starlight `Steps` only when individual steps need nested code, images, or asides. Use an ordinary numbered list for a short procedure.
+
+## Choose the page type
+
+### How-to
+
+Help the reader complete a specific task. Use an imperative title, put prerequisites before actions, and end with a sourced verification result.
+
+### Overview or concept
+
+Explain what something is, why it matters, and how it relates to the product. Use a noun-phrase title and link to actionable tasks.
+
+### Reference
+
+Present stable facts such as fields, parameters, limits, states, or compatibility. Use tables or definition lists when they improve lookup.
+
+### Getting started
+
+Guide a first-time reader through a verified end-to-end outcome. State prerequisites, keep the path opinionated, verify success, and link to the next task.
+
+## Verify the source
+
+Run the content-contract check during writing:
+
+```bash
+pnpm validate:content-contract
+```
+
+Run the complete verification before opening a pull request:
+
+```bash
+pnpm verify:local
+```
+
+Do not update the compatibility baseline when a new page fails the content contract. Either express the content with the supported semantics or ask the documentation-platform maintainer to review a real content-model gap.

@@ -1,0 +1,242 @@
+---
+title: What's new in VOS360 Media SaaS
+robots: noindex, nofollow
+---
+
+## July 2026 updates
+
+### Live Channels
+
+* Geo-sync for OTT channels in 24/30/60 fps streaming, from 23.98/29.97/59.94 fps live inputs
+
+* Audio enhancement with Dialog separation for Dolby AC-4 encoding
+
+* Multiview channels:
+
+  * Up to 16 SDR live inputs, interlaced or progressive
+
+  * OTT or Broadcast encoding
+
+  * Freewheel mode for Mosaic application (no video synchronization by timecode)
+
+  * Muxing several Closed Captions from live inputs to 708 output
+
+  * Static slate per tile is visible in case of input loss and when a tile is muted
+
+  * Audio mixing from live inputs to output dual-mono audio
+
+### Broadcast
+
+* No features are highlighted in this release
+
+### Packaging and Origin
+
+* Management of Live Event Workflow services through SCTE-35
+
+* Geo-sync for live with shared-URL format
+
+### VOS360 Ad SSAI solution
+
+* In-stream ad - contextual targeting for specific sports game segments
+
+* Automatic ad creative prefetching by ingesting CCMS scheduling and ad creative source files
+
+### VOD and File Processing
+
+* Support VVC with LC-EVC and MPEG-H encoding and packaging
+
+### Channel Origination
+
+* Multi-Playout Monitor: New view for monitoring multiple playout channels simultaneously using WebRTC.
+
+* Download Loop Records as MP4 files with extraction, no transcoding, including SOM/EOM via API.
+
+### Scheduler
+
+* No features are highlighted in this release
+
+***
+
+## April 2026 updates
+
+### Live Channels
+
+* Multiview application in HD resolution
+
+  * Up to 4 SDR live inputs
+
+  * Support of multi-camera streams, with video synchronization by timecode
+
+  * Progressive SRT inputs and output
+
+  * Broadcast encoding
+
+  * Moving foreground graphics
+
+  * Closed Captions passthrough
+
+* Insertion of Irdeto NetworkId Watermarking for OTT services, up to UHD resolution, SDR and HDR supported
+
+* Automatic audio translation for OTT services, using Azure Speech Service
+
+* Downmix PCM 5.1.4 and AC4 5.1.4 ATMOS to 2.0 Stereo
+
+* Support HLS-TS inputs with EXT-X-CUE-OUT and EXT-X-CUE-IN when SCTE-35 PID is not present in TS segments
+
+### Broadcast
+
+* EAS for Audio-only channels
+
+### Packaging and Origin
+
+* Export of Live Event Workflow assets in MP4
+
+* AC-4 improvements
+
+* Publishing to MSL5 with shared secret header authentication
+
+### VOS360 Ad SSAI solution
+
+* DASH Trick-Mode support
+
+* In-Stream Ad - Live Event Workflow support
+
+* In-Stream Ad - Creative Pre-Fetching
+
+* In-Stream Ad - Real-Time Ad Decisioning
+
+* Ad Metadata API - Passthrough of all the VAST tracking events
+
+* Standard Metrics Dashboard
+
+### VOD and File Processing
+
+* Storage usage report by label
+
+### Channel Origination
+
+* LoopRecord: Source errors visibles in Asset Acquisition
+
+* Start-Stop Independent graphics by 4 configurable buttons
+
+* View past event in Playout Monitor UI with Asset Status
+
+* Copy-Paste buttons with regular keyboard shortcuts
+
+* Play Sequence in loop if no event / loss of live, when no default live
+
+### Scheduler
+
+* No features are highlighted in this release
+
+***
+
+## December 2025 updates
+
+### Live Channels
+
+* Support HLS-TS ingest with SCTE-35 in TS segments
+
+* Implement Irdeto NetworkID watermarking
+
+### Broadcast
+
+* Support of EMMG server redundancy
+
+* Enable source sharing between the broadcast workflow and OTT/IPTV workflow
+
+### Packaging and Origin
+
+* Support for VVC packaging
+
+* Enable automatic service activation for live events
+
+* Support CMAF ingest push packaging (DASH-IF Live Media Ingest Protocol profile 1)
+
+### VOS360 Ad SSAI solution
+
+* Support of Linear Addressable TV (Spot-by-Spot replacement)
+
+* In-Stream Ad - Support of DASH
+
+* In-Stream Ad - Support of automatic triggering for MLB, NBA, and NHL based on Sportradar
+
+* Client SDKs release (iOS, Android, Web, and Roku)
+
+### VOD and File Processing
+
+* Attach new audio tracks from sidecar files to existing (already published) VOD assets, without video re-transcoding
+
+  * Supported audio file formats: MP4a, MP3, WAV, FLAC, TS audio-only
+
+  * Update the eTag and LastModified headers to facilitate CDN cache management
+
+* Enable stream names for sidecar subtitles for VOD
+
+* Support downloading LLCU assets as MP4 files:
+
+  * Select one or more bitrates
+
+  * Video, audio, and CC are included
+
+  * SCTE-35 is omitted
+
+### Channel Origination
+
+* Playout Monitor UI usability: Timecode/ms clock option, playlist grid foreground and background colors, and ability to mask graphics layer within the timeline
+
+* Support for DVB subtitles in TS, live streaming, files, and Loop Records
+
+* Enable default live redundancy with auto-revert
+
+### Scheduler
+
+No new features are highlighted in this release.
+
+***
+
+## October 2025 updates
+
+### Live Channels
+
+Support custom model for Live audio transcription with Azure AI Services
+
+### Broadcast
+
+No features are highlighted in this release
+
+### Packaging and Origin
+
+* Hearing Impaired accessibility tags for DASH and HLS
+
+* Customized configuration of CHARACTERISTICS attribute in HLS for audio tracks
+
+* Selection of top profile in HLS master playlist
+
+### VOS360 Ad SSAI solution
+
+* In-Stream Ad for HLS-fMP4 GA
+
+* Support of skippable ads for VOD
+
+* Manifest and segment delivery URL format configuration
+
+* Ad request validation tool
+
+### VOD and File Processing
+
+No features are highlighted in this release
+
+### Channel Origination
+
+* Playout Monitor UI usability:
+
+  * New clock widget
+
+  * Option to mask graphic timeline
+
+  * Sort assets and graphics by title name
+
+### Scheduler
+
+No features are highlighted in this release

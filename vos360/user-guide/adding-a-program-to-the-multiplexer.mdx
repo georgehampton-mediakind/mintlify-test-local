@@ -1,0 +1,186 @@
+---
+title: Adding a program to the multiplexer
+robots: noindex, nofollow
+---
+
+Repeat the following procedure for every program you want to add to the multiplexer.
+
+1. Navigate to the **Configure Broadcast** app
+
+2. From the source panel, drag and drop a program to multiplexer on the right.
+
+   ![](/images/vos360/2076f0d8f06550f2d7e6c557.png)
+
+3. Choose the way you want to process the program: **Transcoding&#x20;**&#x6F;r **Pass through**.\
+   ![](/images/vos360/a5aca34a7ae153ff4556a32d.png)
+
+## Transcoding process
+
+If you choose the **Transcoding&#x20;**&#x6F;ption, do the following:
+
+### Source tab
+
+1. From the **Source&#x20;**&#x74;ab, set the general parameters.\
+   ![](/images/vos360/127c0d527a35543692f50ae7.png)\
+   Once the program is connected, you can modify the following parameters:
+
+2. **Name**: The name can be changed.
+
+3. **Source**: No change is allowed.
+
+4. **Program Number**: No change is allowed.
+
+5. **Connect**: Once the program is located you can:
+
+   * Play the video by clicking the arrow button on the right, a thumbnail is displayed.
+
+   * Groom the video, audio, subtitle, and data services. To do so, refer to [Grooming a source input](/vos360/user-guide/grooming-the-source-input).
+
+6. **Signal Loss Slate**: Set it to **ON** to add a slate picture in case of signal loss. To do so, refer to [Setting video overlays](/vos360/user-guide/setting-video-overlays).
+
+7. **Status**: By default, the Status is set to **On-air**.
+
+   * **Stopped**: The program is not transcoded and not broadcast at the output of the multiplexer.
+
+   * **Off-air:** The program is transcoded but not broadcast at the output of the multiplexer.
+
+   * **On-air**: The program is transcoded and broadcast at the output of the multiplexer.
+
+     <Note>
+       **Info:&#x20;**&#x53;witching between Off-air status and On-air status allows you to quickly remove or add a service in a mux since the program does not need to be started.
+     </Note>
+
+### Transcoding tab
+
+1. From the **Transcoding&#x20;**&#x74;ab, choose the **Transcoding** and **Destination** profiles.\
+   ![](/images/vos360/50ed806612e26d523504f654.png)
+
+2. Th&#x65;**&#x20;Process Name** and **Program Number** can be remapped.
+
+3. Choose the **Transcoding Profile**. This profile can be modified once the service is created. This requires a restart of the service.
+
+4. Select the bitrate mode. Choose **On** for **VBR** or **Off** for **CBR**.
+
+5. Define the maximum and minimum video **Bitrate&#x20;**&#x61;ccording to bitrate mode.
+
+6. Define the **priority&#x20;**&#x66;or video in a statmux pool for videos in **VBR** mode.
+
+7. (Optional) **Stream Conditioning&#x20;**&#x69;s displayed and allowed to configure when the source contains an SCTE-35 component (TS source) or SCTE-104 component (Baseband source). The possible configuration values are the following:
+
+   * **Auto**: IDR insertion depends on the output SCTE-35 message.
+
+   * **On ESAM conditioninginfo**: IDR is inserted on the reception of ConditioningInfo section through ESAM protocol.
+
+   * **None**: IDR insertion is not triggered by the output SCTE-35 message.
+
+8. Enable **Input Tracking&#x20;**&#x74;o adapt to incoming PID changes in the source.
+
+   <Note>
+     **Info:&#x20;**&#x49;nput tracking allows automatic adaptation to changes in the source like PMT PID change, PCR PID change, Video PID change, Video Codec change, Audio PID change, Audio Codec change, Audio language change, Number of audio change, SCTE35 PID change, Number of SCTE35 change, DVB Subtitle PID change, DVB Subtitle language change, Number of DVB Subtitle change, Teletext PID change, Teletext language change, Number of Teletext change.
+   </Note>
+
+   Tracking Rules, which determine how to retrieve components when PID has changed inside a program, depend on:
+
+   * Component type
+
+   * Language and codec for audio components
+
+   * Order in PMT when required
+
+9. **Transcoder 1+1 Redundancy:&#x20;**&#x54;his option does not apply to VOS.
+
+10. **Addons**: Turn each option **ON&#x20;**&#x74;o enable insertion of Logo / Graphics / Video Insertion / EAS-NET / Blackout Slate / Nielsen Watermark. For more information, refer to [Setting video overlays](/vos360/user-guide/setting-video-overlays).
+
+    <Note>
+      **Note:&#x20;**&#x54;he Nielsen Watermark add-on is only visible when the transcoding profile has the Nielsen Insertion setting configured as **True** on audio tracks.
+    </Note>
+
+### A/V settings tab
+
+From the **A/V settings** tab, select and change the properties which will override the values in the profile.\
+![](/images/vos360/4fd3833b74961d9f434844c2.png)
+
+<Note>
+  **Note:&#x20;**&#x54;he **Still Detection** toggle can be turned "ON" to reduce the bitrate when the input video is still and when slate insertion takes place. This is available for both VBR and CBR Statmux services.
+</Note>
+
+### Remapping tab
+
+From the **Remapping** tab, make changes if required. You may enable the scrambling which is pre-configured in the Scrambling app by configuring **Enable Scrambling&#x20;**&#x61;nd the desired **Scrambling Group**.\
+![](/images/vos360/47a018bb78a44a420c4fdf71.png)
+
+### Descriptors tab
+
+From the **Descriptors&#x20;**&#x74;ab, add custom PMT/SDT descriptors to generated MPT/SDT for MPTS outputs. Once added, descriptors can be re-ordered.
+
+<Note>
+  **Note:&#x20;**&#x41;dding descriptors to the SDT table can only be used for DVB multiplexers.
+</Note>
+
+![](/images/vos360/305f871b12a8404b34286350.png)
+
+### EIT/ETT tab
+
+From the **EIT/ETT&#x20;**&#x74;abs, configure to transcode PSIP EIT/ETT for ATSC services.
+
+<Note>
+  **Note:&#x20;**&#x54;his tab is only visible for ATSC programs in muxes not using an external PSIP injector. Only sources configured as ATSC standard can be used for the EIT/ETT remux.
+</Note>
+
+![](/images/vos360/51dd7e5dbacab8ee9daf5319.png)
+
+## Passthrough process
+
+If you choose the **Passthrough** option, do the following:
+
+1. **Source** tab: No changes are allowed on this tab.\
+   ![](/images/vos360/eb123edf66249dede43a5eab.png)
+
+2. **Remapping** tab: The Program Name, Program Number, Program Type, and PMT PID can be changed. You can enable the scrambling which is pre-configured in the Scrambling app by configuring **Enable Scrambling&#x20;**&#x61;nd the desired **Scrambling Group**.\
+   ![](/images/vos360/9946a788c05d3989c4bdc086.png)
+
+3. **Descriptors** tab: Custom PMT/SDT descriptors can be added to generated MPT/SDT for MPTS outputs. Once added, descriptors can be re-ordered.
+
+   <Note>
+     **Note:** Adding descriptors to the SDT table can only be used for DVB multiplexers.
+   </Note>
+
+   ![](/images/vos360/4f5225b82adffe32d7162ab6.png)
+
+4. **EAS&#x20;**&#x74;ab: Add any EAS descriptor if required.
+
+   <Note>
+     **Note:&#x20;**&#x54;his tab is only visible when EAS mode has been set to SCTE-18.
+   </Note>
+
+   ![](/images/vos360/1fd9b3eb21d36d8e7aecfa0d.png)
+
+5. **EIT/ETT** tab: Configure to pass through PSIP EIT/ETT when transcoding or passing through ATSC services.
+
+   <Note>
+     **Note:&#x20;**&#x54;his tab is only visible for ATSC programs in muxes not using an external PSIP injector. Only sources configured as ATSC standard can be used for the EIT/ETT remux.
+   </Note>
+
+   ![](/images/vos360/9bd5945257f8d0382724af94.png)
+
+6. Click ***+*****Add*****.***
+
+   <Note>
+     **Note:&#x20;**&#x44;ata received as TS over IP without PCR can be re-muxed by drag-and-drop to the service in the multiplexer directly.
+   </Note>
+
+Once all programs have been added, the multiplexer should appear.
+
+![](/images/vos360/6776fd180a855384e880011f.png)
+
+A thumbnail of each program appears in the **Programs** tab.
+
+![](/images/vos360/f51bcfec3e778a8366e1d1c3.png)
+
+<Note>
+  **Note:&#x20;**&#x54;humbnails are not available for passthrough programs.
+</Note>
+
+If a service has an alarm, click the exclamation mark on the top right corner to show the notification.
+
+![](/images/vos360/f40d8e3a38bb2aa989aeb3b4.png)

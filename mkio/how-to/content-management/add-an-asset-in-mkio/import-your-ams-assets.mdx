@@ -1,0 +1,120 @@
+---
+title: Import your AMS assets
+description: Reference existing Azure Media Services asset containers in MK.IO without re-encoding or moving files.
+sidebarTitle: Import from AMS
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+Use this workflow to migrate assets from **Azure Media Services (AMS)**. For other content in Azure Blob Storage or Amazon S3, use [Reference existing cloud storage content](/mkio/how-to/content-management/add-an-asset-in-mkio/reference-existing-storage).
+
+MK.IO references your existing AMS asset containers directly: no re-encoding or file movement needed. Your files stay exactly where they are in Azure Storage.
+
+<Info>
+  Azure Media Services has been retired. MK.IO is a drop-in replacement: your existing AMS streaming locators, content key policies, and asset containers can all be migrated.
+</Info>
+
+## Import your assets
+
+Three approaches are available depending on your scale and tooling preference.
+
+<Check>
+  Whatever the approach, your assets remain in their Azure storage after migration: MK.IO does not copy or move them.
+</Check>
+
+<span id="using-the-mkio-web-interface" className="mk-legacy-anchor" />
+
+## Using the MK.IO web interface
+
+1. From the MK.IO dashboard view, go to **Storage** from the left-hand side menu.
+2. Select the **Add Azure storage** option then fill in the required information:
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Parameter
+      </th>
+
+      <th>
+        Description
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        Storage Account
+      </td>
+
+      <td>
+        From the drop down, select the connected [Storage Account](/mkio/getting-started/connect-cloud-storage)  linked to your MK.IO account, where the hosted assets lives in your Azure Storage Account.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Storage container
+      </td>
+
+      <td>
+        Enter the name of the specific container where the hosted assets lives in your Azure Storage Account.
+
+        In AMS, each asset is stored in a specific container. You can confirm the storage container name by navigating to the **Assets** view in AMS, locating your 'output' asset name you need to migrate and copying the name of the 'Storage Link' field. This will typically start with an `asset-XXX` naming convention and point to the container where the associated files are stored.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Sub-container (optional)
+      </td>
+
+      <td>
+        Enter the name of the sub-container if any.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Asset name
+      </td>
+
+      <td>
+        The unique identifier you want to use in MK.IO for that asset.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Description
+      </td>
+
+      <td>
+        Provide an optional description for that asset.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Upon asset deletion
+      </td>
+
+      <td>
+        Choose whether you want to preserve the container upon asset deletion.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+When you click **Add,** the files will be uploaded and a new asset will be saved in your list. MK.IO will connect, ingest, and make the content available to be configured for streaming.
+
+## Using Azure Media Services Migration tool from MediaKind
+
+All the steps are detailed in [Bulk asset migration from AMS storage](/mkio/how-to/content-management/add-an-asset-in-mkio/bulk-asset-migration-from-ams-storage).
+
+## Using Azure Media Services Explorer tool
+
+You can retrieve the AMS Explorer tool in this public GitHub repository: [https://github.com/Azure/Azure-Media-Services-Explorer](https://github.com/Azure/Azure-Media-Services-Explorer)
+
+This version of the Azure Media Services Explorer supports creating assets in MK.IO from existing AMS assets.

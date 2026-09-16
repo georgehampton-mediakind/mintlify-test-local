@@ -1,0 +1,78 @@
+---
+title: Set up SDI/ASI cards
+sidebarTitle: Setup SDI/ASI Cards
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+ASI/SDI cards can be configured for different modes of operation. For example, if there are two 4-port ASI/SDI cards in the same chassis, one card can be configured for SDI/ASI output and the other card for HD or UHD SDI input.
+
+<span id="set-up-a-4-port-sdiasi-card" className="mk-legacy-anchor" />
+
+## Set up a 4-port SDI/ASI card
+
+The following three modes are supported.
+
+<span id="4-asihd-sdisd-sdi" className="mk-legacy-anchor" />
+
+#### 4 ASI/HD-SDI/SD-SDI
+
+* 4 independent 3G-SDI/ASI ports. Each port can be either SDI or ASI, input or output.
+
+Use this mode for 4 independent SDI/ASI ports, each of which can be an input or an output.
+
+#### 1 UHD 12G or Quad Link 3G
+
+* Port 1 SDI input/output (up to UHD 12G-SDI) or ASI input/output, **or**
+* Ports 1-4 SDI input/output for Interleaved mode for UHD.
+
+For contribution or headend use cases, use this mode for UHD SDI input.
+For reception use cases, use this mode for UHD SDI output.
+
+#### 1 UHD 12G with downconversion
+
+This mode is not recommended for contribution or headend use cases.
+For reception use cases, use this mode for UHD SDI output with downconversion.
+
+<span id="set-up-an-8-port-sdiasi-card" className="mk-legacy-anchor" />
+
+## Set up an 8-port SDI/ASI card
+
+The following three modes are supported.
+
+<span id="8-asihd-sdisd-sdi" className="mk-legacy-anchor" />
+
+#### 8 ASI/HD-SDI/SD-SDI
+
+* 8 independent 3G-SDI/ASI ports. Each port can be either SDI or ASI, input or output.
+
+Use this mode for 8 independent SDI/ASI ports, each of which can be an input or an output.
+
+#### Dual 4K channels over 12G-SDI or Quad link
+
+* Port 1 SDI input/output (up to UHD 12G-SDI) or ASI input/output, **or**
+
+* Ports 1-4 SDI input/output in Interleaved mode for UHD.
+
+* Port 5 SDI input/output (up to UHD 12G-SDI) or ASI input/output, **or**
+
+* Ports 5-8 SDI input/output in Interleaved mode for UHD.
+
+For contribution or headend use cases, use this mode for UHD SDI input.
+For reception use cases, use this mode for UHD SDI output.
+
+<span id="dual-12g-sdi-with-asisdi-side-channel" className="mk-legacy-anchor" />
+
+#### Dual 12G-SDI with ASI/SDI side channel
+
+This mode is not recommended for contribution or headend use cases.
+For reception use cases, use this mode for UHD SDI output with ASI/SDI output side channel.
+
+<span id="to-set-the-mode-of-operation-of-an-sdiasi-card" className="mk-legacy-anchor" />
+
+## To set the mode of operation of an SDI/ASI card
+
+1. From the MK.IO Beam web UI, select the **Appliance** tab.
+2. Select the **ASI/SDI interface** tab.
+3. Select the **Slot** tab corresponding to the SDI/ASI card. If more than one card is present, there will be a separate slot tab for each card.
+4. Select the **ASI/SDI mode** from the drop-down menu.

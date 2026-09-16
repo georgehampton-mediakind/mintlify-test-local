@@ -1,0 +1,50 @@
+---
+title: Registering a CloudLink using VOS CLI (RPM installation)
+robots: noindex, nofollow
+---
+
+You can also register a CloudLink using VOS CLI in addition to Terminal UI.
+
+1. Navigate to VOS and click **Settings** > **Client Apps** to create the client credentials.
+
+2. Click th&#x65;**&#x20;Add client** button and create a client app with the following:
+
+   1. Enable both the **Authorization code** and **Client credential** checkboxes.
+
+   2. Specify a redirect URL (e.g. [https://localhost:38001/oauth/authorizationCode](https://localhost:38001/oauth/authorizationCode))
+
+3. Initialize the VOS CLI and register the CloudLink to VOS Runtime in Okta mode with the following commands.
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><code>{"vagrant@localhost~ $ vos config init -instanceUrl={{YOUR_VOS_INSTANCE_URL}} -ignoreCertificate=true"}</code><br /><code>newconfig file created with provided instance URl,</code><br /><code>you can edit instance URL in /home/vagrant/</code><a href="https://confluence360.harmonicinc.com/display/GSKB/vos.json">vos.json</a><br /><code>vagrant@localhost~ $ vos login client</code><br /><code>Please enter your clientID</code><br /><code>{"{{YOUR_CLIENT_ID}}"}</code><br /><code>Please enter your clientSecret</code><br /><code>{"{{YOUR_CLIENT_SECRET}}"}</code><br /><code>Please enter your redirectUri</code><br /><code>{"{{YOUR_REDIRECT_URI}}"}</code></p></td></tr></tbody>
+     </table>
+   </div>
+
+4. Copy the URL from "**Visit the URL in web browser**" and paste it to the address bar in the web browser.
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><code>Visit the URL in web browser: xx.xx.xxx.xx</code></p></td></tr></tbody>
+     </table>
+   </div>
+
+5. Copy th&#x65;**&#x20;Authorization code** in the URL from the address bar and paste the code to "**Please enter your code**" as shown below.\
+   ![](/images/vos360/7e2e2b11ad12f489947d53a5.png)
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><code>Please enter your code</code><br /><code>xxxxxx</code></p></td></tr></tbody>
+     </table>
+   </div>
+
+6. Press **Enter&#x20;**&#x61;nd verify your CloudLink registration.
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><code>API token obtained successfully and will expire at 08Oct 1809:59+0000</code><br /><code>{"vagrant@localhost~ $ vos cloudlink register --cloudlinkUrl={{YOUR_CLOUDLINK_URL}} --cloudAuthType=client_credentials --ignoreCertificate --cloudClientId={{YOUR_CLIENT_ID}} --cloudClientSecret={{YOUR_CLIENT_SECRET}} --cloudlinkUsername={{OKTA_ACCOUNT_USERNAME}} --cloudlinkPassword={{OKTA_ACCOUNT_PASSWORD}}"}</code><br /><code>2018/10/0809:17:18Both servers are up</code><br /><code>2018/10/0809:17:20https://</code><a href="https://confluence360.harmonicinc.com/display/GSKB/10.50.104.53">10.50.104.53</a><code> has been successfully registered to </code><a href="https://10.50.104.58:38001/">https://10.50.104.58:38001</a></p></td></tr></tbody>
+     </table>
+   </div>
+
+   **Example:**\
+   vos cloudlink register --cloudAuthType=client\_credentials --cloudClientId="dd8ffd7f-76be-4c6f-bd24-6f8e88df00c6" --cloudClientSecret="ec7ddab422f15f7dab5b1bba43db03c8" --cloudlinkUrl="[https://10.10.1.50](https://10.10.1.50/)" --ignoreCertificate --cloudlinkUsername="abcdefg@[gmail.com](http://gmail.com/)" --cloudlinkPassword='abcdefg'

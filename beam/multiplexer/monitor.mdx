@@ -1,0 +1,149 @@
+---
+title: Service Monitoring
+sidebarTitle: Monitor service statistics and alarms
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+## Monitor service alarms
+
+The MediaKind user interface allows you to access active and cleared alarms list for each service.
+
+1. Go to the Services page.
+
+2. Identify the service that you want to monitor and click the related <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> icon in the **info** column.
+
+   Depending on the severity of the alarm, the <img src="/icons/ui/alarm.svg" alt="Alarm" className="mk-ui-icon" width="16" height="16" /> will appear in different colors and will display the most severe color alarm in case of multiple alarms.
+
+   * red: critical alarm
+   * orange: major alarm
+   * blue: minor alarm
+   * grey: notice alarm
+
+The following page displays.
+
+![Services multiplexer alarms](/_machine-assets/b9bfd73e3d248f9bd1034087c38fe0d867c7c908219accdb630838857af531b8.png)
+
+From this page, you can access the following information:
+
+* The active alarms table applied on the current server including:
+  * date and time of the alarm rise
+  * alarm description (label)
+  * alarm severity
+  * detailed information
+* The alarm history table including:
+
+  * date and time of the alarm rise
+  * alarm description (label)
+  * alarm status
+  * alarm severity
+  * server on which the service was applied when the alarm raised.
+  * detailed information
+
+<Info>
+  The alarm tables display up to 10 alarms per page. Use the arrows or page number at the bottom of the table to navigate through the complete alarms list.
+</Info>
+
+## Monitor service statistics
+
+When a multiplexer configuration is running, you can retrieve and monitor on MediaKind user interface detailed statistics information.
+
+1. From the **Services** page, identify the service that you want to monitor and click the related <img src="/icons/ui/pie-chart.svg" alt="Pie chart" className="mk-ui-icon" width="16" height="16" /> icon in the **Stats** column.
+
+   <Info>
+     The <img src="/icons/ui/pie-chart.svg" alt="Pie chart" className="mk-ui-icon" width="16" height="16" /> is only accessible when an encoder configuration is associated to a server and then running.
+   </Info>
+
+   The **Statistics** page displays.
+
+2. You can navigate between two tabs: **Overview** and **Input**.
+
+### Overview
+
+From the **Overview** tab, you can view the following information for each program:
+
+* Multiplexer Graphs (one graph per processing server)
+* Multiplexer statistics:
+  * MPTS Output
+  * Active/Passive state of the IP output
+  * Info
+  * Bitrate (in bps)
+  * FEC Bitrate (in bps)
+  * CC errors
+  * Dropped packets
+
+Additionally, the following actions can be taken in this page:
+
+* Customise the data displayed in the graphs by clicking the labels in the graph legend.
+* Customise the information displayed such as activating or deactivating the input statistics by clicking the toggle button *Inputs displayed*.
+* View detailed per PID information by expanding the available information in the *Multiplexer Statistics* table using the arrow buttons under the *MPTS Output* column.
+* Reset the current statistics displayed in *Multiplexer Statistics* table using the buttons under the *Actions* column.
+* Change the active Mux, when Active/Standby mode has been enabled, using the buttons under the *Activate* column.
+
+![MFVP SP service statistics mux graphs](/_machine-assets/dd8b73ebcb60e057e0b77886ced621a867268e3dd9b1cf9be75ff310eff04d52.png)
+
+### Statistical bit rate allocation
+
+<Info>
+  The **Statistical bit rate allocation** tab is only available when statmux is enabled at the service level.
+</Info>
+
+From the **Statistical bit rate allocation** tab, you can view the following information for each program:
+
+* **Statmux pool graph**
+
+  Display options:
+
+  * Select the statmux pool to display amongst the pools available.
+  * Select the type of view to display (Line graph or Pool bitrates).
+  * Select the video and audio components to display on the graph (all are activated and visible by default).
+
+* **Statmux pool table**
+
+  The table shows the active/passive status of the servers used for the statmux setup.
+
+  * Click the button in the Actions column to change the active server:
+    * Click the button in front of the server line to cause it to become active for all statmux pools.
+    * Click the button in front of a statmux pool to activate it in the corresponding server.
+  * Click the <img src="/icons/ui/play.svg" alt="Play" className="mk-ui-icon" width="16" height="16" /> button to display detailed information about the statmux group:
+    * Service name or ID
+    * Codec
+    * Priority
+    * Bit rate (min/max)
+    * Resolution
+    * Total bitrate
+    * Video bitrate
+    * Audio bitrate
+    * Private bitrate
+
+![MFVP SP service statistics statmux](/_machine-assets/4805e04e792922e6fe2bc9dab9f8341111c5e730c3cccc209d31bbb1ad9d3335.png)
+
+### Input
+
+From the **Input** tab, you can view the following information:
+
+* Input sources information, especially service name, input source IP address and Multiplexer IP address.
+* RTP quality indicators
+* FEC quality indicators
+
+![SparkSE Stats input](/_machine-assets/73646bf270a6ff97a520469e4d730b374a07ff92c9befee30945fd9a916c282a.png "Service Statistics - Input page")
+
+**Tip:** You can refresh the statistics displayed by clicking the ![Stats AutoRefresh button](/_machine-assets/7072394f8a848dc26f0d1b364cb6161f05a68f8b52898f60aa8abdc48f4e63ee.png) button.
+
+### Bandwidth Policing
+
+From the **Bandwidth Policing** tab, you can view the following information:
+
+* Bandwidth Policing Groups Bitrate Graphs.
+
+  ![MFVP SP BPC stat graph2](/_machine-assets/3ebc73de2829d22692549516cf749ff0d89c267b495440c80cc493afea07ec92.png)
+
+  The page will display 1 or 2 graphs depending on the number of servers assigned for the given service.
+
+  **Tip:** You can filter the information displayed by selecting the Bandwidth Policing Group and the PID to display.
+
+* Bandwidth Policing Groups Statistics.
+
+  ![MFVP SP BPC stat table](/_machine-assets/aa806d52c7e2d3fa63ff02c917e5d84a19316b7e1e151286c6eeb06a67eec760.png)
+
+**Tip:** You can refresh the statistics displayed by clicking the ![Stats AutoRefresh button](/_machine-assets/7072394f8a848dc26f0d1b364cb6161f05a68f8b52898f60aa8abdc48f4e63ee.png) button.

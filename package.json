@@ -1,0 +1,13 @@
+{
+  "name": "mediakind-mintlify-local",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/preview.mjs",
+    "validate": "mint validate --telemetry false",
+    "links": "mint broken-links --telemetry false",
+    "dev:native": "mint dev --no-open --telemetry false"
+  },
+  "devDependencies": {
+    "mint": "4.2.894"
+  }
+}

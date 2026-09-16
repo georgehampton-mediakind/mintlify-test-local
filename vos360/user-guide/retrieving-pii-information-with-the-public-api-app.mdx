@@ -1,0 +1,20 @@
+---
+title: Retrieving PII information with the Public API app
+robots: noindex, nofollow
+---
+
+1. Navigate to the **Public API&#x20;**&#x61;pp.
+
+2. Through the 'User' API, you can use the following GET requests to retrieve the desired user info and login history.
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p>GET https://<span>{"{your site}/vos-api/user/v1/users"}</span></p></td><td colSpan="1" rowSpan="1"><p><span>This request can be used by the account admin to query for user info and login history for all users under the account.</span></p></td></tr><tr><td colSpan="1" rowSpan="1"><p><span>{"GET https://{your site}"}</span>/vos-api/user/v1/users?username=</p></td><td colSpan="1" rowSpan="1"><p>This request can be used by all users to query for user info and login history for a specific username (this will most likely be the email address of the user).</p></td></tr><tr><td colSpan="1" rowSpan="1"><p>GET https://<span>{"{your site}"}</span>/vos-api/user/v1/users/<span>{"{id}"}</span></p></td><td colSpan="1" rowSpan="1"><p>This request can be used by all users to query for user info and login history of a specific user using their user ID (the user ID must be made available by the admin of the account).</p></td></tr></tbody>
+     </table>
+   </div>
+
+<Note>
+  **Note:&#x20;**&#x54;he public IP address along with login history can be obtained by the Admin of an account by logging into the **Hub** and going to the '**Harmonic ID**' section and reviewing the Log Book for an individual user.
+</Note>

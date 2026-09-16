@@ -1,0 +1,47 @@
+---
+title: Installing Beam on G8 and G9 servers
+sidebarTitle: G8 and G9 servers
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+There is no upgrade path from Aquila to MK.IO Beam, but:
+
+1. MK.IO Beam can be installed on G8 and G9 servers using the MK.IO Beam ISO.
+2. Density should be roughly similar to Aquila, but if in doubt, contact Product Management for guidance.
+3. MK.IO Beam requires more disk space due to its support for multiple banks and a broader set of default components, compared to a dedicated Live Encoding, Multiplex, or Packager server.
+4. Server configurations can be exported from Aquila and, in most cases, will be compatible with MK.IO Beam deployments, with the following caveats:
+   * Aquila V21 Packager service configuration is not fully compatible with V30 Packager supplied with MK.IO Beam, seek guidance from the MediaKind Packager community for migrating Aquila V21 Packager configurations to Beam V30 Packager.
+   * It should be possible to import Aquila Live Encoding service configurations to Beam servers, but json service editing may be required in some cases.
+   * Following the import of Aquila json service configuration, it will be necessary to review and update the associated service for interface usage. (Beam default interface naming may not match the previous Aquila interface naming.)
+   * If advanced parameters were applied to config maps, to affect all services under Aquila deployments, they will need to be reapplied to config maps on the Beam deployment
+5. Prior to using the MK.IO Beam ISO, confirm the BIOS is configured appropriately with respect to Real-time clock configuration and specifically for the following options with G9 servers:\
+   **\[BIOS::Advanced::Processor Configuration]**\
+   Intel(R) Virtualization Technology=Enabled\
+   X2APIC=Enabled\
+   **\[BIOS::Advanced::Integrated IO Configuration]**\
+   Intel(R) VT for Directed I/O=Enabled\
+   PCIe Pll SSC=Disabled\
+   **\[BIOS::Advanced::Integrated IO Configuration::PCIe Slot Bifurcation Setting]**\
+   Riser1\_Slot\_1 Bifurcation=x8x8\
+   Riser2\_Slot\_1 Bifurcation=x8x8\
+   Riser2\_Slot\_2 Bifurcation=x8x8\
+   **\[BIOS::Advanced::Integrated IO Configuration::PCIe Misc. Configuration]**\
+   PCIe ASPM Support (Global)=Disabled\
+   **\[BIOS::Advanced::Integrated IO Configuration::Processor PCIe Link Speed::Socket 0 PCIe Link Speed]**\
+   Socket 0, PCIe Port 1a=Gen 3\
+   Socket 0, PCIe Port 1c=Gen 3\
+   **\[BIOS::Advanced::Integrated IO Configuration::Processor PCIe Link Speed::Socket 1 PCIe Link Speed]**\
+   Socket 1, PCIe Port 1a=Gen 3\
+   Socket 1, PCIe Port 2a=Gen 3\
+   Socket 1, PCIe Port 2c=Gen 3\
+   **\[BIOS::Advanced::Integrated IO Configuration::PCIe Misc. Configuration::Socket 0 Configuration::Port 1A]**\
+   Data Link Feature Exchange=Disabled\
+   **\[BIOS::Advanced::Integrated IO Configuration::PCIe Misc. Configuration::Socket 0 Configuration::Port 1C]**\
+   Data Link Feature Exchange=Disabled\
+   **\[BIOS::Advanced::Integrated IO Configuration::PCIe Misc. Configuration::Socket 1 Configuration::Port 1A]**\
+   Data Link Feature Exchange=Disabled\
+   **\[BIOS::Advanced::Integrated IO Configuration::PCIe Misc. Configuration::Socket 1 Configuration::Port 2A]**\
+   Data Link Feature Exchange=Disabled\
+   **\[BIOS::Advanced::Integrated IO Configuration::PCIe Misc. Configuration::Socket 1 Configuration::Port 2C]**\
+   Data Link Feature Exchange=Disabled

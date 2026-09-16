@@ -1,0 +1,19 @@
+---
+title: Transcription transform
+description: Create an AI transcription transform that generates WebVTT subtitles from a VOD audio track.
+sidebarTitle: Audio Speech Transcription
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+MK.IO offers an AI-powered VOD transcription feature that allows you to generate subtitles from audio tracks. The generated subtitles are delivered in WebVTT format into the output asset and can be subsequently added to the manifest of the asset with a [track insertion transform.](/mkio/reference/encoding-transform-presets/add-a-track-to-a-vod-asset)
+
+<Info>
+  On-demand transcription is only available for MP4 assets.
+</Info>
+
+MK.IO provides the built-in **Predefined\_ACSVodTranscription** preset for this workflow. When selecting the preset, specify the original language of the audio track using a BCP-47 locale.
+
+## Source language
+
+MK.IO uses Azure AI Speech for transcription. Azure maintains the current [language and voice support table](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support) for speech-to-text locales. Confirm that the locale required by your workflow is available before creating the transform.

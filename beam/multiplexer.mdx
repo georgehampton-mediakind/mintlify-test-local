@@ -1,0 +1,29 @@
+---
+title: Multiplexing
+description: Understand what a multiplexer does and how MK.IO Beam uses it to combine broadcast channels for headend and distribution workflows.
+sidebarTitle: Multiplexing
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A **multiplexer** (mux) combines multiple audio, video, and data streams into a single MPEG-2 Transport Stream (MPEG-2 TS). In broadcast and headend environments, multiplexing is how multiple channels from separate sources are consolidated into one output for delivery over cable, IPTV, or satellite.
+
+MK.IO Beam's Multiplexer takes transport stream inputs from live encoders or other sources and assembles them into a combined output for delivery over IP or ASI. It supports re-multiplexing and de-multiplexing of IP input streams, with PID remapping, PID filtering, service information (SI/PSI) management, and output adaptation for a range of network environments. Stream assembly and timing alignment are handled automatically.
+
+## Input redundancy
+
+Input sources can be configured with redundancy. If the active source becomes unhealthy, the Multiplexer automatically switches to a secondary source. When secondary sources are monitored, the Multiplexer checks their health before switching, ensuring it only moves to a source in a good state.
+
+## Statistical multiplexing
+
+Standard multiplexing assigns a fixed bitrate to each program in the output transport stream. Statistical multiplexing (statmux) improves on this by dynamically sharing available bandwidth across a pool of encoding services based on encoding complexity at any given moment. Channels with complex scenes receive more bitrate; simpler scenes return bandwidth to the pool.
+
+MK.IO Beam's Multiplexer supports statmux through pools. Each pool has a defined bitrate budget and works with Live Encoder services configured as statmux slaves. The Multiplexer acts as the statmux master, coordinating bitrate allocation across all participating encoders. See [Advanced rate control](/beam/live-encoder/rate-control) for how Live Encoder services participate in a statmux pool.
+
+## Common use cases
+
+* Assembling multiple channels for cable or IPTV headend distribution.
+* Combining live-encoded services into a single transport stream for satellite uplink.
+* Remultiplexing incoming transport streams for downstream processing or conditioning.
+
+To start configuring a Multiplexer service, see [Configure the Multiplexer](/beam/multiplexer/configure/input).

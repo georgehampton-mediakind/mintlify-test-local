@@ -1,0 +1,31 @@
+---
+title: ST2038 grooming dialog
+robots: noindex, nofollow
+---
+
+You can groom the TS input source containing the SMPTE 2038 data to perform VANC extraction and processing for your service output.
+
+1. From the **Configure Channels** app, navigate to the **Sources** page, click **+Source**.
+
+2. Configure the source settings in the **Inputs&#x20;**&#x70;ane.
+
+3. Click the **Connect** button.
+
+   <Note>
+     **Info:&#x20;**&#x54;he ST2038 grooming dialog is not enabled by default. If the TS input source contains SMPTE-2038 data and is detected during grooming, the ST2038 grooming dialog will be present in a new tab. Additionally, the "ST2038 Data" type track will be visible in the Data Services grooming dialog.
+   </Note>
+
+4. From the **ST2038&#x20;**&#x74;ab, click the **+Track&#x20;**&#x62;utton.\
+   ![](/images/vos360/fd16b216922f962535241fda.png)
+
+5. For each track added, configure the Ancillary (ANC) data to be extracted from the ST-2038 source for processing.
+
+   <div className="vos-table-scroll">
+     <table className="vos-source-table">
+       <colgroup span="1"><col span="1" /><col span="1" /></colgroup>
+
+       <tbody><tr><td colSpan="1" rowSpan="1"><p><strong>Source Mode</strong></p></td><td colSpan="1" rowSpan="1"><ul><li><p>SCTE 104<br />The SCTE-104 data extracted from the ST-2038 source will be converted to SCTE-35 and inserted as a separate PID in output TS with correct signaling in PMT.</p></li><li><p>OP 47<br />The Teletext <span>(OP-47) data extracted from the ST-2038 source will </span>be inserted as a separate PID (as ESTI EN 301 775) in output TS with correct signaling, including the Teletext descriptor (generated according to grooming information) in PMT.</p></li><li><p>SMPTE 2031<br />The Teletext <span>(ST 2031) data extracted from the ST-2038 source will </span>be inserted as a separate PID (as ESTI EN 301 775) in output TS with correct signaling, including the Teletext descriptor (generated according to grooming information) in PMT. </p></li><li><p>AFD<br />The AFD (ST 2016-3) data extracted from the ST-2038 source will be used during aspect ratio conversion and the output AFD in video output will be updated accordingly. </p></li><li><p>VITC<br />The VITC (ST 12M) timecode extracted from the ST-2038 source will be used by SCTE-104 processing and attached to video output based on service configuration for whether output VITC is enabled.</p></li><li><p>Closed Caption<br />The Closed Captions (CEA 608, CEA 708 (ST 334)) extracted from the ST-2038 source will be <span>attached to video output based on service configuration for whether CC output is enabled (according to STB mode and source framerate).</span></p></li></ul></td></tr><tr><td colSpan="1" rowSpan="1"><p><strong>Labels </strong></p></td><td colSpan="1" rowSpan="1"><p><span>Optional to specify the source label for filtering purposes.</span></p></td></tr></tbody>
+     </table>
+   </div>
+
+6. Click **Ok**.

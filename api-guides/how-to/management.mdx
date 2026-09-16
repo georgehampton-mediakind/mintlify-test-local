@@ -1,0 +1,72 @@
+---
+title: Build with the Management API
+description: Use the Management API to provision projects, manage access, issue tokens, configure webhook rules, and report on usage.
+sidebarTitle: Management API
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+The Management API is the control plane for MK.IO. Use it when you need to create projects, manage users and teams, issue tokens, assign payment methods, enable metrics, or configure webhook rules that other workflows depend on.
+
+## API overview
+
+| Detail    | Value                                                     |
+| --------- | --------------------------------------------------------- |
+| Base path | `/api/v1/`                                                |
+| Scope     | Organization and project                                  |
+| Reference | [Management API reference](/api-reference/management-api) |
+
+## How the Management API fits into other workflows
+
+You often use this API before you use anything else:
+
+1. Create a project and assign billing.
+2. Grant access to the right users and teams.
+3. Create or rotate tokens for automation.
+4. Add webhook rules so media or fleet workflows can notify your application.
+
+That makes the Management API the setup and governance layer for the rest of the platform.
+
+## Common workflow patterns
+
+<CardGroup cols={1}>
+  <Card title="Provision and govern an organisation" icon="building">
+    1. [Create a project and assign billing](/api-guides/how-to/management/org-provisioning)
+    2. [Set up users and teams](/api-guides/how-to/management/users-and-teams)
+    3. [Create tokens for automation](/api-guides/how-to/management/tokens)
+    4. [Configure webhook rules](/api-guides/how-to/management/webhooks)
+    5. [Monitor usage and billing](/api-guides/how-to/management/usage-and-billing)
+  </Card>
+</CardGroup>
+
+## Guides
+
+<CardGroup cols={2}>
+  <Card title="Users and teams" href="/api-guides/how-to/management/users-and-teams">
+    Understand users, invites, teams, roles, scopes, and the JSON Patch operations used to evolve team access.
+  </Card>
+
+  <Card title="Tokens" href="/api-guides/how-to/management/tokens">
+    Create full-access or restricted tokens, inspect token metadata, and revoke user or organization tokens.
+  </Card>
+
+  <Card title="Organizations and invites" href="/api-guides/how-to/management/organizations-and-invites">
+    Inspect accessible organizations, accept pending invitations, and leave or decline organization access cleanly.
+  </Card>
+
+  <Card title="Webhook rules" href="/api-guides/how-to/management/webhooks">
+    Register webhook destinations, choose events, and inspect event delivery status for each rule.
+  </Card>
+
+  <Card title="Usage and billing" href="/api-guides/how-to/management/usage-and-billing">
+    Inspect current project usage, run date-range reports, assign payment methods, and enable metrics export.
+  </Card>
+</CardGroup>
+
+## Workflow guide
+
+<CardGroup cols={1}>
+  <Card title="Provision org and users" href="/api-guides/how-to/management/org-provisioning">
+    Create a project, assign billing, then move into access and token setup for the people and systems that will use it.
+  </Card>
+</CardGroup>

@@ -1,0 +1,84 @@
+---
+title: Create a Content Key Policy
+description: Configure DRM encryption schemes and token restrictions for your MK.IO content.
+sidebarTitle: Create a Content Key Policy
+---
+
+<span id="_top" className="mk-legacy-anchor" />
+
+A content key policy defines which DRM encryption schemes protect your content and whether viewers must present a JWT token to obtain a decryption license. You create the policy once and reference it from any number of streaming locators.
+
+## Prerequisites
+
+* A running streaming endpoint.
+* An asset ready for playback. Verify it plays without encryption using a `Predefined_ClearStreamingOnly` streaming locator before adding DRM.
+
+## Choose your policy type
+
+Before creating a policy, decide which DRM schemes you need. This determines which predefined streaming policy you will pair it with later.
+
+| If you need                          | Create a policy with            | Pair with streaming policy         |
+| ------------------------------------ | ------------------------------- | ---------------------------------- |
+| Basic encryption only                | ClearKey                        | `Predefined_ClearKey`              |
+| Widevine and PlayReady (no FairPlay) | Widevine + PlayReady            | `Predefined_MultiDrmCencStreaming` |
+| Widevine, PlayReady, and FairPlay    | Widevine + PlayReady + FairPlay | `Predefined_MultiDrmStreaming`     |
+
+<Info>
+  A `Predefined_MultiDrmStreaming` policy requires all three DRM schemes (Widevine, PlayReady, and FairPlay) in the content key policy. A `Predefined_MultiDrmCencStreaming` policy requires both Widevine and PlayReady. If the content key policy does not include the required schemes, creating the streaming locator will fail.
+</Info>
+
+## Create a policy in the UI
+
+<Steps>
+  <Step title="Open the Content Key Policies page">
+    <span id="open-the-content-key-policies-page" className="mk-legacy-anchor" />
+
+    Navigate to **Content Key Policies** from the left-hand menu and select **Create Content Key Policy**.
+  </Step>
+
+  <Step title="Name your policy">
+    <span id="name-your-policy" className="mk-legacy-anchor" />
+
+    Enter a **name** for the policy and an optional **description**. Use a descriptive name that indicates the encryption type and token setting, such as `multidrm-jwt` or `clearkey-open`.
+  </Step>
+
+  <Step title="Add encryption schemes">
+    <span id="add-encryption-schemes" className="mk-legacy-anchor" />
+
+    Add the DRM schemes your policy requires:
+
+    * For ClearKey: select **Add** next to the **Clear Key** section.
+    * For DRM: select **Add** in the **Digital Rights Management** section, then add each scheme individually (**Add Widevine**, **Add PlayReady**, **Add FairPlay**).
+
+    For each scheme, configure:
+
+    1. **Policy option name**: a recognizable label for this scheme within the policy.
+    2. **Use token restriction**: select **Yes** to require a JWT token for license acquisition, or **No** for open access.
+    3. If token restriction is enabled, provide:
+       * **Token type**: select `JWT`.
+       * **Issuer**: a string identifying who issued the token (for example, your company name or service identifier).
+       * **Audience**: a string identifying the intended recipient of the token.
+       * **Primary verification key**: a Base64-encoded symmetric key used to validate the JWT signature.
+    4. For Widevine: optionally provide a **Widevine template** (defaults to `{}`).
+    5. For PlayReady: optionally configure PlayReady-specific license settings.
+    6. For FairPlay: provide the Apple FairPlay **certificate**, **password**, and **application secret key**.
+
+    Select **Add** to save each scheme.
+
+    <Warning>
+      Use the same issuer, audience, and primary verification key values across all DRM schemes in a single policy. These values must match the JWT token you generate for playback.
+    </Warning>
+  </Step>
+
+  <Step title="Create the policy">
+    <span id="create-the-policy" className="mk-legacy-anchor" />
+
+    Select **Create** at the bottom of the page. The policy appears in the **Content Key Policies** list and is ready to use in a streaming locator.
+  </Step>
+</Steps>
+
+## What to do next
+
+* [Set up ClearKey encryption](/mkio/how-to/drm-content-protection/clearkey-encryption) for basic content protection.
+* [Set up Multi-DRM encryption](/mkio/how-to/drm-content-protection/multi-drm-encryption) for Widevine, PlayReady, and FairPlay.
+* [Generate a JWT token](/mkio/how-to/drm-content-protection/jwt-token-authentication) if your policy uses token restriction.
